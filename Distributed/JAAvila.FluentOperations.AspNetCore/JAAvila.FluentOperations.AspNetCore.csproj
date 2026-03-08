@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <PackageIcon>icon.png</PackageIcon>
+    <Authors>JAAvila</Authors>
+    <Description>ASP.NET Core integration for JAAvila.FluentOperations Quality Blueprints. Provides action filters for automatic model validation.</Description>
+    <PackageId>JAAvila.FluentOperations.AspNetCore</PackageId>
+    <PackageTags>FluentOperations;AspNetCore;Validation;ActionFilter</PackageTags>
+    <PackageProjectUrl>https://github.com/JAAvila-Of/JAAvila.FluentOperations</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/JAAvila-Of/JAAvila.FluentOperations</RepositoryUrl>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Copyright>Copyright (C) $([System.DateTime]::Now.Year) JAAvila</Copyright>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+    <PackageReference Include="MinVer" Version="6.0.0" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\JAAvila.FluentOperations\JAAvila.FluentOperations.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="../../icon.png" Pack="true" Visible="false" PackagePath="" />
+    <None Include="README.md" Pack="true" PackagePath=""/>
+  </ItemGroup>
+
+  <Target Name="SetAssemblyVersion" AfterTargets="MinVer">
+    <PropertyGroup>
+      <AssemblyVersion>$(MinVerMajor).$(MinVerMinor).$(MinVerPatch)</AssemblyVersion>
+    </PropertyGroup>
+  </Target>
+
+</Project>

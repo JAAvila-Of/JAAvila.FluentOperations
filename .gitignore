@@ -1,0 +1,11 @@
+bin/
+obj/
+/packages/
+riderModule.iml
+/_ReSharper.Caches/
+.git/
+.idea/
+.claude/
+artifacts/
+CLAUDE.md
+roslyn.md

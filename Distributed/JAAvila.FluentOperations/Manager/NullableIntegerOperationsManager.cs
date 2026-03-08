@@ -1,0 +1,694 @@
+using JAAvila.FluentOperations.Common;
+using JAAvila.FluentOperations.Config;
+using JAAvila.FluentOperations.Contract;
+using JAAvila.FluentOperations.Formatters;
+using JAAvila.FluentOperations.Model;
+using JAAvila.FluentOperations.Utils;
+using JAAvila.FluentOperations.Validators;
+
+namespace JAAvila.FluentOperations.Manager;
+
+/// <summary>
+/// Provides fluent validation operations for <c>int?</c> values.
+/// Supports value presence, equality, comparison, range, divisibility, parity, and membership validations.
+/// </summary>
+public class NullableIntegerOperationsManager
+    : BaseNullableOperationsManager<NullableIntegerOperationsManager, int?>,
+        ITestManager<NullableIntegerOperationsManager, int?>
+{
+    /// <inheritdoc />
+    public PrincipalChain<int?> PrincipalChain { get; }
+
+    /// <summary>
+    /// Initializes a new instance for testing the specified value.
+    /// </summary>
+    /// <param name="value">The value to test.</param>
+    /// <param name="caller">The caller expression name, captured automatically.</param>
+    public NullableIntegerOperationsManager(int? value, string caller)
+    {
+        PrincipalChain = PrincipalChain<int?>.Get(value, caller);
+        GlobalConfig.Initialize();
+        SetManager(this);
+    }
+
+    /// <summary>
+    /// Asserts that the nullable value has a non-null value.
+    /// </summary>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public NullableIntegerOperationsManager HaveValue(Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.NullableInteger.HaveValue))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableIntegerOperationsManager, int?>
+            .New(this)
+            .WithOperation(NullableIntegerHaveValueValidator.New(PrincipalChain))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the nullable value is <c>null</c> (does not have a value).
+    /// </summary>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public NullableIntegerOperationsManager NotHaveValue(Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.NullableInteger.NotHaveValue))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableIntegerOperationsManager, int?>
+            .New(this)
+            .WithOperation(NullableIntegerNotHaveValueValidator.New(PrincipalChain))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the value is equal to <paramref name="expected"/>.
+    /// </summary>
+    /// <param name="expected">The expected value to compare against.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public NullableIntegerOperationsManager Be(int? expected, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Integer.Be))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableIntegerOperationsManager, int?>
+            .New(this)
+            .WithOperation(NullableIntegerBeValidator.New(PrincipalChain, expected))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.ResultValidation,
+                            BaseFormatter.Format(PrincipalChain.GetValue()),
+                            BaseFormatter.Format(expected)
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the value is not equal to <paramref name="expected"/>.
+    /// </summary>
+    /// <param name="expected">The value that should not match.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public NullableIntegerOperationsManager NotBe(int? expected, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Integer.NotBe))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableIntegerOperationsManager, int?>
+            .New(this)
+            .WithOperation(NullableIntegerNotBeValidator.New(PrincipalChain, expected))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.ResultValidation, BaseFormatter.Format(expected))
+                        .WithReason(reason?.ToString())
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the value is greater than zero.
+    /// </summary>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// Throws immediately if the value is <c>null</c> (null guard — use <c>NotBeNull</c> first to cover that scenario).
+    /// </remarks>
+    public NullableIntegerOperationsManager BePositive(Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Integer.BePositive))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableIntegerOperationsManager, int?>
+            .New(this)
+            .WithOperation(NullableIntegerBePositiveValidator.New(PrincipalChain))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(BePositive)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the value is less than zero.
+    /// </summary>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// Throws immediately if the value is <c>null</c> (null guard — use <c>NotBeNull</c> first to cover that scenario).
+    /// </remarks>
+    public NullableIntegerOperationsManager BeNegative(Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Integer.BeNegative))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableIntegerOperationsManager, int?>
+            .New(this)
+            .WithOperation(NullableIntegerBeNegativeValidator.New(PrincipalChain))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(BeNegative)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the value is equal to zero.
+    /// </summary>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public NullableIntegerOperationsManager BeZero(Reason? reason = null)
+    {
+        return Be(0, reason);
+    }
+
+    /// <summary>
+    /// Asserts that the value is greater than <paramref name="value"/>.
+    /// </summary>
+    /// <param name="value">The exclusive lower bound.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// Throws immediately if the value is <c>null</c> (null guard — use <c>NotBeNull</c> first to cover that scenario).
+    /// </remarks>
+    public NullableIntegerOperationsManager BeGreaterThan(int value, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Integer.BeGreaterThan))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableIntegerOperationsManager, int?>
+            .New(this)
+            .WithOperation(NullableIntegerBeGreaterThanValidator.New(PrincipalChain, value))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(BeGreaterThan)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the value is greater than or equal to <paramref name="value"/>.
+    /// </summary>
+    /// <param name="value">The inclusive lower bound.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// Throws immediately if the value is <c>null</c> (null guard — use <c>NotBeNull</c> first to cover that scenario).
+    /// </remarks>
+    public NullableIntegerOperationsManager BeGreaterThanOrEqualTo(int value, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Integer.BeGreaterThanOrEqualTo))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableIntegerOperationsManager, int?>
+            .New(this)
+            .WithOperation(
+                NullableIntegerBeGreaterThanOrEqualToValidator.New(PrincipalChain, value)
+            )
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(BeGreaterThanOrEqualTo)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the value is less than <paramref name="value"/>.
+    /// </summary>
+    /// <param name="value">The exclusive upper bound.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// Throws immediately if the value is <c>null</c> (null guard — use <c>NotBeNull</c> first to cover that scenario).
+    /// </remarks>
+    public NullableIntegerOperationsManager BeLessThan(int value, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Integer.BeLessThan))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableIntegerOperationsManager, int?>
+            .New(this)
+            .WithOperation(NullableIntegerBeLessThanValidator.New(PrincipalChain, value))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(BeLessThan)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the value is less than or equal to <paramref name="value"/>.
+    /// </summary>
+    /// <param name="value">The inclusive upper bound.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// Throws immediately if the value is <c>null</c> (null guard — use <c>NotBeNull</c> first to cover that scenario).
+    /// </remarks>
+    public NullableIntegerOperationsManager BeLessThanOrEqualTo(int value, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Integer.BeLessThanOrEqualTo))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableIntegerOperationsManager, int?>
+            .New(this)
+            .WithOperation(NullableIntegerBeLessThanOrEqualToValidator.New(PrincipalChain, value))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(BeLessThanOrEqualTo)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the value falls within the inclusive range [<paramref name="min"/>, <paramref name="max"/>].
+    /// </summary>
+    /// <param name="min">The lower bound of the range (inclusive).</param>
+    /// <param name="max">The upper bound of the range (inclusive).</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// Throws immediately if the value is <c>null</c> (null guard).
+    /// Also throws immediately if <paramref name="min"/> is greater than <paramref name="max"/> (inverted range guard).
+    /// </remarks>
+    public NullableIntegerOperationsManager BeInRange(int min, int max, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Integer.BeInRange))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableIntegerOperationsManager, int?>
+            .New(this)
+            .WithOperation(NullableIntegerBeInRangeValidator.New(PrincipalChain, min, max))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(BeInRange)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        min > max,
+                        Fail.New(
+                            $"The {nameof(BeInRange)} operation failed because min ({min}) is greater than max ({max})."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the value does not fall within the inclusive range [<paramref name="min"/>, <paramref name="max"/>].
+    /// </summary>
+    /// <param name="min">The lower bound of the range (inclusive).</param>
+    /// <param name="max">The upper bound of the range (inclusive).</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// Throws immediately if the value is <c>null</c> (null guard).
+    /// Also throws immediately if <paramref name="min"/> is greater than <paramref name="max"/> (inverted range guard).
+    /// </remarks>
+    public NullableIntegerOperationsManager NotBeInRange(int min, int max, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Integer.NotBeInRange))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableIntegerOperationsManager, int?>
+            .New(this)
+            .WithOperation(NullableIntegerNotBeInRangeValidator.New(PrincipalChain, min, max))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(NotBeInRange)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        min > max,
+                        Fail.New(
+                            $"The {nameof(NotBeInRange)} operation failed because min ({min}) is greater than max ({max})."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the value is one of the specified <paramref name="values"/>.
+    /// </summary>
+    /// <param name="values">The set of allowed values.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// Throws immediately if the value is <c>null</c> (null guard).
+    /// Also throws immediately if <paramref name="values"/> is empty (empty set guard).
+    /// </remarks>
+    public NullableIntegerOperationsManager BeOneOf(params int[] values)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Integer.BeOneOf))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableIntegerOperationsManager, int?>
+            .New(this)
+            .WithOperation(NullableIntegerBeOneOfValidator.New(PrincipalChain, values))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.ResultValidation)
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(BeOneOf)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        values.Length == 0,
+                        Fail.New(
+                            $"The {nameof(BeOneOf)} operation failed because you have not provided any values."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the value is not any of the specified <paramref name="values"/>.
+    /// </summary>
+    /// <param name="values">The set of disallowed values.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// Throws immediately if the value is <c>null</c> (null guard).
+    /// Also throws immediately if <paramref name="values"/> is empty (empty set guard).
+    /// </remarks>
+    public NullableIntegerOperationsManager NotBeOneOf(params int[] values)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Integer.NotBeOneOf))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableIntegerOperationsManager, int?>
+            .New(this)
+            .WithOperation(NullableIntegerNotBeOneOfValidator.New(PrincipalChain, values))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.ResultValidation)
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(NotBeOneOf)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        values.Length == 0,
+                        Fail.New(
+                            $"The {nameof(NotBeOneOf)} operation failed because you have not provided any values."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the value is evenly divisible by <paramref name="divisor"/>.
+    /// </summary>
+    /// <param name="divisor">The divisor to test against.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// Throws immediately if the value is <c>null</c> (null guard).
+    /// Also throws immediately if <paramref name="divisor"/> is zero (division-by-zero guard).
+    /// </remarks>
+    public NullableIntegerOperationsManager BeDivisibleBy(int divisor, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Integer.BeDivisibleBy))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableIntegerOperationsManager, int?>
+            .New(this)
+            .WithOperation(NullableIntegerBeDivisibleByValidator.New(PrincipalChain, divisor))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(BeDivisibleBy)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        divisor == 0,
+                        Fail.New(
+                            $"The {nameof(BeDivisibleBy)} operation failed because divisor cannot be zero."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the value is an even number (divisible by 2).
+    /// </summary>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public NullableIntegerOperationsManager BeEven(Reason? reason = null)
+    {
+        return BeDivisibleBy(2, reason);
+    }
+
+    /// <summary>
+    /// Asserts that the value is an odd number (not divisible by 2).
+    /// </summary>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// Throws immediately if the value is <c>null</c> (null guard — use <c>NotBeNull</c> first to cover that scenario).
+    /// </remarks>
+    public NullableIntegerOperationsManager BeOdd(Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Integer.BeOdd))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableIntegerOperationsManager, int?>
+            .New(this)
+            .WithOperation(NullableIntegerBeOddValidator.New(PrincipalChain))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(BeOdd)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+}

@@ -1,0 +1,57 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Authors>JAAvila</Authors>
+    <Description>A powerful, fluent validation and testing library for .NET that unifies assertion testing and model validation through an intuitive, scenario-based approach. Quality Blueprints provide reusable validation schemas with automatic scenario inference.</Description>
+    <PackageId>JAAvila.FluentOperations</PackageId>
+    <PackageTags>Validation;Testing;FluentAPI;Assertions;QualityBlueprints;ScenarioValidation;FluentOperations;ModelValidation;DataValidation</PackageTags>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageProjectUrl>https://github.com/JAAvila-Of/JAAvila.FluentOperations</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/JAAvila-Of/JAAvila.FluentOperations</RepositoryUrl>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <LangVersion>latest</LangVersion>
+    <Copyright>Copyright © $([System.DateTime]::Now.Year) JAAvila</Copyright>
+
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="JAAvila.SafeTypes" Version="1.0.4" />
+    <PackageReference Include="JetBrains.Annotations" Version="2024.3.0" />
+    <PackageReference Include="MinVer" Version="6.0.0"  PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="../../icon.png" Pack="true" Visible="false" PackagePath="" />
+    <None Include="../../README.md" Pack="true" PackagePath=""/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="JAAvila.FluentOperations.TestingNUnit" />
+    <InternalsVisibleTo Include="JAAvila.FluentOperations.Testing" />
+    <InternalsVisibleTo Include="JAAvila.FluentOperations.Benchmarks" />
+    <InternalsVisibleTo Include="JAAvila.FluentOperations.AspNetCore" />
+    <InternalsVisibleTo Include="JAAvila.FluentOperations.MediatR" />
+    <InternalsVisibleTo Include="JAAvila.FluentOperations.DependencyInjection" />
+  </ItemGroup>
+
+  <Target Name="SetAssemblyVersion" AfterTargets="MinVer">
+    <PropertyGroup>
+      <AssemblyVersion>$(MinVerMajor).$(MinVerMinor).$(MinVerPatch)</AssemblyVersion>
+    </PropertyGroup>
+  </Target>
+
+</Project>

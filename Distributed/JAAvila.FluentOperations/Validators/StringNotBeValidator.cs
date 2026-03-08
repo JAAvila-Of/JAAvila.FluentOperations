@@ -1,0 +1,37 @@
+﻿using JAAvila.FluentOperations.Contract;
+
+namespace JAAvila.FluentOperations.Validators;
+
+/// <summary>
+/// Validates that the string value does not equal the expected value.
+/// </summary>
+internal class StringNotBeValidator(PrincipalChain<string?> chain, string? expectedValue)
+    : IValidator
+{
+    public static StringNotBeValidator New(PrincipalChain<string?> chain, string? expectedValue) =>
+        new(chain, expectedValue);
+
+    /// <inheritdoc />
+    public string Expected => "Not Be - <not null>";
+
+    /// <inheritdoc />
+    public string ResultValidation { get; set; } = string.Empty;
+
+    public bool Validate()
+    {
+        var value = chain.GetValue();
+
+        if (value != expectedValue)
+        {
+            return true;
+        }
+
+        ResultValidation = "The resulting value should not be equal to {0}.";
+        return false;
+    }
+
+    public Task<bool> ValidateAsync()
+    {
+        return Task.FromResult(Validate());
+    }
+}

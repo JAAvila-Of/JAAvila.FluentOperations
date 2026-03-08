@@ -1,0 +1,61 @@
+using JAAvila.FluentOperations.Contract;
+using JAAvila.SafeTypes.Extension;
+
+namespace JAAvila.FluentOperations.Validators;
+
+/// <summary>
+/// Validates that the collection is sequence-equal to the expected collection.
+/// </summary>
+internal class CollectionBeSequenceEqualToValidator<T>(
+    PrincipalChain<IEnumerable<T>> chain,
+    IEnumerable<T> expected
+) : IValidator
+{
+    public static CollectionBeSequenceEqualToValidator<T> New(
+        PrincipalChain<IEnumerable<T>> chain,
+        IEnumerable<T> expected
+    ) => new(chain, expected);
+
+    public string Expected { get; }
+    public string ResultValidation { get; set; }
+
+    public bool Validate()
+    {
+        var actual = chain.GetValue();
+
+        if (actual.IsNull() && expected.IsNull())
+        {
+            return true;
+        }
+
+        if (actual.IsNull() || expected.IsNull())
+        {
+            ResultValidation = "The collection was expected to be sequence-equal, but {0}.";
+            return false;
+        }
+
+        var actualList = actual.ToList();
+        var expectedList = expected.ToList();
+
+        if (actualList.Count != expectedList.Count)
+        {
+            ResultValidation =
+                "The collection was expected to have {0} items in sequence, but found {1} items.";
+            return false;
+        }
+
+        if (
+            !actualList
+                .Where((t, i) => !EqualityComparer<T>.Default.Equals(t, expectedList[i]))
+                .Any()
+        )
+        {
+            return true;
+        }
+
+        ResultValidation = "The collection differs at index {0}: expected {1} but found {2}.";
+        return false;
+    }
+
+    public Task<bool> ValidateAsync() => Task.FromResult(Validate());
+}
