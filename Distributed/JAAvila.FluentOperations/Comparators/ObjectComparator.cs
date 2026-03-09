@@ -9,7 +9,7 @@ namespace JAAvila.FluentOperations.Comparators;
 /// Performs recursive deep equality comparison of objects by their public properties.
 /// Handles cycles, configurable recursion depth, excluded properties, and collection comparison.
 /// </summary>
-internal class ObjectComparator : IComparator<object?>
+public class ObjectComparator : IComparator<object?>
 {
     private static readonly ConcurrentDictionary<Type, PropertyInfo[]> PropertyCache = new();
 
