@@ -9,7 +9,7 @@ namespace JAAvila.FluentOperations.Formatters;
 /// Also exposes <see cref="StringValueFormatter"/>, the <see cref="IValueFormatter"/> adapter
 /// used by the <see cref="FormatterPipeline"/>.
 /// </summary>
-internal class StringFormatter
+public class StringFormatter
 {
     public static string Format(string? value)
     {

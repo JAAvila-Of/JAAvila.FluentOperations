@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Formatters;
 /// <summary>
 /// Provides advanced formatting options for QualityReport output.
 /// </summary>
-internal static class QualityReportFormatter
+public static class QualityReportFormatter
 {
     /// <summary>
     /// Formats a QualityReport into a detailed multi-line string with Unicode indicators.
