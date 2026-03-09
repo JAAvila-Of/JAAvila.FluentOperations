@@ -3,7 +3,7 @@ namespace JAAvila.FluentOperations.Config;
 /// <summary>
 /// Configuration for string display in error messages.
 /// </summary>
-internal class StringConfig
+public class StringConfig
 {
     /// <summary>
     /// Maximum number of characters to display before truncating with ellipsis.

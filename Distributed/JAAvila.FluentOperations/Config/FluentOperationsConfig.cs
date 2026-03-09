@@ -72,22 +72,22 @@ public static class FluentOperationsConfig
     /// <summary>
     /// Returns the current effective StringConfig.
     /// </summary>
-    internal static StringConfig GetStringConfig() => GlobalConfig.GetStringConfig();
+    public static StringConfig GetStringConfig() => GlobalConfig.GetStringConfig();
 
     /// <summary>
     /// Returns the current effective NumericConfig.
     /// </summary>
-    internal static NumericConfig GetNumericConfig() => GlobalConfig.GetNumericConfig();
+    public static NumericConfig GetNumericConfig() => GlobalConfig.GetNumericConfig();
 
     /// <summary>
     /// Returns the current effective DateTimeConfig.
     /// </summary>
-    internal static DateTimeConfig GetDateTimeConfig() => GlobalConfig.GetDateTimeConfig();
+    public static DateTimeConfig GetDateTimeConfig() => GlobalConfig.GetDateTimeConfig();
 
     /// <summary>
     /// Returns the current effective FormattingConfig.
     /// </summary>
-    internal static FormattingConfig GetFormattingConfig() => GlobalConfig.GetFormattingConfig();
+    public static FormattingConfig GetFormattingConfig() => GlobalConfig.GetFormattingConfig();
 }
 
 /// <summary>
