@@ -13,8 +13,10 @@
     <PackageProjectUrl>https://github.com/JAAvila-Of/JAAvila.FluentOperations</PackageProjectUrl>
     <RepositoryUrl>https://github.com/JAAvila-Of/JAAvila.FluentOperations</RepositoryUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Copyright>Copyright (C) $([System.DateTime]::Now.Year) JAAvila</Copyright>
+    <MinVerTagPrefix>di-</MinVerTagPrefix>
   </PropertyGroup>
 
   <PropertyGroup>

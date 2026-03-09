@@ -4,7 +4,7 @@ namespace JAAvila.FluentOperations.Formatters;
 /// Generic value formatter used by managers to format values in error messages.
 /// Delegates to FormatterPipeline for type-specific formatting.
 /// </summary>
-internal class BaseFormatter
+public class BaseFormatter
 {
     /// <summary>
     /// Formats a value of the given type for display in error messages.

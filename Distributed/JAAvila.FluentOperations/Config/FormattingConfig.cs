@@ -3,7 +3,7 @@ namespace JAAvila.FluentOperations.Config;
 /// <summary>
 /// Configuration for the value formatting pipeline.
 /// </summary>
-internal class FormattingConfig
+public class FormattingConfig
 {
     /// <summary>
     /// Display text for null values. Default: "&lt;null&gt;".
