@@ -1264,4 +1264,32 @@ public abstract partial class QualityBlueprint<T>
         Func<TProp, Uri?> transform,
         RuleConfig config
     ) => ForTransform<TProp, Uri?, UriOperationsManager>(propertyExpression, transform, config);
+
+    // any -> ActionStats? cross-type transformation
+    /// <summary>
+    /// Registers a property with a cross-type transformation to <see cref="ActionStats"/> applied before validation.
+    /// The source type <typeparamref name="TProp"/> is inferred from the property expression.
+    /// </summary>
+    /// <typeparam name="TProp">The source property type (inferred by the compiler).</typeparam>
+    /// <param name="propertyExpression">An expression selecting the property to transform.</param>
+    /// <param name="transform">A function that maps the property value to <see cref="ActionStats"/>.</param>
+    /// <returns>A property proxy that exposes <see cref="ActionStatsOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<ActionStatsOperationsManager> ForTransform<TProp>(
+        Expression<Func<T, TProp>> propertyExpression,
+        Func<TProp, ActionStats?> transform
+    ) => ForTransform<TProp, ActionStats?, ActionStatsOperationsManager>(propertyExpression, transform);
+
+    /// <summary>
+    /// Registers a property with a cross-type transformation to <see cref="ActionStats"/> applied before validation, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    /// <typeparam name="TProp">The source property type (inferred by the compiler).</typeparam>
+    /// <param name="propertyExpression">An expression selecting the property to transform.</param>
+    /// <param name="transform">A function that maps the property value to <see cref="ActionStats"/>.</param>
+    /// <param name="config">Configuration for this rule (severity, error code, cascade mode).</param>
+    /// <returns>A property proxy that exposes <see cref="ActionStatsOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<ActionStatsOperationsManager> ForTransform<TProp>(
+        Expression<Func<T, TProp>> propertyExpression,
+        Func<TProp, ActionStats?> transform,
+        RuleConfig config
+    ) => ForTransform<TProp, ActionStats?, ActionStatsOperationsManager>(propertyExpression, transform, config);
 }
