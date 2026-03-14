@@ -278,15 +278,17 @@ Manager: `DateTimeOperationsManager` / `NullableDateTimeOperationsManager`
 
 ### DateOnly Validations
 
-Manager: `DateOnlyOperationsManager`
+Manager: `DateOnlyOperationsManager` / `NullableDateOnlyOperationsManager`
 
 Same as DateTime minus time-specific operations (BeSameDay, BeSameMonth, BeSameYear, BeCloseTo).
+
+Nullable-only: `HaveValue()` / `NotHaveValue()`
 
 ---
 
 ### TimeOnly Validations
 
-Manager: `TimeOnlyOperationsManager`
+Manager: `TimeOnlyOperationsManager` / `NullableTimeOnlyOperationsManager`
 
 | Method | Description |
 |--------|-------------|
@@ -298,6 +300,7 @@ Manager: `TimeOnlyOperationsManager`
 | `HaveHour(int)` | Specific hour |
 | `HaveMinute(int)` | Specific minute |
 | `HaveSecond(int)` | Specific second |
+| `HaveValue()` / `NotHaveValue()` | (nullable only) |
 
 ---
 
