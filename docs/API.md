@@ -26,6 +26,7 @@ Complete API documentation for JAAvila.FluentOperations.
   - [Uri](#uri-validations)
   - [Object / Reference](#object-validations)
   - [Action / Async Action](#action-validations)
+  - [ActionStats (Execution Statistics)](#actionstats-execution-statistics)
 - [Quality Blueprints](#quality-blueprints)
   - [QualityBlueprint&lt;T&gt;](#qualityblueprintt)
   - [QualityReport](#qualityreport)
@@ -498,6 +499,83 @@ Exception chain methods (after `Throw`/`ThrowExactly`):
 | `.WithInnerException<T>()` | Has inner exception of type |
 | `.Which()` | Access the caught exception |
 | `.And` | Continue chaining assertions |
+
+---
+
+### ActionStats (Execution Statistics)
+
+Capture and assert on execution statistics of delegates.
+
+#### Capturing Stats
+
+| Method | Target Type | Returns |
+|--------|-------------|---------|
+| `action.Stats()` | `Action` | `ActionStats` |
+| `func.Stats()` | `Func<T>` | `ActionStats` |
+| `await asyncAction.StatsAsync()` | `Func<Task>` | `ActionStats` |
+| `await asyncFunc.StatsAsync()` | `Func<Task<T>>` | `ActionStats` |
+
+#### ActionStats Properties
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `ElapsedTime` | `TimeSpan` | Execution duration |
+| `ElapsedMilliseconds` | `double` | Convenience: total milliseconds |
+| `Succeeded` | `bool` | Whether it completed without throwing |
+| `Exception` | `Exception?` | Captured exception, if any |
+| `ExceptionType` | `Type?` | Type of captured exception |
+| `MemoryDelta` | `long` | Approximate memory delta in bytes |
+| `ReturnValue` | `object?` | Return value for Func delegates |
+
+#### Assertion Operations
+
+Manager: `ActionStatsOperationsManager`
+
+| Method | Description |
+|--------|-------------|
+| `CompleteWithin(TimeSpan)` | Elapsed time <= max |
+| `CompleteWithinMilliseconds(double)` | Convenience overload |
+| `TakeLongerThan(TimeSpan)` | Elapsed time >= min |
+| `TakeLongerThanMilliseconds(double)` | Convenience overload |
+| `TakeShorterThan(TimeSpan)` | Elapsed time < max |
+| `TakeShorterThanMilliseconds(double)` | Convenience overload |
+| `HaveElapsedTimeBetween(TimeSpan, TimeSpan)` | Range assertion (inclusive) |
+| `Succeed()` | Completed without exception |
+| `NotSucceed()` | Threw an exception |
+| `HaveException<T>()` | Has specific exception type (or derived) |
+| `ConsumeMemoryLessThan(long)` | Memory delta < threshold |
+| `ConsumeMemoryGreaterThan(long)` | Memory delta > threshold |
+
+#### Usage Examples
+
+```csharp
+// Basic timing assertion
+Action action = () => Thread.Sleep(50);
+action.Stats().Test().CompleteWithin(TimeSpan.FromSeconds(1));
+
+// Chaining multiple assertions
+var stats = action.Stats();
+stats.Test()
+    .Succeed()
+    .CompleteWithinMilliseconds(200)
+    .TakeShorterThanMilliseconds(500)
+    .ConsumeMemoryLessThan(1_000_000);
+
+// Exception assertions
+Action failing = () => throw new InvalidOperationException("oops");
+failing.Stats().Test()
+    .NotSucceed()
+    .HaveException<InvalidOperationException>();
+
+// Async usage
+Func<Task> asyncWork = async () => await Task.Delay(100);
+var asyncStats = await asyncWork.StatsAsync();
+asyncStats.Test().CompleteWithinMilliseconds(500);
+
+// Inspecting stats without assertions
+var info = action.Stats();
+Console.WriteLine($"Took {info.ElapsedMilliseconds}ms, Memory: {info.MemoryDelta} bytes");
+```
 
 ---
 
