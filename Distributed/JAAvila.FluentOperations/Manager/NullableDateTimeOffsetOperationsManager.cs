@@ -1,6 +1,7 @@
 using JAAvila.FluentOperations.Common;
 using JAAvila.FluentOperations.Config;
 using JAAvila.FluentOperations.Contract;
+using JAAvila.FluentOperations.Formatters;
 using JAAvila.FluentOperations.Model;
 using JAAvila.FluentOperations.Utils;
 using JAAvila.FluentOperations.Validators;
@@ -77,6 +78,66 @@ public class NullableDateTimeOffsetOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the value is equal to <paramref name="expected"/>.
+    /// </summary>
+    /// <param name="expected">The expected value to compare against.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public NullableDateTimeOffsetOperationsManager Be(DateTimeOffset? expected, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.DateTimeOffset.Be))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableDateTimeOffsetOperationsManager, DateTimeOffset?>
+            .New(this)
+            .WithOperation(NullableDateTimeOffsetBeValidator.New(PrincipalChain, expected))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.ResultValidation,
+                            BaseFormatter.Format(PrincipalChain.GetValue()),
+                            BaseFormatter.Format(expected)
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the value is not equal to <paramref name="expected"/>.
+    /// </summary>
+    /// <param name="expected">The value that should not match.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public NullableDateTimeOffsetOperationsManager NotBe(DateTimeOffset? expected, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.DateTimeOffset.NotBe))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableDateTimeOffsetOperationsManager, DateTimeOffset?>
+            .New(this)
+            .WithOperation(NullableDateTimeOffsetNotBeValidator.New(PrincipalChain, expected))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.ResultValidation, BaseFormatter.Format(expected))
                         .WithReason(reason?.ToString())
             )
             .Execute();
