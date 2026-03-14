@@ -37,8 +37,8 @@ internal class PropertyProxy<TProp, TManager>(
 {
     public TManager Test()
     {
-        // Inicia la captura por propiedad antes de devolver el manager
-        // El escenario se toma del contexto de RuleCaptureContext que fue seteado en el Blueprint/For
+        // Start the property capture before returning the manager
+        // The scenario is taken from the RuleCaptureContext context that was set in the Blueprint/For
         ExecutionEngine<ObjectOperationsManager, object?>.BeginPropertyCapture(
             captureList,
             propertyName,
@@ -48,6 +48,11 @@ internal class PropertyProxy<TProp, TManager>(
         if (managerFactory != null)
         {
             return managerFactory(propertyName);
+        }
+
+        if (typeof(TManager) == typeof(ActionStatsOperationsManager))
+        {
+            return (TManager)(object)new ActionStatsOperationsManager(null, propertyName);
         }
 
         if (typeof(TManager) == typeof(StringOperationsManager))
