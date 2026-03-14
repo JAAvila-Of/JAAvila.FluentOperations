@@ -1183,4 +1183,46 @@ public struct Operations
         [EnumStringValue("nothavevalue")]
         NotHaveValue,
     }
+
+    /// <summary>
+    /// Operations available for <see cref="Model.ActionStats"/> execution statistics assertions.
+    /// </summary>
+    public enum ActionStats
+    {
+        [EnumStringValue("completewithin")]
+        CompleteWithin,
+
+        [EnumStringValue("completewithinmilliseconds")]
+        CompleteWithinMilliseconds,
+
+        [EnumStringValue("takelongerthan")]
+        TakeLongerThan,
+
+        [EnumStringValue("takelongerthanmilliseconds")]
+        TakeLongerThanMilliseconds,
+
+        [EnumStringValue("takeshorterthan")]
+        TakeShorterThan,
+
+        [EnumStringValue("takeshorterthanmilliseconds")]
+        TakeShorterThanMilliseconds,
+
+        [EnumStringValue("haveelapsedtimebetween")]
+        HaveElapsedTimeBetween,
+
+        [EnumStringValue("succeed")]
+        Succeed,
+
+        [EnumStringValue("notsucceed")]
+        NotSucceed,
+
+        [EnumStringValue("haveexception")]
+        HaveException,
+
+        [EnumStringValue("consumememorylessthan")]
+        ConsumeMemoryLessThan,
+
+        [EnumStringValue("consumememorygreaterthan")]
+        ConsumeMemoryGreaterThan,
+    }
 }
