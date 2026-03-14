@@ -408,6 +408,31 @@ public abstract partial class QualityBlueprint<T>
     ) => For<int?, NullableIntegerOperationsManager>(propertyExpression, config);
 
     /// <summary>
+    /// Defines a validation rule for an <see cref="ActionStats"/> property of the model.
+    /// Call <see cref="IPropertyProxy{TManager}.Test"/> on the result to access ActionStats assertions.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the ActionStats property to validate (e.g., <c>x =&gt; x.ExecutionStats</c>).
+    /// </param>
+    /// <returns>A property proxy that exposes <see cref="ActionStatsOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<ActionStatsOperationsManager> For(
+        Expression<Func<T, ActionStats?>> propertyExpression
+    ) => For<ActionStats?, ActionStatsOperationsManager>(propertyExpression);
+
+    /// <summary>
+    /// Defines a validation rule for an <see cref="ActionStats"/> property of the model, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the ActionStats property to validate (e.g., <c>x =&gt; x.ExecutionStats</c>).
+    /// </param>
+    /// <param name="config">Configuration for this rule (severity, error code, cascade mode).</param>
+    /// <returns>A property proxy that exposes <see cref="ActionStatsOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<ActionStatsOperationsManager> For(
+        Expression<Func<T, ActionStats?>> propertyExpression,
+        RuleConfig config
+    ) => For<ActionStats?, ActionStatsOperationsManager>(propertyExpression, config);
+
+    /// <summary>
     /// Defines a validation rule for an <see cref="object"/> property of the model.
     /// Call <see cref="IPropertyProxy{TManager}.Test"/> on the result to access object assertions.
     /// </summary>
