@@ -22,6 +22,13 @@ internal class CollectionNotBeSequenceEqualToValidator<T>(
     public bool Validate()
     {
         var actual = chain.GetValue();
+
+        // If actual is null but expected is not, they are NOT sequence-equal => pass
+        if (actual is null)
+        {
+            return true;
+        }
+
         var actualList = actual.ToList();
         var expectedList = expected.ToList();
 

@@ -144,4 +144,106 @@ public class NullableTimeOnlyOperationsManager
 
         return this;
     }
+
+    /// <summary>
+    /// Asserts that the value falls within the inclusive range [<paramref name="min"/>, <paramref name="max"/>].
+    /// </summary>
+    /// <param name="min">The lower bound of the range (inclusive).</param>
+    /// <param name="max">The upper bound of the range (inclusive).</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// Throws immediately if the value is <c>null</c> (null guard).
+    /// Also throws immediately if <paramref name="min"/> is greater than <paramref name="max"/> (inverted range guard).
+    /// </remarks>
+    public NullableTimeOnlyOperationsManager BeInRange(TimeOnly min, TimeOnly max, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.TimeOnly.BeInRange))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableTimeOnlyOperationsManager, TimeOnly?>
+            .New(this)
+            .WithOperation(NullableTimeOnlyBeInRangeValidator.New(PrincipalChain, min, max))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(BeInRange)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        min > max,
+                        Fail.New(
+                            $"The {nameof(BeInRange)} operation failed because the range is inverted: min ({min:HH:mm:ss}) > max ({max:HH:mm:ss})."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the value does not fall within the inclusive range [<paramref name="min"/>, <paramref name="max"/>].
+    /// </summary>
+    /// <param name="min">The lower bound of the range (inclusive).</param>
+    /// <param name="max">The upper bound of the range (inclusive).</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// Throws immediately if the value is <c>null</c> (null guard).
+    /// Also throws immediately if <paramref name="min"/> is greater than <paramref name="max"/> (inverted range guard).
+    /// </remarks>
+    public NullableTimeOnlyOperationsManager NotBeInRange(TimeOnly min, TimeOnly max, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.TimeOnly.NotBeInRange))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableTimeOnlyOperationsManager, TimeOnly?>
+            .New(this)
+            .WithOperation(NullableTimeOnlyNotBeInRangeValidator.New(PrincipalChain, min, max))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(NotBeInRange)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        min > max,
+                        Fail.New(
+                            $"The {nameof(NotBeInRange)} operation failed because the range is inverted: min ({min:HH:mm:ss}) > max ({max:HH:mm:ss})."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
 }

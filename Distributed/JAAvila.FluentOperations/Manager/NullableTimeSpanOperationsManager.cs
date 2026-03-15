@@ -144,4 +144,106 @@ public class NullableTimeSpanOperationsManager
 
         return this;
     }
+
+    /// <summary>
+    /// Asserts that the value falls within the inclusive range [<paramref name="min"/>, <paramref name="max"/>].
+    /// </summary>
+    /// <param name="min">The lower bound of the range (inclusive).</param>
+    /// <param name="max">The upper bound of the range (inclusive).</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// Throws immediately if the value is <c>null</c> (null guard).
+    /// Also throws immediately if <paramref name="min"/> is greater than <paramref name="max"/> (inverted range guard).
+    /// </remarks>
+    public NullableTimeSpanOperationsManager BeInRange(TimeSpan min, TimeSpan max, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.TimeSpan.BeInRange))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableTimeSpanOperationsManager, TimeSpan?>
+            .New(this)
+            .WithOperation(NullableTimeSpanBeInRangeValidator.New(PrincipalChain, min, max))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(BeInRange)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        min > max,
+                        Fail.New(
+                            $"The {nameof(BeInRange)} operation failed because min ({min}) is greater than max ({max})."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the value does not fall within the inclusive range [<paramref name="min"/>, <paramref name="max"/>].
+    /// </summary>
+    /// <param name="min">The lower bound of the range (inclusive).</param>
+    /// <param name="max">The upper bound of the range (inclusive).</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// Throws immediately if the value is <c>null</c> (null guard).
+    /// Also throws immediately if <paramref name="min"/> is greater than <paramref name="max"/> (inverted range guard).
+    /// </remarks>
+    public NullableTimeSpanOperationsManager NotBeInRange(TimeSpan min, TimeSpan max, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.TimeSpan.NotBeInRange))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableTimeSpanOperationsManager, TimeSpan?>
+            .New(this)
+            .WithOperation(NullableTimeSpanNotBeInRangeValidator.New(PrincipalChain, min, max))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(NotBeInRange)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        min > max,
+                        Fail.New(
+                            $"The {nameof(NotBeInRange)} operation failed because min ({min}) is greater than max ({max})."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
 }

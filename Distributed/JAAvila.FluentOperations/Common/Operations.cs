@@ -759,6 +759,9 @@ public struct Operations
         [EnumStringValue("beinrange")]
         BeInRange,
 
+        [EnumStringValue("notbeinrange")]
+        NotBeInRange,
+
         [EnumStringValue("havedays")]
         HaveDays,
 
@@ -791,6 +794,9 @@ public struct Operations
 
         [EnumStringValue("beinrange")]
         BeInRange,
+
+        [EnumStringValue("notbeinrange")]
+        NotBeInRange,
 
         [EnumStringValue("havehour")]
         HaveHour,
