@@ -124,9 +124,13 @@ Manager: `StringOperationsManager`
 | `EndWith(string)` | Ends with suffix |
 | `NotEndWith(string)` | Does not end with suffix |
 | `Match(string pattern)` | Matches regex pattern |
+| `Match(Regex)` | Matches precompiled regex |
 | `NotMatch(string pattern)` | Does not match regex |
+| `NotMatch(Regex)` | Does not match precompiled regex |
 | `MatchAny(params string[])` | Matches any regex pattern |
+| `MatchAny(params Regex[])` | Matches any precompiled regex |
 | `MatchAll(params string[])` | Matches all regex patterns |
+| `MatchAll(params Regex[])` | Matches all precompiled regex patterns |
 | `MatchWildcard(string)` | Matches wildcard pattern (`*`) |
 | `NotMatchWildcard(string)` | Does not match wildcard |
 | `BeEmail()` | Valid email format |

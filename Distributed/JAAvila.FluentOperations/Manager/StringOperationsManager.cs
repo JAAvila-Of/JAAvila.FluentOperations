@@ -1,4 +1,5 @@
-﻿using JAAvila.FluentOperations.Common;
+﻿using System.Text.RegularExpressions;
+using JAAvila.FluentOperations.Common;
 using JAAvila.FluentOperations.Config;
 using JAAvila.FluentOperations.Connector;
 using JAAvila.FluentOperations.Constraints;
@@ -1005,6 +1006,57 @@ public class StringOperationsManager
     }
 
     /// <summary>
+    /// Asserts that the string matches the specified precompiled regular expression.
+    /// </summary>
+    /// <param name="regex">The precompiled regular expression to test against the string.</param>
+    /// <param name="reason">An optional reason to provide context for the operation.</param>
+    /// <returns>The current instance of <see cref="StringOperationsManager"/> for method chaining.</returns>
+    /// <remarks>
+    /// This operation fails immediately if the string is <c>null</c> or if <paramref name="regex"/> is <c>null</c>.
+    /// Use a precompiled <see cref="Regex"/> when the same pattern is applied repeatedly for better performance.
+    /// </remarks>
+    public StringOperationsManager Match(Regex regex, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.String.Match))
+        {
+            return this;
+        }
+
+        ExecutionEngine<StringOperationsManager, string?>
+            .New(this)
+            .WithOperation(StringMatchRegexValidator.New(regex, PrincipalChain))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.ResultValidation, regex.ToString())
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(Match)} operation failed because the parent value was <null>. {{0}}.",
+                            $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        regex.IsNull(),
+                        Fail.New(
+                            $"The {nameof(Match)} operation failed because the regex was <null>."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
     /// Asserts that the string does not match the specified regular expression pattern.
     /// </summary>
     /// <param name="pattern">The regex pattern that must not match the string.</param>
@@ -1047,6 +1099,57 @@ public class StringOperationsManager
                         pattern.IsNull(),
                         Fail.New(
                             $"The {nameof(NotMatch)} operation failed because the pattern was <null>."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the string does not match the specified precompiled regular expression.
+    /// </summary>
+    /// <param name="regex">The precompiled regular expression that must not match the string.</param>
+    /// <param name="reason">An optional reason to provide context for the operation.</param>
+    /// <returns>The current instance of <see cref="StringOperationsManager"/> for method chaining.</returns>
+    /// <remarks>
+    /// This operation fails immediately if the string is <c>null</c> or if <paramref name="regex"/> is <c>null</c>.
+    /// Use a precompiled <see cref="Regex"/> when the same pattern is applied repeatedly for better performance.
+    /// </remarks>
+    public StringOperationsManager NotMatch(Regex regex, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.String.NotMatch))
+        {
+            return this;
+        }
+
+        ExecutionEngine<StringOperationsManager, string?>
+            .New(this)
+            .WithOperation(StringNotMatchRegexValidator.New(regex, PrincipalChain))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.ResultValidation, regex.ToString())
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(NotMatch)} operation failed because the parent value was <null>. {{0}}.",
+                            $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        regex.IsNull(),
+                        Fail.New(
+                            $"The {nameof(NotMatch)} operation failed because the regex was <null>."
                         )
                     )
             )
@@ -1104,6 +1207,106 @@ public class StringOperationsManager
     }
 
     /// <summary>
+    /// Asserts that the string matches at least one of the specified precompiled regular expressions.
+    /// </summary>
+    /// <param name="patterns">The precompiled regular expressions, at least one of which must match the string.</param>
+    /// <returns>The current instance of <see cref="StringOperationsManager"/> for method chaining.</returns>
+    /// <remarks>
+    /// This operation fails immediately if the string is <c>null</c> or if <paramref name="patterns"/> is null or empty.
+    /// Use precompiled <see cref="Regex"/> instances when the same patterns are applied repeatedly for better performance.
+    /// </remarks>
+    public StringOperationsManager MatchAny(params Regex[] patterns)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.String.MatchAny))
+        {
+            return this;
+        }
+
+        ExecutionEngine<StringOperationsManager, string?>
+            .New(this)
+            .WithOperation(StringMatchAnyRegexValidator.New(patterns, PrincipalChain))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.ResultValidation)
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(MatchAny)} operation failed because the parent value was <null>. {{0}}.",
+                            $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        patterns.IsNullOrEmpty(),
+                        Fail.New(
+                            $"The {nameof(MatchAny)} operation failed because the patterns array was null or empty."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the string matches at least one of the specified precompiled regular expressions.
+    /// </summary>
+    /// <param name="reason">An optional reason to provide context for the operation.</param>
+    /// <param name="patterns">The precompiled regular expressions, at least one of which must match the string.</param>
+    /// <returns>The current instance of <see cref="StringOperationsManager"/> for method chaining.</returns>
+    /// <remarks>
+    /// This operation fails immediately if the string is <c>null</c> or if <paramref name="patterns"/> is null or empty.
+    /// Use precompiled <see cref="Regex"/> instances when the same patterns are applied repeatedly for better performance.
+    /// </remarks>
+    public StringOperationsManager MatchAny(Reason? reason, params Regex[] patterns)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.String.MatchAny))
+        {
+            return this;
+        }
+
+        ExecutionEngine<StringOperationsManager, string?>
+            .New(this)
+            .WithOperation(StringMatchAnyRegexValidator.New(patterns, PrincipalChain))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(MatchAny)} operation failed because the parent value was <null>. {{0}}.",
+                            $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        patterns.IsNullOrEmpty(),
+                        Fail.New(
+                            $"The {nameof(MatchAny)} operation failed because the patterns array was null or empty."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
     /// Asserts that the string matches all of the specified regular expression patterns.
     /// </summary>
     /// <param name="patterns">The regex patterns that must all match the string.</param>
@@ -1126,6 +1329,106 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(operation.ResultValidation)
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(MatchAll)} operation failed because the parent value was <null>. {{0}}.",
+                            $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        patterns.IsNullOrEmpty(),
+                        Fail.New(
+                            $"The {nameof(MatchAll)} operation failed because the patterns array was null or empty."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the string matches all of the specified precompiled regular expressions.
+    /// </summary>
+    /// <param name="patterns">The precompiled regular expressions that must all match the string.</param>
+    /// <returns>The current instance of <see cref="StringOperationsManager"/> for method chaining.</returns>
+    /// <remarks>
+    /// This operation fails immediately if the string is <c>null</c> or if <paramref name="patterns"/> is null or empty.
+    /// Use precompiled <see cref="Regex"/> instances when the same patterns are applied repeatedly for better performance.
+    /// </remarks>
+    public StringOperationsManager MatchAll(params Regex[] patterns)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.String.MatchAll))
+        {
+            return this;
+        }
+
+        ExecutionEngine<StringOperationsManager, string?>
+            .New(this)
+            .WithOperation(StringMatchAllRegexValidator.New(patterns, PrincipalChain))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.ResultValidation)
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(MatchAll)} operation failed because the parent value was <null>. {{0}}.",
+                            $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        patterns.IsNullOrEmpty(),
+                        Fail.New(
+                            $"The {nameof(MatchAll)} operation failed because the patterns array was null or empty."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the string matches all of the specified precompiled regular expressions.
+    /// </summary>
+    /// <param name="reason">An optional reason to provide context for the operation.</param>
+    /// <param name="patterns">The precompiled regular expressions that must all match the string.</param>
+    /// <returns>The current instance of <see cref="StringOperationsManager"/> for method chaining.</returns>
+    /// <remarks>
+    /// This operation fails immediately if the string is <c>null</c> or if <paramref name="patterns"/> is null or empty.
+    /// Use precompiled <see cref="Regex"/> instances when the same patterns are applied repeatedly for better performance.
+    /// </remarks>
+    public StringOperationsManager MatchAll(Reason? reason, params Regex[] patterns)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.String.MatchAll))
+        {
+            return this;
+        }
+
+        ExecutionEngine<StringOperationsManager, string?>
+            .New(this)
+            .WithOperation(StringMatchAllRegexValidator.New(patterns, PrincipalChain))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.ResultValidation)
+                        .WithReason(reason?.ToString())
             )
             .FailIf(
                 manager =>
