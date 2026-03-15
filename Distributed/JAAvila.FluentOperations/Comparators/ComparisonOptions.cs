@@ -43,11 +43,27 @@ public record ComparisonOptions
     public int MaxDifferencesReported { get; init; } = 5;
 
     /// <summary>
+    /// Whether to ignore element order when comparing collections.
+    /// When <c>true</c>, collections are compared as unordered bags (same elements, any order).
+    /// When <c>false</c> (default), collections are compared index-by-index.
+    /// Used by ObjectComparator when comparing nested collections inside deep comparison.
+    /// </summary>
+    public bool IgnoreCollectionOrder { get; init; }
+
+    /// <summary>
     /// Predefined options for case-insensitive ordinal comparison.
     /// </summary>
     public static readonly ComparisonOptions CaseInsensitive = new()
     {
         StringComparison = StringComparison.OrdinalIgnoreCase
+    };
+
+    /// <summary>
+    /// Predefined options that ignore element order in nested collections.
+    /// </summary>
+    public static readonly ComparisonOptions IgnoreOrder = new()
+    {
+        IgnoreCollectionOrder = true
     };
 
     /// <summary>
