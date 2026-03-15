@@ -1798,15 +1798,6 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                         )
                     )
             )
-            .FailIf(
-                manager =>
-                    (
-                        manager.PrincipalChain.GetValue().IsNull(),
-                        Fail.New(
-                            $"The {nameof(NotBeEquivalentTo)} operation failed because the array was null."
-                        )
-                    )
-            )
             .Execute();
 
         return this;
@@ -1893,15 +1884,6 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                         manager.PrincipalChain.GetValue().IsNull() && expected.IsNull(),
                         Fail.New(
                             $"The {nameof(NotBeSequenceEqualTo)} operation failed because both collections are null and therefore sequence-equal."
-                        )
-                    )
-            )
-            .FailIf(
-                manager =>
-                    (
-                        manager.PrincipalChain.GetValue().IsNull(),
-                        Fail.New(
-                            $"The {nameof(NotBeSequenceEqualTo)} operation failed because the array was null."
                         )
                     )
             )

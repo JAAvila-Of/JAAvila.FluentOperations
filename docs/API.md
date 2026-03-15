@@ -302,6 +302,7 @@ Manager: `TimeOnlyOperationsManager` / `NullableTimeOnlyOperationsManager`
 | `BeAfter(TimeOnly)` | After time |
 | `BeBefore(TimeOnly)` | Before time |
 | `BeInRange(TimeOnly, TimeOnly)` | Within range |
+| `NotBeInRange(TimeOnly, TimeOnly)` | Outside range |
 | `HaveHour(int)` | Specific hour |
 | `HaveMinute(int)` | Specific minute |
 | `HaveSecond(int)` | Specific second |
@@ -323,6 +324,7 @@ Manager: `TimeSpanOperationsManager` / `NullableTimeSpanOperationsManager`
 | `BeGreaterThan(TimeSpan)` | Longer than |
 | `BeLessThan(TimeSpan)` | Shorter than |
 | `BeInRange(TimeSpan, TimeSpan)` | Within range |
+| `NotBeInRange(TimeSpan, TimeSpan)` | Outside range |
 | `HaveDays(int)` | Specific days component |
 | `HaveHours(int)` | Specific hours component |
 | `HaveMinutes(int)` | Specific minutes component |
