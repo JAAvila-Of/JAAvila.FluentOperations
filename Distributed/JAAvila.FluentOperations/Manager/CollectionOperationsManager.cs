@@ -20,17 +20,21 @@ public class CollectionOperationsManager<T>
 {
     /// <inheritdoc />
     public PrincipalChain<IEnumerable<T>> PrincipalChain { get; }
-    private readonly List<T> _materialized;
 
     /// <summary>
     /// Initializes a new instance for testing the specified collection.
     /// </summary>
-    /// <param name="value">The collection value to test. Materialized eagerly to avoid multiple enumeration.</param>
+    /// <param name="value">The collection value to test. Materialized eagerly to avoid multiple enumeration. Null is accepted and deferred to FailIf guards.</param>
     /// <param name="caller">The caller expression name, captured automatically.</param>
     public CollectionOperationsManager(IEnumerable<T> value, string caller)
     {
-        _materialized = value is ICollection<T> col ? col.ToList() : value.ToList();
-        PrincipalChain = PrincipalChain<IEnumerable<T>>.Get(_materialized, caller);
+        var materialized = value switch
+                           {
+                               null => null,
+                               ICollection<T> col => col.ToList(),
+                               _ => value.ToList()
+                           };
+        PrincipalChain = PrincipalChain<IEnumerable<T>>.Get(materialized!, caller);
         GlobalConfig.Initialize();
     }
 
@@ -333,6 +337,52 @@ public class CollectionOperationsManager<T>
     }
 
     /// <summary>
+    /// Asserts that the collection contains at least one element matching the specified predicate.
+    /// </summary>
+    /// <param name="predicate">A function that must return <c>true</c> for at least one element.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public CollectionOperationsManager<T> Contain(Func<T, bool> predicate, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Collection.ContainMatch))
+        {
+            return this;
+        }
+
+        ExecutionEngine<CollectionOperationsManager<T>, IEnumerable<T>>
+            .New(this)
+            .WithOperation(CollectionContainPredicateValidator<T>.New(PrincipalChain, predicate))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue().IsNull(),
+                        Fail.New(
+                            $"The {nameof(Contain)} operation failed because the collection was null."
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        predicate is null,
+                        Fail.New(
+                            $"The {nameof(Contain)} operation failed because the predicate cannot be null."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
     /// Asserts that the collection contains the specified item a number of times satisfying the given occurrence constraint.
     /// </summary>
     /// <param name="item">The item to look for in the collection.</param>
@@ -462,6 +512,55 @@ public class CollectionOperationsManager<T>
                         manager.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(ContainSingle)} operation failed because the collection was null."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the collection contains exactly one element matching the specified predicate.
+    /// </summary>
+    /// <param name="predicate">A function that must return <c>true</c> for exactly one element.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public CollectionOperationsManager<T> ContainSingle(Func<T, bool> predicate, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Collection.ContainSingleMatch))
+        {
+            return this;
+        }
+
+        ExecutionEngine<CollectionOperationsManager<T>, IEnumerable<T>>
+            .New(this)
+            .WithOperation(CollectionContainSinglePredicateValidator<T>.New(PrincipalChain, predicate))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.ResultValidation,
+                            PrincipalChain.GetValue()?.Count(predicate).ToString() ?? "0"
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue().IsNull(),
+                        Fail.New(
+                            $"The {nameof(ContainSingle)} operation failed because the collection was null."
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        predicate is null,
+                        Fail.New(
+                            $"The {nameof(ContainSingle)} operation failed because the predicate cannot be null."
                         )
                     )
             )

@@ -355,8 +355,10 @@ Manager: `CollectionOperationsManager<T>`
 | `HaveMaxCount(int)` | At most N elements |
 | `Contain(T)` | Contains element |
 | `Contain(T, OccurrenceConstraint)` | Contains with occurrence |
+| `Contain(Func<T, bool>)` | Contains element matching predicate |
 | `NotContain(T)` | Does not contain |
 | `ContainSingle()` | Exactly one element |
+| `ContainSingle(Func<T, bool>)` | Exactly one element matching predicate |
 | `ContainAll(params T[])` | Contains all elements |
 | `ContainAny(params T[])` | Contains at least one |
 | `ContainInOrder(params T[])` | Contains in specific order |
