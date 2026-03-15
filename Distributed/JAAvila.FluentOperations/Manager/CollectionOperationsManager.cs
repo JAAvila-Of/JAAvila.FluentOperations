@@ -132,6 +132,15 @@ public class CollectionOperationsManager<T>
                         .WithResult(operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue().IsNull(),
+                        Fail.New(
+                            $"The {nameof(NotBeEmpty)} operation failed because the collection was null."
+                        )
+                    )
+            )
             .Execute();
 
         return this;
@@ -1653,6 +1662,165 @@ public class CollectionOperationsManager<T>
                         max < 0,
                         Fail.New(
                             $"The {nameof(HaveMaxCount)} operation failed because the maximum count cannot be negative."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the collection has exactly the specified number of elements (length).
+    /// </summary>
+    /// <param name="expected">The expected element count. Must be non-negative.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// This operation fails immediately if the collection is <c>null</c> or if <paramref name="expected"/> is negative.
+    /// </remarks>
+    public CollectionOperationsManager<T> HaveLength(int expected, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Collection.HaveLength))
+        {
+            return this;
+        }
+
+        ExecutionEngine<CollectionOperationsManager<T>, IEnumerable<T>>
+            .New(this)
+            .WithOperation(CollectionHaveLengthValidator<T>.New(PrincipalChain, expected))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.ResultValidation,
+                            expected.ToString(),
+                            PrincipalChain.GetValue()?.Count().ToString() ?? "null"
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue().IsNull(),
+                        Fail.New(
+                            $"The {nameof(HaveLength)} operation failed because the collection was null."
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        expected < 0,
+                        Fail.New(
+                            $"The {nameof(HaveLength)} operation failed because the expected length cannot be negative."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the collection has more elements than the specified value.
+    /// </summary>
+    /// <param name="expected">The minimum exclusive element count. Must be non-negative.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// This operation fails immediately if the collection is <c>null</c> or if <paramref name="expected"/> is negative.
+    /// </remarks>
+    public CollectionOperationsManager<T> HaveLengthGreaterThan(int expected, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Collection.HaveLengthGreaterThan))
+        {
+            return this;
+        }
+
+        ExecutionEngine<CollectionOperationsManager<T>, IEnumerable<T>>
+            .New(this)
+            .WithOperation(CollectionHaveLengthGreaterThanValidator<T>.New(PrincipalChain, expected))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.ResultValidation,
+                            expected.ToString(),
+                            PrincipalChain.GetValue()?.Count().ToString() ?? "null"
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue().IsNull(),
+                        Fail.New(
+                            $"The {nameof(HaveLengthGreaterThan)} operation failed because the collection was null."
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        expected < 0,
+                        Fail.New(
+                            $"The {nameof(HaveLengthGreaterThan)} operation failed because the expected length cannot be negative."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the collection has fewer elements than the specified value.
+    /// </summary>
+    /// <param name="expected">The maximum exclusive element count. Must be non-negative.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// This operation fails immediately if the collection is <c>null</c> or if <paramref name="expected"/> is negative.
+    /// </remarks>
+    public CollectionOperationsManager<T> HaveLengthLessThan(int expected, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Collection.HaveLengthLessThan))
+        {
+            return this;
+        }
+
+        ExecutionEngine<CollectionOperationsManager<T>, IEnumerable<T>>
+            .New(this)
+            .WithOperation(CollectionHaveLengthLessThanValidator<T>.New(PrincipalChain, expected))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.ResultValidation,
+                            expected.ToString(),
+                            PrincipalChain.GetValue()?.Count().ToString() ?? "null"
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue().IsNull(),
+                        Fail.New(
+                            $"The {nameof(HaveLengthLessThan)} operation failed because the collection was null."
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        expected < 0,
+                        Fail.New(
+                            $"The {nameof(HaveLengthLessThan)} operation failed because the expected length cannot be negative."
                         )
                     )
             )

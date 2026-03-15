@@ -953,6 +953,15 @@ public struct Operations
 
         [EnumStringValue("havemaxcount")]
         HaveMaxCount,
+
+        [EnumStringValue("havelength")]
+        HaveLength,
+
+        [EnumStringValue("havelengthgreaterthan")]
+        HaveLengthGreaterThan,
+
+        [EnumStringValue("havelengthlessthan")]
+        HaveLengthLessThan,
     }
 
     /// <summary>

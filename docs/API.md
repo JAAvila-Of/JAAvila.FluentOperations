@@ -353,6 +353,9 @@ Manager: `CollectionOperationsManager<T>`
 | `HaveCountLessThan(int)` | Fewer than N elements |
 | `HaveMinCount(int)` | At least N elements |
 | `HaveMaxCount(int)` | At most N elements |
+| `HaveLength(int)` | Exact length (element count) |
+| `HaveLengthGreaterThan(int)` | More than N elements |
+| `HaveLengthLessThan(int)` | Fewer than N elements |
 | `Contain(T)` | Contains element |
 | `Contain(T, OccurrenceConstraint)` | Contains with occurrence |
 | `Contain(Func<T, bool>)` | Contains element matching predicate |
