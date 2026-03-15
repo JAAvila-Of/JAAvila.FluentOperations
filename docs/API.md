@@ -374,6 +374,8 @@ Manager: `CollectionOperationsManager<T>`
 | `ContainDuplicates()` | Has duplicates |
 | `StartWith(T)` | First element matches |
 | `EndWith(T)` | Last element matches |
+| `BeEquivalentTo(IEnumerable<T>)` | Same elements, any order |
+| `BeSequenceEqualTo(IEnumerable<T>)` | Same elements, same order |
 
 ---
 
@@ -471,8 +473,42 @@ Manager: `ObjectOperationsManager` / `ReferenceOperationsManager`
 | `BeCastTo<T>()` | Can be cast to type |
 | `Evaluate(Func<T, bool>)` | Custom predicate |
 | `BeEquivalentTo(object)` | Deep structural equality |
+| `BeEquivalentTo(object, ComparisonOptions)` | Deep structural equality with options |
 | `NotBeEquivalentTo(object)` | Not structurally equal |
+| `NotBeEquivalentTo(object, ComparisonOptions)` | Not structurally equal with options |
 | `BeSequenceEqualTo(IEnumerable)` | Sequence equality |
+
+#### ComparisonOptions
+
+Options for `BeEquivalentTo` / `NotBeEquivalentTo` deep comparison:
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `StringComparison` | `StringComparison` | `Ordinal` | String comparison mode |
+| `IgnoreLeadingWhitespace` | `bool` | `false` | Ignore leading whitespace |
+| `IgnoreTrailingWhitespace` | `bool` | `false` | Ignore trailing whitespace |
+| `IgnoreNewLineStyle` | `bool` | `false` | Normalize CRLF vs LF |
+| `MaxRecursionDepth` | `int` | `10` | Max depth for nested comparison |
+| `ExcludedProperties` | `HashSet<string>` | `[]` | Properties to skip |
+| `MaxDifferencesReported` | `int` | `5` | Max differences in output |
+| `IgnoreCollectionOrder` | `bool` | `false` | Compare collections as unordered bags |
+
+Predefined options: `ComparisonOptions.Default`, `ComparisonOptions.CaseInsensitive`, `ComparisonOptions.IgnoreOrder`
+
+```csharp
+// Default (strict order)
+obj.Test().BeEquivalentTo(expected);
+
+// Ignore collection order
+obj.Test().BeEquivalentTo(expected, ComparisonOptions.IgnoreOrder);
+
+// Combined options
+obj.Test().BeEquivalentTo(expected, new ComparisonOptions
+{
+    IgnoreCollectionOrder = true,
+    ExcludedProperties = ["Id", "CreatedAt"]
+});
+```
 
 ---
 
