@@ -1367,6 +1367,109 @@ public class CollectionOperationsManager<T>
     }
 
     /// <summary>
+    /// Asserts that the collection does NOT contain the same elements as the expected collection, regardless of order.
+    /// </summary>
+    /// <param name="expected">The collection whose elements must NOT match the tested collection.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public CollectionOperationsManager<T> NotBeEquivalentTo(
+        IEnumerable<T> expected,
+        Reason? reason = null
+    )
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Collection.NotBeEquivalentTo))
+        {
+            return this;
+        }
+
+        ExecutionEngine<CollectionOperationsManager<T>, IEnumerable<T>>
+            .New(this)
+            .WithOperation(CollectionNotBeEquivalentToValidator<T>.New(PrincipalChain, expected))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.ResultValidation
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue().IsNull() && expected.IsNull(),
+                        Fail.New(
+                            $"The {nameof(NotBeEquivalentTo)} operation failed because both collections are null and therefore equivalent."
+                        )
+                    )
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue().IsNull(),
+                        Fail.New(
+                            $"The {nameof(NotBeEquivalentTo)} operation failed because the collection was null."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the collection does NOT contain the same elements in the same order
+    /// as the expected collection.
+    /// </summary>
+    /// <param name="expected">The collection whose elements must NOT match the tested collection in exact order.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public CollectionOperationsManager<T> NotBeSequenceEqualTo(
+        IEnumerable<T> expected,
+        Reason? reason = null
+    )
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Collection.NotBeSequenceEqualTo))
+        {
+            return this;
+        }
+
+        ExecutionEngine<CollectionOperationsManager<T>, IEnumerable<T>>
+            .New(this)
+            .WithOperation(CollectionNotBeSequenceEqualToValidator<T>.New(PrincipalChain, expected))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.ResultValidation
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue().IsNull() && expected.IsNull(),
+                        Fail.New(
+                            $"The {nameof(NotBeSequenceEqualTo)} operation failed because both collections are null and therefore sequence-equal."
+                        )
+                    )
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue().IsNull(),
+                        Fail.New(
+                            $"The {nameof(NotBeSequenceEqualTo)} operation failed because the collection was null."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
     /// Asserts that the element at the specified index in the collection equals the expected value.
     /// </summary>
     /// <param name="index">The zero-based index to check. Must be non-negative.</param>

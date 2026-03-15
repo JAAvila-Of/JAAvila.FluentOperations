@@ -385,6 +385,8 @@ Manager: `CollectionOperationsManager<T>`
 | `EndWith(T)` | Last element matches |
 | `BeEquivalentTo(IEnumerable<T>)` | Same elements, any order |
 | `BeSequenceEqualTo(IEnumerable<T>)` | Same elements, same order |
+| `NotBeEquivalentTo(IEnumerable<T>)` | NOT same elements (any order) |
+| `NotBeSequenceEqualTo(IEnumerable<T>)` | NOT same elements/order |
 
 ---
 
@@ -392,7 +394,7 @@ Manager: `CollectionOperationsManager<T>`
 
 Manager: `ArrayOperationsManager<T>`
 
-All Collection operations plus:
+All Collection operations plus (including equivalence: `BeEquivalentTo`, `NotBeEquivalentTo`, `BeSequenceEqualTo`, `NotBeSequenceEqualTo`):
 
 | Method | Description |
 |--------|-------------|
