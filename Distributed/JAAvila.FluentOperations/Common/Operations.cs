@@ -882,6 +882,12 @@ public struct Operations
         [EnumStringValue("containsingle")]
         ContainSingle,
 
+        [EnumStringValue("containmatch")]
+        ContainMatch,
+
+        [EnumStringValue("containsinglematch")]
+        ContainSingleMatch,
+
         [EnumStringValue("containall")]
         ContainAll,
 
