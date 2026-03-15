@@ -1715,6 +1715,202 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
     }
 
     /// <summary>
+    /// Asserts that the array contains the same elements as the expected collection, regardless of order.
+    /// </summary>
+    /// <param name="expected">The collection whose elements must match the tested array in any order.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// This operation fails immediately if the array is <c>null</c> and <paramref name="expected"/> is not <c>null</c>.
+    /// </remarks>
+    public ArrayOperationsManager<T> BeEquivalentTo(
+        IEnumerable<T> expected,
+        Reason? reason = null
+    )
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Collection.BeEquivalentTo))
+        {
+            return this;
+        }
+
+        ExecutionEngine<ArrayOperationsManager<T>, IEnumerable<T>>
+            .New(this)
+            .WithOperation(CollectionBeEquivalentToValidator<T>.New(PrincipalChain, expected))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.ResultValidation,
+                            expected.Count().ToString(),
+                            _array?.Length.ToString() ?? "null"
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue().IsNull() && !expected.IsNull(),
+                        Fail.New(
+                            $"The {nameof(BeEquivalentTo)} operation failed because the array was null."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the array does NOT contain the same elements as the expected collection, regardless of order.
+    /// </summary>
+    /// <param name="expected">The collection whose elements must NOT match the tested array.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public ArrayOperationsManager<T> NotBeEquivalentTo(
+        IEnumerable<T> expected,
+        Reason? reason = null
+    )
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Collection.NotBeEquivalentTo))
+        {
+            return this;
+        }
+
+        ExecutionEngine<ArrayOperationsManager<T>, IEnumerable<T>>
+            .New(this)
+            .WithOperation(CollectionNotBeEquivalentToValidator<T>.New(PrincipalChain, expected))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.ResultValidation
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue().IsNull() && expected.IsNull(),
+                        Fail.New(
+                            $"The {nameof(NotBeEquivalentTo)} operation failed because both collections are null and therefore equivalent."
+                        )
+                    )
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue().IsNull(),
+                        Fail.New(
+                            $"The {nameof(NotBeEquivalentTo)} operation failed because the array was null."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the array contains the same elements in the same order as the expected collection.
+    /// </summary>
+    /// <param name="expected">The collection whose elements must match the tested array in exact order.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// This operation fails immediately if the array is <c>null</c> and <paramref name="expected"/> is not <c>null</c>.
+    /// </remarks>
+    public ArrayOperationsManager<T> BeSequenceEqualTo(
+        IEnumerable<T> expected,
+        Reason? reason = null
+    )
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Collection.BeSequenceEqualTo))
+        {
+            return this;
+        }
+
+        ExecutionEngine<ArrayOperationsManager<T>, IEnumerable<T>>
+            .New(this)
+            .WithOperation(CollectionBeSequenceEqualToValidator<T>.New(PrincipalChain, expected))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.ResultValidation,
+                            expected.Count().ToString(),
+                            _array?.Length.ToString() ?? "null"
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue().IsNull() && !expected.IsNull(),
+                        Fail.New(
+                            $"The {nameof(BeSequenceEqualTo)} operation failed because the array was null."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the array does NOT contain the same elements in the same order as the expected collection.
+    /// </summary>
+    /// <param name="expected">The collection whose elements must NOT match the tested array in exact order.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public ArrayOperationsManager<T> NotBeSequenceEqualTo(
+        IEnumerable<T> expected,
+        Reason? reason = null
+    )
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Collection.NotBeSequenceEqualTo))
+        {
+            return this;
+        }
+
+        ExecutionEngine<ArrayOperationsManager<T>, IEnumerable<T>>
+            .New(this)
+            .WithOperation(CollectionNotBeSequenceEqualToValidator<T>.New(PrincipalChain, expected))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.ResultValidation
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue().IsNull() && expected.IsNull(),
+                        Fail.New(
+                            $"The {nameof(NotBeSequenceEqualTo)} operation failed because both collections are null and therefore sequence-equal."
+                        )
+                    )
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue().IsNull(),
+                        Fail.New(
+                            $"The {nameof(NotBeSequenceEqualTo)} operation failed because the array was null."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
     /// Extracts a sub-value from the current array using the given selector.
     /// Returns a connector that exposes the sub-value for further assertions.
     /// </summary>

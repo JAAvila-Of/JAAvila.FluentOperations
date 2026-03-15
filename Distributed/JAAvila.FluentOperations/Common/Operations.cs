@@ -939,6 +939,12 @@ public struct Operations
         [EnumStringValue("besequenceequalto")]
         BeSequenceEqualTo,
 
+        [EnumStringValue("notbeequivalentto")]
+        NotBeEquivalentTo,
+
+        [EnumStringValue("notbesequenceequalto")]
+        NotBeSequenceEqualTo,
+
         [EnumStringValue("haveelementat")]
         HaveElementAt,
 
