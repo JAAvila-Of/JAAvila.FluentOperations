@@ -1,5 +1,7 @@
 using JAAvila.FluentOperations.Common;
 using JAAvila.FluentOperations.Config;
+using JAAvila.FluentOperations.Connector;
+using JAAvila.FluentOperations.Constraints;
 using JAAvila.FluentOperations.Contract;
 using JAAvila.FluentOperations.Formatters;
 using JAAvila.FluentOperations.Model;
@@ -493,6 +495,62 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                         manager.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(Contain)} operation failed because the array was null."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the array contains the specified item a number of times satisfying the given occurrence constraint.
+    /// </summary>
+    /// <param name="item">The item expected to be present in the array.</param>
+    /// <param name="constraint">The occurrence constraint that specifies how many times the item must appear.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// This operation fails immediately if the array is <c>null</c> or if <paramref name="constraint"/> is <c>null</c>.
+    /// </remarks>
+    public ArrayOperationsManager<T> Contain(
+        T item,
+        OccurrenceConstraint constraint,
+        Reason? reason = null
+    )
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Collection.ContainWithOccurrence))
+        {
+            return this;
+        }
+
+        ExecutionEngine<ArrayOperationsManager<T>, IEnumerable<T>>
+            .New(this)
+            .WithOperation(
+                CollectionContainWithOccurrenceValidator<T>.New(PrincipalChain, item, constraint)
+            )
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.ResultValidation, BaseFormatter.Format(item))
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue().IsNull(),
+                        Fail.New(
+                            $"The {nameof(Contain)} operation failed because the array was null."
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        constraint == null!,
+                        Fail.New(
+                            $"The {nameof(Contain)} operation failed because the occurrence constraint was null."
                         )
                     )
             )
@@ -1654,5 +1712,29 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
             .Execute();
 
         return this;
+    }
+
+    /// <summary>
+    /// Extracts a sub-value from the current array using the given selector.
+    /// Returns a connector that exposes the sub-value for further assertions.
+    /// </summary>
+    /// <param name="selector">A function that extracts a sub-value from the current array.</param>
+    /// <typeparam name="TResult">The type of the extracted sub-value.</typeparam>
+    /// <returns>
+    /// An <see cref="AndWhichConnector{TManager,TSubject}"/> exposing the extracted sub-value
+    /// and allowing the chain to continue from the parent manager via <c>.And</c>.
+    /// </returns>
+    public AndWhichConnector<ArrayOperationsManager<T>, TResult> Which<TResult>(
+        Func<IEnumerable<T>, TResult> selector
+    )
+    {
+        ArgumentNullException.ThrowIfNull(selector);
+        var value = PrincipalChain.GetValue();
+        var result = selector(value);
+        return new AndWhichConnector<ArrayOperationsManager<T>, TResult>(
+            this,
+            result,
+            PrincipalChain.GetSubject()
+        );
     }
 }

@@ -186,6 +186,42 @@ internal class PropertyProxy<TProp, TManager>(
                 (object)new NullableDateTimeOffsetOperationsManager(null, propertyName);
         }
 
+        // Generic manager support (Collection, Array, Dictionary, Enum)
+        if (typeof(TManager).IsGenericType)
+        {
+            var genericDef = typeof(TManager).GetGenericTypeDefinition();
+
+            if (genericDef == typeof(CollectionOperationsManager<>))
+            {
+                var itemType = typeof(TManager).GetGenericArguments()[0];
+                var listType = typeof(List<>).MakeGenericType(itemType);
+                var emptyList = Activator.CreateInstance(listType)!;
+                return (TManager)Activator.CreateInstance(typeof(TManager), emptyList, propertyName)!;
+            }
+
+            if (genericDef == typeof(ArrayOperationsManager<>))
+            {
+                var itemType = typeof(TManager).GetGenericArguments()[0];
+                var emptyArray = Array.CreateInstance(itemType, 0);
+                return (TManager)Activator.CreateInstance(typeof(TManager), emptyArray, propertyName)!;
+            }
+
+            if (genericDef == typeof(DictionaryOperationsManager<,>))
+            {
+                var typeArgs = typeof(TManager).GetGenericArguments();
+                var dictType = typeof(Dictionary<,>).MakeGenericType(typeArgs);
+                var emptyDict = Activator.CreateInstance(dictType)!;
+                return (TManager)Activator.CreateInstance(typeof(TManager), emptyDict, propertyName)!;
+            }
+
+            if (genericDef == typeof(EnumOperationsManager<>))
+            {
+                var enumType = typeof(TManager).GetGenericArguments()[0];
+                var defaultVal = Activator.CreateInstance(enumType)!;
+                return (TManager)Activator.CreateInstance(typeof(TManager), defaultVal, propertyName)!;
+            }
+        }
+
         return (TManager)(object)new ObjectOperationsManager(null, propertyName);
     }
 }
