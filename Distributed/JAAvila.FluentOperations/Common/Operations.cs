@@ -395,6 +395,84 @@ public struct Operations
     }
 
     /// <summary>
+    /// Operations available for <see cref="char"/> values.
+    /// </summary>
+    public enum Char
+    {
+        [EnumStringValue("be")]
+        Be,
+
+        [EnumStringValue("notbe")]
+        NotBe,
+
+        [EnumStringValue("begreaterthan")]
+        BeGreaterThan,
+
+        [EnumStringValue("begreaterthanorequalto")]
+        BeGreaterThanOrEqualTo,
+
+        [EnumStringValue("belessthan")]
+        BeLessThan,
+
+        [EnumStringValue("belessthanorequalto")]
+        BeLessThanOrEqualTo,
+
+        [EnumStringValue("beinrange")]
+        BeInRange,
+
+        [EnumStringValue("notbeinrange")]
+        NotBeInRange,
+
+        [EnumStringValue("beoneof")]
+        BeOneOf,
+
+        [EnumStringValue("notbeoneof")]
+        NotBeOneOf,
+
+        [EnumStringValue("beuppercase")]
+        BeUpperCase,
+
+        [EnumStringValue("belowercase")]
+        BeLowerCase,
+
+        [EnumStringValue("bedigit")]
+        BeDigit,
+
+        [EnumStringValue("beletter")]
+        BeLetter,
+
+        [EnumStringValue("beletterordigit")]
+        BeLetterOrDigit,
+
+        [EnumStringValue("bewhitespace")]
+        BeWhiteSpace,
+
+        [EnumStringValue("bepunctuation")]
+        BePunctuation,
+
+        [EnumStringValue("becontrol")]
+        BeControl,
+
+        [EnumStringValue("beascii")]
+        BeAscii,
+
+        [EnumStringValue("besurrogate")]
+        BeSurrogate,
+    }
+
+    /// <summary>
+    /// Operations available for <see cref="char?"/> (nullable char) values.
+    /// </summary>
+    public enum NullableChar
+    {
+        [EnumStringValue("havevaluechar")]
+        HaveValue,
+
+        [EnumStringValue("nothavevaluechar")]
+        NotHaveValue,
+    }
+
+    /// <summary>
     /// Operations available for <see cref="long"/> values.
     /// </summary>
     public enum Long

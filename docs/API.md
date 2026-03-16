@@ -13,6 +13,7 @@ Complete API documentation for JAAvila.FluentOperations.
   - [Decimal](#decimal-validations)
   - [Double](#double-validations)
   - [Float](#float-validations)
+  - [Char](#char-validations)
   - [DateTime](#datetime-validations)
   - [DateOnly](#dateonly-validations)
   - [TimeOnly](#timeonly-validations)
@@ -263,6 +264,42 @@ Manager: `SByteOperationsManager` / `NullableSByteOperationsManager`
 - `HaveValue()` -- has a non-null value
 - `NotHaveValue()` -- is null
 - All sbyte operations above (with FailIf null guards)
+
+---
+
+### Char Validations
+
+Manager: `CharOperationsManager` / `NullableCharOperationsManager`
+
+| Operation | Description |
+|-----------|-------------|
+| `Be(char)` | Equals expected |
+| `NotBe(char)` | Does not equal |
+| `BeGreaterThan(char)` | Greater than value |
+| `BeGreaterThanOrEqualTo(char)` | Greater than or equal |
+| `BeLessThan(char)` | Less than value |
+| `BeLessThanOrEqualTo(char)` | Less than or equal |
+| `BeInRange(char, char)` | Within inclusive range |
+| `NotBeInRange(char, char)` | Outside range |
+| `BeOneOf(params char[])` | In set of values |
+| `NotBeOneOf(params char[])` | Not in set |
+| `BeUpperCase()` | Is uppercase letter (`char.IsUpper`) |
+| `BeLowerCase()` | Is lowercase letter (`char.IsLower`) |
+| `BeDigit()` | Is digit (`char.IsDigit`) |
+| `BeLetter()` | Is letter (`char.IsLetter`) |
+| `BeLetterOrDigit()` | Is letter or digit (`char.IsLetterOrDigit`) |
+| `BeWhiteSpace()` | Is white-space (`char.IsWhiteSpace`) |
+| `BePunctuation()` | Is punctuation (`char.IsPunctuation`) |
+| `BeControl()` | Is control character (`char.IsControl`) |
+| `BeAscii()` | Is ASCII (value < 128) |
+| `BeSurrogate()` | Is surrogate (`char.IsSurrogate`) |
+
+> **Note:** Character classification operations use `System.Char` static methods. Numeric-only operations (BePositive, BeNegative, BeZero, BeDivisibleBy, BeEven, BeOdd) are intentionally excluded because `char` represents characters, not numbers.
+
+**Nullable char (`char?`)** adds:
+- `HaveValue()` -- has a non-null value
+- `NotHaveValue()` -- is null
+- All char operations above (with FailIf null guards)
 
 ---
 
