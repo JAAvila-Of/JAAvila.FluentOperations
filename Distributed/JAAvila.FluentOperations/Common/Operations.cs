@@ -458,6 +458,69 @@ public struct Operations
     }
 
     /// <summary>
+    /// Operations available for <see cref="ulong"/> values.
+    /// </summary>
+    public enum ULong
+    {
+        [EnumStringValue("be")]
+        Be,
+
+        [EnumStringValue("notbe")]
+        NotBe,
+
+        [EnumStringValue("bepositive")]
+        BePositive,
+
+        [EnumStringValue("bezero")]
+        BeZero,
+
+        [EnumStringValue("begreaterthan")]
+        BeGreaterThan,
+
+        [EnumStringValue("begreaterthanorequalto")]
+        BeGreaterThanOrEqualTo,
+
+        [EnumStringValue("belessthan")]
+        BeLessThan,
+
+        [EnumStringValue("belessthanorequalto")]
+        BeLessThanOrEqualTo,
+
+        [EnumStringValue("beinrange")]
+        BeInRange,
+
+        [EnumStringValue("notbeinrange")]
+        NotBeInRange,
+
+        [EnumStringValue("beoneof")]
+        BeOneOf,
+
+        [EnumStringValue("notbeoneof")]
+        NotBeOneOf,
+
+        [EnumStringValue("bedivisibleby")]
+        BeDivisibleBy,
+
+        [EnumStringValue("beeven")]
+        BeEven,
+
+        [EnumStringValue("beodd")]
+        BeOdd,
+    }
+
+    /// <summary>
+    /// Operations available for <see cref="ulong?"/> (nullable ulong) values.
+    /// </summary>
+    public enum NullableULong
+    {
+        [EnumStringValue("havevalueulong")]
+        HaveValue,
+
+        [EnumStringValue("nothavevalueulong")]
+        NotHaveValue,
+    }
+
+    /// <summary>
     /// Operations available for <see cref="short"/> values.
     /// </summary>
     public enum Short

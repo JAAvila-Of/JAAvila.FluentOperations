@@ -298,6 +298,37 @@ Manager: `UIntOperationsManager` / `NullableUIntOperationsManager`
 
 ---
 
+### ULong Validations
+
+Manager: `ULongOperationsManager` / `NullableULongOperationsManager`
+
+| Operation | Description |
+|-----------|-------------|
+| `Be(ulong)` | Equals expected |
+| `NotBe(ulong)` | Does not equal |
+| `BePositive()` | Greater than zero |
+| `BeZero()` | Equals zero |
+| `BeGreaterThan(ulong)` | Greater than value |
+| `BeGreaterThanOrEqualTo(ulong)` | Greater than or equal |
+| `BeLessThan(ulong)` | Less than value |
+| `BeLessThanOrEqualTo(ulong)` | Less than or equal |
+| `BeInRange(ulong, ulong)` | Within inclusive range |
+| `NotBeInRange(ulong, ulong)` | Outside range |
+| `BeOneOf(params ulong[])` | In set of values |
+| `NotBeOneOf(params ulong[])` | Not in set |
+| `BeDivisibleBy(ulong)` | Divisible by value |
+| `BeEven()` | Divisible by 2 |
+| `BeOdd()` | Not divisible by 2 |
+
+> **Note:** `BeNegative()` is not available for `ulong` because it is an unsigned type (range 0-18,446,744,073,709,551,615).
+
+**Nullable ulong (`ulong?`)** adds:
+- `HaveValue()` -- has a non-null value
+- `NotHaveValue()` -- is null
+- All ulong operations above (with FailIf null guards)
+
+---
+
 ### Short Validations
 
 Manager: `ShortOperationsManager` / `NullableShortOperationsManager`

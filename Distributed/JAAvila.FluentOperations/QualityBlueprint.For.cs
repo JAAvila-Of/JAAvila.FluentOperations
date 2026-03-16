@@ -533,6 +533,56 @@ public abstract partial class QualityBlueprint<T>
     ) => For<uint?, NullableUIntOperationsManager>(propertyExpression, config);
 
     /// <summary>
+    /// Defines a validation rule for a <see cref="ulong"/> property of the model.
+    /// Call <see cref="IPropertyProxy{TManager}.Test"/> on the result to access ulong assertions.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the ulong property to validate (e.g., <c>x =&gt; x.Count</c>).
+    /// </param>
+    /// <returns>A property proxy that exposes <see cref="ULongOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<ULongOperationsManager> For(
+        Expression<Func<T, ulong>> propertyExpression
+    ) => For<ulong, ULongOperationsManager>(propertyExpression);
+
+    /// <summary>
+    /// Defines a validation rule for a <see cref="ulong"/> property of the model, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the ulong property to validate (e.g., <c>x =&gt; x.Count</c>).
+    /// </param>
+    /// <param name="config">Configuration for this rule (severity, error code, cascade mode).</param>
+    /// <returns>A property proxy that exposes <see cref="ULongOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<ULongOperationsManager> For(
+        Expression<Func<T, ulong>> propertyExpression,
+        RuleConfig config
+    ) => For<ulong, ULongOperationsManager>(propertyExpression, config);
+
+    /// <summary>
+    /// Defines a validation rule for a nullable <see cref="ulong"/> property of the model.
+    /// Call <see cref="IPropertyProxy{TManager}.Test"/> on the result to access nullable ulong assertions.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the nullable ulong property to validate (e.g., <c>x =&gt; x.Count</c>).
+    /// </param>
+    /// <returns>A property proxy that exposes <see cref="NullableULongOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<NullableULongOperationsManager> For(
+        Expression<Func<T, ulong?>> propertyExpression
+    ) => For<ulong?, NullableULongOperationsManager>(propertyExpression);
+
+    /// <summary>
+    /// Defines a validation rule for a nullable <see cref="ulong"/> property of the model, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the nullable ulong property to validate (e.g., <c>x =&gt; x.Count</c>).
+    /// </param>
+    /// <param name="config">Configuration for this rule (severity, error code, cascade mode).</param>
+    /// <returns>A property proxy that exposes <see cref="NullableULongOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<NullableULongOperationsManager> For(
+        Expression<Func<T, ulong?>> propertyExpression,
+        RuleConfig config
+    ) => For<ulong?, NullableULongOperationsManager>(propertyExpression, config);
+
+    /// <summary>
     /// Defines a validation rule for a <see cref="short"/> property of the model.
     /// Call <see cref="IPropertyProxy{TManager}.Test"/> on the result to access short assertions.
     /// </summary>
