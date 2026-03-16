@@ -140,6 +140,16 @@ internal class PropertyProxy<TProp, TManager>(
             return (TManager)(object)new SByteOperationsManager(default, propertyName);
         }
 
+        if (typeof(TManager) == typeof(NullableUIntOperationsManager))
+        {
+            return (TManager)(object)new NullableUIntOperationsManager(null, propertyName);
+        }
+
+        if (typeof(TManager) == typeof(UIntOperationsManager))
+        {
+            return (TManager)(object)new UIntOperationsManager(default, propertyName);
+        }
+
         if (typeof(TManager) == typeof(NullableShortOperationsManager))
         {
             return (TManager)(object)new NullableShortOperationsManager(null, propertyName);

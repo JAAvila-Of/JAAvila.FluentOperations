@@ -267,6 +267,37 @@ Manager: `SByteOperationsManager` / `NullableSByteOperationsManager`
 
 ---
 
+### UInt Validations
+
+Manager: `UIntOperationsManager` / `NullableUIntOperationsManager`
+
+| Operation | Description |
+|-----------|-------------|
+| `Be(uint)` | Equals expected |
+| `NotBe(uint)` | Does not equal |
+| `BePositive()` | Greater than zero |
+| `BeZero()` | Equals zero |
+| `BeGreaterThan(uint)` | Greater than value |
+| `BeGreaterThanOrEqualTo(uint)` | Greater than or equal |
+| `BeLessThan(uint)` | Less than value |
+| `BeLessThanOrEqualTo(uint)` | Less than or equal |
+| `BeInRange(uint, uint)` | Within inclusive range |
+| `NotBeInRange(uint, uint)` | Outside range |
+| `BeOneOf(params uint[])` | In set of values |
+| `NotBeOneOf(params uint[])` | Not in set |
+| `BeDivisibleBy(uint)` | Divisible by value |
+| `BeEven()` | Divisible by 2 |
+| `BeOdd()` | Not divisible by 2 |
+
+> **Note:** `BeNegative()` is not available for `uint` because it is an unsigned type (range 0-4,294,967,295).
+
+**Nullable uint (`uint?`)** adds:
+- `HaveValue()` -- has a non-null value
+- `NotHaveValue()` -- is null
+- All uint operations above (with FailIf null guards)
+
+---
+
 ### Short Validations
 
 Manager: `ShortOperationsManager` / `NullableShortOperationsManager`
