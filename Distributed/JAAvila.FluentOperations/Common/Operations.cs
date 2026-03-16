@@ -906,6 +906,12 @@ public struct Operations
         [EnumStringValue("containany")]
         ContainAny,
 
+        [EnumStringValue("notcontainany")]
+        NotContainAny,
+
+        [EnumStringValue("notcontainall")]
+        NotContainAll,
+
         [EnumStringValue("besubsetof")]
         BeSubsetOf,
 
