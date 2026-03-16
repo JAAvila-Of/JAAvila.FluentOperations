@@ -483,6 +483,56 @@ public abstract partial class QualityBlueprint<T>
     ) => For<sbyte?, NullableSByteOperationsManager>(propertyExpression, config);
 
     /// <summary>
+    /// Defines a validation rule for a <see cref="short"/> property of the model.
+    /// Call <see cref="IPropertyProxy{TManager}.Test"/> on the result to access short assertions.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the short property to validate (e.g., <c>x =&gt; x.Quantity</c>).
+    /// </param>
+    /// <returns>A property proxy that exposes <see cref="ShortOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<ShortOperationsManager> For(
+        Expression<Func<T, short>> propertyExpression
+    ) => For<short, ShortOperationsManager>(propertyExpression);
+
+    /// <summary>
+    /// Defines a validation rule for a <see cref="short"/> property of the model, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the short property to validate (e.g., <c>x =&gt; x.Quantity</c>).
+    /// </param>
+    /// <param name="config">Configuration for severity, error code, custom message, or cascade mode.</param>
+    /// <returns>A property proxy that exposes <see cref="ShortOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<ShortOperationsManager> For(
+        Expression<Func<T, short>> propertyExpression,
+        RuleConfig config
+    ) => For<short, ShortOperationsManager>(propertyExpression, config);
+
+    /// <summary>
+    /// Defines a validation rule for a nullable <see cref="short"/> property of the model.
+    /// Call <see cref="IPropertyProxy{TManager}.Test"/> on the result to access nullable short assertions.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the nullable short property to validate (e.g., <c>x =&gt; x.Quantity</c>).
+    /// </param>
+    /// <returns>A property proxy that exposes <see cref="NullableShortOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<NullableShortOperationsManager> For(
+        Expression<Func<T, short?>> propertyExpression
+    ) => For<short?, NullableShortOperationsManager>(propertyExpression);
+
+    /// <summary>
+    /// Defines a validation rule for a nullable <see cref="short"/> property of the model, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the nullable short property to validate (e.g., <c>x =&gt; x.Quantity</c>).
+    /// </param>
+    /// <param name="config">Configuration for severity, error code, custom message, or cascade mode.</param>
+    /// <returns>A property proxy that exposes <see cref="NullableShortOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<NullableShortOperationsManager> For(
+        Expression<Func<T, short?>> propertyExpression,
+        RuleConfig config
+    ) => For<short?, NullableShortOperationsManager>(propertyExpression, config);
+
+    /// <summary>
     /// Defines a validation rule for a <see cref="char"/> property of the model.
     /// Call <see cref="IPropertyProxy{TManager}.Test"/> on the result to access char assertions.
     /// </summary>

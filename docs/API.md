@@ -267,6 +267,38 @@ Manager: `SByteOperationsManager` / `NullableSByteOperationsManager`
 
 ---
 
+### Short Validations
+
+Manager: `ShortOperationsManager` / `NullableShortOperationsManager`
+
+| Operation | Description |
+|-----------|-------------|
+| `Be(short)` | Equals expected |
+| `NotBe(short)` | Does not equal |
+| `BePositive()` | Greater than zero |
+| `BeNegative()` | Less than zero |
+| `BeZero()` | Equals zero |
+| `BeGreaterThan(short)` | Greater than value |
+| `BeGreaterThanOrEqualTo(short)` | Greater than or equal |
+| `BeLessThan(short)` | Less than value |
+| `BeLessThanOrEqualTo(short)` | Less than or equal |
+| `BeInRange(short, short)` | Within inclusive range |
+| `NotBeInRange(short, short)` | Outside range |
+| `BeOneOf(params short[])` | In set of values |
+| `NotBeOneOf(params short[])` | Not in set |
+| `BeDivisibleBy(short)` | Divisible by value |
+| `BeEven()` | Divisible by 2 |
+| `BeOdd()` | Not divisible by 2 |
+
+> **Note:** Unlike `ushort`, `BeNegative()` IS available for `short` because it is a signed type (range -32768 to 32767).
+
+**Nullable short (`short?`)** adds:
+- `HaveValue()` -- has a non-null value
+- `NotHaveValue()` -- is null
+- All short operations above (with FailIf null guards)
+
+---
+
 ### Char Validations
 
 Manager: `CharOperationsManager` / `NullableCharOperationsManager`

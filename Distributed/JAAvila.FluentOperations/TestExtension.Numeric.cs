@@ -336,6 +336,54 @@ public static partial class TestExtension
     }
 
     /// <summary>
+    /// Begins a fluent assertion chain for the specified <see cref="short"/> value.
+    /// </summary>
+    /// <param name="value">The short value to test.</param>
+    /// <param name="callerName">
+    /// Automatically captured expression name of the variable being tested.
+    /// Used in failure messages for contextual reporting.
+    /// </param>
+    /// <returns>A <see cref="ShortOperationsManager"/> for chaining short-specific assertions.</returns>
+    /// <example>
+    /// <code>
+    /// short temperature = -100;
+    /// temperature.Test().BeNegative().BeLessThan(0);
+    /// </code>
+    /// </example>
+    [Pure]
+    public static ShortOperationsManager Test(
+        this short value,
+        [CallerArgumentExpression("value")] string callerName = ""
+    )
+    {
+        return new ShortOperationsManager(value, callerName);
+    }
+
+    /// <summary>
+    /// Begins a fluent assertion chain for the specified nullable <see cref="short"/> value.
+    /// </summary>
+    /// <param name="value">The nullable short value to test.</param>
+    /// <param name="callerName">
+    /// Automatically captured expression name of the variable being tested.
+    /// Used in failure messages for contextual reporting.
+    /// </param>
+    /// <returns>A <see cref="NullableShortOperationsManager"/> for chaining nullable short-specific assertions.</returns>
+    /// <example>
+    /// <code>
+    /// short? offset = null;
+    /// offset.Test().NotHaveValue();
+    /// </code>
+    /// </example>
+    [Pure]
+    public static NullableShortOperationsManager Test(
+        this short? value,
+        [CallerArgumentExpression("value")] string callerName = ""
+    )
+    {
+        return new NullableShortOperationsManager(value, callerName);
+    }
+
+    /// <summary>
     /// Begins a fluent assertion chain for the specified <see cref="char"/> value.
     /// </summary>
     /// <param name="value">The char value to test.</param>
