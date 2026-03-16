@@ -46,6 +46,12 @@ public struct Operations
 
         [EnumStringValue("notbeequivalentto")]
         NotBeEquivalentTo,
+
+        [EnumStringValue("be")]
+        Be,
+
+        [EnumStringValue("notbe")]
+        NotBe,
     }
 
     /// <summary>
@@ -974,6 +980,12 @@ public struct Operations
 
         [EnumStringValue("havelengthlessthan")]
         HaveLengthLessThan,
+
+        [EnumStringValue("be")]
+        Be,
+
+        [EnumStringValue("notbe")]
+        NotBe,
     }
 
     /// <summary>
@@ -989,6 +1001,12 @@ public struct Operations
 
         [EnumStringValue("havelengthlessthan")]
         HaveLengthLessThan,
+
+        [EnumStringValue("be")]
+        Be,
+
+        [EnumStringValue("notbe")]
+        NotBe,
     }
 
     /// <summary>
@@ -1019,6 +1037,12 @@ public struct Operations
 
         [EnumStringValue("notbeempty")]
         NotBeEmpty,
+
+        [EnumStringValue("be")]
+        Be,
+
+        [EnumStringValue("notbe")]
+        NotBe,
     }
 
     /// <summary>

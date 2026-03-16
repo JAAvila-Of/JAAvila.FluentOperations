@@ -389,6 +389,12 @@ Manager: `CollectionOperationsManager<T>`
 | `BeSequenceEqualTo(IEnumerable<T>)` | Same elements, same order |
 | `NotBeEquivalentTo(IEnumerable<T>)` | NOT same elements (any order) |
 | `NotBeSequenceEqualTo(IEnumerable<T>)` | NOT same elements/order |
+| `Be(IEnumerable<T>)` | Same reference as expected |
+| `NotBe(IEnumerable<T>)` | Not the same reference |
+| `BeOfType<TType>()` | Runtime type is exactly TType |
+| `BeOfType(Type)` | Runtime type is exactly the specified type |
+| `NotBeOfType<TType>()` | Runtime type is not TType |
+| `NotBeOfType(Type)` | Runtime type is not the specified type |
 
 ---
 
@@ -403,6 +409,12 @@ All Collection operations plus (including equivalence: `BeEquivalentTo`, `NotBeE
 | `HaveLength(int)` | Exact array length |
 | `HaveLengthGreaterThan(int)` | More than N |
 | `HaveLengthLessThan(int)` | Fewer than N |
+| `Be(IEnumerable<T>)` | Same reference as expected |
+| `NotBe(IEnumerable<T>)` | Not the same reference |
+| `BeOfType<TType>()` | Runtime type is exactly TType |
+| `BeOfType(Type)` | Runtime type is exactly the specified type |
+| `NotBeOfType<TType>()` | Runtime type is not TType |
+| `NotBeOfType(Type)` | Runtime type is not the specified type |
 
 ---
 
@@ -420,6 +432,12 @@ Manager: `DictionaryOperationsManager<TKey, TValue>`
 | `HaveCount(int)` | Exact count |
 | `BeEmpty()` | No entries |
 | `NotBeEmpty()` | Has entries |
+| `Be(IDictionary<TKey, TValue>)` | Same reference as expected |
+| `NotBe(IDictionary<TKey, TValue>)` | Not the same reference |
+| `BeOfType<TType>()` | Runtime type is exactly TType |
+| `BeOfType(Type)` | Runtime type is exactly the specified type |
+| `NotBeOfType<TType>()` | Runtime type is not TType |
+| `NotBeOfType(Type)` | Runtime type is not the specified type |
 | `Which<TResult>(Func<IDictionary<TKey, TValue>, TResult>)` | Extract sub-value for chained assertions |
 
 ---
@@ -506,6 +524,8 @@ Manager: `ObjectOperationsManager` / `ReferenceOperationsManager`
 | `BeOfType<T>()` | Is exact type |
 | `BeCastTo<T>()` | Can be cast to type |
 | `Evaluate(Func<T, bool>)` | Custom predicate |
+| `Be(object?)` | Equals expected (using `Equals()`) |
+| `NotBe(object?)` | Does not equal expected |
 | `BeEquivalentTo(object)` | Deep structural equality |
 | `BeEquivalentTo(object, ComparisonOptions)` | Deep structural equality with options |
 | `NotBeEquivalentTo(object)` | Not structurally equal |

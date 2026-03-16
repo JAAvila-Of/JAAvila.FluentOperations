@@ -3,6 +3,7 @@ using JAAvila.FluentOperations.Comparators;
 using JAAvila.FluentOperations.Config;
 using JAAvila.FluentOperations.Connector;
 using JAAvila.FluentOperations.Contract;
+using JAAvila.FluentOperations.Formatters;
 using JAAvila.FluentOperations.Model;
 using JAAvila.FluentOperations.Utils;
 using JAAvila.FluentOperations.Validators;
@@ -121,6 +122,66 @@ public class ObjectOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the object equals <paramref name="expected"/> using <see cref="object.Equals(object?, object?)"/>.
+    /// </summary>
+    /// <param name="expected">The expected value to compare against.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public ObjectOperationsManager Be(object? expected, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Common.Be))
+        {
+            return this;
+        }
+
+        ExecutionEngine<ObjectOperationsManager, object?>
+            .New(this)
+            .WithOperation(ObjectBeValidator.New(PrincipalChain, expected))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.ResultValidation,
+                            BaseFormatter.Format(expected),
+                            BaseFormatter.Format(PrincipalChain.GetValue())
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the object does not equal <paramref name="expected"/> using <see cref="object.Equals(object?, object?)"/>.
+    /// </summary>
+    /// <param name="expected">The value that should not match.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public ObjectOperationsManager NotBe(object? expected, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Common.NotBe))
+        {
+            return this;
+        }
+
+        ExecutionEngine<ObjectOperationsManager, object?>
+            .New(this)
+            .WithOperation(ObjectNotBeValidator.New(PrincipalChain, expected))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.ResultValidation, BaseFormatter.Format(expected))
                         .WithReason(reason?.ToString())
             )
             .Execute();
