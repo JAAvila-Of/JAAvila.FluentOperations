@@ -234,6 +234,38 @@ Manager: `ByteOperationsManager` / `NullableByteOperationsManager`
 
 ---
 
+### SByte Validations
+
+Manager: `SByteOperationsManager` / `NullableSByteOperationsManager`
+
+| Operation | Description |
+|-----------|-------------|
+| `Be(sbyte)` | Equals expected |
+| `NotBe(sbyte)` | Does not equal |
+| `BePositive()` | Greater than zero |
+| `BeNegative()` | Less than zero |
+| `BeZero()` | Equals zero |
+| `BeGreaterThan(sbyte)` | Greater than value |
+| `BeGreaterThanOrEqualTo(sbyte)` | Greater than or equal |
+| `BeLessThan(sbyte)` | Less than value |
+| `BeLessThanOrEqualTo(sbyte)` | Less than or equal |
+| `BeInRange(sbyte, sbyte)` | Within inclusive range |
+| `NotBeInRange(sbyte, sbyte)` | Outside range |
+| `BeOneOf(params sbyte[])` | In set of values |
+| `NotBeOneOf(params sbyte[])` | Not in set |
+| `BeDivisibleBy(sbyte)` | Divisible by value |
+| `BeEven()` | Divisible by 2 |
+| `BeOdd()` | Not divisible by 2 |
+
+> **Note:** Unlike `byte`, `BeNegative()` IS available for `sbyte` because it is a signed type (range -128 to 127).
+
+**Nullable sbyte (`sbyte?`)** adds:
+- `HaveValue()` -- has a non-null value
+- `NotHaveValue()` -- is null
+- All sbyte operations above (with FailIf null guards)
+
+---
+
 ### Long Validations
 
 Manager: `LongOperationsManager` / `NullableLongOperationsManager`
