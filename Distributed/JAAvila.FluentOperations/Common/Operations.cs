@@ -266,6 +266,69 @@ public struct Operations
     }
 
     /// <summary>
+    /// Operations available for <see cref="byte"/> values.
+    /// </summary>
+    public enum Byte
+    {
+        [EnumStringValue("be")]
+        Be,
+
+        [EnumStringValue("notbe")]
+        NotBe,
+
+        [EnumStringValue("bepositive")]
+        BePositive,
+
+        [EnumStringValue("bezero")]
+        BeZero,
+
+        [EnumStringValue("begreaterthan")]
+        BeGreaterThan,
+
+        [EnumStringValue("begreaterthanorequalto")]
+        BeGreaterThanOrEqualTo,
+
+        [EnumStringValue("belessthan")]
+        BeLessThan,
+
+        [EnumStringValue("belessthanorequalto")]
+        BeLessThanOrEqualTo,
+
+        [EnumStringValue("beinrange")]
+        BeInRange,
+
+        [EnumStringValue("notbeinrange")]
+        NotBeInRange,
+
+        [EnumStringValue("beoneof")]
+        BeOneOf,
+
+        [EnumStringValue("notbeoneof")]
+        NotBeOneOf,
+
+        [EnumStringValue("bedivisibleby")]
+        BeDivisibleBy,
+
+        [EnumStringValue("beeven")]
+        BeEven,
+
+        [EnumStringValue("beodd")]
+        BeOdd,
+    }
+
+    /// <summary>
+    /// Operations available for <see cref="byte?"/> (nullable byte) values.
+    /// </summary>
+    public enum NullableByte
+    {
+        [EnumStringValue("havevaluebyte")]
+        HaveValue,
+
+        [EnumStringValue("nothavevaluebyte")]
+        NotHaveValue,
+    }
+
+    /// <summary>
     /// Operations available for <see cref="long"/> values.
     /// </summary>
     public enum Long

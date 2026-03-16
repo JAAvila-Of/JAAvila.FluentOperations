@@ -203,6 +203,37 @@ Manager: `IntegerOperationsManager` / `NullableIntegerOperationsManager`
 
 ---
 
+### Byte Validations
+
+Manager: `ByteOperationsManager` / `NullableByteOperationsManager`
+
+| Operation | Description |
+|-----------|-------------|
+| `Be(byte)` | Equals expected |
+| `NotBe(byte)` | Does not equal |
+| `BePositive()` | Greater than zero |
+| `BeZero()` | Equals zero |
+| `BeGreaterThan(byte)` | Greater than value |
+| `BeGreaterThanOrEqualTo(byte)` | Greater than or equal |
+| `BeLessThan(byte)` | Less than value |
+| `BeLessThanOrEqualTo(byte)` | Less than or equal |
+| `BeInRange(byte, byte)` | Within inclusive range |
+| `NotBeInRange(byte, byte)` | Outside range |
+| `BeOneOf(params byte[])` | In set of values |
+| `NotBeOneOf(params byte[])` | Not in set |
+| `BeDivisibleBy(byte)` | Divisible by value |
+| `BeEven()` | Divisible by 2 |
+| `BeOdd()` | Not divisible by 2 |
+
+> **Note:** `BeNegative()` is not available for `byte` because it is an unsigned type (range 0-255).
+
+**Nullable byte (`byte?`)** adds:
+- `HaveValue()` — has a non-null value
+- `NotHaveValue()` — is null
+- All byte operations above (with FailIf null guards)
+
+---
+
 ### Long Validations
 
 Manager: `LongOperationsManager` / `NullableLongOperationsManager`
