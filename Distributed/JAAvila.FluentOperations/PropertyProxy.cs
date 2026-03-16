@@ -120,6 +120,16 @@ internal class PropertyProxy<TProp, TManager>(
             return (TManager)(object)new FloatOperationsManager(default, propertyName);
         }
 
+        if (typeof(TManager) == typeof(NullableByteOperationsManager))
+        {
+            return (TManager)(object)new NullableByteOperationsManager(null, propertyName);
+        }
+
+        if (typeof(TManager) == typeof(ByteOperationsManager))
+        {
+            return (TManager)(object)new ByteOperationsManager(default, propertyName);
+        }
+
         if (typeof(TManager) == typeof(DateTimeOperationsManager))
         {
             return (TManager)(object)new DateTimeOperationsManager(default, propertyName);

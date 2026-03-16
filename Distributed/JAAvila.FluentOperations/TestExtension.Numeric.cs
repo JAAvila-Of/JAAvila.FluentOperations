@@ -238,4 +238,52 @@ public static partial class TestExtension
     {
         return new NullableFloatOperationsManager(value, callerName);
     }
+
+    /// <summary>
+    /// Begins a fluent assertion chain for the specified <see cref="byte"/> value.
+    /// </summary>
+    /// <param name="value">The byte value to test.</param>
+    /// <param name="callerName">
+    /// Automatically captured expression name of the variable being tested.
+    /// Used in failure messages for contextual reporting.
+    /// </param>
+    /// <returns>A <see cref="ByteOperationsManager"/> for chaining byte-specific assertions.</returns>
+    /// <example>
+    /// <code>
+    /// byte age = 25;
+    /// age.Test().BePositive().BeLessThan(128);
+    /// </code>
+    /// </example>
+    [Pure]
+    public static ByteOperationsManager Test(
+        this byte value,
+        [CallerArgumentExpression("value")] string callerName = ""
+    )
+    {
+        return new ByteOperationsManager(value, callerName);
+    }
+
+    /// <summary>
+    /// Begins a fluent assertion chain for the specified nullable <see cref="byte"/> value.
+    /// </summary>
+    /// <param name="value">The nullable byte value to test.</param>
+    /// <param name="callerName">
+    /// Automatically captured expression name of the variable being tested.
+    /// Used in failure messages for contextual reporting.
+    /// </param>
+    /// <returns>A <see cref="NullableByteOperationsManager"/> for chaining nullable byte-specific assertions.</returns>
+    /// <example>
+    /// <code>
+    /// byte? channel = null;
+    /// channel.Test().NotHaveValue();
+    /// </code>
+    /// </example>
+    [Pure]
+    public static NullableByteOperationsManager Test(
+        this byte? value,
+        [CallerArgumentExpression("value")] string callerName = ""
+    )
+    {
+        return new NullableByteOperationsManager(value, callerName);
+    }
 }
