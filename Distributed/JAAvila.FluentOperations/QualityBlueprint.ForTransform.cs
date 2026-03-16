@@ -911,6 +911,40 @@ public abstract partial class QualityBlueprint<T>
     ) => ForTransform<sbyte?, NullableSByteOperationsManager>(propertyExpression, transform, config);
 
     /// <summary>
+    /// Registers a same-type transformation for a <see cref="short"/> property.
+    /// </summary>
+    protected IPropertyProxy<ShortOperationsManager> ForTransform(
+        Expression<Func<T, short>> propertyExpression,
+        Func<short, short> transform
+    ) => ForTransform<short, ShortOperationsManager>(propertyExpression, transform);
+
+    /// <summary>
+    /// Registers a same-type transformation for a <see cref="short"/> property, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    protected IPropertyProxy<ShortOperationsManager> ForTransform(
+        Expression<Func<T, short>> propertyExpression,
+        Func<short, short> transform,
+        RuleConfig config
+    ) => ForTransform<short, ShortOperationsManager>(propertyExpression, transform, config);
+
+    /// <summary>
+    /// Registers a same-type transformation for a nullable <see cref="short"/> property.
+    /// </summary>
+    protected IPropertyProxy<NullableShortOperationsManager> ForTransform(
+        Expression<Func<T, short?>> propertyExpression,
+        Func<short?, short?> transform
+    ) => ForTransform<short?, NullableShortOperationsManager>(propertyExpression, transform);
+
+    /// <summary>
+    /// Registers a same-type transformation for a nullable <see cref="short"/> property, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    protected IPropertyProxy<NullableShortOperationsManager> ForTransform(
+        Expression<Func<T, short?>> propertyExpression,
+        Func<short?, short?> transform,
+        RuleConfig config
+    ) => ForTransform<short?, NullableShortOperationsManager>(propertyExpression, transform, config);
+
+    /// <summary>
     /// Registers a same-type transformation for a <see cref="char"/> property.
     /// </summary>
     protected IPropertyProxy<CharOperationsManager> ForTransform(
@@ -1466,6 +1500,40 @@ public abstract partial class QualityBlueprint<T>
         Func<TProp, sbyte?> transform,
         RuleConfig config
     ) => ForTransform<TProp, sbyte?, NullableSByteOperationsManager>(propertyExpression, transform, config);
+
+    /// <summary>
+    /// Registers a property with a cross-type transformation to <see cref="short"/> applied before validation.
+    /// </summary>
+    protected IPropertyProxy<ShortOperationsManager> ForTransform<TProp>(
+        Expression<Func<T, TProp>> propertyExpression,
+        Func<TProp, short> transform
+    ) => ForTransform<TProp, short, ShortOperationsManager>(propertyExpression, transform);
+
+    /// <summary>
+    /// Registers a property with a cross-type transformation to <see cref="short"/> applied before validation, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    protected IPropertyProxy<ShortOperationsManager> ForTransform<TProp>(
+        Expression<Func<T, TProp>> propertyExpression,
+        Func<TProp, short> transform,
+        RuleConfig config
+    ) => ForTransform<TProp, short, ShortOperationsManager>(propertyExpression, transform, config);
+
+    /// <summary>
+    /// Registers a property with a cross-type transformation to nullable <see cref="short"/> applied before validation.
+    /// </summary>
+    protected IPropertyProxy<NullableShortOperationsManager> ForTransform<TProp>(
+        Expression<Func<T, TProp>> propertyExpression,
+        Func<TProp, short?> transform
+    ) => ForTransform<TProp, short?, NullableShortOperationsManager>(propertyExpression, transform);
+
+    /// <summary>
+    /// Registers a property with a cross-type transformation to nullable <see cref="short"/> applied before validation, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    protected IPropertyProxy<NullableShortOperationsManager> ForTransform<TProp>(
+        Expression<Func<T, TProp>> propertyExpression,
+        Func<TProp, short?> transform,
+        RuleConfig config
+    ) => ForTransform<TProp, short?, NullableShortOperationsManager>(propertyExpression, transform, config);
 
     /// <summary>
     /// Registers a property with a cross-type transformation to <see cref="char"/> applied before validation.
