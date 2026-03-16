@@ -856,6 +856,132 @@ public class CollectionOperationsManager<T>
     }
 
     /// <summary>
+    /// Asserts that the collection does not contain any of the specified items.
+    /// </summary>
+    /// <param name="items">The items that must all be absent from the collection.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public CollectionOperationsManager<T> NotContainAny(params T[] items)
+    {
+        return NotContainAny(null, items);
+    }
+
+    /// <summary>
+    /// Asserts that the collection does not contain any of the specified items.
+    /// Fails if even one of the specified items is found in the collection.
+    /// </summary>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <param name="items">The items that must all be absent from the collection.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// This operation fails immediately if the collection is <c>null</c> or if <paramref name="items"/> is <c>null</c>.
+    /// </remarks>
+    public CollectionOperationsManager<T> NotContainAny(Reason? reason, params T[] items)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Collection.NotContainAny))
+        {
+            return this;
+        }
+
+        ExecutionEngine<CollectionOperationsManager<T>, IEnumerable<T>>
+            .New(this)
+            .WithOperation(CollectionNotContainAnyValidator<T>.New(PrincipalChain, items))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.ResultValidation,
+                            string.Join(", ", items.Select(BaseFormatter.Format))
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue().IsNull(),
+                        Fail.New(
+                            $"The {nameof(NotContainAny)} operation failed because the collection was null."
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        items.IsNull(),
+                        Fail.New(
+                            $"The {nameof(NotContainAny)} operation failed because the items parameter cannot be null."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the collection does not contain all of the specified items simultaneously.
+    /// </summary>
+    /// <param name="items">The items that must not all be present in the collection.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public CollectionOperationsManager<T> NotContainAll(params T[] items)
+    {
+        return NotContainAll(null, items);
+    }
+
+    /// <summary>
+    /// Asserts that the collection does not contain all of the specified items simultaneously.
+    /// At least one of the specified items must be absent from the collection.
+    /// </summary>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <param name="items">The items that must not all be present simultaneously.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// This operation fails immediately if the collection is <c>null</c> or if <paramref name="items"/> is <c>null</c>.
+    /// </remarks>
+    public CollectionOperationsManager<T> NotContainAll(Reason? reason, params T[] items)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Collection.NotContainAll))
+        {
+            return this;
+        }
+
+        ExecutionEngine<CollectionOperationsManager<T>, IEnumerable<T>>
+            .New(this)
+            .WithOperation(CollectionNotContainAllValidator<T>.New(PrincipalChain, items))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.ResultValidation,
+                            string.Join(", ", items.Select(BaseFormatter.Format))
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue().IsNull(),
+                        Fail.New(
+                            $"The {nameof(NotContainAll)} operation failed because the collection was null."
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        items.IsNull(),
+                        Fail.New(
+                            $"The {nameof(NotContainAll)} operation failed because the items parameter cannot be null."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
     /// Asserts that every element in the collection is also present in the specified superset.
     /// </summary>
     /// <param name="superset">The collection that must contain all elements of the tested collection.</param>

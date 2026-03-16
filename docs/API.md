@@ -370,6 +370,8 @@ Manager: `CollectionOperationsManager<T>`
 | `ContainSingle(Func<T, bool>)` | Exactly one element matching predicate |
 | `ContainAll(params T[])` | Contains all elements |
 | `ContainAny(params T[])` | Contains at least one |
+| `NotContainAny(params T[])` | Does not contain any of the specified items |
+| `NotContainAll(params T[])` | Does not contain all specified items simultaneously |
 | `ContainInOrder(params T[])` | Contains in specific order |
 | `HaveElementAt(int, T)` | Element at index |
 | `BeSubsetOf(IEnumerable)` | All elements in superset |
@@ -402,7 +404,7 @@ Manager: `CollectionOperationsManager<T>`
 
 Manager: `ArrayOperationsManager<T>`
 
-All Collection operations plus (including equivalence: `BeEquivalentTo`, `NotBeEquivalentTo`, `BeSequenceEqualTo`, `NotBeSequenceEqualTo`):
+All Collection operations plus (including equivalence: `BeEquivalentTo`, `NotBeEquivalentTo`, `BeSequenceEqualTo`, `NotBeSequenceEqualTo`, `NotContainAny`, `NotContainAll`):
 
 | Method | Description |
 |--------|-------------|

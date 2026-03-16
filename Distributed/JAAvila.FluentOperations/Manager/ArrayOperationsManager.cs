@@ -1008,6 +1008,132 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
     }
 
     /// <summary>
+    /// Asserts that the array does not contain any of the specified items.
+    /// </summary>
+    /// <param name="items">The items that must all be absent from the array.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public ArrayOperationsManager<T> NotContainAny(params T[] items)
+    {
+        return NotContainAny(null, items);
+    }
+
+    /// <summary>
+    /// Asserts that the array does not contain any of the specified items.
+    /// Fails if even one of the specified items is found in the array.
+    /// </summary>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <param name="items">The items that must all be absent from the array.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// This operation fails immediately if the array is <c>null</c> or if <paramref name="items"/> is <c>null</c>.
+    /// </remarks>
+    public ArrayOperationsManager<T> NotContainAny(Reason? reason, params T[] items)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Collection.NotContainAny))
+        {
+            return this;
+        }
+
+        ExecutionEngine<ArrayOperationsManager<T>, IEnumerable<T>>
+            .New(this)
+            .WithOperation(CollectionNotContainAnyValidator<T>.New(PrincipalChain, items))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.ResultValidation,
+                            string.Join(", ", items.Select(BaseFormatter.Format))
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue().IsNull(),
+                        Fail.New(
+                            $"The {nameof(NotContainAny)} operation failed because the array was null."
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        items.IsNull(),
+                        Fail.New(
+                            $"The {nameof(NotContainAny)} operation failed because the items parameter cannot be null."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the array does not contain all of the specified items simultaneously.
+    /// </summary>
+    /// <param name="items">The items that must not all be present in the array.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public ArrayOperationsManager<T> NotContainAll(params T[] items)
+    {
+        return NotContainAll(null, items);
+    }
+
+    /// <summary>
+    /// Asserts that the array does not contain all of the specified items simultaneously.
+    /// At least one of the specified items must be absent from the array.
+    /// </summary>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <param name="items">The items that must not all be present simultaneously.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// This operation fails immediately if the array is <c>null</c> or if <paramref name="items"/> is <c>null</c>.
+    /// </remarks>
+    public ArrayOperationsManager<T> NotContainAll(Reason? reason, params T[] items)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Collection.NotContainAll))
+        {
+            return this;
+        }
+
+        ExecutionEngine<ArrayOperationsManager<T>, IEnumerable<T>>
+            .New(this)
+            .WithOperation(CollectionNotContainAllValidator<T>.New(PrincipalChain, items))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.ResultValidation,
+                            string.Join(", ", items.Select(BaseFormatter.Format))
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue().IsNull(),
+                        Fail.New(
+                            $"The {nameof(NotContainAll)} operation failed because the array was null."
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        items.IsNull(),
+                        Fail.New(
+                            $"The {nameof(NotContainAll)} operation failed because the items parameter cannot be null."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
     /// Asserts that every element in the array is also present in the specified superset.
     /// </summary>
     /// <param name="superset">The collection that must contain all elements of the tested array.</param>
