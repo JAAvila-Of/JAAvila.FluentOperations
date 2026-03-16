@@ -420,6 +420,7 @@ Manager: `DictionaryOperationsManager<TKey, TValue>`
 | `HaveCount(int)` | Exact count |
 | `BeEmpty()` | No entries |
 | `NotBeEmpty()` | Has entries |
+| `Which<TResult>(Func<IDictionary<TKey, TValue>, TResult>)` | Extract sub-value for chained assertions |
 
 ---
 

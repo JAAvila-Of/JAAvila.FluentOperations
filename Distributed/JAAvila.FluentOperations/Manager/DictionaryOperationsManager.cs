@@ -1,5 +1,6 @@
 using JAAvila.FluentOperations.Common;
 using JAAvila.FluentOperations.Config;
+using JAAvila.FluentOperations.Connector;
 using JAAvila.FluentOperations.Contract;
 using JAAvila.FluentOperations.Formatters;
 using JAAvila.FluentOperations.Model;
@@ -382,5 +383,29 @@ public class DictionaryOperationsManager<TKey, TValue>
             .Execute();
 
         return this;
+    }
+
+    /// <summary>
+    /// Extracts a sub-value from the current dictionary using the given selector.
+    /// Returns a connector that exposes the sub-value for further assertions.
+    /// </summary>
+    /// <param name="selector">A function that extracts a sub-value from the current dictionary.</param>
+    /// <typeparam name="TResult">The type of the extracted sub-value.</typeparam>
+    /// <returns>
+    /// An <see cref="AndWhichConnector{TManager,TSubject}"/> exposing the extracted sub-value
+    /// and allowing the chain to continue from the parent manager via <c>.And</c>.
+    /// </returns>
+    public AndWhichConnector<DictionaryOperationsManager<TKey, TValue>, TResult> Which<TResult>(
+        Func<IDictionary<TKey, TValue>, TResult> selector
+    )
+    {
+        ArgumentNullException.ThrowIfNull(selector);
+        var value = PrincipalChain.GetValue();
+        var result = selector(value);
+        return new AndWhichConnector<DictionaryOperationsManager<TKey, TValue>, TResult>(
+            this,
+            result,
+            PrincipalChain.GetSubject()
+        );
     }
 }
