@@ -286,4 +286,52 @@ public static partial class TestExtension
     {
         return new NullableByteOperationsManager(value, callerName);
     }
+
+    /// <summary>
+    /// Begins a fluent assertion chain for the specified <see cref="sbyte"/> value.
+    /// </summary>
+    /// <param name="value">The sbyte value to test.</param>
+    /// <param name="callerName">
+    /// Automatically captured expression name of the variable being tested.
+    /// Used in failure messages for contextual reporting.
+    /// </param>
+    /// <returns>A <see cref="SByteOperationsManager"/> for chaining sbyte-specific assertions.</returns>
+    /// <example>
+    /// <code>
+    /// sbyte temperature = -10;
+    /// temperature.Test().BeNegative().BeLessThan(0);
+    /// </code>
+    /// </example>
+    [Pure]
+    public static SByteOperationsManager Test(
+        this sbyte value,
+        [CallerArgumentExpression("value")] string callerName = ""
+    )
+    {
+        return new SByteOperationsManager(value, callerName);
+    }
+
+    /// <summary>
+    /// Begins a fluent assertion chain for the specified nullable <see cref="sbyte"/> value.
+    /// </summary>
+    /// <param name="value">The nullable sbyte value to test.</param>
+    /// <param name="callerName">
+    /// Automatically captured expression name of the variable being tested.
+    /// Used in failure messages for contextual reporting.
+    /// </param>
+    /// <returns>A <see cref="NullableSByteOperationsManager"/> for chaining nullable sbyte-specific assertions.</returns>
+    /// <example>
+    /// <code>
+    /// sbyte? offset = null;
+    /// offset.Test().NotHaveValue();
+    /// </code>
+    /// </example>
+    [Pure]
+    public static NullableSByteOperationsManager Test(
+        this sbyte? value,
+        [CallerArgumentExpression("value")] string callerName = ""
+    )
+    {
+        return new NullableSByteOperationsManager(value, callerName);
+    }
 }

@@ -329,6 +329,72 @@ public struct Operations
     }
 
     /// <summary>
+    /// Operations available for <see cref="sbyte"/> values.
+    /// </summary>
+    public enum SByte
+    {
+        [EnumStringValue("be")]
+        Be,
+
+        [EnumStringValue("notbe")]
+        NotBe,
+
+        [EnumStringValue("bepositive")]
+        BePositive,
+
+        [EnumStringValue("benegative")]
+        BeNegative,
+
+        [EnumStringValue("bezero")]
+        BeZero,
+
+        [EnumStringValue("begreaterthan")]
+        BeGreaterThan,
+
+        [EnumStringValue("begreaterthanorequalto")]
+        BeGreaterThanOrEqualTo,
+
+        [EnumStringValue("belessthan")]
+        BeLessThan,
+
+        [EnumStringValue("belessthanorequalto")]
+        BeLessThanOrEqualTo,
+
+        [EnumStringValue("beinrange")]
+        BeInRange,
+
+        [EnumStringValue("notbeinrange")]
+        NotBeInRange,
+
+        [EnumStringValue("beoneof")]
+        BeOneOf,
+
+        [EnumStringValue("notbeoneof")]
+        NotBeOneOf,
+
+        [EnumStringValue("bedivisibleby")]
+        BeDivisibleBy,
+
+        [EnumStringValue("beeven")]
+        BeEven,
+
+        [EnumStringValue("beodd")]
+        BeOdd,
+    }
+
+    /// <summary>
+    /// Operations available for <see cref="sbyte?"/> (nullable sbyte) values.
+    /// </summary>
+    public enum NullableSByte
+    {
+        [EnumStringValue("havevaluesbyte")]
+        HaveValue,
+
+        [EnumStringValue("nothavevaluesbyte")]
+        NotHaveValue,
+    }
+
+    /// <summary>
     /// Operations available for <see cref="long"/> values.
     /// </summary>
     public enum Long

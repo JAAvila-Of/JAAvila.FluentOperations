@@ -130,6 +130,16 @@ internal class PropertyProxy<TProp, TManager>(
             return (TManager)(object)new ByteOperationsManager(default, propertyName);
         }
 
+        if (typeof(TManager) == typeof(NullableSByteOperationsManager))
+        {
+            return (TManager)(object)new NullableSByteOperationsManager(null, propertyName);
+        }
+
+        if (typeof(TManager) == typeof(SByteOperationsManager))
+        {
+            return (TManager)(object)new SByteOperationsManager(default, propertyName);
+        }
+
         if (typeof(TManager) == typeof(DateTimeOperationsManager))
         {
             return (TManager)(object)new DateTimeOperationsManager(default, propertyName);
