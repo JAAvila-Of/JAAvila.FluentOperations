@@ -220,6 +220,11 @@ internal class PropertyProxy<TProp, TManager>(
                 var defaultVal = Activator.CreateInstance(enumType)!;
                 return (TManager)Activator.CreateInstance(typeof(TManager), defaultVal, propertyName)!;
             }
+
+            if (genericDef == typeof(NullableEnumOperationsManager<>))
+            {
+                return (TManager)Activator.CreateInstance(typeof(TManager), (object?)null, propertyName)!;
+            }
         }
 
         return (TManager)(object)new ObjectOperationsManager(null, propertyName);
