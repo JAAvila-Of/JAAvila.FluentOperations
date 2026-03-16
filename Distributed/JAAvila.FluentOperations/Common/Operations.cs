@@ -1085,6 +1085,18 @@ public struct Operations
     }
 
     /// <summary>
+    /// Operations available for nullable enum values (used with <c>NullableEnumOperationsManager&lt;T&gt;</c>).
+    /// </summary>
+    public enum NullableEnum
+    {
+        [EnumStringValue("havevalueenum")]
+        HaveValue,
+
+        [EnumStringValue("nothavevalueenum")]
+        NotHaveValue,
+    }
+
+    /// <summary>
     /// Operations available for <see cref="System.Uri"/> values.
     /// </summary>
     public enum Uri

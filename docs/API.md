@@ -455,6 +455,26 @@ Manager: `EnumOperationsManager<T>` (via `.TestEnum<T>()`)
 
 ---
 
+### Nullable Enum Validations
+
+Manager: `NullableEnumOperationsManager<T>` (via `.TestEnum<T>()` on `T?`)
+
+| Method | Description |
+|--------|-------------|
+| `HaveValue()` | Has a non-null value |
+| `NotHaveValue()` | Is null |
+| `Be(T?)` | Equals expected (supports null) |
+| `NotBe(T?)` | Does not equal (supports null) |
+| `BeDefined()` | Is a defined enum value (null guard) |
+| `BeOneOf(params T[])` | In set (null guard) |
+| `NotBeOneOf(params T[])` | Not in set (null guard) |
+| `HaveFlag(T)` | Has flag (for `[Flags]`) (null guard) |
+| `NotHaveFlag(T)` | Does not have flag (null guard) |
+| `BeNull()` | Is null (inherited) |
+| `NotBeNull()` | Is not null (inherited) |
+
+---
+
 ### Uri Validations
 
 Manager: `UriOperationsManager`
