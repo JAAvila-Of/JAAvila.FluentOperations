@@ -483,6 +483,56 @@ public abstract partial class QualityBlueprint<T>
     ) => For<sbyte?, NullableSByteOperationsManager>(propertyExpression, config);
 
     /// <summary>
+    /// Defines a validation rule for a <see cref="uint"/> property of the model.
+    /// Call <see cref="IPropertyProxy{TManager}.Test"/> on the result to access uint assertions.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the uint property to validate (e.g., <c>x =&gt; x.Count</c>).
+    /// </param>
+    /// <returns>A property proxy that exposes <see cref="UIntOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<UIntOperationsManager> For(
+        Expression<Func<T, uint>> propertyExpression
+    ) => For<uint, UIntOperationsManager>(propertyExpression);
+
+    /// <summary>
+    /// Defines a validation rule for a <see cref="uint"/> property of the model, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the uint property to validate (e.g., <c>x =&gt; x.Count</c>).
+    /// </param>
+    /// <param name="config">Configuration for this rule (severity, error code, cascade mode).</param>
+    /// <returns>A property proxy that exposes <see cref="UIntOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<UIntOperationsManager> For(
+        Expression<Func<T, uint>> propertyExpression,
+        RuleConfig config
+    ) => For<uint, UIntOperationsManager>(propertyExpression, config);
+
+    /// <summary>
+    /// Defines a validation rule for a nullable <see cref="uint"/> property of the model.
+    /// Call <see cref="IPropertyProxy{TManager}.Test"/> on the result to access nullable uint assertions.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the nullable uint property to validate (e.g., <c>x =&gt; x.Count</c>).
+    /// </param>
+    /// <returns>A property proxy that exposes <see cref="NullableUIntOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<NullableUIntOperationsManager> For(
+        Expression<Func<T, uint?>> propertyExpression
+    ) => For<uint?, NullableUIntOperationsManager>(propertyExpression);
+
+    /// <summary>
+    /// Defines a validation rule for a nullable <see cref="uint"/> property of the model, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the nullable uint property to validate (e.g., <c>x =&gt; x.Count</c>).
+    /// </param>
+    /// <param name="config">Configuration for this rule (severity, error code, cascade mode).</param>
+    /// <returns>A property proxy that exposes <see cref="NullableUIntOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<NullableUIntOperationsManager> For(
+        Expression<Func<T, uint?>> propertyExpression,
+        RuleConfig config
+    ) => For<uint?, NullableUIntOperationsManager>(propertyExpression, config);
+
+    /// <summary>
     /// Defines a validation rule for a <see cref="short"/> property of the model.
     /// Call <see cref="IPropertyProxy{TManager}.Test"/> on the result to access short assertions.
     /// </summary>

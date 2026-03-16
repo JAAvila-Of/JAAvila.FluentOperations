@@ -910,6 +910,42 @@ public abstract partial class QualityBlueprint<T>
         RuleConfig config
     ) => ForTransform<sbyte?, NullableSByteOperationsManager>(propertyExpression, transform, config);
 
+    // uint -> uint transformation
+    /// <summary>
+    /// Registers a same-type transformation for a <see cref="uint"/> property.
+    /// </summary>
+    protected IPropertyProxy<UIntOperationsManager> ForTransform(
+        Expression<Func<T, uint>> propertyExpression,
+        Func<uint, uint> transform
+    ) => ForTransform<uint, UIntOperationsManager>(propertyExpression, transform);
+
+    /// <summary>
+    /// Registers a same-type transformation for a <see cref="uint"/> property, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    protected IPropertyProxy<UIntOperationsManager> ForTransform(
+        Expression<Func<T, uint>> propertyExpression,
+        Func<uint, uint> transform,
+        RuleConfig config
+    ) => ForTransform<uint, UIntOperationsManager>(propertyExpression, transform, config);
+
+    // uint? -> uint? transformation
+    /// <summary>
+    /// Registers a same-type transformation for a nullable <see cref="uint"/> property.
+    /// </summary>
+    protected IPropertyProxy<NullableUIntOperationsManager> ForTransform(
+        Expression<Func<T, uint?>> propertyExpression,
+        Func<uint?, uint?> transform
+    ) => ForTransform<uint?, NullableUIntOperationsManager>(propertyExpression, transform);
+
+    /// <summary>
+    /// Registers a same-type transformation for a nullable <see cref="uint"/> property, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    protected IPropertyProxy<NullableUIntOperationsManager> ForTransform(
+        Expression<Func<T, uint?>> propertyExpression,
+        Func<uint?, uint?> transform,
+        RuleConfig config
+    ) => ForTransform<uint?, NullableUIntOperationsManager>(propertyExpression, transform, config);
+
     /// <summary>
     /// Registers a same-type transformation for a <see cref="short"/> property.
     /// </summary>
@@ -1500,6 +1536,42 @@ public abstract partial class QualityBlueprint<T>
         Func<TProp, sbyte?> transform,
         RuleConfig config
     ) => ForTransform<TProp, sbyte?, NullableSByteOperationsManager>(propertyExpression, transform, config);
+
+    // Cross-type -> uint
+    /// <summary>
+    /// Registers a property with a cross-type transformation to <see cref="uint"/> applied before validation.
+    /// </summary>
+    protected IPropertyProxy<UIntOperationsManager> ForTransform<TProp>(
+        Expression<Func<T, TProp>> propertyExpression,
+        Func<TProp, uint> transform
+    ) => ForTransform<TProp, uint, UIntOperationsManager>(propertyExpression, transform);
+
+    /// <summary>
+    /// Registers a property with a cross-type transformation to <see cref="uint"/> applied before validation, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    protected IPropertyProxy<UIntOperationsManager> ForTransform<TProp>(
+        Expression<Func<T, TProp>> propertyExpression,
+        Func<TProp, uint> transform,
+        RuleConfig config
+    ) => ForTransform<TProp, uint, UIntOperationsManager>(propertyExpression, transform, config);
+
+    // Cross-type -> uint?
+    /// <summary>
+    /// Registers a property with a cross-type transformation to nullable <see cref="uint"/> applied before validation.
+    /// </summary>
+    protected IPropertyProxy<NullableUIntOperationsManager> ForTransform<TProp>(
+        Expression<Func<T, TProp>> propertyExpression,
+        Func<TProp, uint?> transform
+    ) => ForTransform<TProp, uint?, NullableUIntOperationsManager>(propertyExpression, transform);
+
+    /// <summary>
+    /// Registers a property with a cross-type transformation to nullable <see cref="uint"/> applied before validation, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    protected IPropertyProxy<NullableUIntOperationsManager> ForTransform<TProp>(
+        Expression<Func<T, TProp>> propertyExpression,
+        Func<TProp, uint?> transform,
+        RuleConfig config
+    ) => ForTransform<TProp, uint?, NullableUIntOperationsManager>(propertyExpression, transform, config);
 
     /// <summary>
     /// Registers a property with a cross-type transformation to <see cref="short"/> applied before validation.
