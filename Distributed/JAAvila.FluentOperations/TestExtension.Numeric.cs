@@ -334,4 +334,52 @@ public static partial class TestExtension
     {
         return new NullableSByteOperationsManager(value, callerName);
     }
+
+    /// <summary>
+    /// Begins a fluent assertion chain for the specified <see cref="char"/> value.
+    /// </summary>
+    /// <param name="value">The char value to test.</param>
+    /// <param name="callerName">
+    /// Automatically captured expression name of the variable being tested.
+    /// Used in failure messages for contextual reporting.
+    /// </param>
+    /// <returns>A <see cref="CharOperationsManager"/> for chaining char-specific assertions.</returns>
+    /// <example>
+    /// <code>
+    /// char letter = 'A';
+    /// letter.Test().BeUpperCase().BeLetter();
+    /// </code>
+    /// </example>
+    [Pure]
+    public static CharOperationsManager Test(
+        this char value,
+        [CallerArgumentExpression("value")] string callerName = ""
+    )
+    {
+        return new CharOperationsManager(value, callerName);
+    }
+
+    /// <summary>
+    /// Begins a fluent assertion chain for the specified nullable <see cref="char"/> value.
+    /// </summary>
+    /// <param name="value">The nullable char value to test.</param>
+    /// <param name="callerName">
+    /// Automatically captured expression name of the variable being tested.
+    /// Used in failure messages for contextual reporting.
+    /// </param>
+    /// <returns>A <see cref="NullableCharOperationsManager"/> for chaining nullable char-specific assertions.</returns>
+    /// <example>
+    /// <code>
+    /// char? initial = null;
+    /// initial.Test().NotHaveValue();
+    /// </code>
+    /// </example>
+    [Pure]
+    public static NullableCharOperationsManager Test(
+        this char? value,
+        [CallerArgumentExpression("value")] string callerName = ""
+    )
+    {
+        return new NullableCharOperationsManager(value, callerName);
+    }
 }

@@ -383,6 +383,156 @@ public abstract partial class QualityBlueprint<T>
     ) => For<float?, NullableFloatOperationsManager>(propertyExpression, config);
 
     /// <summary>
+    /// Defines a validation rule for a <see cref="byte"/> property of the model.
+    /// Call <see cref="IPropertyProxy{TManager}.Test"/> on the result to access byte assertions.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the byte property to validate (e.g., <c>x =&gt; x.Channel</c>).
+    /// </param>
+    /// <returns>A property proxy that exposes <see cref="ByteOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<ByteOperationsManager> For(
+        Expression<Func<T, byte>> propertyExpression
+    ) => For<byte, ByteOperationsManager>(propertyExpression);
+
+    /// <summary>
+    /// Defines a validation rule for a <see cref="byte"/> property of the model, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the byte property to validate (e.g., <c>x =&gt; x.Channel</c>).
+    /// </param>
+    /// <param name="config">Configuration for this rule (severity, error code, cascade mode).</param>
+    /// <returns>A property proxy that exposes <see cref="ByteOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<ByteOperationsManager> For(
+        Expression<Func<T, byte>> propertyExpression,
+        RuleConfig config
+    ) => For<byte, ByteOperationsManager>(propertyExpression, config);
+
+    /// <summary>
+    /// Defines a validation rule for a nullable <see cref="byte"/> property of the model.
+    /// Call <see cref="IPropertyProxy{TManager}.Test"/> on the result to access nullable byte assertions.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the nullable byte property to validate (e.g., <c>x =&gt; x.Channel</c>).
+    /// </param>
+    /// <returns>A property proxy that exposes <see cref="NullableByteOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<NullableByteOperationsManager> For(
+        Expression<Func<T, byte?>> propertyExpression
+    ) => For<byte?, NullableByteOperationsManager>(propertyExpression);
+
+    /// <summary>
+    /// Defines a validation rule for a nullable <see cref="byte"/> property of the model, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the nullable byte property to validate (e.g., <c>x =&gt; x.Channel</c>).
+    /// </param>
+    /// <param name="config">Configuration for this rule (severity, error code, cascade mode).</param>
+    /// <returns>A property proxy that exposes <see cref="NullableByteOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<NullableByteOperationsManager> For(
+        Expression<Func<T, byte?>> propertyExpression,
+        RuleConfig config
+    ) => For<byte?, NullableByteOperationsManager>(propertyExpression, config);
+
+    /// <summary>
+    /// Defines a validation rule for an <see cref="sbyte"/> property of the model.
+    /// Call <see cref="IPropertyProxy{TManager}.Test"/> on the result to access sbyte assertions.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the sbyte property to validate (e.g., <c>x =&gt; x.Temperature</c>).
+    /// </param>
+    /// <returns>A property proxy that exposes <see cref="SByteOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<SByteOperationsManager> For(
+        Expression<Func<T, sbyte>> propertyExpression
+    ) => For<sbyte, SByteOperationsManager>(propertyExpression);
+
+    /// <summary>
+    /// Defines a validation rule for an <see cref="sbyte"/> property of the model, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the sbyte property to validate (e.g., <c>x =&gt; x.Temperature</c>).
+    /// </param>
+    /// <param name="config">Configuration for this rule (severity, error code, cascade mode).</param>
+    /// <returns>A property proxy that exposes <see cref="SByteOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<SByteOperationsManager> For(
+        Expression<Func<T, sbyte>> propertyExpression,
+        RuleConfig config
+    ) => For<sbyte, SByteOperationsManager>(propertyExpression, config);
+
+    /// <summary>
+    /// Defines a validation rule for a nullable <see cref="sbyte"/> property of the model.
+    /// Call <see cref="IPropertyProxy{TManager}.Test"/> on the result to access nullable sbyte assertions.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the nullable sbyte property to validate (e.g., <c>x =&gt; x.Temperature</c>).
+    /// </param>
+    /// <returns>A property proxy that exposes <see cref="NullableSByteOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<NullableSByteOperationsManager> For(
+        Expression<Func<T, sbyte?>> propertyExpression
+    ) => For<sbyte?, NullableSByteOperationsManager>(propertyExpression);
+
+    /// <summary>
+    /// Defines a validation rule for a nullable <see cref="sbyte"/> property of the model, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the nullable sbyte property to validate (e.g., <c>x =&gt; x.Temperature</c>).
+    /// </param>
+    /// <param name="config">Configuration for this rule (severity, error code, cascade mode).</param>
+    /// <returns>A property proxy that exposes <see cref="NullableSByteOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<NullableSByteOperationsManager> For(
+        Expression<Func<T, sbyte?>> propertyExpression,
+        RuleConfig config
+    ) => For<sbyte?, NullableSByteOperationsManager>(propertyExpression, config);
+
+    /// <summary>
+    /// Defines a validation rule for a <see cref="char"/> property of the model.
+    /// Call <see cref="IPropertyProxy{TManager}.Test"/> on the result to access char assertions.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the char property to validate (e.g., <c>x =&gt; x.Grade</c>).
+    /// </param>
+    /// <returns>A property proxy that exposes <see cref="CharOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<CharOperationsManager> For(
+        Expression<Func<T, char>> propertyExpression
+    ) => For<char, CharOperationsManager>(propertyExpression);
+
+    /// <summary>
+    /// Defines a validation rule for a <see cref="char"/> property of the model, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the char property to validate (e.g., <c>x =&gt; x.Grade</c>).
+    /// </param>
+    /// <param name="config">Configuration for this rule (severity, error code, cascade mode).</param>
+    /// <returns>A property proxy that exposes <see cref="CharOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<CharOperationsManager> For(
+        Expression<Func<T, char>> propertyExpression,
+        RuleConfig config
+    ) => For<char, CharOperationsManager>(propertyExpression, config);
+
+    /// <summary>
+    /// Defines a validation rule for a nullable <see cref="char"/> property of the model.
+    /// Call <see cref="IPropertyProxy{TManager}.Test"/> on the result to access nullable char assertions.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the nullable char property to validate (e.g., <c>x =&gt; x.Grade</c>).
+    /// </param>
+    /// <returns>A property proxy that exposes <see cref="NullableCharOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<NullableCharOperationsManager> For(
+        Expression<Func<T, char?>> propertyExpression
+    ) => For<char?, NullableCharOperationsManager>(propertyExpression);
+
+    /// <summary>
+    /// Defines a validation rule for a nullable <see cref="char"/> property of the model, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the nullable char property to validate (e.g., <c>x =&gt; x.Grade</c>).
+    /// </param>
+    /// <param name="config">Configuration for this rule (severity, error code, cascade mode).</param>
+    /// <returns>A property proxy that exposes <see cref="NullableCharOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<NullableCharOperationsManager> For(
+        Expression<Func<T, char?>> propertyExpression,
+        RuleConfig config
+    ) => For<char?, NullableCharOperationsManager>(propertyExpression, config);
+
+    /// <summary>
     /// Defines a validation rule for a nullable <see cref="int"/> property of the model.
     /// Call <see cref="IPropertyProxy{TManager}.Test"/> on the result to access nullable integer assertions.
     /// </summary>
