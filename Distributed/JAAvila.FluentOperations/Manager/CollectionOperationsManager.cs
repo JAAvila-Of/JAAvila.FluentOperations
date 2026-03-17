@@ -20,18 +20,232 @@ public class CollectionOperationsManager<T>
 {
     /// <inheritdoc />
     public PrincipalChain<IEnumerable<T>> PrincipalChain { get; }
-    private readonly List<T> _materialized;
 
     /// <summary>
     /// Initializes a new instance for testing the specified collection.
     /// </summary>
-    /// <param name="value">The collection value to test. Materialized eagerly to avoid multiple enumeration.</param>
+    /// <param name="value">The collection value to test.
+    /// Already-materialized collections (ICollection&lt;T&gt;) are stored as-is, preserving their original reference.
+    /// Lazy enumerables (LINQ queries, yield return, IQueryable) are materialized once to avoid multiple enumeration.
+    /// Null is accepted and deferred to FailIf guards.</param>
     /// <param name="caller">The caller expression name, captured automatically.</param>
     public CollectionOperationsManager(IEnumerable<T> value, string caller)
     {
-        _materialized = value is ICollection<T> col ? col.ToList() : value.ToList();
-        PrincipalChain = PrincipalChain<IEnumerable<T>>.Get(_materialized, caller);
+        var safeValue = value switch
+        {
+            null => null,
+            ICollection<T> => value,
+            _ => value.ToList()
+        };
+        PrincipalChain = PrincipalChain<IEnumerable<T>>.Get(safeValue!, caller);
         GlobalConfig.Initialize();
+    }
+
+    /// <summary>
+    /// Asserts that the collection is <c>null</c>.
+    /// </summary>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public CollectionOperationsManager<T> BeNull(Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Common.BeNull))
+        {
+            return this;
+        }
+
+        ExecutionEngine<CollectionOperationsManager<T>, IEnumerable<T>>
+            .New(this)
+            .WithOperation(ReferenceBeNullValidator<IEnumerable<T>>.New(PrincipalChain))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.ResultValidation,
+                            BaseFormatter.Format(PrincipalChain.GetValue())
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the collection is not <c>null</c>.
+    /// </summary>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public CollectionOperationsManager<T> NotBeNull(Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Common.NotBeNull))
+        {
+            return this;
+        }
+
+        ExecutionEngine<CollectionOperationsManager<T>, IEnumerable<T>>
+            .New(this)
+            .WithOperation(ReferenceNotBeNullValidator<IEnumerable<T>>.New(PrincipalChain))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the collection is the same reference as <paramref name="expected"/>.
+    /// </summary>
+    /// <param name="expected">The expected collection reference.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public CollectionOperationsManager<T> Be(IEnumerable<T> expected, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Collection.Be))
+        {
+            return this;
+        }
+
+        ExecutionEngine<CollectionOperationsManager<T>, IEnumerable<T>>
+            .New(this)
+            .WithOperation(CollectionBeValidator<T>.New(PrincipalChain, expected))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.ResultValidation,
+                            BaseFormatter.Format(expected)
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(Be)} operation failed because the collection was null."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the collection is not the same reference as <paramref name="expected"/>.
+    /// </summary>
+    /// <param name="expected">The collection reference that should not match.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public CollectionOperationsManager<T> NotBe(IEnumerable<T> expected, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Collection.NotBe))
+        {
+            return this;
+        }
+
+        ExecutionEngine<CollectionOperationsManager<T>, IEnumerable<T>>
+            .New(this)
+            .WithOperation(CollectionNotBeValidator<T>.New(PrincipalChain, expected))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.ResultValidation,
+                            BaseFormatter.Format(expected)
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(NotBe)} operation failed because the collection was null."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the runtime type of the collection is exactly <typeparamref name="TType"/>.
+    /// </summary>
+    /// <typeparam name="TType">The expected runtime type.</typeparam>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public CollectionOperationsManager<T> BeOfType<TType>(Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Common.BeOfType))
+        {
+            return this;
+        }
+
+        var type = typeof(TType);
+        ValidateBeOfTypeOperation(reason, type);
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the runtime type of the collection is exactly <paramref name="expected"/>.
+    /// </summary>
+    /// <param name="expected">The expected runtime type.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public CollectionOperationsManager<T> BeOfType(Type expected, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Common.BeOfType))
+        {
+            return this;
+        }
+
+        ValidateBeOfTypeOperation(reason, expected);
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the runtime type of the collection is not <typeparamref name="TType"/>.
+    /// </summary>
+    /// <typeparam name="TType">The type that should not match.</typeparam>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public CollectionOperationsManager<T> NotBeOfType<TType>(Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Common.NotBeOfType))
+        {
+            return this;
+        }
+
+        var type = typeof(TType);
+        ValidateNotBeOfTypeOperation(reason, type);
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the runtime type of the collection is not <paramref name="expected"/>.
+    /// </summary>
+    /// <param name="expected">The type that should not match.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public CollectionOperationsManager<T> NotBeOfType(Type expected, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Common.NotBeOfType))
+        {
+            return this;
+        }
+
+        ValidateNotBeOfTypeOperation(reason, expected);
+        return this;
     }
 
     /// <summary>
@@ -127,6 +341,15 @@ public class CollectionOperationsManager<T>
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(operation.ResultValidation)
                         .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue().IsNull(),
+                        Fail.New(
+                            $"The {nameof(NotBeEmpty)} operation failed because the collection was null."
+                        )
+                    )
             )
             .Execute();
 
@@ -333,6 +556,52 @@ public class CollectionOperationsManager<T>
     }
 
     /// <summary>
+    /// Asserts that the collection contains at least one element matching the specified predicate.
+    /// </summary>
+    /// <param name="predicate">A function that must return <c>true</c> for at least one element.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public CollectionOperationsManager<T> Contain(Func<T, bool> predicate, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Collection.ContainMatch))
+        {
+            return this;
+        }
+
+        ExecutionEngine<CollectionOperationsManager<T>, IEnumerable<T>>
+            .New(this)
+            .WithOperation(CollectionContainPredicateValidator<T>.New(PrincipalChain, predicate))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue().IsNull(),
+                        Fail.New(
+                            $"The {nameof(Contain)} operation failed because the collection was null."
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        predicate is null,
+                        Fail.New(
+                            $"The {nameof(Contain)} operation failed because the predicate cannot be null."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
     /// Asserts that the collection contains the specified item a number of times satisfying the given occurrence constraint.
     /// </summary>
     /// <param name="item">The item to look for in the collection.</param>
@@ -471,6 +740,55 @@ public class CollectionOperationsManager<T>
     }
 
     /// <summary>
+    /// Asserts that the collection contains exactly one element matching the specified predicate.
+    /// </summary>
+    /// <param name="predicate">A function that must return <c>true</c> for exactly one element.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public CollectionOperationsManager<T> ContainSingle(Func<T, bool> predicate, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Collection.ContainSingleMatch))
+        {
+            return this;
+        }
+
+        ExecutionEngine<CollectionOperationsManager<T>, IEnumerable<T>>
+            .New(this)
+            .WithOperation(CollectionContainSinglePredicateValidator<T>.New(PrincipalChain, predicate))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.ResultValidation,
+                            PrincipalChain.GetValue()?.Count(predicate).ToString() ?? "0"
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue().IsNull(),
+                        Fail.New(
+                            $"The {nameof(ContainSingle)} operation failed because the collection was null."
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        predicate is null,
+                        Fail.New(
+                            $"The {nameof(ContainSingle)} operation failed because the predicate cannot be null."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
     /// Asserts that the collection contains all of the specified items.
     /// </summary>
     /// <param name="items">The items that must all be present in the collection.</param>
@@ -586,6 +904,132 @@ public class CollectionOperationsManager<T>
                         items.IsNull(),
                         Fail.New(
                             $"The {nameof(ContainAny)} operation failed because the items parameter cannot be null."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the collection does not contain any of the specified items.
+    /// </summary>
+    /// <param name="items">The items that must all be absent from the collection.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public CollectionOperationsManager<T> NotContainAny(params T[] items)
+    {
+        return NotContainAny(null, items);
+    }
+
+    /// <summary>
+    /// Asserts that the collection does not contain any of the specified items.
+    /// Fails if even one of the specified items is found in the collection.
+    /// </summary>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <param name="items">The items that must all be absent from the collection.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// This operation fails immediately if the collection is <c>null</c> or if <paramref name="items"/> is <c>null</c>.
+    /// </remarks>
+    public CollectionOperationsManager<T> NotContainAny(Reason? reason, params T[] items)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Collection.NotContainAny))
+        {
+            return this;
+        }
+
+        ExecutionEngine<CollectionOperationsManager<T>, IEnumerable<T>>
+            .New(this)
+            .WithOperation(CollectionNotContainAnyValidator<T>.New(PrincipalChain, items))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.ResultValidation,
+                            string.Join(", ", items.Select(BaseFormatter.Format))
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue().IsNull(),
+                        Fail.New(
+                            $"The {nameof(NotContainAny)} operation failed because the collection was null."
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        items.IsNull(),
+                        Fail.New(
+                            $"The {nameof(NotContainAny)} operation failed because the items parameter cannot be null."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the collection does not contain all of the specified items simultaneously.
+    /// </summary>
+    /// <param name="items">The items that must not all be present in the collection.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public CollectionOperationsManager<T> NotContainAll(params T[] items)
+    {
+        return NotContainAll(null, items);
+    }
+
+    /// <summary>
+    /// Asserts that the collection does not contain all of the specified items simultaneously.
+    /// At least one of the specified items must be absent from the collection.
+    /// </summary>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <param name="items">The items that must not all be present simultaneously.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// This operation fails immediately if the collection is <c>null</c> or if <paramref name="items"/> is <c>null</c>.
+    /// </remarks>
+    public CollectionOperationsManager<T> NotContainAll(Reason? reason, params T[] items)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Collection.NotContainAll))
+        {
+            return this;
+        }
+
+        ExecutionEngine<CollectionOperationsManager<T>, IEnumerable<T>>
+            .New(this)
+            .WithOperation(CollectionNotContainAllValidator<T>.New(PrincipalChain, items))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.ResultValidation,
+                            string.Join(", ", items.Select(BaseFormatter.Format))
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue().IsNull(),
+                        Fail.New(
+                            $"The {nameof(NotContainAll)} operation failed because the collection was null."
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        items.IsNull(),
+                        Fail.New(
+                            $"The {nameof(NotContainAll)} operation failed because the items parameter cannot be null."
                         )
                     )
             )
@@ -1259,6 +1703,91 @@ public class CollectionOperationsManager<T>
     }
 
     /// <summary>
+    /// Asserts that the collection does NOT contain the same elements as the expected collection, regardless of order.
+    /// </summary>
+    /// <param name="expected">The collection whose elements must NOT match the tested collection.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public CollectionOperationsManager<T> NotBeEquivalentTo(
+        IEnumerable<T> expected,
+        Reason? reason = null
+    )
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Collection.NotBeEquivalentTo))
+        {
+            return this;
+        }
+
+        ExecutionEngine<CollectionOperationsManager<T>, IEnumerable<T>>
+            .New(this)
+            .WithOperation(CollectionNotBeEquivalentToValidator<T>.New(PrincipalChain, expected))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.ResultValidation
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue().IsNull() && expected.IsNull(),
+                        Fail.New(
+                            $"The {nameof(NotBeEquivalentTo)} operation failed because both collections are null and therefore equivalent."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the collection does NOT contain the same elements in the same order
+    /// as the expected collection.
+    /// </summary>
+    /// <param name="expected">The collection whose elements must NOT match the tested collection in exact order.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public CollectionOperationsManager<T> NotBeSequenceEqualTo(
+        IEnumerable<T> expected,
+        Reason? reason = null
+    )
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Collection.NotBeSequenceEqualTo))
+        {
+            return this;
+        }
+
+        ExecutionEngine<CollectionOperationsManager<T>, IEnumerable<T>>
+            .New(this)
+            .WithOperation(CollectionNotBeSequenceEqualToValidator<T>.New(PrincipalChain, expected))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.ResultValidation
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue().IsNull() && expected.IsNull(),
+                        Fail.New(
+                            $"The {nameof(NotBeSequenceEqualTo)} operation failed because both collections are null and therefore sequence-equal."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
     /// Asserts that the element at the specified index in the collection equals the expected value.
     /// </summary>
     /// <param name="index">The zero-based index to check. Must be non-negative.</param>
@@ -1563,6 +2092,165 @@ public class CollectionOperationsManager<T>
     }
 
     /// <summary>
+    /// Asserts that the collection has exactly the specified number of elements (length).
+    /// </summary>
+    /// <param name="expected">The expected element count. Must be non-negative.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// This operation fails immediately if the collection is <c>null</c> or if <paramref name="expected"/> is negative.
+    /// </remarks>
+    public CollectionOperationsManager<T> HaveLength(int expected, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Collection.HaveLength))
+        {
+            return this;
+        }
+
+        ExecutionEngine<CollectionOperationsManager<T>, IEnumerable<T>>
+            .New(this)
+            .WithOperation(CollectionHaveLengthValidator<T>.New(PrincipalChain, expected))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.ResultValidation,
+                            expected.ToString(),
+                            PrincipalChain.GetValue()?.Count().ToString() ?? "null"
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue().IsNull(),
+                        Fail.New(
+                            $"The {nameof(HaveLength)} operation failed because the collection was null."
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        expected < 0,
+                        Fail.New(
+                            $"The {nameof(HaveLength)} operation failed because the expected length cannot be negative."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the collection has more elements than the specified value.
+    /// </summary>
+    /// <param name="expected">The minimum exclusive element count. Must be non-negative.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// This operation fails immediately if the collection is <c>null</c> or if <paramref name="expected"/> is negative.
+    /// </remarks>
+    public CollectionOperationsManager<T> HaveLengthGreaterThan(int expected, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Collection.HaveLengthGreaterThan))
+        {
+            return this;
+        }
+
+        ExecutionEngine<CollectionOperationsManager<T>, IEnumerable<T>>
+            .New(this)
+            .WithOperation(CollectionHaveLengthGreaterThanValidator<T>.New(PrincipalChain, expected))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.ResultValidation,
+                            expected.ToString(),
+                            PrincipalChain.GetValue()?.Count().ToString() ?? "null"
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue().IsNull(),
+                        Fail.New(
+                            $"The {nameof(HaveLengthGreaterThan)} operation failed because the collection was null."
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        expected < 0,
+                        Fail.New(
+                            $"The {nameof(HaveLengthGreaterThan)} operation failed because the expected length cannot be negative."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the collection has fewer elements than the specified value.
+    /// </summary>
+    /// <param name="expected">The maximum exclusive element count. Must be non-negative.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// This operation fails immediately if the collection is <c>null</c> or if <paramref name="expected"/> is negative.
+    /// </remarks>
+    public CollectionOperationsManager<T> HaveLengthLessThan(int expected, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Collection.HaveLengthLessThan))
+        {
+            return this;
+        }
+
+        ExecutionEngine<CollectionOperationsManager<T>, IEnumerable<T>>
+            .New(this)
+            .WithOperation(CollectionHaveLengthLessThanValidator<T>.New(PrincipalChain, expected))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.ResultValidation,
+                            expected.ToString(),
+                            PrincipalChain.GetValue()?.Count().ToString() ?? "null"
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue().IsNull(),
+                        Fail.New(
+                            $"The {nameof(HaveLengthLessThan)} operation failed because the collection was null."
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        expected < 0,
+                        Fail.New(
+                            $"The {nameof(HaveLengthLessThan)} operation failed because the expected length cannot be negative."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
     /// Extracts a sub-value from the current collection using the given selector.
     /// Returns a connector that exposes the sub-value for further assertions.
     /// </summary>
@@ -1585,4 +2273,76 @@ public class CollectionOperationsManager<T>
             PrincipalChain.GetSubject()
         );
     }
+
+    #region PRIVATE METHODS
+
+    private void ValidateBeOfTypeOperation(Reason? reason, Type? type)
+    {
+        ExecutionEngine<CollectionOperationsManager<T>, IEnumerable<T>>
+            .New(this)
+            .WithOperation(ReferenceBeOfTypeValidator<IEnumerable<T>>.New(PrincipalChain, type!))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                _ =>
+                    (
+                        type is null,
+                        Fail.New(
+                            $"The {nameof(BeOfType)} operation failed because the expected type was <null>."
+                        )
+                    )
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(BeOfType)} operation failed because the collection was <null>."
+                        )
+                    )
+            )
+            .Execute();
+    }
+
+    private void ValidateNotBeOfTypeOperation(Reason? reason, Type? type)
+    {
+        ExecutionEngine<CollectionOperationsManager<T>, IEnumerable<T>>
+            .New(this)
+            .WithOperation(
+                ReferenceNotBeOfTypeValidator<IEnumerable<T>>.New(PrincipalChain, type!)
+            )
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                _ =>
+                    (
+                        type is null,
+                        Fail.New(
+                            $"The {nameof(NotBeOfType)} operation failed because the expected type was <null>."
+                        )
+                    )
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(NotBeOfType)} operation failed because the collection was <null>."
+                        )
+                    )
+            )
+            .Execute();
+    }
+
+    #endregion
 }

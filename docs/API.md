@@ -13,6 +13,7 @@ Complete API documentation for JAAvila.FluentOperations.
   - [Decimal](#decimal-validations)
   - [Double](#double-validations)
   - [Float](#float-validations)
+  - [Char](#char-validations)
   - [DateTime](#datetime-validations)
   - [DateOnly](#dateonly-validations)
   - [TimeOnly](#timeonly-validations)
@@ -124,9 +125,13 @@ Manager: `StringOperationsManager`
 | `EndWith(string)` | Ends with suffix |
 | `NotEndWith(string)` | Does not end with suffix |
 | `Match(string pattern)` | Matches regex pattern |
+| `Match(Regex)` | Matches precompiled regex |
 | `NotMatch(string pattern)` | Does not match regex |
+| `NotMatch(Regex)` | Does not match precompiled regex |
 | `MatchAny(params string[])` | Matches any regex pattern |
+| `MatchAny(params Regex[])` | Matches any precompiled regex |
 | `MatchAll(params string[])` | Matches all regex patterns |
+| `MatchAll(params Regex[])` | Matches all precompiled regex patterns |
 | `MatchWildcard(string)` | Matches wildcard pattern (`*`) |
 | `NotMatchWildcard(string)` | Does not match wildcard |
 | `BeEmail()` | Valid email format |
@@ -196,6 +201,230 @@ Manager: `IntegerOperationsManager` / `NullableIntegerOperationsManager`
 | `BeEven()` | Even number |
 | `BeOdd()` | Odd number |
 | `HaveValue()` / `NotHaveValue()` | (nullable only) |
+
+---
+
+### Byte Validations
+
+Manager: `ByteOperationsManager` / `NullableByteOperationsManager`
+
+| Operation | Description |
+|-----------|-------------|
+| `Be(byte)` | Equals expected |
+| `NotBe(byte)` | Does not equal |
+| `BePositive()` | Greater than zero |
+| `BeZero()` | Equals zero |
+| `BeGreaterThan(byte)` | Greater than value |
+| `BeGreaterThanOrEqualTo(byte)` | Greater than or equal |
+| `BeLessThan(byte)` | Less than value |
+| `BeLessThanOrEqualTo(byte)` | Less than or equal |
+| `BeInRange(byte, byte)` | Within inclusive range |
+| `NotBeInRange(byte, byte)` | Outside range |
+| `BeOneOf(params byte[])` | In set of values |
+| `NotBeOneOf(params byte[])` | Not in set |
+| `BeDivisibleBy(byte)` | Divisible by value |
+| `BeEven()` | Divisible by 2 |
+| `BeOdd()` | Not divisible by 2 |
+
+> **Note:** `BeNegative()` is not available for `byte` because it is an unsigned type (range 0-255).
+
+**Nullable byte (`byte?`)** adds:
+- `HaveValue()` — has a non-null value
+- `NotHaveValue()` — is null
+- All byte operations above (with FailIf null guards)
+
+---
+
+### SByte Validations
+
+Manager: `SByteOperationsManager` / `NullableSByteOperationsManager`
+
+| Operation | Description |
+|-----------|-------------|
+| `Be(sbyte)` | Equals expected |
+| `NotBe(sbyte)` | Does not equal |
+| `BePositive()` | Greater than zero |
+| `BeNegative()` | Less than zero |
+| `BeZero()` | Equals zero |
+| `BeGreaterThan(sbyte)` | Greater than value |
+| `BeGreaterThanOrEqualTo(sbyte)` | Greater than or equal |
+| `BeLessThan(sbyte)` | Less than value |
+| `BeLessThanOrEqualTo(sbyte)` | Less than or equal |
+| `BeInRange(sbyte, sbyte)` | Within inclusive range |
+| `NotBeInRange(sbyte, sbyte)` | Outside range |
+| `BeOneOf(params sbyte[])` | In set of values |
+| `NotBeOneOf(params sbyte[])` | Not in set |
+| `BeDivisibleBy(sbyte)` | Divisible by value |
+| `BeEven()` | Divisible by 2 |
+| `BeOdd()` | Not divisible by 2 |
+
+> **Note:** Unlike `byte`, `BeNegative()` IS available for `sbyte` because it is a signed type (range -128 to 127).
+
+**Nullable sbyte (`sbyte?`)** adds:
+- `HaveValue()` -- has a non-null value
+- `NotHaveValue()` -- is null
+- All sbyte operations above (with FailIf null guards)
+
+---
+
+### UInt Validations
+
+Manager: `UIntOperationsManager` / `NullableUIntOperationsManager`
+
+| Operation | Description |
+|-----------|-------------|
+| `Be(uint)` | Equals expected |
+| `NotBe(uint)` | Does not equal |
+| `BePositive()` | Greater than zero |
+| `BeZero()` | Equals zero |
+| `BeGreaterThan(uint)` | Greater than value |
+| `BeGreaterThanOrEqualTo(uint)` | Greater than or equal |
+| `BeLessThan(uint)` | Less than value |
+| `BeLessThanOrEqualTo(uint)` | Less than or equal |
+| `BeInRange(uint, uint)` | Within inclusive range |
+| `NotBeInRange(uint, uint)` | Outside range |
+| `BeOneOf(params uint[])` | In set of values |
+| `NotBeOneOf(params uint[])` | Not in set |
+| `BeDivisibleBy(uint)` | Divisible by value |
+| `BeEven()` | Divisible by 2 |
+| `BeOdd()` | Not divisible by 2 |
+
+> **Note:** `BeNegative()` is not available for `uint` because it is an unsigned type (range 0-4,294,967,295).
+
+**Nullable uint (`uint?`)** adds:
+- `HaveValue()` -- has a non-null value
+- `NotHaveValue()` -- is null
+- All uint operations above (with FailIf null guards)
+
+---
+
+### UShort Validations
+
+Manager: `UShortOperationsManager` / `NullableUShortOperationsManager`
+
+| Operation | Description |
+|-----------|-------------|
+| `Be(ushort)` | Equals expected |
+| `NotBe(ushort)` | Does not equal |
+| `BePositive()` | Greater than zero |
+| `BeZero()` | Equals zero |
+| `BeGreaterThan(ushort)` | Greater than value |
+| `BeGreaterThanOrEqualTo(ushort)` | Greater than or equal |
+| `BeLessThan(ushort)` | Less than value |
+| `BeLessThanOrEqualTo(ushort)` | Less than or equal |
+| `BeInRange(ushort, ushort)` | Within inclusive range |
+| `NotBeInRange(ushort, ushort)` | Outside range |
+| `BeOneOf(params ushort[])` | In set of values |
+| `NotBeOneOf(params ushort[])` | Not in set |
+| `BeDivisibleBy(ushort)` | Divisible by value |
+| `BeEven()` | Divisible by 2 |
+| `BeOdd()` | Not divisible by 2 |
+
+> **Note:** `BeNegative()` is not available for `ushort` because it is an unsigned type (range 0-65,535).
+
+**Nullable ushort (`ushort?`)** adds:
+- `HaveValue()` -- has a non-null value
+- `NotHaveValue()` -- is null
+- All ushort operations above (with FailIf null guards)
+
+---
+
+### ULong Validations
+
+Manager: `ULongOperationsManager` / `NullableULongOperationsManager`
+
+| Operation | Description |
+|-----------|-------------|
+| `Be(ulong)` | Equals expected |
+| `NotBe(ulong)` | Does not equal |
+| `BePositive()` | Greater than zero |
+| `BeZero()` | Equals zero |
+| `BeGreaterThan(ulong)` | Greater than value |
+| `BeGreaterThanOrEqualTo(ulong)` | Greater than or equal |
+| `BeLessThan(ulong)` | Less than value |
+| `BeLessThanOrEqualTo(ulong)` | Less than or equal |
+| `BeInRange(ulong, ulong)` | Within inclusive range |
+| `NotBeInRange(ulong, ulong)` | Outside range |
+| `BeOneOf(params ulong[])` | In set of values |
+| `NotBeOneOf(params ulong[])` | Not in set |
+| `BeDivisibleBy(ulong)` | Divisible by value |
+| `BeEven()` | Divisible by 2 |
+| `BeOdd()` | Not divisible by 2 |
+
+> **Note:** `BeNegative()` is not available for `ulong` because it is an unsigned type (range 0-18,446,744,073,709,551,615).
+
+**Nullable ulong (`ulong?`)** adds:
+- `HaveValue()` -- has a non-null value
+- `NotHaveValue()` -- is null
+- All ulong operations above (with FailIf null guards)
+
+---
+
+### Short Validations
+
+Manager: `ShortOperationsManager` / `NullableShortOperationsManager`
+
+| Operation | Description |
+|-----------|-------------|
+| `Be(short)` | Equals expected |
+| `NotBe(short)` | Does not equal |
+| `BePositive()` | Greater than zero |
+| `BeNegative()` | Less than zero |
+| `BeZero()` | Equals zero |
+| `BeGreaterThan(short)` | Greater than value |
+| `BeGreaterThanOrEqualTo(short)` | Greater than or equal |
+| `BeLessThan(short)` | Less than value |
+| `BeLessThanOrEqualTo(short)` | Less than or equal |
+| `BeInRange(short, short)` | Within inclusive range |
+| `NotBeInRange(short, short)` | Outside range |
+| `BeOneOf(params short[])` | In set of values |
+| `NotBeOneOf(params short[])` | Not in set |
+| `BeDivisibleBy(short)` | Divisible by value |
+| `BeEven()` | Divisible by 2 |
+| `BeOdd()` | Not divisible by 2 |
+
+> **Note:** Unlike `ushort`, `BeNegative()` IS available for `short` because it is a signed type (range -32768 to 32767).
+
+**Nullable short (`short?`)** adds:
+- `HaveValue()` -- has a non-null value
+- `NotHaveValue()` -- is null
+- All short operations above (with FailIf null guards)
+
+---
+
+### Char Validations
+
+Manager: `CharOperationsManager` / `NullableCharOperationsManager`
+
+| Operation | Description |
+|-----------|-------------|
+| `Be(char)` | Equals expected |
+| `NotBe(char)` | Does not equal |
+| `BeGreaterThan(char)` | Greater than value |
+| `BeGreaterThanOrEqualTo(char)` | Greater than or equal |
+| `BeLessThan(char)` | Less than value |
+| `BeLessThanOrEqualTo(char)` | Less than or equal |
+| `BeInRange(char, char)` | Within inclusive range |
+| `NotBeInRange(char, char)` | Outside range |
+| `BeOneOf(params char[])` | In set of values |
+| `NotBeOneOf(params char[])` | Not in set |
+| `BeUpperCase()` | Is uppercase letter (`char.IsUpper`) |
+| `BeLowerCase()` | Is lowercase letter (`char.IsLower`) |
+| `BeDigit()` | Is digit (`char.IsDigit`) |
+| `BeLetter()` | Is letter (`char.IsLetter`) |
+| `BeLetterOrDigit()` | Is letter or digit (`char.IsLetterOrDigit`) |
+| `BeWhiteSpace()` | Is white-space (`char.IsWhiteSpace`) |
+| `BePunctuation()` | Is punctuation (`char.IsPunctuation`) |
+| `BeControl()` | Is control character (`char.IsControl`) |
+| `BeAscii()` | Is ASCII (value < 128) |
+| `BeSurrogate()` | Is surrogate (`char.IsSurrogate`) |
+
+> **Note:** Character classification operations use `System.Char` static methods. Numeric-only operations (BePositive, BeNegative, BeZero, BeDivisibleBy, BeEven, BeOdd) are intentionally excluded because `char` represents characters, not numbers.
+
+**Nullable char (`char?`)** adds:
+- `HaveValue()` -- has a non-null value
+- `NotHaveValue()` -- is null
+- All char operations above (with FailIf null guards)
 
 ---
 
@@ -298,6 +527,7 @@ Manager: `TimeOnlyOperationsManager` / `NullableTimeOnlyOperationsManager`
 | `BeAfter(TimeOnly)` | After time |
 | `BeBefore(TimeOnly)` | Before time |
 | `BeInRange(TimeOnly, TimeOnly)` | Within range |
+| `NotBeInRange(TimeOnly, TimeOnly)` | Outside range |
 | `HaveHour(int)` | Specific hour |
 | `HaveMinute(int)` | Specific minute |
 | `HaveSecond(int)` | Specific second |
@@ -319,6 +549,7 @@ Manager: `TimeSpanOperationsManager` / `NullableTimeSpanOperationsManager`
 | `BeGreaterThan(TimeSpan)` | Longer than |
 | `BeLessThan(TimeSpan)` | Shorter than |
 | `BeInRange(TimeSpan, TimeSpan)` | Within range |
+| `NotBeInRange(TimeSpan, TimeSpan)` | Outside range |
 | `HaveDays(int)` | Specific days component |
 | `HaveHours(int)` | Specific hours component |
 | `HaveMinutes(int)` | Specific minutes component |
@@ -345,6 +576,8 @@ Manager: `CollectionOperationsManager<T>`
 
 | Method | Description |
 |--------|-------------|
+| `BeNull()` | Value is null |
+| `NotBeNull()` | Value is not null |
 | `NotBeNullOrEmpty()` | Not null and has elements |
 | `BeEmpty()` | No elements |
 | `NotBeEmpty()` | Has elements |
@@ -353,12 +586,19 @@ Manager: `CollectionOperationsManager<T>`
 | `HaveCountLessThan(int)` | Fewer than N elements |
 | `HaveMinCount(int)` | At least N elements |
 | `HaveMaxCount(int)` | At most N elements |
+| `HaveLength(int)` | Exact length (element count) |
+| `HaveLengthGreaterThan(int)` | More than N elements |
+| `HaveLengthLessThan(int)` | Fewer than N elements |
 | `Contain(T)` | Contains element |
 | `Contain(T, OccurrenceConstraint)` | Contains with occurrence |
+| `Contain(Func<T, bool>)` | Contains element matching predicate |
 | `NotContain(T)` | Does not contain |
 | `ContainSingle()` | Exactly one element |
+| `ContainSingle(Func<T, bool>)` | Exactly one element matching predicate |
 | `ContainAll(params T[])` | Contains all elements |
 | `ContainAny(params T[])` | Contains at least one |
+| `NotContainAny(params T[])` | Does not contain any of the specified items |
+| `NotContainAll(params T[])` | Does not contain all specified items simultaneously |
 | `ContainInOrder(params T[])` | Contains in specific order |
 | `HaveElementAt(int, T)` | Element at index |
 | `BeSubsetOf(IEnumerable)` | All elements in superset |
@@ -374,6 +614,16 @@ Manager: `CollectionOperationsManager<T>`
 | `ContainDuplicates()` | Has duplicates |
 | `StartWith(T)` | First element matches |
 | `EndWith(T)` | Last element matches |
+| `BeEquivalentTo(IEnumerable<T>)` | Same elements, any order |
+| `BeSequenceEqualTo(IEnumerable<T>)` | Same elements, same order |
+| `NotBeEquivalentTo(IEnumerable<T>)` | NOT same elements (any order) |
+| `NotBeSequenceEqualTo(IEnumerable<T>)` | NOT same elements/order |
+| `Be(IEnumerable<T>)` | Same reference as expected |
+| `NotBe(IEnumerable<T>)` | Not the same reference |
+| `BeOfType<TType>()` | Runtime type is exactly TType |
+| `BeOfType(Type)` | Runtime type is exactly the specified type |
+| `NotBeOfType<TType>()` | Runtime type is not TType |
+| `NotBeOfType(Type)` | Runtime type is not the specified type |
 
 ---
 
@@ -381,13 +631,21 @@ Manager: `CollectionOperationsManager<T>`
 
 Manager: `ArrayOperationsManager<T>`
 
-All Collection operations plus:
+All Collection operations plus (including equivalence: `BeEquivalentTo`, `NotBeEquivalentTo`, `BeSequenceEqualTo`, `NotBeSequenceEqualTo`, `NotContainAny`, `NotContainAll`):
 
 | Method | Description |
 |--------|-------------|
+| `BeNull()` | Value is null |
+| `NotBeNull()` | Value is not null |
 | `HaveLength(int)` | Exact array length |
 | `HaveLengthGreaterThan(int)` | More than N |
 | `HaveLengthLessThan(int)` | Fewer than N |
+| `Be(IEnumerable<T>)` | Same reference as expected |
+| `NotBe(IEnumerable<T>)` | Not the same reference |
+| `BeOfType<TType>()` | Runtime type is exactly TType |
+| `BeOfType(Type)` | Runtime type is exactly the specified type |
+| `NotBeOfType<TType>()` | Runtime type is not TType |
+| `NotBeOfType(Type)` | Runtime type is not the specified type |
 
 ---
 
@@ -397,6 +655,8 @@ Manager: `DictionaryOperationsManager<TKey, TValue>`
 
 | Method | Description |
 |--------|-------------|
+| `BeNull()` | Value is null |
+| `NotBeNull()` | Value is not null |
 | `ContainKey(TKey)` | Has key |
 | `NotContainKey(TKey)` | Does not have key |
 | `ContainValue(TValue)` | Has value |
@@ -405,6 +665,13 @@ Manager: `DictionaryOperationsManager<TKey, TValue>`
 | `HaveCount(int)` | Exact count |
 | `BeEmpty()` | No entries |
 | `NotBeEmpty()` | Has entries |
+| `Be(IDictionary<TKey, TValue>)` | Same reference as expected |
+| `NotBe(IDictionary<TKey, TValue>)` | Not the same reference |
+| `BeOfType<TType>()` | Runtime type is exactly TType |
+| `BeOfType(Type)` | Runtime type is exactly the specified type |
+| `NotBeOfType<TType>()` | Runtime type is not TType |
+| `NotBeOfType(Type)` | Runtime type is not the specified type |
+| `Which<TResult>(Func<IDictionary<TKey, TValue>, TResult>)` | Extract sub-value for chained assertions |
 
 ---
 
@@ -440,6 +707,26 @@ Manager: `EnumOperationsManager<T>` (via `.TestEnum<T>()`)
 
 ---
 
+### Nullable Enum Validations
+
+Manager: `NullableEnumOperationsManager<T>` (via `.TestEnum<T>()` on `T?`)
+
+| Method | Description |
+|--------|-------------|
+| `HaveValue()` | Has a non-null value |
+| `NotHaveValue()` | Is null |
+| `Be(T?)` | Equals expected (supports null) |
+| `NotBe(T?)` | Does not equal (supports null) |
+| `BeDefined()` | Is a defined enum value (null guard) |
+| `BeOneOf(params T[])` | In set (null guard) |
+| `NotBeOneOf(params T[])` | Not in set (null guard) |
+| `HaveFlag(T)` | Has flag (for `[Flags]`) (null guard) |
+| `NotHaveFlag(T)` | Does not have flag (null guard) |
+| `BeNull()` | Is null (inherited) |
+| `NotBeNull()` | Is not null (inherited) |
+
+---
+
 ### Uri Validations
 
 Manager: `UriOperationsManager`
@@ -470,9 +757,45 @@ Manager: `ObjectOperationsManager` / `ReferenceOperationsManager`
 | `BeOfType<T>()` | Is exact type |
 | `BeCastTo<T>()` | Can be cast to type |
 | `Evaluate(Func<T, bool>)` | Custom predicate |
+| `Be(object?)` | Equals expected (using `Equals()`) |
+| `NotBe(object?)` | Does not equal expected |
 | `BeEquivalentTo(object)` | Deep structural equality |
+| `BeEquivalentTo(object, ComparisonOptions)` | Deep structural equality with options |
 | `NotBeEquivalentTo(object)` | Not structurally equal |
+| `NotBeEquivalentTo(object, ComparisonOptions)` | Not structurally equal with options |
 | `BeSequenceEqualTo(IEnumerable)` | Sequence equality |
+
+#### ComparisonOptions
+
+Options for `BeEquivalentTo` / `NotBeEquivalentTo` deep comparison:
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `StringComparison` | `StringComparison` | `Ordinal` | String comparison mode |
+| `IgnoreLeadingWhitespace` | `bool` | `false` | Ignore leading whitespace |
+| `IgnoreTrailingWhitespace` | `bool` | `false` | Ignore trailing whitespace |
+| `IgnoreNewLineStyle` | `bool` | `false` | Normalize CRLF vs LF |
+| `MaxRecursionDepth` | `int` | `10` | Max depth for nested comparison |
+| `ExcludedProperties` | `HashSet<string>` | `[]` | Properties to skip |
+| `MaxDifferencesReported` | `int` | `5` | Max differences in output |
+| `IgnoreCollectionOrder` | `bool` | `false` | Compare collections as unordered bags |
+
+Predefined options: `ComparisonOptions.Default`, `ComparisonOptions.CaseInsensitive`, `ComparisonOptions.IgnoreOrder`
+
+```csharp
+// Default (strict order)
+obj.Test().BeEquivalentTo(expected);
+
+// Ignore collection order
+obj.Test().BeEquivalentTo(expected, ComparisonOptions.IgnoreOrder);
+
+// Combined options
+obj.Test().BeEquivalentTo(expected, new ComparisonOptions
+{
+    IgnoreCollectionOrder = true,
+    ExcludedProperties = ["Id", "CreatedAt"]
+});
+```
 
 ---
 
@@ -533,6 +856,8 @@ Manager: `ActionStatsOperationsManager`
 
 | Method | Description |
 |--------|-------------|
+| `BeNull()` | ActionStats value is null |
+| `NotBeNull()` | ActionStats value is not null |
 | `CompleteWithin(TimeSpan)` | Elapsed time <= max |
 | `CompleteWithinMilliseconds(double)` | Convenience overload |
 | `TakeLongerThan(TimeSpan)` | Elapsed time >= min |

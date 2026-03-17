@@ -1,5 +1,6 @@
 using JAAvila.FluentOperations.Common;
 using JAAvila.FluentOperations.Config;
+using JAAvila.FluentOperations.Connector;
 using JAAvila.FluentOperations.Contract;
 using JAAvila.FluentOperations.Formatters;
 using JAAvila.FluentOperations.Model;
@@ -29,6 +30,226 @@ public class DictionaryOperationsManager<TKey, TValue>
     {
         PrincipalChain = PrincipalChain<IDictionary<TKey, TValue>>.Get(value, caller);
         GlobalConfig.Initialize();
+    }
+
+    /// <summary>
+    /// Asserts that the dictionary is <c>null</c>.
+    /// </summary>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public DictionaryOperationsManager<TKey, TValue> BeNull(Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Common.BeNull))
+        {
+            return this;
+        }
+
+        ExecutionEngine<DictionaryOperationsManager<TKey, TValue>, IDictionary<TKey, TValue>>
+            .New(this)
+            .WithOperation(
+                ReferenceBeNullValidator<IDictionary<TKey, TValue>>.New(PrincipalChain)
+            )
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.ResultValidation,
+                            BaseFormatter.Format(PrincipalChain.GetValue())
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the dictionary is not <c>null</c>.
+    /// </summary>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public DictionaryOperationsManager<TKey, TValue> NotBeNull(Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Common.NotBeNull))
+        {
+            return this;
+        }
+
+        ExecutionEngine<DictionaryOperationsManager<TKey, TValue>, IDictionary<TKey, TValue>>
+            .New(this)
+            .WithOperation(
+                ReferenceNotBeNullValidator<IDictionary<TKey, TValue>>.New(PrincipalChain)
+            )
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the dictionary is the same reference as <paramref name="expected"/>.
+    /// </summary>
+    /// <param name="expected">The expected dictionary reference.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public DictionaryOperationsManager<TKey, TValue> Be(
+        IDictionary<TKey, TValue> expected,
+        Reason? reason = null
+    )
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Dictionary.Be))
+        {
+            return this;
+        }
+
+        ExecutionEngine<DictionaryOperationsManager<TKey, TValue>, IDictionary<TKey, TValue>>
+            .New(this)
+            .WithOperation(DictionaryBeValidator<TKey, TValue>.New(PrincipalChain, expected))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.ResultValidation,
+                            BaseFormatter.Format(expected)
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue().IsNull(),
+                        Fail.New(
+                            $"The {nameof(Be)} operation failed because the dictionary was null."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the dictionary is not the same reference as <paramref name="expected"/>.
+    /// </summary>
+    /// <param name="expected">The dictionary reference that should not match.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public DictionaryOperationsManager<TKey, TValue> NotBe(
+        IDictionary<TKey, TValue> expected,
+        Reason? reason = null
+    )
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Dictionary.NotBe))
+        {
+            return this;
+        }
+
+        ExecutionEngine<DictionaryOperationsManager<TKey, TValue>, IDictionary<TKey, TValue>>
+            .New(this)
+            .WithOperation(DictionaryNotBeValidator<TKey, TValue>.New(PrincipalChain, expected))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.ResultValidation,
+                            BaseFormatter.Format(expected)
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue().IsNull(),
+                        Fail.New(
+                            $"The {nameof(NotBe)} operation failed because the dictionary was null."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the runtime type of the dictionary is exactly <typeparamref name="TType"/>.
+    /// </summary>
+    /// <typeparam name="TType">The expected runtime type.</typeparam>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public DictionaryOperationsManager<TKey, TValue> BeOfType<TType>(Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Common.BeOfType))
+        {
+            return this;
+        }
+
+        var type = typeof(TType);
+        ValidateBeOfTypeOperation(reason, type);
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the runtime type of the dictionary is exactly <paramref name="expected"/>.
+    /// </summary>
+    /// <param name="expected">The expected runtime type.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public DictionaryOperationsManager<TKey, TValue> BeOfType(Type expected, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Common.BeOfType))
+        {
+            return this;
+        }
+
+        ValidateBeOfTypeOperation(reason, expected);
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the runtime type of the dictionary is not <typeparamref name="TType"/>.
+    /// </summary>
+    /// <typeparam name="TType">The type that should not match.</typeparam>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public DictionaryOperationsManager<TKey, TValue> NotBeOfType<TType>(Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Common.NotBeOfType))
+        {
+            return this;
+        }
+
+        var type = typeof(TType);
+        ValidateNotBeOfTypeOperation(reason, type);
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the runtime type of the dictionary is not <paramref name="expected"/>.
+    /// </summary>
+    /// <param name="expected">The type that should not match.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public DictionaryOperationsManager<TKey, TValue> NotBeOfType(
+        Type expected,
+        Reason? reason = null
+    )
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Common.NotBeOfType))
+        {
+            return this;
+        }
+
+        ValidateNotBeOfTypeOperation(reason, expected);
+        return this;
     }
 
     /// <summary>
@@ -383,4 +604,105 @@ public class DictionaryOperationsManager<TKey, TValue>
 
         return this;
     }
+
+    /// <summary>
+    /// Extracts a sub-value from the current dictionary using the given selector.
+    /// Returns a connector that exposes the sub-value for further assertions.
+    /// </summary>
+    /// <param name="selector">A function that extracts a sub-value from the current dictionary.</param>
+    /// <typeparam name="TResult">The type of the extracted sub-value.</typeparam>
+    /// <returns>
+    /// An <see cref="AndWhichConnector{TManager,TSubject}"/> exposing the extracted sub-value
+    /// and allowing the chain to continue from the parent manager via <c>.And</c>.
+    /// </returns>
+    public AndWhichConnector<DictionaryOperationsManager<TKey, TValue>, TResult> Which<TResult>(
+        Func<IDictionary<TKey, TValue>, TResult> selector
+    )
+    {
+        ArgumentNullException.ThrowIfNull(selector);
+        var value = PrincipalChain.GetValue();
+        var result = selector(value);
+        return new AndWhichConnector<DictionaryOperationsManager<TKey, TValue>, TResult>(
+            this,
+            result,
+            PrincipalChain.GetSubject()
+        );
+    }
+
+    #region PRIVATE METHODS
+
+    private void ValidateBeOfTypeOperation(Reason? reason, Type? type)
+    {
+        ExecutionEngine<DictionaryOperationsManager<TKey, TValue>, IDictionary<TKey, TValue>>
+            .New(this)
+            .WithOperation(
+                ReferenceBeOfTypeValidator<IDictionary<TKey, TValue>>.New(PrincipalChain, type!)
+            )
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                _ =>
+                    (
+                        type is null,
+                        Fail.New(
+                            $"The {nameof(BeOfType)} operation failed because the expected type was <null>."
+                        )
+                    )
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue().IsNull(),
+                        Fail.New(
+                            $"The {nameof(BeOfType)} operation failed because the dictionary was <null>."
+                        )
+                    )
+            )
+            .Execute();
+    }
+
+    private void ValidateNotBeOfTypeOperation(Reason? reason, Type? type)
+    {
+        ExecutionEngine<DictionaryOperationsManager<TKey, TValue>, IDictionary<TKey, TValue>>
+            .New(this)
+            .WithOperation(
+                ReferenceNotBeOfTypeValidator<IDictionary<TKey, TValue>>.New(
+                    PrincipalChain,
+                    type!
+                )
+            )
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                _ =>
+                    (
+                        type is null,
+                        Fail.New(
+                            $"The {nameof(NotBeOfType)} operation failed because the expected type was <null>."
+                        )
+                    )
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue().IsNull(),
+                        Fail.New(
+                            $"The {nameof(NotBeOfType)} operation failed because the dictionary was <null>."
+                        )
+                    )
+            )
+            .Execute();
+    }
+
+    #endregion
 }

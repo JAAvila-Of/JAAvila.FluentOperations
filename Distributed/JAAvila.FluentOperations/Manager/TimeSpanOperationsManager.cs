@@ -298,6 +298,52 @@ public class TimeSpanOperationsManager : ITestManager<TimeSpanOperationsManager,
     }
 
     /// <summary>
+    /// Asserts that the value does not fall within the inclusive range [<paramref name="min"/>, <paramref name="max"/>].
+    /// </summary>
+    /// <param name="min">The lower bound of the range (inclusive).</param>
+    /// <param name="max">The upper bound of the range (inclusive).</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// Throws immediately if <paramref name="min"/> is greater than <paramref name="max"/> (inverted range guard).
+    /// </remarks>
+    public TimeSpanOperationsManager NotBeInRange(TimeSpan min, TimeSpan max, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.TimeSpan.NotBeInRange))
+        {
+            return this;
+        }
+
+        ExecutionEngine<TimeSpanOperationsManager, TimeSpan>
+            .New(this)
+            .WithOperation(TimeSpanNotBeInRangeValidator.New(PrincipalChain, min, max))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.ResultValidation,
+                            BaseFormatter.Format(min),
+                            BaseFormatter.Format(max),
+                            BaseFormatter.Format(PrincipalChain.GetValue())
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                _ =>
+                    (
+                        min > max,
+                        Fail.New(
+                            $"The {nameof(NotBeInRange)} operation failed because the range is inverted: min ({min}) > max ({max})."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
     /// Asserts that the whole-day component of the value equals <paramref name="days"/>.
     /// </summary>
     /// <param name="days">The expected number of whole days.</param>

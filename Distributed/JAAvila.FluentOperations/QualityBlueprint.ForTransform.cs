@@ -840,6 +840,252 @@ public abstract partial class QualityBlueprint<T>
         RuleConfig config
     ) => ForTransform<Uri?, UriOperationsManager>(propertyExpression, transform, config);
 
+    // Same-type ForTransform shortcuts for byte, sbyte, char (+ nullables)
+
+    /// <summary>
+    /// Registers a same-type transformation for a <see cref="byte"/> property.
+    /// </summary>
+    protected IPropertyProxy<ByteOperationsManager> ForTransform(
+        Expression<Func<T, byte>> propertyExpression,
+        Func<byte, byte> transform
+    ) => ForTransform<byte, ByteOperationsManager>(propertyExpression, transform);
+
+    /// <summary>
+    /// Registers a same-type transformation for a <see cref="byte"/> property, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    protected IPropertyProxy<ByteOperationsManager> ForTransform(
+        Expression<Func<T, byte>> propertyExpression,
+        Func<byte, byte> transform,
+        RuleConfig config
+    ) => ForTransform<byte, ByteOperationsManager>(propertyExpression, transform, config);
+
+    /// <summary>
+    /// Registers a same-type transformation for a nullable <see cref="byte"/> property.
+    /// </summary>
+    protected IPropertyProxy<NullableByteOperationsManager> ForTransform(
+        Expression<Func<T, byte?>> propertyExpression,
+        Func<byte?, byte?> transform
+    ) => ForTransform<byte?, NullableByteOperationsManager>(propertyExpression, transform);
+
+    /// <summary>
+    /// Registers a same-type transformation for a nullable <see cref="byte"/> property, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    protected IPropertyProxy<NullableByteOperationsManager> ForTransform(
+        Expression<Func<T, byte?>> propertyExpression,
+        Func<byte?, byte?> transform,
+        RuleConfig config
+    ) => ForTransform<byte?, NullableByteOperationsManager>(propertyExpression, transform, config);
+
+    /// <summary>
+    /// Registers a same-type transformation for an <see cref="sbyte"/> property.
+    /// </summary>
+    protected IPropertyProxy<SByteOperationsManager> ForTransform(
+        Expression<Func<T, sbyte>> propertyExpression,
+        Func<sbyte, sbyte> transform
+    ) => ForTransform<sbyte, SByteOperationsManager>(propertyExpression, transform);
+
+    /// <summary>
+    /// Registers a same-type transformation for an <see cref="sbyte"/> property, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    protected IPropertyProxy<SByteOperationsManager> ForTransform(
+        Expression<Func<T, sbyte>> propertyExpression,
+        Func<sbyte, sbyte> transform,
+        RuleConfig config
+    ) => ForTransform<sbyte, SByteOperationsManager>(propertyExpression, transform, config);
+
+    /// <summary>
+    /// Registers a same-type transformation for a nullable <see cref="sbyte"/> property.
+    /// </summary>
+    protected IPropertyProxy<NullableSByteOperationsManager> ForTransform(
+        Expression<Func<T, sbyte?>> propertyExpression,
+        Func<sbyte?, sbyte?> transform
+    ) => ForTransform<sbyte?, NullableSByteOperationsManager>(propertyExpression, transform);
+
+    /// <summary>
+    /// Registers a same-type transformation for a nullable <see cref="sbyte"/> property, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    protected IPropertyProxy<NullableSByteOperationsManager> ForTransform(
+        Expression<Func<T, sbyte?>> propertyExpression,
+        Func<sbyte?, sbyte?> transform,
+        RuleConfig config
+    ) => ForTransform<sbyte?, NullableSByteOperationsManager>(propertyExpression, transform, config);
+
+    // uint -> uint transformation
+    /// <summary>
+    /// Registers a same-type transformation for a <see cref="uint"/> property.
+    /// </summary>
+    protected IPropertyProxy<UIntOperationsManager> ForTransform(
+        Expression<Func<T, uint>> propertyExpression,
+        Func<uint, uint> transform
+    ) => ForTransform<uint, UIntOperationsManager>(propertyExpression, transform);
+
+    /// <summary>
+    /// Registers a same-type transformation for a <see cref="uint"/> property, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    protected IPropertyProxy<UIntOperationsManager> ForTransform(
+        Expression<Func<T, uint>> propertyExpression,
+        Func<uint, uint> transform,
+        RuleConfig config
+    ) => ForTransform<uint, UIntOperationsManager>(propertyExpression, transform, config);
+
+    // uint? -> uint? transformation
+    /// <summary>
+    /// Registers a same-type transformation for a nullable <see cref="uint"/> property.
+    /// </summary>
+    protected IPropertyProxy<NullableUIntOperationsManager> ForTransform(
+        Expression<Func<T, uint?>> propertyExpression,
+        Func<uint?, uint?> transform
+    ) => ForTransform<uint?, NullableUIntOperationsManager>(propertyExpression, transform);
+
+    /// <summary>
+    /// Registers a same-type transformation for a nullable <see cref="uint"/> property, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    protected IPropertyProxy<NullableUIntOperationsManager> ForTransform(
+        Expression<Func<T, uint?>> propertyExpression,
+        Func<uint?, uint?> transform,
+        RuleConfig config
+    ) => ForTransform<uint?, NullableUIntOperationsManager>(propertyExpression, transform, config);
+
+    // ushort -> ushort transformation
+    /// <summary>
+    /// Registers a same-type transformation for a <see cref="ushort"/> property.
+    /// </summary>
+    protected IPropertyProxy<UShortOperationsManager> ForTransform(
+        Expression<Func<T, ushort>> propertyExpression,
+        Func<ushort, ushort> transform
+    ) => ForTransform<ushort, UShortOperationsManager>(propertyExpression, transform);
+
+    /// <summary>
+    /// Registers a same-type transformation for a <see cref="ushort"/> property, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    protected IPropertyProxy<UShortOperationsManager> ForTransform(
+        Expression<Func<T, ushort>> propertyExpression,
+        Func<ushort, ushort> transform,
+        RuleConfig config
+    ) => ForTransform<ushort, UShortOperationsManager>(propertyExpression, transform, config);
+
+    // ushort? -> ushort? transformation
+    /// <summary>
+    /// Registers a same-type transformation for a nullable <see cref="ushort"/> property.
+    /// </summary>
+    protected IPropertyProxy<NullableUShortOperationsManager> ForTransform(
+        Expression<Func<T, ushort?>> propertyExpression,
+        Func<ushort?, ushort?> transform
+    ) => ForTransform<ushort?, NullableUShortOperationsManager>(propertyExpression, transform);
+
+    /// <summary>
+    /// Registers a same-type transformation for a nullable <see cref="ushort"/> property, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    protected IPropertyProxy<NullableUShortOperationsManager> ForTransform(
+        Expression<Func<T, ushort?>> propertyExpression,
+        Func<ushort?, ushort?> transform,
+        RuleConfig config
+    ) => ForTransform<ushort?, NullableUShortOperationsManager>(propertyExpression, transform, config);
+
+    // ulong -> ulong transformation
+    /// <summary>
+    /// Registers a same-type transformation for a <see cref="ulong"/> property.
+    /// </summary>
+    protected IPropertyProxy<ULongOperationsManager> ForTransform(
+        Expression<Func<T, ulong>> propertyExpression,
+        Func<ulong, ulong> transform
+    ) => ForTransform<ulong, ULongOperationsManager>(propertyExpression, transform);
+
+    /// <summary>
+    /// Registers a same-type transformation for a <see cref="ulong"/> property, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    protected IPropertyProxy<ULongOperationsManager> ForTransform(
+        Expression<Func<T, ulong>> propertyExpression,
+        Func<ulong, ulong> transform,
+        RuleConfig config
+    ) => ForTransform<ulong, ULongOperationsManager>(propertyExpression, transform, config);
+
+    // ulong? -> ulong? transformation
+    /// <summary>
+    /// Registers a same-type transformation for a nullable <see cref="ulong"/> property.
+    /// </summary>
+    protected IPropertyProxy<NullableULongOperationsManager> ForTransform(
+        Expression<Func<T, ulong?>> propertyExpression,
+        Func<ulong?, ulong?> transform
+    ) => ForTransform<ulong?, NullableULongOperationsManager>(propertyExpression, transform);
+
+    /// <summary>
+    /// Registers a same-type transformation for a nullable <see cref="ulong"/> property, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    protected IPropertyProxy<NullableULongOperationsManager> ForTransform(
+        Expression<Func<T, ulong?>> propertyExpression,
+        Func<ulong?, ulong?> transform,
+        RuleConfig config
+    ) => ForTransform<ulong?, NullableULongOperationsManager>(propertyExpression, transform, config);
+
+    /// <summary>
+    /// Registers a same-type transformation for a <see cref="short"/> property.
+    /// </summary>
+    protected IPropertyProxy<ShortOperationsManager> ForTransform(
+        Expression<Func<T, short>> propertyExpression,
+        Func<short, short> transform
+    ) => ForTransform<short, ShortOperationsManager>(propertyExpression, transform);
+
+    /// <summary>
+    /// Registers a same-type transformation for a <see cref="short"/> property, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    protected IPropertyProxy<ShortOperationsManager> ForTransform(
+        Expression<Func<T, short>> propertyExpression,
+        Func<short, short> transform,
+        RuleConfig config
+    ) => ForTransform<short, ShortOperationsManager>(propertyExpression, transform, config);
+
+    /// <summary>
+    /// Registers a same-type transformation for a nullable <see cref="short"/> property.
+    /// </summary>
+    protected IPropertyProxy<NullableShortOperationsManager> ForTransform(
+        Expression<Func<T, short?>> propertyExpression,
+        Func<short?, short?> transform
+    ) => ForTransform<short?, NullableShortOperationsManager>(propertyExpression, transform);
+
+    /// <summary>
+    /// Registers a same-type transformation for a nullable <see cref="short"/> property, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    protected IPropertyProxy<NullableShortOperationsManager> ForTransform(
+        Expression<Func<T, short?>> propertyExpression,
+        Func<short?, short?> transform,
+        RuleConfig config
+    ) => ForTransform<short?, NullableShortOperationsManager>(propertyExpression, transform, config);
+
+    /// <summary>
+    /// Registers a same-type transformation for a <see cref="char"/> property.
+    /// </summary>
+    protected IPropertyProxy<CharOperationsManager> ForTransform(
+        Expression<Func<T, char>> propertyExpression,
+        Func<char, char> transform
+    ) => ForTransform<char, CharOperationsManager>(propertyExpression, transform);
+
+    /// <summary>
+    /// Registers a same-type transformation for a <see cref="char"/> property, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    protected IPropertyProxy<CharOperationsManager> ForTransform(
+        Expression<Func<T, char>> propertyExpression,
+        Func<char, char> transform,
+        RuleConfig config
+    ) => ForTransform<char, CharOperationsManager>(propertyExpression, transform, config);
+
+    /// <summary>
+    /// Registers a same-type transformation for a nullable <see cref="char"/> property.
+    /// </summary>
+    protected IPropertyProxy<NullableCharOperationsManager> ForTransform(
+        Expression<Func<T, char?>> propertyExpression,
+        Func<char?, char?> transform
+    ) => ForTransform<char?, NullableCharOperationsManager>(propertyExpression, transform);
+
+    /// <summary>
+    /// Registers a same-type transformation for a nullable <see cref="char"/> property, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    protected IPropertyProxy<NullableCharOperationsManager> ForTransform(
+        Expression<Func<T, char?>> propertyExpression,
+        Func<char?, char?> transform,
+        RuleConfig config
+    ) => ForTransform<char?, NullableCharOperationsManager>(propertyExpression, transform, config);
+
     // -------------------------------------------------------------------------
     // Cross-type ForTransform shortcuts (Phase 2: 15 target types x 2 = 30 methods)
     // The source type TProp is inferred from the property expression.
@@ -1292,4 +1538,250 @@ public abstract partial class QualityBlueprint<T>
         Func<TProp, ActionStats?> transform,
         RuleConfig config
     ) => ForTransform<TProp, ActionStats?, ActionStatsOperationsManager>(propertyExpression, transform, config);
+
+    // Cross-type ForTransform shortcuts for byte, sbyte, char (+ nullables)
+
+    /// <summary>
+    /// Registers a property with a cross-type transformation to <see cref="byte"/> applied before validation.
+    /// </summary>
+    protected IPropertyProxy<ByteOperationsManager> ForTransform<TProp>(
+        Expression<Func<T, TProp>> propertyExpression,
+        Func<TProp, byte> transform
+    ) => ForTransform<TProp, byte, ByteOperationsManager>(propertyExpression, transform);
+
+    /// <summary>
+    /// Registers a property with a cross-type transformation to <see cref="byte"/> applied before validation, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    protected IPropertyProxy<ByteOperationsManager> ForTransform<TProp>(
+        Expression<Func<T, TProp>> propertyExpression,
+        Func<TProp, byte> transform,
+        RuleConfig config
+    ) => ForTransform<TProp, byte, ByteOperationsManager>(propertyExpression, transform, config);
+
+    /// <summary>
+    /// Registers a property with a cross-type transformation to nullable <see cref="byte"/> applied before validation.
+    /// </summary>
+    protected IPropertyProxy<NullableByteOperationsManager> ForTransform<TProp>(
+        Expression<Func<T, TProp>> propertyExpression,
+        Func<TProp, byte?> transform
+    ) => ForTransform<TProp, byte?, NullableByteOperationsManager>(propertyExpression, transform);
+
+    /// <summary>
+    /// Registers a property with a cross-type transformation to nullable <see cref="byte"/> applied before validation, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    protected IPropertyProxy<NullableByteOperationsManager> ForTransform<TProp>(
+        Expression<Func<T, TProp>> propertyExpression,
+        Func<TProp, byte?> transform,
+        RuleConfig config
+    ) => ForTransform<TProp, byte?, NullableByteOperationsManager>(propertyExpression, transform, config);
+
+    /// <summary>
+    /// Registers a property with a cross-type transformation to <see cref="sbyte"/> applied before validation.
+    /// </summary>
+    protected IPropertyProxy<SByteOperationsManager> ForTransform<TProp>(
+        Expression<Func<T, TProp>> propertyExpression,
+        Func<TProp, sbyte> transform
+    ) => ForTransform<TProp, sbyte, SByteOperationsManager>(propertyExpression, transform);
+
+    /// <summary>
+    /// Registers a property with a cross-type transformation to <see cref="sbyte"/> applied before validation, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    protected IPropertyProxy<SByteOperationsManager> ForTransform<TProp>(
+        Expression<Func<T, TProp>> propertyExpression,
+        Func<TProp, sbyte> transform,
+        RuleConfig config
+    ) => ForTransform<TProp, sbyte, SByteOperationsManager>(propertyExpression, transform, config);
+
+    /// <summary>
+    /// Registers a property with a cross-type transformation to nullable <see cref="sbyte"/> applied before validation.
+    /// </summary>
+    protected IPropertyProxy<NullableSByteOperationsManager> ForTransform<TProp>(
+        Expression<Func<T, TProp>> propertyExpression,
+        Func<TProp, sbyte?> transform
+    ) => ForTransform<TProp, sbyte?, NullableSByteOperationsManager>(propertyExpression, transform);
+
+    /// <summary>
+    /// Registers a property with a cross-type transformation to nullable <see cref="sbyte"/> applied before validation, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    protected IPropertyProxy<NullableSByteOperationsManager> ForTransform<TProp>(
+        Expression<Func<T, TProp>> propertyExpression,
+        Func<TProp, sbyte?> transform,
+        RuleConfig config
+    ) => ForTransform<TProp, sbyte?, NullableSByteOperationsManager>(propertyExpression, transform, config);
+
+    // Cross-type -> uint
+    /// <summary>
+    /// Registers a property with a cross-type transformation to <see cref="uint"/> applied before validation.
+    /// </summary>
+    protected IPropertyProxy<UIntOperationsManager> ForTransform<TProp>(
+        Expression<Func<T, TProp>> propertyExpression,
+        Func<TProp, uint> transform
+    ) => ForTransform<TProp, uint, UIntOperationsManager>(propertyExpression, transform);
+
+    /// <summary>
+    /// Registers a property with a cross-type transformation to <see cref="uint"/> applied before validation, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    protected IPropertyProxy<UIntOperationsManager> ForTransform<TProp>(
+        Expression<Func<T, TProp>> propertyExpression,
+        Func<TProp, uint> transform,
+        RuleConfig config
+    ) => ForTransform<TProp, uint, UIntOperationsManager>(propertyExpression, transform, config);
+
+    // Cross-type -> uint?
+    /// <summary>
+    /// Registers a property with a cross-type transformation to nullable <see cref="uint"/> applied before validation.
+    /// </summary>
+    protected IPropertyProxy<NullableUIntOperationsManager> ForTransform<TProp>(
+        Expression<Func<T, TProp>> propertyExpression,
+        Func<TProp, uint?> transform
+    ) => ForTransform<TProp, uint?, NullableUIntOperationsManager>(propertyExpression, transform);
+
+    /// <summary>
+    /// Registers a property with a cross-type transformation to nullable <see cref="uint"/> applied before validation, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    protected IPropertyProxy<NullableUIntOperationsManager> ForTransform<TProp>(
+        Expression<Func<T, TProp>> propertyExpression,
+        Func<TProp, uint?> transform,
+        RuleConfig config
+    ) => ForTransform<TProp, uint?, NullableUIntOperationsManager>(propertyExpression, transform, config);
+
+    // Cross-type -> ushort
+    /// <summary>
+    /// Registers a property with a cross-type transformation to <see cref="ushort"/> applied before validation.
+    /// </summary>
+    protected IPropertyProxy<UShortOperationsManager> ForTransform<TProp>(
+        Expression<Func<T, TProp>> propertyExpression,
+        Func<TProp, ushort> transform
+    ) => ForTransform<TProp, ushort, UShortOperationsManager>(propertyExpression, transform);
+
+    /// <summary>
+    /// Registers a property with a cross-type transformation to <see cref="ushort"/> applied before validation, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    protected IPropertyProxy<UShortOperationsManager> ForTransform<TProp>(
+        Expression<Func<T, TProp>> propertyExpression,
+        Func<TProp, ushort> transform,
+        RuleConfig config
+    ) => ForTransform<TProp, ushort, UShortOperationsManager>(propertyExpression, transform, config);
+
+    // Cross-type -> ushort?
+    /// <summary>
+    /// Registers a property with a cross-type transformation to nullable <see cref="ushort"/> applied before validation.
+    /// </summary>
+    protected IPropertyProxy<NullableUShortOperationsManager> ForTransform<TProp>(
+        Expression<Func<T, TProp>> propertyExpression,
+        Func<TProp, ushort?> transform
+    ) => ForTransform<TProp, ushort?, NullableUShortOperationsManager>(propertyExpression, transform);
+
+    /// <summary>
+    /// Registers a property with a cross-type transformation to nullable <see cref="ushort"/> applied before validation, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    protected IPropertyProxy<NullableUShortOperationsManager> ForTransform<TProp>(
+        Expression<Func<T, TProp>> propertyExpression,
+        Func<TProp, ushort?> transform,
+        RuleConfig config
+    ) => ForTransform<TProp, ushort?, NullableUShortOperationsManager>(propertyExpression, transform, config);
+
+    // Cross-type -> ulong
+    /// <summary>
+    /// Registers a property with a cross-type transformation to <see cref="ulong"/> applied before validation.
+    /// </summary>
+    protected IPropertyProxy<ULongOperationsManager> ForTransform<TProp>(
+        Expression<Func<T, TProp>> propertyExpression,
+        Func<TProp, ulong> transform
+    ) => ForTransform<TProp, ulong, ULongOperationsManager>(propertyExpression, transform);
+
+    /// <summary>
+    /// Registers a property with a cross-type transformation to <see cref="ulong"/> applied before validation, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    protected IPropertyProxy<ULongOperationsManager> ForTransform<TProp>(
+        Expression<Func<T, TProp>> propertyExpression,
+        Func<TProp, ulong> transform,
+        RuleConfig config
+    ) => ForTransform<TProp, ulong, ULongOperationsManager>(propertyExpression, transform, config);
+
+    // Cross-type -> ulong?
+    /// <summary>
+    /// Registers a property with a cross-type transformation to nullable <see cref="ulong"/> applied before validation.
+    /// </summary>
+    protected IPropertyProxy<NullableULongOperationsManager> ForTransform<TProp>(
+        Expression<Func<T, TProp>> propertyExpression,
+        Func<TProp, ulong?> transform
+    ) => ForTransform<TProp, ulong?, NullableULongOperationsManager>(propertyExpression, transform);
+
+    /// <summary>
+    /// Registers a property with a cross-type transformation to nullable <see cref="ulong"/> applied before validation, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    protected IPropertyProxy<NullableULongOperationsManager> ForTransform<TProp>(
+        Expression<Func<T, TProp>> propertyExpression,
+        Func<TProp, ulong?> transform,
+        RuleConfig config
+    ) => ForTransform<TProp, ulong?, NullableULongOperationsManager>(propertyExpression, transform, config);
+
+    /// <summary>
+    /// Registers a property with a cross-type transformation to <see cref="short"/> applied before validation.
+    /// </summary>
+    protected IPropertyProxy<ShortOperationsManager> ForTransform<TProp>(
+        Expression<Func<T, TProp>> propertyExpression,
+        Func<TProp, short> transform
+    ) => ForTransform<TProp, short, ShortOperationsManager>(propertyExpression, transform);
+
+    /// <summary>
+    /// Registers a property with a cross-type transformation to <see cref="short"/> applied before validation, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    protected IPropertyProxy<ShortOperationsManager> ForTransform<TProp>(
+        Expression<Func<T, TProp>> propertyExpression,
+        Func<TProp, short> transform,
+        RuleConfig config
+    ) => ForTransform<TProp, short, ShortOperationsManager>(propertyExpression, transform, config);
+
+    /// <summary>
+    /// Registers a property with a cross-type transformation to nullable <see cref="short"/> applied before validation.
+    /// </summary>
+    protected IPropertyProxy<NullableShortOperationsManager> ForTransform<TProp>(
+        Expression<Func<T, TProp>> propertyExpression,
+        Func<TProp, short?> transform
+    ) => ForTransform<TProp, short?, NullableShortOperationsManager>(propertyExpression, transform);
+
+    /// <summary>
+    /// Registers a property with a cross-type transformation to nullable <see cref="short"/> applied before validation, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    protected IPropertyProxy<NullableShortOperationsManager> ForTransform<TProp>(
+        Expression<Func<T, TProp>> propertyExpression,
+        Func<TProp, short?> transform,
+        RuleConfig config
+    ) => ForTransform<TProp, short?, NullableShortOperationsManager>(propertyExpression, transform, config);
+
+    /// <summary>
+    /// Registers a property with a cross-type transformation to <see cref="char"/> applied before validation.
+    /// </summary>
+    protected IPropertyProxy<CharOperationsManager> ForTransform<TProp>(
+        Expression<Func<T, TProp>> propertyExpression,
+        Func<TProp, char> transform
+    ) => ForTransform<TProp, char, CharOperationsManager>(propertyExpression, transform);
+
+    /// <summary>
+    /// Registers a property with a cross-type transformation to <see cref="char"/> applied before validation, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    protected IPropertyProxy<CharOperationsManager> ForTransform<TProp>(
+        Expression<Func<T, TProp>> propertyExpression,
+        Func<TProp, char> transform,
+        RuleConfig config
+    ) => ForTransform<TProp, char, CharOperationsManager>(propertyExpression, transform, config);
+
+    /// <summary>
+    /// Registers a property with a cross-type transformation to nullable <see cref="char"/> applied before validation.
+    /// </summary>
+    protected IPropertyProxy<NullableCharOperationsManager> ForTransform<TProp>(
+        Expression<Func<T, TProp>> propertyExpression,
+        Func<TProp, char?> transform
+    ) => ForTransform<TProp, char?, NullableCharOperationsManager>(propertyExpression, transform);
+
+    /// <summary>
+    /// Registers a property with a cross-type transformation to nullable <see cref="char"/> applied before validation, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    protected IPropertyProxy<NullableCharOperationsManager> ForTransform<TProp>(
+        Expression<Func<T, TProp>> propertyExpression,
+        Func<TProp, char?> transform,
+        RuleConfig config
+    ) => ForTransform<TProp, char?, NullableCharOperationsManager>(propertyExpression, transform, config);
 }

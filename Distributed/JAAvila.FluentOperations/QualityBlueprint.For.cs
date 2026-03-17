@@ -383,6 +383,356 @@ public abstract partial class QualityBlueprint<T>
     ) => For<float?, NullableFloatOperationsManager>(propertyExpression, config);
 
     /// <summary>
+    /// Defines a validation rule for a <see cref="byte"/> property of the model.
+    /// Call <see cref="IPropertyProxy{TManager}.Test"/> on the result to access byte assertions.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the byte property to validate (e.g., <c>x =&gt; x.Channel</c>).
+    /// </param>
+    /// <returns>A property proxy that exposes <see cref="ByteOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<ByteOperationsManager> For(
+        Expression<Func<T, byte>> propertyExpression
+    ) => For<byte, ByteOperationsManager>(propertyExpression);
+
+    /// <summary>
+    /// Defines a validation rule for a <see cref="byte"/> property of the model, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the byte property to validate (e.g., <c>x =&gt; x.Channel</c>).
+    /// </param>
+    /// <param name="config">Configuration for this rule (severity, error code, cascade mode).</param>
+    /// <returns>A property proxy that exposes <see cref="ByteOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<ByteOperationsManager> For(
+        Expression<Func<T, byte>> propertyExpression,
+        RuleConfig config
+    ) => For<byte, ByteOperationsManager>(propertyExpression, config);
+
+    /// <summary>
+    /// Defines a validation rule for a nullable <see cref="byte"/> property of the model.
+    /// Call <see cref="IPropertyProxy{TManager}.Test"/> on the result to access nullable byte assertions.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the nullable byte property to validate (e.g., <c>x =&gt; x.Channel</c>).
+    /// </param>
+    /// <returns>A property proxy that exposes <see cref="NullableByteOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<NullableByteOperationsManager> For(
+        Expression<Func<T, byte?>> propertyExpression
+    ) => For<byte?, NullableByteOperationsManager>(propertyExpression);
+
+    /// <summary>
+    /// Defines a validation rule for a nullable <see cref="byte"/> property of the model, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the nullable byte property to validate (e.g., <c>x =&gt; x.Channel</c>).
+    /// </param>
+    /// <param name="config">Configuration for this rule (severity, error code, cascade mode).</param>
+    /// <returns>A property proxy that exposes <see cref="NullableByteOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<NullableByteOperationsManager> For(
+        Expression<Func<T, byte?>> propertyExpression,
+        RuleConfig config
+    ) => For<byte?, NullableByteOperationsManager>(propertyExpression, config);
+
+    /// <summary>
+    /// Defines a validation rule for an <see cref="sbyte"/> property of the model.
+    /// Call <see cref="IPropertyProxy{TManager}.Test"/> on the result to access sbyte assertions.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the sbyte property to validate (e.g., <c>x =&gt; x.Temperature</c>).
+    /// </param>
+    /// <returns>A property proxy that exposes <see cref="SByteOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<SByteOperationsManager> For(
+        Expression<Func<T, sbyte>> propertyExpression
+    ) => For<sbyte, SByteOperationsManager>(propertyExpression);
+
+    /// <summary>
+    /// Defines a validation rule for an <see cref="sbyte"/> property of the model, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the sbyte property to validate (e.g., <c>x =&gt; x.Temperature</c>).
+    /// </param>
+    /// <param name="config">Configuration for this rule (severity, error code, cascade mode).</param>
+    /// <returns>A property proxy that exposes <see cref="SByteOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<SByteOperationsManager> For(
+        Expression<Func<T, sbyte>> propertyExpression,
+        RuleConfig config
+    ) => For<sbyte, SByteOperationsManager>(propertyExpression, config);
+
+    /// <summary>
+    /// Defines a validation rule for a nullable <see cref="sbyte"/> property of the model.
+    /// Call <see cref="IPropertyProxy{TManager}.Test"/> on the result to access nullable sbyte assertions.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the nullable sbyte property to validate (e.g., <c>x =&gt; x.Temperature</c>).
+    /// </param>
+    /// <returns>A property proxy that exposes <see cref="NullableSByteOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<NullableSByteOperationsManager> For(
+        Expression<Func<T, sbyte?>> propertyExpression
+    ) => For<sbyte?, NullableSByteOperationsManager>(propertyExpression);
+
+    /// <summary>
+    /// Defines a validation rule for a nullable <see cref="sbyte"/> property of the model, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the nullable sbyte property to validate (e.g., <c>x =&gt; x.Temperature</c>).
+    /// </param>
+    /// <param name="config">Configuration for this rule (severity, error code, cascade mode).</param>
+    /// <returns>A property proxy that exposes <see cref="NullableSByteOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<NullableSByteOperationsManager> For(
+        Expression<Func<T, sbyte?>> propertyExpression,
+        RuleConfig config
+    ) => For<sbyte?, NullableSByteOperationsManager>(propertyExpression, config);
+
+    /// <summary>
+    /// Defines a validation rule for a <see cref="uint"/> property of the model.
+    /// Call <see cref="IPropertyProxy{TManager}.Test"/> on the result to access uint assertions.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the uint property to validate (e.g., <c>x =&gt; x.Count</c>).
+    /// </param>
+    /// <returns>A property proxy that exposes <see cref="UIntOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<UIntOperationsManager> For(
+        Expression<Func<T, uint>> propertyExpression
+    ) => For<uint, UIntOperationsManager>(propertyExpression);
+
+    /// <summary>
+    /// Defines a validation rule for a <see cref="uint"/> property of the model, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the uint property to validate (e.g., <c>x =&gt; x.Count</c>).
+    /// </param>
+    /// <param name="config">Configuration for this rule (severity, error code, cascade mode).</param>
+    /// <returns>A property proxy that exposes <see cref="UIntOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<UIntOperationsManager> For(
+        Expression<Func<T, uint>> propertyExpression,
+        RuleConfig config
+    ) => For<uint, UIntOperationsManager>(propertyExpression, config);
+
+    /// <summary>
+    /// Defines a validation rule for a nullable <see cref="uint"/> property of the model.
+    /// Call <see cref="IPropertyProxy{TManager}.Test"/> on the result to access nullable uint assertions.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the nullable uint property to validate (e.g., <c>x =&gt; x.Count</c>).
+    /// </param>
+    /// <returns>A property proxy that exposes <see cref="NullableUIntOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<NullableUIntOperationsManager> For(
+        Expression<Func<T, uint?>> propertyExpression
+    ) => For<uint?, NullableUIntOperationsManager>(propertyExpression);
+
+    /// <summary>
+    /// Defines a validation rule for a nullable <see cref="uint"/> property of the model, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the nullable uint property to validate (e.g., <c>x =&gt; x.Count</c>).
+    /// </param>
+    /// <param name="config">Configuration for this rule (severity, error code, cascade mode).</param>
+    /// <returns>A property proxy that exposes <see cref="NullableUIntOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<NullableUIntOperationsManager> For(
+        Expression<Func<T, uint?>> propertyExpression,
+        RuleConfig config
+    ) => For<uint?, NullableUIntOperationsManager>(propertyExpression, config);
+
+    /// <summary>
+    /// Defines a validation rule for a <see cref="ushort"/> property of the model.
+    /// Call <see cref="IPropertyProxy{TManager}.Test"/> on the result to access ushort assertions.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the ushort property to validate (e.g., <c>x =&gt; x.Port</c>).
+    /// </param>
+    /// <returns>A property proxy that exposes <see cref="UShortOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<UShortOperationsManager> For(
+        Expression<Func<T, ushort>> propertyExpression
+    ) => For<ushort, UShortOperationsManager>(propertyExpression);
+
+    /// <summary>
+    /// Defines a validation rule for a <see cref="ushort"/> property of the model, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the ushort property to validate (e.g., <c>x =&gt; x.Port</c>).
+    /// </param>
+    /// <param name="config">Configuration for this rule (severity, error code, cascade mode).</param>
+    /// <returns>A property proxy that exposes <see cref="UShortOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<UShortOperationsManager> For(
+        Expression<Func<T, ushort>> propertyExpression,
+        RuleConfig config
+    ) => For<ushort, UShortOperationsManager>(propertyExpression, config);
+
+    /// <summary>
+    /// Defines a validation rule for a nullable <see cref="ushort"/> property of the model.
+    /// Call <see cref="IPropertyProxy{TManager}.Test"/> on the result to access nullable ushort assertions.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the nullable ushort property to validate (e.g., <c>x =&gt; x.Port</c>).
+    /// </param>
+    /// <returns>A property proxy that exposes <see cref="NullableUShortOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<NullableUShortOperationsManager> For(
+        Expression<Func<T, ushort?>> propertyExpression
+    ) => For<ushort?, NullableUShortOperationsManager>(propertyExpression);
+
+    /// <summary>
+    /// Defines a validation rule for a nullable <see cref="ushort"/> property of the model, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the nullable ushort property to validate (e.g., <c>x =&gt; x.Port</c>).
+    /// </param>
+    /// <param name="config">Configuration for this rule (severity, error code, cascade mode).</param>
+    /// <returns>A property proxy that exposes <see cref="NullableUShortOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<NullableUShortOperationsManager> For(
+        Expression<Func<T, ushort?>> propertyExpression,
+        RuleConfig config
+    ) => For<ushort?, NullableUShortOperationsManager>(propertyExpression, config);
+
+    /// <summary>
+    /// Defines a validation rule for a <see cref="ulong"/> property of the model.
+    /// Call <see cref="IPropertyProxy{TManager}.Test"/> on the result to access ulong assertions.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the ulong property to validate (e.g., <c>x =&gt; x.Count</c>).
+    /// </param>
+    /// <returns>A property proxy that exposes <see cref="ULongOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<ULongOperationsManager> For(
+        Expression<Func<T, ulong>> propertyExpression
+    ) => For<ulong, ULongOperationsManager>(propertyExpression);
+
+    /// <summary>
+    /// Defines a validation rule for a <see cref="ulong"/> property of the model, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the ulong property to validate (e.g., <c>x =&gt; x.Count</c>).
+    /// </param>
+    /// <param name="config">Configuration for this rule (severity, error code, cascade mode).</param>
+    /// <returns>A property proxy that exposes <see cref="ULongOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<ULongOperationsManager> For(
+        Expression<Func<T, ulong>> propertyExpression,
+        RuleConfig config
+    ) => For<ulong, ULongOperationsManager>(propertyExpression, config);
+
+    /// <summary>
+    /// Defines a validation rule for a nullable <see cref="ulong"/> property of the model.
+    /// Call <see cref="IPropertyProxy{TManager}.Test"/> on the result to access nullable ulong assertions.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the nullable ulong property to validate (e.g., <c>x =&gt; x.Count</c>).
+    /// </param>
+    /// <returns>A property proxy that exposes <see cref="NullableULongOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<NullableULongOperationsManager> For(
+        Expression<Func<T, ulong?>> propertyExpression
+    ) => For<ulong?, NullableULongOperationsManager>(propertyExpression);
+
+    /// <summary>
+    /// Defines a validation rule for a nullable <see cref="ulong"/> property of the model, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the nullable ulong property to validate (e.g., <c>x =&gt; x.Count</c>).
+    /// </param>
+    /// <param name="config">Configuration for this rule (severity, error code, cascade mode).</param>
+    /// <returns>A property proxy that exposes <see cref="NullableULongOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<NullableULongOperationsManager> For(
+        Expression<Func<T, ulong?>> propertyExpression,
+        RuleConfig config
+    ) => For<ulong?, NullableULongOperationsManager>(propertyExpression, config);
+
+    /// <summary>
+    /// Defines a validation rule for a <see cref="short"/> property of the model.
+    /// Call <see cref="IPropertyProxy{TManager}.Test"/> on the result to access short assertions.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the short property to validate (e.g., <c>x =&gt; x.Quantity</c>).
+    /// </param>
+    /// <returns>A property proxy that exposes <see cref="ShortOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<ShortOperationsManager> For(
+        Expression<Func<T, short>> propertyExpression
+    ) => For<short, ShortOperationsManager>(propertyExpression);
+
+    /// <summary>
+    /// Defines a validation rule for a <see cref="short"/> property of the model, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the short property to validate (e.g., <c>x =&gt; x.Quantity</c>).
+    /// </param>
+    /// <param name="config">Configuration for severity, error code, custom message, or cascade mode.</param>
+    /// <returns>A property proxy that exposes <see cref="ShortOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<ShortOperationsManager> For(
+        Expression<Func<T, short>> propertyExpression,
+        RuleConfig config
+    ) => For<short, ShortOperationsManager>(propertyExpression, config);
+
+    /// <summary>
+    /// Defines a validation rule for a nullable <see cref="short"/> property of the model.
+    /// Call <see cref="IPropertyProxy{TManager}.Test"/> on the result to access nullable short assertions.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the nullable short property to validate (e.g., <c>x =&gt; x.Quantity</c>).
+    /// </param>
+    /// <returns>A property proxy that exposes <see cref="NullableShortOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<NullableShortOperationsManager> For(
+        Expression<Func<T, short?>> propertyExpression
+    ) => For<short?, NullableShortOperationsManager>(propertyExpression);
+
+    /// <summary>
+    /// Defines a validation rule for a nullable <see cref="short"/> property of the model, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the nullable short property to validate (e.g., <c>x =&gt; x.Quantity</c>).
+    /// </param>
+    /// <param name="config">Configuration for severity, error code, custom message, or cascade mode.</param>
+    /// <returns>A property proxy that exposes <see cref="NullableShortOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<NullableShortOperationsManager> For(
+        Expression<Func<T, short?>> propertyExpression,
+        RuleConfig config
+    ) => For<short?, NullableShortOperationsManager>(propertyExpression, config);
+
+    /// <summary>
+    /// Defines a validation rule for a <see cref="char"/> property of the model.
+    /// Call <see cref="IPropertyProxy{TManager}.Test"/> on the result to access char assertions.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the char property to validate (e.g., <c>x =&gt; x.Grade</c>).
+    /// </param>
+    /// <returns>A property proxy that exposes <see cref="CharOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<CharOperationsManager> For(
+        Expression<Func<T, char>> propertyExpression
+    ) => For<char, CharOperationsManager>(propertyExpression);
+
+    /// <summary>
+    /// Defines a validation rule for a <see cref="char"/> property of the model, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the char property to validate (e.g., <c>x =&gt; x.Grade</c>).
+    /// </param>
+    /// <param name="config">Configuration for this rule (severity, error code, cascade mode).</param>
+    /// <returns>A property proxy that exposes <see cref="CharOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<CharOperationsManager> For(
+        Expression<Func<T, char>> propertyExpression,
+        RuleConfig config
+    ) => For<char, CharOperationsManager>(propertyExpression, config);
+
+    /// <summary>
+    /// Defines a validation rule for a nullable <see cref="char"/> property of the model.
+    /// Call <see cref="IPropertyProxy{TManager}.Test"/> on the result to access nullable char assertions.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the nullable char property to validate (e.g., <c>x =&gt; x.Grade</c>).
+    /// </param>
+    /// <returns>A property proxy that exposes <see cref="NullableCharOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<NullableCharOperationsManager> For(
+        Expression<Func<T, char?>> propertyExpression
+    ) => For<char?, NullableCharOperationsManager>(propertyExpression);
+
+    /// <summary>
+    /// Defines a validation rule for a nullable <see cref="char"/> property of the model, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the nullable char property to validate (e.g., <c>x =&gt; x.Grade</c>).
+    /// </param>
+    /// <param name="config">Configuration for this rule (severity, error code, cascade mode).</param>
+    /// <returns>A property proxy that exposes <see cref="NullableCharOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<NullableCharOperationsManager> For(
+        Expression<Func<T, char?>> propertyExpression,
+        RuleConfig config
+    ) => For<char?, NullableCharOperationsManager>(propertyExpression, config);
+
+    /// <summary>
     /// Defines a validation rule for a nullable <see cref="int"/> property of the model.
     /// Call <see cref="IPropertyProxy{TManager}.Test"/> on the result to access nullable integer assertions.
     /// </summary>

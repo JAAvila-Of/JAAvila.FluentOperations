@@ -44,16 +44,23 @@ internal class CollectionBeSequenceEqualToValidator<T>(
             return false;
         }
 
-        if (
-            !actualList
-                .Where((t, i) => !EqualityComparer<T>.Default.Equals(t, expectedList[i]))
-                .Any()
-        )
+        var firstMismatchIndex = -1;
+        for (var i = 0; i < actualList.Count; i++)
+        {
+            if (!EqualityComparer<T>.Default.Equals(actualList[i], expectedList[i]))
+            {
+                firstMismatchIndex = i;
+                break;
+            }
+        }
+
+        if (firstMismatchIndex < 0)
         {
             return true;
         }
 
-        ResultValidation = "The collection differs at index {0}: expected {1} but found {2}.";
+        ResultValidation =
+            $"The collection differs at index {firstMismatchIndex}: expected \"{expectedList[firstMismatchIndex]}\" but found \"{actualList[firstMismatchIndex]}\".";
         return false;
     }
 

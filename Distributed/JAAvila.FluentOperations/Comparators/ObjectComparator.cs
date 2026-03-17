@@ -254,6 +254,26 @@ public class ObjectComparator : IComparator<object?>
             return;
         }
 
+        if (options.IgnoreCollectionOrder)
+        {
+            CompareCollectionsUnordered(actualList, expectedList, path, depth, options, visited, differences);
+        }
+        else
+        {
+            CompareCollectionsOrdered(actualList, expectedList, path, depth, options, visited, differences);
+        }
+    }
+
+    private static void CompareCollectionsOrdered(
+        List<object?> actualList,
+        List<object?> expectedList,
+        string path,
+        int depth,
+        ComparisonOptions options,
+        HashSet<object> visited,
+        List<string> differences
+    )
+    {
         var count = Math.Min(actualList.Count, expectedList.Count);
 
         for (var i = 0; i < count; i++)
@@ -273,6 +293,62 @@ public class ObjectComparator : IComparator<object?>
                 visited,
                 differences
             );
+        }
+    }
+
+    private static void CompareCollectionsUnordered(
+        List<object?> actualList,
+        List<object?> expectedList,
+        string path,
+        int depth,
+        ComparisonOptions options,
+        HashSet<object> visited,
+        List<string> differences
+    )
+    {
+        var remaining = new List<object?>(actualList);
+
+        for (var i = 0; i < expectedList.Count; i++)
+        {
+            if (differences.Count >= options.MaxDifferencesReported)
+            {
+                return;
+            }
+
+            var expectedItem = expectedList[i];
+            var matchIndex = -1;
+
+            for (var j = 0; j < remaining.Count; j++)
+            {
+                var testDifferences = new List<string>();
+                var testVisited = new HashSet<object>(ReferenceEqualityComparer.Instance);
+                CompareRecursive(
+                    remaining[j],
+                    expectedItem,
+                    string.Empty,
+                    depth + 1,
+                    options,
+                    testVisited,
+                    testDifferences
+                );
+
+                if (testDifferences.Count == 0)
+                {
+                    matchIndex = j;
+                    break;
+                }
+            }
+
+            if (matchIndex < 0)
+            {
+                var label = string.IsNullOrEmpty(path) ? "<root>" : $"Collection at '{path}'";
+                differences.Add(
+                    $"{label}: expected element '{FormatValue(expectedItem)}' was not found (ignoring order)"
+                );
+                return;
+            }
+
+            remaining.RemoveAt(matchIndex);
         }
     }
 
