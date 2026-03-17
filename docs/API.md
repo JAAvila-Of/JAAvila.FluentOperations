@@ -298,6 +298,37 @@ Manager: `UIntOperationsManager` / `NullableUIntOperationsManager`
 
 ---
 
+### UShort Validations
+
+Manager: `UShortOperationsManager` / `NullableUShortOperationsManager`
+
+| Operation | Description |
+|-----------|-------------|
+| `Be(ushort)` | Equals expected |
+| `NotBe(ushort)` | Does not equal |
+| `BePositive()` | Greater than zero |
+| `BeZero()` | Equals zero |
+| `BeGreaterThan(ushort)` | Greater than value |
+| `BeGreaterThanOrEqualTo(ushort)` | Greater than or equal |
+| `BeLessThan(ushort)` | Less than value |
+| `BeLessThanOrEqualTo(ushort)` | Less than or equal |
+| `BeInRange(ushort, ushort)` | Within inclusive range |
+| `NotBeInRange(ushort, ushort)` | Outside range |
+| `BeOneOf(params ushort[])` | In set of values |
+| `NotBeOneOf(params ushort[])` | Not in set |
+| `BeDivisibleBy(ushort)` | Divisible by value |
+| `BeEven()` | Divisible by 2 |
+| `BeOdd()` | Not divisible by 2 |
+
+> **Note:** `BeNegative()` is not available for `ushort` because it is an unsigned type (range 0-65,535).
+
+**Nullable ushort (`ushort?`)** adds:
+- `HaveValue()` -- has a non-null value
+- `NotHaveValue()` -- is null
+- All ushort operations above (with FailIf null guards)
+
+---
+
 ### ULong Validations
 
 Manager: `ULongOperationsManager` / `NullableULongOperationsManager`
