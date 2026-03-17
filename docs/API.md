@@ -576,6 +576,8 @@ Manager: `CollectionOperationsManager<T>`
 
 | Method | Description |
 |--------|-------------|
+| `BeNull()` | Value is null |
+| `NotBeNull()` | Value is not null |
 | `NotBeNullOrEmpty()` | Not null and has elements |
 | `BeEmpty()` | No elements |
 | `NotBeEmpty()` | Has elements |
@@ -633,6 +635,8 @@ All Collection operations plus (including equivalence: `BeEquivalentTo`, `NotBeE
 
 | Method | Description |
 |--------|-------------|
+| `BeNull()` | Value is null |
+| `NotBeNull()` | Value is not null |
 | `HaveLength(int)` | Exact array length |
 | `HaveLengthGreaterThan(int)` | More than N |
 | `HaveLengthLessThan(int)` | Fewer than N |
@@ -651,6 +655,8 @@ Manager: `DictionaryOperationsManager<TKey, TValue>`
 
 | Method | Description |
 |--------|-------------|
+| `BeNull()` | Value is null |
+| `NotBeNull()` | Value is not null |
 | `ContainKey(TKey)` | Has key |
 | `NotContainKey(TKey)` | Does not have key |
 | `ContainValue(TValue)` | Has value |
@@ -850,6 +856,8 @@ Manager: `ActionStatsOperationsManager`
 
 | Method | Description |
 |--------|-------------|
+| `BeNull()` | ActionStats value is null |
+| `NotBeNull()` | ActionStats value is not null |
 | `CompleteWithin(TimeSpan)` | Elapsed time <= max |
 | `CompleteWithinMilliseconds(double)` | Convenience overload |
 | `TakeLongerThan(TimeSpan)` | Elapsed time >= min |

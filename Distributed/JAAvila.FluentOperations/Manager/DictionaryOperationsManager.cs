@@ -33,6 +33,67 @@ public class DictionaryOperationsManager<TKey, TValue>
     }
 
     /// <summary>
+    /// Asserts that the dictionary is <c>null</c>.
+    /// </summary>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public DictionaryOperationsManager<TKey, TValue> BeNull(Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Common.BeNull))
+        {
+            return this;
+        }
+
+        ExecutionEngine<DictionaryOperationsManager<TKey, TValue>, IDictionary<TKey, TValue>>
+            .New(this)
+            .WithOperation(
+                ReferenceBeNullValidator<IDictionary<TKey, TValue>>.New(PrincipalChain)
+            )
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.ResultValidation,
+                            BaseFormatter.Format(PrincipalChain.GetValue())
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the dictionary is not <c>null</c>.
+    /// </summary>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public DictionaryOperationsManager<TKey, TValue> NotBeNull(Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Common.NotBeNull))
+        {
+            return this;
+        }
+
+        ExecutionEngine<DictionaryOperationsManager<TKey, TValue>, IDictionary<TKey, TValue>>
+            .New(this)
+            .WithOperation(
+                ReferenceNotBeNullValidator<IDictionary<TKey, TValue>>.New(PrincipalChain)
+            )
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
     /// Asserts that the dictionary is the same reference as <paramref name="expected"/>.
     /// </summary>
     /// <param name="expected">The expected dictionary reference.</param>

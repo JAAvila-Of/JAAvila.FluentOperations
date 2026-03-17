@@ -34,6 +34,63 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
     }
 
     /// <summary>
+    /// Asserts that the array is <c>null</c>.
+    /// </summary>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public ArrayOperationsManager<T> BeNull(Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Common.BeNull))
+        {
+            return this;
+        }
+
+        ExecutionEngine<ArrayOperationsManager<T>, IEnumerable<T>>
+            .New(this)
+            .WithOperation(ReferenceBeNullValidator<IEnumerable<T>>.New(PrincipalChain))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.ResultValidation,
+                            BaseFormatter.Format(PrincipalChain.GetValue())
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the array is not <c>null</c>.
+    /// </summary>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public ArrayOperationsManager<T> NotBeNull(Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Common.NotBeNull))
+        {
+            return this;
+        }
+
+        ExecutionEngine<ArrayOperationsManager<T>, IEnumerable<T>>
+            .New(this)
+            .WithOperation(ReferenceNotBeNullValidator<IEnumerable<T>>.New(PrincipalChain))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
     /// Asserts that the array is the same reference as <paramref name="expected"/>.
     /// </summary>
     /// <param name="expected">The expected array/collection reference.</param>
