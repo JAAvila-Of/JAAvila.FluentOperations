@@ -213,4 +213,5 @@ public abstract partial class QualityBlueprint<T>
                 )
         );
     }
+
 }
