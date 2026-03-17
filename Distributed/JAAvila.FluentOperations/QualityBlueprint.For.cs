@@ -533,6 +533,56 @@ public abstract partial class QualityBlueprint<T>
     ) => For<uint?, NullableUIntOperationsManager>(propertyExpression, config);
 
     /// <summary>
+    /// Defines a validation rule for a <see cref="ushort"/> property of the model.
+    /// Call <see cref="IPropertyProxy{TManager}.Test"/> on the result to access ushort assertions.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the ushort property to validate (e.g., <c>x =&gt; x.Port</c>).
+    /// </param>
+    /// <returns>A property proxy that exposes <see cref="UShortOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<UShortOperationsManager> For(
+        Expression<Func<T, ushort>> propertyExpression
+    ) => For<ushort, UShortOperationsManager>(propertyExpression);
+
+    /// <summary>
+    /// Defines a validation rule for a <see cref="ushort"/> property of the model, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the ushort property to validate (e.g., <c>x =&gt; x.Port</c>).
+    /// </param>
+    /// <param name="config">Configuration for this rule (severity, error code, cascade mode).</param>
+    /// <returns>A property proxy that exposes <see cref="UShortOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<UShortOperationsManager> For(
+        Expression<Func<T, ushort>> propertyExpression,
+        RuleConfig config
+    ) => For<ushort, UShortOperationsManager>(propertyExpression, config);
+
+    /// <summary>
+    /// Defines a validation rule for a nullable <see cref="ushort"/> property of the model.
+    /// Call <see cref="IPropertyProxy{TManager}.Test"/> on the result to access nullable ushort assertions.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the nullable ushort property to validate (e.g., <c>x =&gt; x.Port</c>).
+    /// </param>
+    /// <returns>A property proxy that exposes <see cref="NullableUShortOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<NullableUShortOperationsManager> For(
+        Expression<Func<T, ushort?>> propertyExpression
+    ) => For<ushort?, NullableUShortOperationsManager>(propertyExpression);
+
+    /// <summary>
+    /// Defines a validation rule for a nullable <see cref="ushort"/> property of the model, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the nullable ushort property to validate (e.g., <c>x =&gt; x.Port</c>).
+    /// </param>
+    /// <param name="config">Configuration for this rule (severity, error code, cascade mode).</param>
+    /// <returns>A property proxy that exposes <see cref="NullableUShortOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<NullableUShortOperationsManager> For(
+        Expression<Func<T, ushort?>> propertyExpression,
+        RuleConfig config
+    ) => For<ushort?, NullableUShortOperationsManager>(propertyExpression, config);
+
+    /// <summary>
     /// Defines a validation rule for a <see cref="ulong"/> property of the model.
     /// Call <see cref="IPropertyProxy{TManager}.Test"/> on the result to access ulong assertions.
     /// </summary>

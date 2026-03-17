@@ -946,6 +946,42 @@ public abstract partial class QualityBlueprint<T>
         RuleConfig config
     ) => ForTransform<uint?, NullableUIntOperationsManager>(propertyExpression, transform, config);
 
+    // ushort -> ushort transformation
+    /// <summary>
+    /// Registers a same-type transformation for a <see cref="ushort"/> property.
+    /// </summary>
+    protected IPropertyProxy<UShortOperationsManager> ForTransform(
+        Expression<Func<T, ushort>> propertyExpression,
+        Func<ushort, ushort> transform
+    ) => ForTransform<ushort, UShortOperationsManager>(propertyExpression, transform);
+
+    /// <summary>
+    /// Registers a same-type transformation for a <see cref="ushort"/> property, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    protected IPropertyProxy<UShortOperationsManager> ForTransform(
+        Expression<Func<T, ushort>> propertyExpression,
+        Func<ushort, ushort> transform,
+        RuleConfig config
+    ) => ForTransform<ushort, UShortOperationsManager>(propertyExpression, transform, config);
+
+    // ushort? -> ushort? transformation
+    /// <summary>
+    /// Registers a same-type transformation for a nullable <see cref="ushort"/> property.
+    /// </summary>
+    protected IPropertyProxy<NullableUShortOperationsManager> ForTransform(
+        Expression<Func<T, ushort?>> propertyExpression,
+        Func<ushort?, ushort?> transform
+    ) => ForTransform<ushort?, NullableUShortOperationsManager>(propertyExpression, transform);
+
+    /// <summary>
+    /// Registers a same-type transformation for a nullable <see cref="ushort"/> property, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    protected IPropertyProxy<NullableUShortOperationsManager> ForTransform(
+        Expression<Func<T, ushort?>> propertyExpression,
+        Func<ushort?, ushort?> transform,
+        RuleConfig config
+    ) => ForTransform<ushort?, NullableUShortOperationsManager>(propertyExpression, transform, config);
+
     // ulong -> ulong transformation
     /// <summary>
     /// Registers a same-type transformation for a <see cref="ulong"/> property.
@@ -1608,6 +1644,42 @@ public abstract partial class QualityBlueprint<T>
         Func<TProp, uint?> transform,
         RuleConfig config
     ) => ForTransform<TProp, uint?, NullableUIntOperationsManager>(propertyExpression, transform, config);
+
+    // Cross-type -> ushort
+    /// <summary>
+    /// Registers a property with a cross-type transformation to <see cref="ushort"/> applied before validation.
+    /// </summary>
+    protected IPropertyProxy<UShortOperationsManager> ForTransform<TProp>(
+        Expression<Func<T, TProp>> propertyExpression,
+        Func<TProp, ushort> transform
+    ) => ForTransform<TProp, ushort, UShortOperationsManager>(propertyExpression, transform);
+
+    /// <summary>
+    /// Registers a property with a cross-type transformation to <see cref="ushort"/> applied before validation, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    protected IPropertyProxy<UShortOperationsManager> ForTransform<TProp>(
+        Expression<Func<T, TProp>> propertyExpression,
+        Func<TProp, ushort> transform,
+        RuleConfig config
+    ) => ForTransform<TProp, ushort, UShortOperationsManager>(propertyExpression, transform, config);
+
+    // Cross-type -> ushort?
+    /// <summary>
+    /// Registers a property with a cross-type transformation to nullable <see cref="ushort"/> applied before validation.
+    /// </summary>
+    protected IPropertyProxy<NullableUShortOperationsManager> ForTransform<TProp>(
+        Expression<Func<T, TProp>> propertyExpression,
+        Func<TProp, ushort?> transform
+    ) => ForTransform<TProp, ushort?, NullableUShortOperationsManager>(propertyExpression, transform);
+
+    /// <summary>
+    /// Registers a property with a cross-type transformation to nullable <see cref="ushort"/> applied before validation, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    protected IPropertyProxy<NullableUShortOperationsManager> ForTransform<TProp>(
+        Expression<Func<T, TProp>> propertyExpression,
+        Func<TProp, ushort?> transform,
+        RuleConfig config
+    ) => ForTransform<TProp, ushort?, NullableUShortOperationsManager>(propertyExpression, transform, config);
 
     // Cross-type -> ulong
     /// <summary>
