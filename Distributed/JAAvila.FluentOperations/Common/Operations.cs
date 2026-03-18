@@ -1359,6 +1359,9 @@ public struct Operations
         [EnumStringValue("containmatch")]
         ContainMatch,
 
+        [EnumStringValue("notcontainmatch")]
+        NotContainMatch,
+
         [EnumStringValue("containsinglematch")]
         ContainSingleMatch,
 
