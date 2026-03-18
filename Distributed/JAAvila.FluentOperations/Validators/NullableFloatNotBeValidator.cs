@@ -16,7 +16,7 @@ internal class NullableFloatNotBeValidator(PrincipalChain<float?> chain, float? 
 
     public bool Validate()
     {
-        if (chain.GetValue() != expected)
+        if (!Nullable.Equals(chain.GetValue(), expected))
         {
             return true;
         }

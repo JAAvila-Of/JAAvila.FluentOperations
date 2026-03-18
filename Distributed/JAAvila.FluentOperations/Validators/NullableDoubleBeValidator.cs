@@ -18,7 +18,7 @@ internal class NullableDoubleBeValidator(PrincipalChain<double?> chain, double? 
     {
         var value = chain.GetValue();
 
-        if (value == expected)
+        if (Nullable.Equals(value, expected))
         {
             return true;
         }

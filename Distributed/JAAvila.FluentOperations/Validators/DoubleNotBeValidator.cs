@@ -15,7 +15,7 @@ internal class DoubleNotBeValidator(PrincipalChain<double> chain, double expecte
 
     public bool Validate()
     {
-        if (chain.GetValue() != expected)
+        if (!chain.GetValue().Equals(expected))
         {
             return true;
         }
