@@ -17,7 +17,7 @@ internal class NullableFloatBeValidator(PrincipalChain<float?> chain, float? exp
     {
         var value = chain.GetValue();
 
-        if (value == expected)
+        if (Nullable.Equals(value, expected))
         {
             return true;
         }

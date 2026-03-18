@@ -118,6 +118,16 @@ public class FloatOperationsManager : ITestManager<FloatOperationsManager, float
                         )
                         .WithReason(reason?.ToString())
             )
+            .FailIf(
+                manager =>
+                    (
+                        float.IsNaN(manager.PrincipalChain.GetValue()),
+                        Fail.New(
+                            $"The {nameof(BePositive)} operation failed because the value was NaN. "
+                            + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
+                        )
+                    )
+            )
             .Execute();
 
         return this;
@@ -148,6 +158,16 @@ public class FloatOperationsManager : ITestManager<FloatOperationsManager, float
                         )
                         .WithReason(reason?.ToString())
             )
+            .FailIf(
+                manager =>
+                    (
+                        float.IsNaN(manager.PrincipalChain.GetValue()),
+                        Fail.New(
+                            $"The {nameof(BeNegative)} operation failed because the value was NaN. "
+                            + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
+                        )
+                    )
+            )
             .Execute();
 
         return this;
@@ -177,6 +197,16 @@ public class FloatOperationsManager : ITestManager<FloatOperationsManager, float
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        float.IsNaN(manager.PrincipalChain.GetValue()),
+                        Fail.New(
+                            $"The {nameof(BeZero)} operation failed because the value was NaN. "
+                            + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
+                        )
+                    )
             )
             .Execute();
 
@@ -210,6 +240,16 @@ public class FloatOperationsManager : ITestManager<FloatOperationsManager, float
                         )
                         .WithReason(reason?.ToString())
             )
+            .FailIf(
+                manager =>
+                    (
+                        float.IsNaN(manager.PrincipalChain.GetValue()),
+                        Fail.New(
+                            $"The {nameof(BeGreaterThan)} operation failed because the value was NaN. "
+                            + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
+                        )
+                    )
+            )
             .Execute();
 
         return this;
@@ -241,6 +281,16 @@ public class FloatOperationsManager : ITestManager<FloatOperationsManager, float
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        float.IsNaN(manager.PrincipalChain.GetValue()),
+                        Fail.New(
+                            $"The {nameof(BeGreaterThanOrEqualTo)} operation failed because the value was NaN. "
+                            + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
+                        )
+                    )
             )
             .Execute();
 
@@ -274,6 +324,16 @@ public class FloatOperationsManager : ITestManager<FloatOperationsManager, float
                         )
                         .WithReason(reason?.ToString())
             )
+            .FailIf(
+                manager =>
+                    (
+                        float.IsNaN(manager.PrincipalChain.GetValue()),
+                        Fail.New(
+                            $"The {nameof(BeLessThan)} operation failed because the value was NaN. "
+                            + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
+                        )
+                    )
+            )
             .Execute();
 
         return this;
@@ -305,6 +365,16 @@ public class FloatOperationsManager : ITestManager<FloatOperationsManager, float
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        float.IsNaN(manager.PrincipalChain.GetValue()),
+                        Fail.New(
+                            $"The {nameof(BeLessThanOrEqualTo)} operation failed because the value was NaN. "
+                            + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
+                        )
+                    )
             )
             .Execute();
 
@@ -342,6 +412,16 @@ public class FloatOperationsManager : ITestManager<FloatOperationsManager, float
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        float.IsNaN(manager.PrincipalChain.GetValue()),
+                        Fail.New(
+                            $"The {nameof(BeInRange)} operation failed because the value was NaN. "
+                            + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
+                        )
+                    )
             )
             .FailIf(
                 _ =>
@@ -388,6 +468,16 @@ public class FloatOperationsManager : ITestManager<FloatOperationsManager, float
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        float.IsNaN(manager.PrincipalChain.GetValue()),
+                        Fail.New(
+                            $"The {nameof(NotBeInRange)} operation failed because the value was NaN. "
+                            + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
+                        )
+                    )
             )
             .FailIf(
                 _ =>
@@ -542,6 +632,16 @@ public class FloatOperationsManager : ITestManager<FloatOperationsManager, float
                         .WithReason(reason?.ToString())
             )
             .FailIf(
+                manager =>
+                    (
+                        float.IsNaN(manager.PrincipalChain.GetValue()),
+                        Fail.New(
+                            $"The {nameof(BeDivisibleBy)} operation failed because the value was NaN. "
+                            + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
+                        )
+                    )
+            )
+            .FailIf(
                 _ =>
                     (
                         divisor is 0.0f or float.NaN,
@@ -586,6 +686,16 @@ public class FloatOperationsManager : ITestManager<FloatOperationsManager, float
                         .WithReason(reason?.ToString())
             )
             .FailIf(
+                manager =>
+                    (
+                        float.IsNaN(manager.PrincipalChain.GetValue()),
+                        Fail.New(
+                            $"The {nameof(HavePrecision)} operation failed because the value was NaN. "
+                            + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
+                        )
+                    )
+            )
+            .FailIf(
                 _ =>
                     (
                         expectedDecimals < 0,
@@ -628,6 +738,16 @@ public class FloatOperationsManager : ITestManager<FloatOperationsManager, float
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        float.IsNaN(manager.PrincipalChain.GetValue()),
+                        Fail.New(
+                            $"The {nameof(BeRoundedTo)} operation failed because the value was NaN. "
+                            + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
+                        )
+                    )
             )
             .FailIf(
                 _ =>
@@ -678,6 +798,16 @@ public class FloatOperationsManager : ITestManager<FloatOperationsManager, float
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        float.IsNaN(manager.PrincipalChain.GetValue()),
+                        Fail.New(
+                            $"The {nameof(BeApproximately)} operation failed because the value was NaN. "
+                            + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
+                        )
+                    )
             )
             .FailIf(
                 _ =>

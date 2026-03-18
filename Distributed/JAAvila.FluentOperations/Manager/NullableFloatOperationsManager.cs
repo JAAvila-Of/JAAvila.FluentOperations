@@ -179,6 +179,17 @@ public class NullableFloatOperationsManager
                         )
                     )
             )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is not null
+                            && float.IsNaN(manager.PrincipalChain.GetValue()!.Value),
+                        Fail.New(
+                            $"The {nameof(BePositive)} operation failed because the value was NaN. "
+                            + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
+                        )
+                    )
+            )
             .Execute();
 
         return this;
@@ -218,6 +229,17 @@ public class NullableFloatOperationsManager
                         )
                     )
             )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is not null
+                            && float.IsNaN(manager.PrincipalChain.GetValue()!.Value),
+                        Fail.New(
+                            $"The {nameof(BeNegative)} operation failed because the value was NaN. "
+                            + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
+                        )
+                    )
+            )
             .Execute();
 
         return this;
@@ -254,6 +276,17 @@ public class NullableFloatOperationsManager
                         manager.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeZero)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is not null
+                            && float.IsNaN(manager.PrincipalChain.GetValue()!.Value),
+                        Fail.New(
+                            $"The {nameof(BeZero)} operation failed because the value was NaN. "
+                            + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
                         )
                     )
             )
@@ -297,6 +330,17 @@ public class NullableFloatOperationsManager
                         )
                     )
             )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is not null
+                            && float.IsNaN(manager.PrincipalChain.GetValue()!.Value),
+                        Fail.New(
+                            $"The {nameof(BeGreaterThan)} operation failed because the value was NaN. "
+                            + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
+                        )
+                    )
+            )
             .Execute();
 
         return this;
@@ -334,6 +378,17 @@ public class NullableFloatOperationsManager
                         manager.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeGreaterThanOrEqualTo)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is not null
+                            && float.IsNaN(manager.PrincipalChain.GetValue()!.Value),
+                        Fail.New(
+                            $"The {nameof(BeGreaterThanOrEqualTo)} operation failed because the value was NaN. "
+                            + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
                         )
                     )
             )
@@ -377,6 +432,17 @@ public class NullableFloatOperationsManager
                         )
                     )
             )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is not null
+                            && float.IsNaN(manager.PrincipalChain.GetValue()!.Value),
+                        Fail.New(
+                            $"The {nameof(BeLessThan)} operation failed because the value was NaN. "
+                            + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
+                        )
+                    )
+            )
             .Execute();
 
         return this;
@@ -414,6 +480,17 @@ public class NullableFloatOperationsManager
                         manager.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeLessThanOrEqualTo)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is not null
+                            && float.IsNaN(manager.PrincipalChain.GetValue()!.Value),
+                        Fail.New(
+                            $"The {nameof(BeLessThanOrEqualTo)} operation failed because the value was NaN. "
+                            + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
                         )
                     )
             )
@@ -456,6 +533,17 @@ public class NullableFloatOperationsManager
                         manager.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeInRange)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is not null
+                            && float.IsNaN(manager.PrincipalChain.GetValue()!.Value),
+                        Fail.New(
+                            $"The {nameof(BeInRange)} operation failed because the value was NaN. "
+                            + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
                         )
                     )
             )
@@ -507,6 +595,17 @@ public class NullableFloatOperationsManager
                         manager.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(NotBeInRange)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is not null
+                            && float.IsNaN(manager.PrincipalChain.GetValue()!.Value),
+                        Fail.New(
+                            $"The {nameof(NotBeInRange)} operation failed because the value was NaN. "
+                            + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
                         )
                     )
             )
@@ -657,6 +756,17 @@ public class NullableFloatOperationsManager
                     )
             )
             .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is not null
+                            && float.IsNaN(manager.PrincipalChain.GetValue()!.Value),
+                        Fail.New(
+                            $"The {nameof(BeDivisibleBy)} operation failed because the value was NaN. "
+                            + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
+                        )
+                    )
+            )
+            .FailIf(
                 _ =>
                     (
                         divisor == 0f,
@@ -707,6 +817,17 @@ public class NullableFloatOperationsManager
                         )
                     )
             )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is not null
+                            && float.IsNaN(manager.PrincipalChain.GetValue()!.Value),
+                        Fail.New(
+                            $"The {nameof(HavePrecision)} operation failed because the value was NaN. "
+                            + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
+                        )
+                    )
+            )
             .Execute();
 
         return this;
@@ -745,6 +866,17 @@ public class NullableFloatOperationsManager
                         manager.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeRoundedTo)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is not null
+                            && float.IsNaN(manager.PrincipalChain.GetValue()!.Value),
+                        Fail.New(
+                            $"The {nameof(BeRoundedTo)} operation failed because the value was NaN. "
+                            + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
                         )
                     )
             )
@@ -792,6 +924,17 @@ public class NullableFloatOperationsManager
                         manager.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeApproximately)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is not null
+                            && float.IsNaN(manager.PrincipalChain.GetValue()!.Value),
+                        Fail.New(
+                            $"The {nameof(BeApproximately)} operation failed because the value was NaN. "
+                            + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
                         )
                     )
             )

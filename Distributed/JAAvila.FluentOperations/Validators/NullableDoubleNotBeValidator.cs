@@ -20,7 +20,7 @@ internal class NullableDoubleNotBeValidator(PrincipalChain<double?> chain, doubl
     {
         var value = chain.GetValue();
 
-        if (value != expected)
+        if (!Nullable.Equals(value, expected))
         {
             return true;
         }
