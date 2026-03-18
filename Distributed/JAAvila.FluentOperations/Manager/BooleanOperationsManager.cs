@@ -1,4 +1,4 @@
-using JAAvila.FluentOperations.Common;
+﻿using JAAvila.FluentOperations.Common;
 using JAAvila.FluentOperations.Config;
 using JAAvila.FluentOperations.Contract;
 using JAAvila.FluentOperations.Formatters;
@@ -254,5 +254,93 @@ public class BooleanOperationsManager : ITestManager<BooleanOperationsManager, b
             .Execute();
 
         return this;
+    }
+
+    /// <summary>
+    /// Asserts that the runtime type of the value is exactly <typeparamref name="TType"/>.
+    /// </summary>
+    public BooleanOperationsManager BeOfType<TType>(Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Common.BeOfType))
+            return this;
+        ValidateBeOfTypeOperation(reason, typeof(TType));
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the runtime type of the value is exactly <paramref name="expected"/>.
+    /// </summary>
+    public BooleanOperationsManager BeOfType(Type expected, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Common.BeOfType))
+            return this;
+        ValidateBeOfTypeOperation(reason, expected);
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the runtime type of the value is not <typeparamref name="TType"/>.
+    /// </summary>
+    public BooleanOperationsManager NotBeOfType<TType>(Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Common.NotBeOfType))
+            return this;
+        ValidateNotBeOfTypeOperation(reason, typeof(TType));
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the runtime type of the value is not <paramref name="expected"/>.
+    /// </summary>
+    public BooleanOperationsManager NotBeOfType(Type expected, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Common.NotBeOfType))
+            return this;
+        ValidateNotBeOfTypeOperation(reason, expected);
+        return this;
+    }
+
+    private void ValidateBeOfTypeOperation(Reason? reason, Type? type)
+    {
+        ExecutionEngine<BooleanOperationsManager, bool>
+            .New(this)
+            .WithOperation(ReferenceBeOfTypeValidator<bool>.New(PrincipalChain, type!))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                _ =>
+                    (
+                        type is null,
+                        Fail.New($"The {nameof(BeOfType)} operation failed because the expected type was <null>.")
+                    )
+            )
+            .Execute();
+    }
+
+    private void ValidateNotBeOfTypeOperation(Reason? reason, Type? type)
+    {
+        ExecutionEngine<BooleanOperationsManager, bool>
+            .New(this)
+            .WithOperation(ReferenceNotBeOfTypeValidator<bool>.New(PrincipalChain, type!))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                _ =>
+                    (
+                        type is null,
+                        Fail.New($"The {nameof(NotBeOfType)} operation failed because the expected type was <null>.")
+                    )
+            )
+            .Execute();
     }
 }

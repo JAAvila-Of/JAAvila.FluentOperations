@@ -853,6 +853,55 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
     }
 
     /// <summary>
+    /// Asserts that the array does not contain any element matching the specified predicate.
+    /// </summary>
+    /// <param name="predicate">A function that must return <c>false</c> for every element.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// This operation fails immediately if the array is <c>null</c> or if <paramref name="predicate"/> is <c>null</c>.
+    /// </remarks>
+    public ArrayOperationsManager<T> NotContain(Func<T, bool> predicate, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Collection.NotContainMatch))
+        {
+            return this;
+        }
+
+        ExecutionEngine<ArrayOperationsManager<T>, IEnumerable<T>>
+            .New(this)
+            .WithOperation(CollectionNotContainPredicateValidator<T>.New(PrincipalChain, predicate))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue().IsNull(),
+                        Fail.New(
+                            $"The {nameof(NotContain)} operation failed because the array was null."
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        predicate.IsNull(),
+                        Fail.New(
+                            $"The {nameof(NotContain)} operation failed because the predicate cannot be null."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
     /// Asserts that the array contains exactly one element.
     /// </summary>
     /// <param name="reason">An optional reason providing context for the assertion.</param>
