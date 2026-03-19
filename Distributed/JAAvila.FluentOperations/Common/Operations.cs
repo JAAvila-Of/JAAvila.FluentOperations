@@ -96,6 +96,9 @@ public struct Operations
         [EnumStringValue("notbenullorwhitespace")]
         NotBeNullOrWhiteSpace,
 
+        [EnumStringValue("notbenullorempty")]
+        NotBeNullOrEmpty,
+
         [EnumStringValue("havelength")]
         HaveLength,
 
@@ -177,6 +180,12 @@ public struct Operations
         [EnumStringValue("havelengthbetween")]
         HaveLengthBetween,
 
+        [EnumStringValue("havelengthgreaterthan")]
+        HaveLengthGreaterThan,
+
+        [EnumStringValue("havelengthlessthan")]
+        HaveLengthLessThan,
+
         [EnumStringValue("containonlydigits")]
         ContainOnlyDigits,
 
@@ -185,6 +194,9 @@ public struct Operations
 
         [EnumStringValue("containnowhitespace")]
         ContainNoWhitespace,
+
+        [EnumStringValue("notcontain")]
+        NotContain,
 
         [EnumStringValue("containall")]
         ContainAll,

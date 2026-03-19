@@ -366,6 +366,99 @@ public abstract class BaseOperationsManager<TManager, TSubject>
         return Manager;
     }
 
+    /// <summary>
+    /// Asserts that the value passes the given <see cref="ICustomValidator{TSubject}"/>.
+    /// </summary>
+    /// <param name="customValidator">The custom validator to evaluate.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// Throws immediately if <paramref name="customValidator"/> is <c>null</c>.
+    /// </remarks>
+    public TManager Evaluate(ICustomValidator<TSubject> customValidator, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Common.Evaluate))
+        {
+            return Manager;
+        }
+
+        ExecutionEngine<TManager, TSubject>
+            .New(Manager)
+            .WithOperation(
+                ReferenceEvaluateCustomValidator<TSubject>.New(
+                    Manager.PrincipalChain,
+                    customValidator
+                )
+            )
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(Manager.PrincipalChain.GetSubject())
+                        .WithResult(operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                _ =>
+                    (
+                        customValidator is null,
+                        Fail.New(
+                            $"The {nameof(Evaluate)} operation failed because the custom validator was <null>."
+                        )
+                    )
+            )
+            .Execute();
+
+        return Manager;
+    }
+
+    /// <summary>
+    /// Asserts asynchronously that the value passes the given <see cref="IAsyncCustomValidator{TSubject}"/>.
+    /// </summary>
+    /// <param name="customValidator">The async custom validator to evaluate.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>A task that completes with the current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// Throws immediately if <paramref name="customValidator"/> is <c>null</c>.
+    /// </remarks>
+    public async Task<TManager> EvaluateAsync(
+        IAsyncCustomValidator<TSubject> customValidator,
+        Reason? reason = null
+    )
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Common.Evaluate))
+        {
+            return Manager;
+        }
+
+        await ExecutionEngine<TManager, TSubject>
+            .New(Manager)
+            .WithOperation(
+                ReferenceEvaluateAsyncCustomValidator<TSubject>.New(
+                    Manager.PrincipalChain,
+                    customValidator
+                )
+            )
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(Manager.PrincipalChain.GetSubject())
+                        .WithResult(operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                _ =>
+                    (
+                        customValidator is null,
+                        Fail.New(
+                            $"The {nameof(EvaluateAsync)} operation failed because the async custom validator was <null>."
+                        )
+                    )
+            )
+            .ExecuteAsync();
+
+        return Manager;
+    }
+
     #region PRIVATE METHODS
 
     private TManager ValidateNotBeCastToOperation(Reason? reason, Type? expectedType)
