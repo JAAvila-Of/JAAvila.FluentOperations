@@ -1,6 +1,6 @@
 # JAAvila.FluentOperations
 
-[![Tests](https://img.shields.io/badge/tests-2906%20passing-brightgreen)]()
+[![Tests](https://img.shields.io/badge/tests-5716%20passing-brightgreen)]()
 [![.NET](https://img.shields.io/badge/.NET-8.0-blue)](https://dotnet.microsoft.com)
 [![C#](https://img.shields.io/badge/C%23-13.0-blue)](https://docs.microsoft.com/dotnet/csharp/)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
@@ -85,11 +85,11 @@ if (!report.IsValid)
 |----------|-------|------------|
 | **String** | `string?` | 45+ ops: Be, NotBe, BeEmpty, Contain, Match (regex), BeEmail, BeUrl, BeJson, BeXml, BeSemVer, BeIPAddress, BeCreditCard, MatchWildcard, ContainAll, ContainAny... |
 | **Boolean** | `bool`, `bool?` | Be, BeTrue, BeFalse, BeAllTrue, BeAllFalse, Imply, HaveValue |
-| **Numeric** | `int`, `long`, `decimal`, `double`, `float` (+ nullable) | Be, BePositive, BeNegative, BeZero, BeGreaterThan, BeLessThan, BeInRange, BeOneOf, BeDivisibleBy, BeEven, BeOdd, BeApproximately, HavePrecision, BeNaN, BeInfinity, BeFinite... |
+| **Numeric** | `int`, `long`, `decimal`, `double`, `float` (+ nullable) | Be, BePositive, BeNegative, BeZero, BeGreaterThan, BeLessThan, BeInRange, BeOneOf, BeDivisibleBy, BeEven, BeOdd, BeApproximately (decimal, double, float), HavePrecision, BeNaN, BeInfinity, BeFinite... |
 | **Date/Time** | `DateTime`, `DateOnly`, `TimeOnly`, `TimeSpan`, `DateTimeOffset` (+ nullable) | Be, BeAfter, BeBefore, BeInRange, BeToday, BeInThePast, BeInTheFuture, BeWeekday, BeCloseTo, HaveYear... |
-| **Collections** | `IEnumerable<T>`, `T[]`, `Dictionary<TKey,TValue>` | HaveCount, Contain, ContainAll, ContainInOrder, BeSubsetOf, BeInAscendingOrder, AllSatisfy, BeUnique, HaveElementAt, SatisfyRespectively, HaveMinCount... |
+| **Collections** | `IEnumerable<T>`, `T[]`, `Dictionary<TKey,TValue>` | HaveCount, Contain, ContainAll, ContainInOrder, BeSubsetOf, BeInAscendingOrder, BeInAscendingOrder(keySelector), AllSatisfy, BeUnique, HaveElementAt, SatisfyRespectively, HaveMinCount, Inspect, ExtractSingle... |
 | **Special** | `Guid`, `Guid?`, `Enum<T>`, `Uri?` | Be, BeEmpty, BeDefined, HaveFlag, HaveScheme, BeAbsolute... |
-| **Object** | `object?` | BeNull, NotBeNull, BeSameAs, BeOfType, BeEquivalentTo |
+| **Object** | `object?` | BeNull, NotBeNull, BeSameAs, BeOfType, BeAssignableTo, BeEquivalentTo (with builder options) |
 | **Action** | `Action`, `Func<Task>` | Throw, ThrowExactly, NotThrow, NotThrowAfter, CompleteWithinAsync |
 
 ## Blueprint Features
@@ -295,9 +295,9 @@ See [Integration Guide](./docs/INTEGRATION.md) for full examples.
 
 ## Project Stats
 
-- **2906 tests** across NUnit and xUnit projects
-- **415+ validators** covering 20+ data types
-- **34 operation managers** with fluent chaining
+- **5716 tests** across NUnit test projects
+- **440+ validators** covering 20+ data types
+- **37 operation managers** with fluent chaining
 - **4 NuGet packages** (core + 3 integrations)
 - **CI/CD** via GitHub Actions (build + test matrix, NuGet release on tags)
 - **Performance optimized** with lazy initialization, caching, and zero-allocation patterns
