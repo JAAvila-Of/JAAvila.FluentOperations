@@ -51,6 +51,21 @@ public record ComparisonOptions
     public bool IgnoreCollectionOrder { get; init; }
 
     /// <summary>
+    /// Per-type numeric tolerances for approximate comparison.
+    /// Key is the compared type (e.g., typeof(decimal), typeof(double), typeof(DateTime)),
+    /// value is the tolerance (decimal for decimal, double for double, TimeSpan for DateTime).
+    /// When set, values within the tolerance are considered equal.
+    /// </summary>
+    public IReadOnlyDictionary<Type, object>? Tolerances { get; init; }
+
+    /// <summary>
+    /// Member name mappings: source property name -> target property name.
+    /// When matching properties on the expected object, uses the mapped name instead.
+    /// Enables cross-type comparison where actual and expected have different property names for the same data.
+    /// </summary>
+    public IReadOnlyDictionary<string, string>? MemberMappings { get; init; }
+
+    /// <summary>
     /// Predefined options for case-insensitive ordinal comparison.
     /// </summary>
     public static readonly ComparisonOptions CaseInsensitive = new()

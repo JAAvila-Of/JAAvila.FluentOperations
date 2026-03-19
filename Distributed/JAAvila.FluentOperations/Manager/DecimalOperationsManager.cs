@@ -1,6 +1,7 @@
 ﻿using JAAvila.FluentOperations.Common;
 using JAAvila.FluentOperations.Config;
 using JAAvila.FluentOperations.Contract;
+using JAAvila.FluentOperations.Formatters;
 using JAAvila.FluentOperations.Model;
 using JAAvila.FluentOperations.Utils;
 using JAAvila.FluentOperations.Validators;
@@ -567,6 +568,56 @@ public class DecimalOperationsManager : ITestManager<DecimalOperationsManager, d
                         decimals < 0,
                         Fail.New(
                             $"The {nameof(BeRoundedTo)} operation failed because the number of decimal places cannot be negative."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the value is within <paramref name="tolerance"/> of <paramref name="expected"/>.
+    /// </summary>
+    /// <param name="expected">The expected value to compare against.</param>
+    /// <param name="tolerance">The maximum allowed difference from the expected value.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// Throws immediately if <paramref name="tolerance"/> is negative.
+    /// </remarks>
+    public DecimalOperationsManager BeApproximately(
+        decimal expected,
+        decimal tolerance,
+        Reason? reason = null
+    )
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Decimal.BeApproximately))
+        {
+            return this;
+        }
+
+        ExecutionEngine<DecimalOperationsManager, decimal>
+            .New(this)
+            .WithOperation(DecimalBeApproximatelyValidator.New(PrincipalChain, expected, tolerance))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.ResultValidation,
+                            BaseFormatter.Format(expected),
+                            BaseFormatter.Format(tolerance),
+                            BaseFormatter.Format(PrincipalChain.GetValue())
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                _ =>
+                    (
+                        tolerance < 0,
+                        Fail.New(
+                            $"The {nameof(BeApproximately)} operation failed because the tolerance cannot be negative."
                         )
                     )
             )
