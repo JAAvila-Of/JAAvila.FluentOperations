@@ -246,6 +246,34 @@ public class StringOperationsManager
     }
 
     /// <summary>
+    /// Asserts that the string is not <c>null</c> and not empty (<c>""</c>).
+    /// </summary>
+    /// <param name="reason">An optional reason to provide context for the operation.</param>
+    /// <returns>The current instance of <see cref="StringOperationsManager"/> for method chaining.</returns>
+    public StringOperationsManager NotBeNullOrEmpty(Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.String.NotBeNullOrEmpty))
+        {
+            return this;
+        }
+
+        ExecutionEngine<StringOperationsManager, string?>
+            .New(this)
+            .WithOperation(StringNotBeNullOrEmptyValidator.New(PrincipalChain))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithValue(StringFormatter.Format(PrincipalChain.GetValueAsString()))
+                        .WithResult(operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
     /// Asserts that the string is <c>null</c>, empty, or consists only of white-space characters.
     /// </summary>
     /// <param name="reason">An optional reason to provide context for the operation.</param>
@@ -646,6 +674,131 @@ public class StringOperationsManager
                         expected == "",
                         Fail.New(
                             $"The {nameof(Contain)} operation failed because expected was empty."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the string does not contain the specified substring (ordinal comparison).
+    /// </summary>
+    /// <param name="expected">The substring that should not appear in the string. Cannot be <c>null</c> or empty.</param>
+    /// <param name="reason">An optional reason to provide context for the operation.</param>
+    /// <returns>The current instance of <see cref="StringOperationsManager"/> for method chaining.</returns>
+    /// <remarks>
+    /// This operation fails immediately if the string is <c>null</c>, or if <paramref name="expected"/> is <c>null</c> or empty.
+    /// </remarks>
+    public StringOperationsManager NotContain(string expected, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.String.NotContain))
+        {
+            return this;
+        }
+
+        ExecutionEngine<StringOperationsManager, string?>
+            .New(this)
+            .WithOperation(StringNotContainValidator.New(expected, PrincipalChain))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithValue(StringFormatter.Format(PrincipalChain.GetValueAsString()))
+                        .WithResult(operation.ResultValidation, StringFormatter.Format(expected))
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(NotContain)} operation failed because the parent value was <null>. {{0}}.",
+                            $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        expected.IsNull(),
+                        Fail.New(
+                            $"The {nameof(NotContain)} operation failed because expected was <null>."
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        expected == "",
+                        Fail.New(
+                            $"The {nameof(NotContain)} operation failed because expected was empty."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the string does not contain the specified substring using the given StringComparison.
+    /// </summary>
+    /// <param name="expected">The substring that should not appear in the string. Cannot be <c>null</c> or empty.</param>
+    /// <param name="comparison">The <see cref="StringComparison"/> mode to use.</param>
+    /// <param name="reason">An optional reason to provide context for the operation.</param>
+    /// <returns>The current instance of <see cref="StringOperationsManager"/> for method chaining.</returns>
+    /// <remarks>
+    /// This operation fails immediately if the string is <c>null</c>, or if <paramref name="expected"/> is <c>null</c> or empty.
+    /// </remarks>
+    public StringOperationsManager NotContain(
+        string expected,
+        StringComparison comparison,
+        Reason? reason = null
+    )
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.String.NotContain))
+        {
+            return this;
+        }
+
+        ExecutionEngine<StringOperationsManager, string?>
+            .New(this)
+            .WithOperation(StringNotContainValidator.New(expected, PrincipalChain, comparison))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithValue(StringFormatter.Format(PrincipalChain.GetValueAsString()))
+                        .WithResult(operation.ResultValidation, StringFormatter.Format(expected))
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(NotContain)} operation failed because the parent value was <null>. {{0}}.",
+                            $"It is recommended to run the {nameof(NotContain)} operation first to cover all possible scenarios"
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        expected.IsNull(),
+                        Fail.New(
+                            $"The {nameof(NotContain)} operation failed because expected was <null>."
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        expected == "",
+                        Fail.New(
+                            $"The {nameof(NotContain)} operation failed because expected was empty."
                         )
                     )
             )
@@ -1951,6 +2104,114 @@ public class StringOperationsManager
                         min < 0 || max < 0 || min > max,
                         Fail.New(
                             $"The {nameof(HaveLengthBetween)} operation failed because the arguments are invalid: min={min}, max={max}."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the string length is strictly greater than <paramref name="expected"/>.
+    /// </summary>
+    /// <param name="expected">The exclusive lower bound for character count. Must be non-negative.</param>
+    /// <param name="reason">An optional reason to provide context for the operation.</param>
+    /// <returns>The current instance of <see cref="StringOperationsManager"/> for method chaining.</returns>
+    /// <remarks>
+    /// This operation fails immediately if the string is <c>null</c> or if <paramref name="expected"/> is negative.
+    /// </remarks>
+    public StringOperationsManager HaveLengthGreaterThan(int expected, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.String.HaveLengthGreaterThan))
+        {
+            return this;
+        }
+
+        ExecutionEngine<StringOperationsManager, string?>
+            .New(this)
+            .WithOperation(StringHaveLengthGreaterThanValidator.New(PrincipalChain, expected))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.ResultValidation,
+                            expected.ToString(),
+                            PrincipalChain.GetValue()!.Length.ToString()
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(HaveLengthGreaterThan)} operation failed because the parent value was <null>. {{0}}.",
+                            $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        expected < 0,
+                        Fail.New(
+                            $"The {nameof(HaveLengthGreaterThan)} operation failed because the expected length cannot be negative."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the string length is strictly less than <paramref name="expected"/>.
+    /// </summary>
+    /// <param name="expected">The exclusive upper bound for character count. Must be non-negative.</param>
+    /// <param name="reason">An optional reason to provide context for the operation.</param>
+    /// <returns>The current instance of <see cref="StringOperationsManager"/> for method chaining.</returns>
+    /// <remarks>
+    /// This operation fails immediately if the string is <c>null</c> or if <paramref name="expected"/> is negative.
+    /// </remarks>
+    public StringOperationsManager HaveLengthLessThan(int expected, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.String.HaveLengthLessThan))
+        {
+            return this;
+        }
+
+        ExecutionEngine<StringOperationsManager, string?>
+            .New(this)
+            .WithOperation(StringHaveLengthLessThanValidator.New(PrincipalChain, expected))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.ResultValidation,
+                            expected.ToString(),
+                            PrincipalChain.GetValue()!.Length.ToString()
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(HaveLengthLessThan)} operation failed because the parent value was <null>. {{0}}.",
+                            $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        expected < 0,
+                        Fail.New(
+                            $"The {nameof(HaveLengthLessThan)} operation failed because the expected length cannot be negative."
                         )
                     )
             )
