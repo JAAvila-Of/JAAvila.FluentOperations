@@ -52,6 +52,12 @@ public struct Operations
 
         [EnumStringValue("notbe")]
         NotBe,
+
+        [EnumStringValue("beassignableto")]
+        BeAssignableTo,
+
+        [EnumStringValue("notbeassignableto")]
+        NotBeAssignableTo,
     }
 
     /// <summary>
@@ -833,6 +839,9 @@ public struct Operations
 
         [EnumStringValue("beroundedto")]
         BeRoundedTo,
+
+        [EnumStringValue("beapproximately")]
+        BeApproximately,
     }
 
     /// <summary>
@@ -1457,6 +1466,15 @@ public struct Operations
 
         [EnumStringValue("notbe")]
         NotBe,
+
+        [EnumStringValue("inspect")]
+        Inspect,
+
+        [EnumStringValue("extractsingle")]
+        ExtractSingle,
+
+        [EnumStringValue("extractsinglematch")]
+        ExtractSingleMatch,
     }
 
     /// <summary>

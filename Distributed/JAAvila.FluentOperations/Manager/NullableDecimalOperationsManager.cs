@@ -773,6 +773,62 @@ public class NullableDecimalOperationsManager
     }
 
     /// <summary>
+    /// Asserts that the value is within <paramref name="tolerance"/> of <paramref name="expected"/>.
+    /// </summary>
+    /// <param name="expected">The reference value to compare against.</param>
+    /// <param name="tolerance">The maximum allowed absolute difference.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// Throws immediately if the value is <c>null</c> (null guard -- use <c>NotBeNull</c> first to cover that scenario).
+    /// </remarks>
+    public NullableDecimalOperationsManager BeApproximately(
+        decimal expected,
+        decimal tolerance,
+        Reason? reason = null
+    )
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Decimal.BeApproximately))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableDecimalOperationsManager, decimal?>
+            .New(this)
+            .WithOperation(
+                NullableDecimalBeApproximatelyValidator.New(PrincipalChain, expected, tolerance)
+            )
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(BeApproximately)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        tolerance < 0,
+                        Fail.New(
+                            $"The {nameof(BeApproximately)} operation failed because the tolerance cannot be negative."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
     /// Asserts that the runtime type of the value is exactly <typeparamref name="TType"/>.
     /// </summary>
     public NullableDecimalOperationsManager BeOfType<TType>(Reason? reason = null)

@@ -1,4 +1,5 @@
 using JAAvila.FluentOperations.Common;
+using JAAvila.FluentOperations.Comparators;
 using JAAvila.FluentOperations.Config;
 using JAAvila.FluentOperations.Connector;
 using JAAvila.FluentOperations.Constraints;
@@ -838,6 +839,120 @@ public class CollectionOperationsManager<T>
     }
 
     /// <summary>
+    /// Asserts that the collection contains exactly one element and extracts it.
+    /// Returns an <see cref="AndWhichConnector{TManager,TSubject}"/> whose <c>Subject</c> is the extracted element.
+    /// </summary>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>A connector exposing the single element via <c>.Subject</c> and the parent manager via <c>.And</c>.</returns>
+    public AndWhichConnector<CollectionOperationsManager<T>, T> ExtractSingle(Reason? reason = null)
+    {
+        T extractedValue = default!;
+
+        if (OperationUtils.CheckOperationAllowed(Operations.Collection.ExtractSingle))
+        {
+            var validator = CollectionExtractSingleValidator<T>.New(PrincipalChain);
+
+            ExecutionEngine<CollectionOperationsManager<T>, IEnumerable<T>>
+                .New(this)
+                .WithOperation(validator)
+                .WithTemplate(
+                    (template, operation) =>
+                        template
+                            .WithSubject(PrincipalChain.GetSubject())
+                            .WithResult(
+                                operation.ResultValidation,
+                                PrincipalChain.GetValue()?.Count().ToString() ?? "0"
+                            )
+                            .WithReason(reason?.ToString())
+                )
+                .FailIf(
+                    manager =>
+                        (
+                            manager.PrincipalChain.GetValue().IsNull(),
+                            Fail.New(
+                                $"The {nameof(ExtractSingle)} operation failed because the collection was null."
+                            )
+                        )
+                )
+                .Execute();
+
+            if (validator.ExtractedValue is not null)
+            {
+                extractedValue = validator.ExtractedValue;
+            }
+        }
+
+        return new AndWhichConnector<CollectionOperationsManager<T>, T>(
+            this,
+            extractedValue,
+            PrincipalChain.GetSubject()
+        );
+    }
+
+    /// <summary>
+    /// Asserts that the collection contains exactly one element matching the predicate and extracts it.
+    /// </summary>
+    /// <param name="predicate">A function to filter elements.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>A connector exposing the matching element via <c>.Subject</c> and the parent manager via <c>.And</c>.</returns>
+    public AndWhichConnector<CollectionOperationsManager<T>, T> ExtractSingle(
+        Func<T, bool> predicate,
+        Reason? reason = null
+    )
+    {
+        T extractedValue = default!;
+
+        if (OperationUtils.CheckOperationAllowed(Operations.Collection.ExtractSingleMatch))
+        {
+            var validator = CollectionExtractSinglePredicateValidator<T>.New(PrincipalChain, predicate);
+
+            ExecutionEngine<CollectionOperationsManager<T>, IEnumerable<T>>
+                .New(this)
+                .WithOperation(validator)
+                .WithTemplate(
+                    (template, operation) =>
+                        template
+                            .WithSubject(PrincipalChain.GetSubject())
+                            .WithResult(
+                                operation.ResultValidation,
+                                PrincipalChain.GetValue()?.Count(predicate).ToString() ?? "0"
+                            )
+                            .WithReason(reason?.ToString())
+                )
+                .FailIf(
+                    manager =>
+                        (
+                            manager.PrincipalChain.GetValue().IsNull(),
+                            Fail.New(
+                                $"The {nameof(ExtractSingle)} operation failed because the collection was null."
+                            )
+                        )
+                )
+                .FailIf(
+                    _ =>
+                        (
+                            predicate is null,
+                            Fail.New(
+                                $"The {nameof(ExtractSingle)} operation failed because the predicate cannot be null."
+                            )
+                        )
+                )
+                .Execute();
+
+            if (validator.ExtractedValue is not null)
+            {
+                extractedValue = validator.ExtractedValue;
+            }
+        }
+
+        return new AndWhichConnector<CollectionOperationsManager<T>, T>(
+            this,
+            extractedValue,
+            PrincipalChain.GetSubject()
+        );
+    }
+
+    /// <summary>
     /// Asserts that the collection contains all of the specified items.
     /// </summary>
     /// <param name="items">The items that must all be present in the collection.</param>
@@ -1382,6 +1497,112 @@ public class CollectionOperationsManager<T>
     }
 
     /// <summary>
+    /// Asserts that the collection elements are sorted in ascending order
+    /// by the key extracted via <paramref name="keySelector"/>.
+    /// </summary>
+    /// <typeparam name="TKey">The type of the key to compare. Must implement <see cref="IComparable{T}"/>.</typeparam>
+    /// <param name="keySelector">A function that extracts the comparison key from each element.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public CollectionOperationsManager<T> BeInAscendingOrder<TKey>(
+        Func<T, TKey> keySelector,
+        Reason? reason = null
+    ) where TKey : IComparable<TKey>
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Collection.BeInAscendingOrder))
+        {
+            return this;
+        }
+
+        ExecutionEngine<CollectionOperationsManager<T>, IEnumerable<T>>
+            .New(this)
+            .WithOperation(
+                CollectionBeInAscendingOrderByKeyValidator<T, TKey>.New(PrincipalChain, keySelector)
+            )
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue().IsNull(),
+                        Fail.New(
+                            $"The {nameof(BeInAscendingOrder)} operation failed because the collection was null."
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        keySelector is null,
+                        Fail.New(
+                            $"The {nameof(BeInAscendingOrder)} operation failed because the key selector cannot be null."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the collection elements are sorted in descending order
+    /// by the key extracted via <paramref name="keySelector"/>.
+    /// </summary>
+    /// <typeparam name="TKey">The type of the key to compare. Must implement <see cref="IComparable{T}"/>.</typeparam>
+    /// <param name="keySelector">A function that extracts the comparison key from each element.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public CollectionOperationsManager<T> BeInDescendingOrder<TKey>(
+        Func<T, TKey> keySelector,
+        Reason? reason = null
+    ) where TKey : IComparable<TKey>
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Collection.BeInDescendingOrder))
+        {
+            return this;
+        }
+
+        ExecutionEngine<CollectionOperationsManager<T>, IEnumerable<T>>
+            .New(this)
+            .WithOperation(
+                CollectionBeInDescendingOrderByKeyValidator<T, TKey>.New(PrincipalChain, keySelector)
+            )
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue().IsNull(),
+                        Fail.New(
+                            $"The {nameof(BeInDescendingOrder)} operation failed because the collection was null."
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        keySelector is null,
+                        Fail.New(
+                            $"The {nameof(BeInDescendingOrder)} operation failed because the key selector cannot be null."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
     /// Asserts that every element in the collection satisfies the specified predicate.
     /// </summary>
     /// <param name="predicate">A function that must return <c>true</c> for every element.</param>
@@ -1428,6 +1649,77 @@ public class CollectionOperationsManager<T>
             .Execute();
 
         return this;
+    }
+
+    /// <summary>
+    /// Asserts that every element in the collection passes the assertions defined by the inspector callback.
+    /// The inspector receives each element and its zero-based index, and can use <c>.Test()</c> assertions
+    /// to validate the element. Failures are captured per element and reported with positional context.
+    /// </summary>
+    /// <param name="inspector">
+    /// A callback that receives each element and its index. Use <c>.Test()</c> assertions inside this callback
+    /// to validate each element. All assertion failures are captured and reported with their element index.
+    /// </param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// This operation fails immediately if the collection is <c>null</c> or if <paramref name="inspector"/> is <c>null</c>.
+    /// Unlike <see cref="AllSatisfy"/>, which uses a boolean predicate, <c>Inspect</c> runs full <c>.Test()</c>
+    /// assertion chains per element, providing detailed per-element failure messages.
+    /// </remarks>
+    public CollectionOperationsManager<T> Inspect(Action<T, int> inspector, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Collection.Inspect))
+        {
+            return this;
+        }
+
+        ExecutionEngine<CollectionOperationsManager<T>, IEnumerable<T>>
+            .New(this)
+            .WithOperation(CollectionInspectValidator<T>.New(PrincipalChain, inspector))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue().IsNull(),
+                        Fail.New(
+                            $"The {nameof(Inspect)} operation failed because the collection was null."
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        inspector is null,
+                        Fail.New(
+                            $"The {nameof(Inspect)} operation failed because the inspector cannot be null."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that every element in the collection passes the assertions defined by the inspector callback.
+    /// This overload does not provide the element index.
+    /// </summary>
+    /// <param name="inspector">
+    /// A callback that receives each element. Use <c>.Test()</c> assertions inside this callback
+    /// to validate each element.
+    /// </param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public CollectionOperationsManager<T> Inspect(Action<T> inspector, Reason? reason = null)
+    {
+        return Inspect((element, _) => inspector(element), reason);
     }
 
     /// <summary>
@@ -1674,6 +1966,57 @@ public class CollectionOperationsManager<T>
         {
             return this;
         }
+
+        ExecutionEngine<CollectionOperationsManager<T>, IEnumerable<T>>
+            .New(this)
+            .WithOperation(CollectionBeEquivalentToValidator<T>.New(PrincipalChain, expected))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.ResultValidation,
+                            expected.Count().ToString(),
+                            PrincipalChain.GetValue().Count().ToString()
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue().IsNull() && !expected.IsNull(),
+                        Fail.New(
+                            "The BeEquivalentTo operation failed because the collection was null."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the collection contains the same elements as the expected collection
+    /// (order-independent), using comparison configured via the <paramref name="configure"/> builder.
+    /// </summary>
+    /// <param name="expected">The expected collection to compare against.</param>
+    /// <param name="configure">A lambda that configures the comparison options.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public CollectionOperationsManager<T> BeEquivalentTo(
+        IEnumerable<T> expected,
+        Action<ComparisonOptionsBuilder> configure,
+        Reason? reason = null
+    )
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Collection.BeEquivalentTo))
+        {
+            return this;
+        }
+
+        var builder = new ComparisonOptionsBuilder();
+        configure(builder);
+        var options = builder.Build();
 
         ExecutionEngine<CollectionOperationsManager<T>, IEnumerable<T>>
             .New(this)
