@@ -446,6 +446,7 @@ All Integer operations plus:
 |--------|-------------|
 | `HavePrecision(int)` | Exact decimal places |
 | `BeRoundedTo(int)` | Rounded to N places |
+| `BeApproximately(decimal, decimal)` | Within tolerance of expected value |
 
 ---
 
@@ -615,9 +616,16 @@ Manager: `CollectionOperationsManager<T>`
 | `StartWith(T)` | First element matches |
 | `EndWith(T)` | Last element matches |
 | `BeEquivalentTo(IEnumerable<T>)` | Same elements, any order |
+| `BeEquivalentTo(IEnumerable<T>, Action<ComparisonOptionsBuilder>)` | Same elements with builder options |
 | `BeSequenceEqualTo(IEnumerable<T>)` | Same elements, same order |
 | `NotBeEquivalentTo(IEnumerable<T>)` | NOT same elements (any order) |
 | `NotBeSequenceEqualTo(IEnumerable<T>)` | NOT same elements/order |
+| `BeInAscendingOrder<TKey>(Func<T, TKey>)` | Sorted ascending by key selector |
+| `BeInDescendingOrder<TKey>(Func<T, TKey>)` | Sorted descending by key selector |
+| `Inspect(Action<T, int>)` | Deep inspection of each element with index |
+| `Inspect(Action<T>)` | Deep inspection of each element |
+| `ExtractSingle()` | Extract the single element via `AndWhichConnector` |
+| `ExtractSingle(Func<T, bool>)` | Extract single matching element via `AndWhichConnector` |
 | `Be(IEnumerable<T>)` | Same reference as expected |
 | `NotBe(IEnumerable<T>)` | Not the same reference |
 | `BeOfType<TType>()` | Runtime type is exactly TType |
@@ -631,7 +639,7 @@ Manager: `CollectionOperationsManager<T>`
 
 Manager: `ArrayOperationsManager<T>`
 
-All Collection operations plus (including equivalence: `BeEquivalentTo`, `NotBeEquivalentTo`, `BeSequenceEqualTo`, `NotBeSequenceEqualTo`, `NotContainAny`, `NotContainAll`):
+All Collection operations plus (including equivalence: `BeEquivalentTo`, `BeEquivalentTo(builder)`, `NotBeEquivalentTo`, `BeSequenceEqualTo`, `NotBeSequenceEqualTo`, `NotContainAny`, `NotContainAll`, `BeInAscendingOrder(keySelector)`, `BeInDescendingOrder(keySelector)`, `Inspect`, `ExtractSingle`):
 
 | Method | Description |
 |--------|-------------|
@@ -761,8 +769,13 @@ Manager: `ObjectOperationsManager` / `ReferenceOperationsManager`
 | `NotBe(object?)` | Does not equal expected |
 | `BeEquivalentTo(object)` | Deep structural equality |
 | `BeEquivalentTo(object, ComparisonOptions)` | Deep structural equality with options |
+| `BeEquivalentTo(object, Action<ComparisonOptionsBuilder>)` | Deep structural equality with builder options |
 | `NotBeEquivalentTo(object)` | Not structurally equal |
 | `NotBeEquivalentTo(object, ComparisonOptions)` | Not structurally equal with options |
+| `BeAssignableTo<T>()` | Runtime type assignable to T (inheritance + interfaces) |
+| `BeAssignableTo(Type)` | Runtime type assignable to specified type |
+| `NotBeAssignableTo<T>()` | Runtime type NOT assignable to T |
+| `NotBeAssignableTo(Type)` | Runtime type NOT assignable to specified type |
 | `BeSequenceEqualTo(IEnumerable)` | Sequence equality |
 
 #### ComparisonOptions
@@ -779,6 +792,8 @@ Options for `BeEquivalentTo` / `NotBeEquivalentTo` deep comparison:
 | `ExcludedProperties` | `HashSet<string>` | `[]` | Properties to skip |
 | `MaxDifferencesReported` | `int` | `5` | Max differences in output |
 | `IgnoreCollectionOrder` | `bool` | `false` | Compare collections as unordered bags |
+| `Tolerances` | `IReadOnlyDictionary<Type, object>?` | `null` | Per-type numeric tolerances for approximate comparison |
+| `MemberMappings` | `IReadOnlyDictionary<string, string>?` | `null` | Property name mappings for cross-type comparison |
 
 Predefined options: `ComparisonOptions.Default`, `ComparisonOptions.CaseInsensitive`, `ComparisonOptions.IgnoreOrder`
 
@@ -796,6 +811,46 @@ obj.Test().BeEquivalentTo(expected, new ComparisonOptions
     ExcludedProperties = ["Id", "CreatedAt"]
 });
 ```
+
+#### ComparisonOptionsBuilder
+
+Fluent builder for configuring `ComparisonOptions` via lambda:
+
+```csharp
+// Exclude properties
+obj.Test().BeEquivalentTo(expected, opts => opts
+    .Excluding("Id")
+    .Excluding<Order>(x => x.CreatedAt));
+
+// Numeric tolerance
+obj.Test().BeEquivalentTo(expected, opts => opts
+    .WithTolerance(0.05m));
+
+// DateTime tolerance
+obj.Test().BeEquivalentTo(expected, opts => opts
+    .WithDateTimeTolerance(TimeSpan.FromSeconds(5)));
+
+// Member mapping (cross-type comparison)
+obj.Test().BeEquivalentTo(expected, opts => opts
+    .WithMapping("Email", "CustomerEmail"));
+
+// Collection order + case insensitive + max depth
+obj.Test().BeEquivalentTo(expected, opts => opts
+    .IgnoringCollectionOrder()
+    .IgnoringCase()
+    .WithMaxDepth(3));
+```
+
+| Method | Description |
+|--------|-------------|
+| `Excluding(params string[])` | Exclude properties by name |
+| `Excluding<T>(Expression<Func<T, object>>)` | Exclude property by expression |
+| `WithTolerance<T>(T)` | Numeric tolerance (decimal, double, float) |
+| `WithDateTimeTolerance(TimeSpan)` | DateTime comparison tolerance |
+| `WithMapping(string, string)` | Map source member to target member |
+| `IgnoringCollectionOrder()` | Ignore element order in nested collections |
+| `IgnoringCase()` | Case-insensitive string comparison |
+| `WithMaxDepth(int)` | Maximum recursion depth (default: 10) |
 
 ---
 
