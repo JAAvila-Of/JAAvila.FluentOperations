@@ -227,6 +227,12 @@ public struct Operations
 
         [EnumStringValue("beipv6")]
         BeIPv6,
+
+        [EnumStringValue("beoneof")]
+        BeOneOf,
+
+        [EnumStringValue("notbeoneof")]
+        NotBeOneOf,
     }
 
     /// <summary>
