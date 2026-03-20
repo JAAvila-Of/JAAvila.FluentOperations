@@ -2883,6 +2883,110 @@ public class CollectionOperationsManager<T>
     }
 
     /// <summary>
+    /// Asserts that the collection contains no null elements.
+    /// </summary>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// This operation fails immediately if the collection is <c>null</c>.
+    /// </remarks>
+    public CollectionOperationsManager<T> NotContainNull(Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Collection.NotContainNull))
+        {
+            return this;
+        }
+
+        ExecutionEngine<CollectionOperationsManager<T>, IEnumerable<T>>
+            .New(this)
+            .WithOperation(CollectionNotContainNullValidator<T>.New(PrincipalChain))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue().IsNull(),
+                        Fail.New(
+                            $"The {nameof(NotContainNull)} operation failed because the collection was null."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the collection element count is within the specified inclusive range [<paramref name="min"/>, <paramref name="max"/>].
+    /// </summary>
+    /// <param name="min">The inclusive minimum element count. Must be non-negative.</param>
+    /// <param name="max">The inclusive maximum element count. Must be greater than or equal to <paramref name="min"/>.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// This operation fails immediately if the collection is <c>null</c>, if <paramref name="min"/> is negative,
+    /// or if <paramref name="max"/> is less than <paramref name="min"/>.
+    /// </remarks>
+    public CollectionOperationsManager<T> HaveCountBetween(int min, int max, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Collection.HaveCountBetween))
+        {
+            return this;
+        }
+
+        ExecutionEngine<CollectionOperationsManager<T>, IEnumerable<T>>
+            .New(this)
+            .WithOperation(CollectionHaveCountBetweenValidator<T>.New(PrincipalChain, min, max))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.ResultValidation,
+                            min.ToString(),
+                            max.ToString(),
+                            PrincipalChain.GetValue()?.Count().ToString() ?? "null"
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue().IsNull(),
+                        Fail.New(
+                            $"The {nameof(HaveCountBetween)} operation failed because the collection was null."
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        min < 0,
+                        Fail.New(
+                            $"The {nameof(HaveCountBetween)} operation failed because the minimum count cannot be negative."
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        max < min,
+                        Fail.New(
+                            $"The {nameof(HaveCountBetween)} operation failed because the maximum count ({max}) cannot be less than the minimum count ({min})."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
     /// Extracts a sub-value from the current collection using the given selector.
     /// Returns a connector that exposes the sub-value for further assertions.
     /// </summary>

@@ -599,6 +599,7 @@ Manager: `CollectionOperationsManager<T>`
 | `HaveCountLessThan(int)` | Fewer than N elements |
 | `HaveMinCount(int)` | At least N elements |
 | `HaveMaxCount(int)` | At most N elements |
+| `HaveCountBetween(int, int)` | Count is within [min, max] inclusive range |
 | `HaveLength(int)` | Exact length (element count) |
 | `HaveLengthGreaterThan(int)` | More than N elements |
 | `HaveLengthLessThan(int)` | Fewer than N elements |
@@ -606,6 +607,7 @@ Manager: `CollectionOperationsManager<T>`
 | `Contain(T, OccurrenceConstraint)` | Contains with occurrence |
 | `Contain(Func<T, bool>)` | Contains element matching predicate |
 | `NotContain(T)` | Does not contain |
+| `NotContainNull()` | No element is null (reports count and indexes of nulls found) |
 | `ContainSingle()` | Exactly one element |
 | `ContainSingle(Func<T, bool>)` | Exactly one element matching predicate |
 | `ContainAll(params T[])` | Contains all elements |
