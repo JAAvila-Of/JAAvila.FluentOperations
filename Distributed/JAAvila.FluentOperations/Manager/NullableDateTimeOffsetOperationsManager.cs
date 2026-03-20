@@ -248,6 +248,124 @@ public class NullableDateTimeOffsetOperationsManager
     }
 
     /// <summary>
+    /// Asserts that the value is within <paramref name="tolerance"/> of <paramref name="expected"/>.
+    /// </summary>
+    /// <param name="expected">The expected date and time to compare against.</param>
+    /// <param name="tolerance">The maximum allowed difference from the expected value.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// Throws immediately if the value is <c>null</c> (null guard) or if <paramref name="tolerance"/> is negative.
+    /// </remarks>
+    public NullableDateTimeOffsetOperationsManager BeCloseTo(
+        DateTimeOffset expected,
+        TimeSpan tolerance,
+        Reason? reason = null
+    )
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.NullableDateTimeOffset.BeCloseTo))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableDateTimeOffsetOperationsManager, DateTimeOffset?>
+            .New(this)
+            .WithOperation(NullableDateTimeOffsetBeCloseToValidator.New(PrincipalChain, expected, tolerance))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.ResultValidation,
+                            expected.ToString("O"),
+                            BaseFormatter.Format(tolerance),
+                            BaseFormatter.Format(PrincipalChain.GetValue())
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(BeCloseTo)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        tolerance < TimeSpan.Zero,
+                        Fail.New(
+                            $"The {nameof(BeCloseTo)} operation failed because the tolerance cannot be negative."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the value is NOT within <paramref name="tolerance"/> of <paramref name="expected"/>.
+    /// </summary>
+    /// <param name="expected">The date and time to compare against.</param>
+    /// <param name="tolerance">The minimum required difference from the expected value.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// Throws immediately if the value is <c>null</c> (null guard) or if <paramref name="tolerance"/> is negative.
+    /// </remarks>
+    public NullableDateTimeOffsetOperationsManager NotBeCloseTo(
+        DateTimeOffset expected,
+        TimeSpan tolerance,
+        Reason? reason = null
+    )
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.NullableDateTimeOffset.NotBeCloseTo))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableDateTimeOffsetOperationsManager, DateTimeOffset?>
+            .New(this)
+            .WithOperation(NullableDateTimeOffsetNotBeCloseToValidator.New(PrincipalChain, expected, tolerance))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.ResultValidation,
+                            expected.ToString("O"),
+                            BaseFormatter.Format(tolerance),
+                            BaseFormatter.Format(PrincipalChain.GetValue())
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(NotBeCloseTo)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        tolerance < TimeSpan.Zero,
+                        Fail.New(
+                            $"The {nameof(NotBeCloseTo)} operation failed because the tolerance cannot be negative."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
     /// Asserts that the runtime type of the value is exactly <typeparamref name="TType"/>.
     /// </summary>
     public NullableDateTimeOffsetOperationsManager BeOfType<TType>(Reason? reason = null)
