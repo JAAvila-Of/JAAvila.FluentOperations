@@ -2692,6 +2692,196 @@ public class CollectionOperationsManager<T>
         return this;
     }
 
+    // =========================================================================
+    // ContainEquivalentOf
+    // =========================================================================
+
+    /// <summary>
+    /// Asserts that the collection contains at least one element that is structurally equivalent
+    /// to <paramref name="expected"/> using deep property-by-property comparison with default options.
+    /// </summary>
+    /// <typeparam name="TExpected">The type of the expected template object.</typeparam>
+    /// <param name="expected">The template object to compare against each element.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// Comparison is expected-driven: only properties present on <typeparamref name="TExpected"/>
+    /// are compared. This enables partial matching with anonymous types or DTOs.
+    /// </remarks>
+    public CollectionOperationsManager<T> ContainEquivalentOf<TExpected>(
+        TExpected expected,
+        Reason? reason = null
+    )
+    {
+        return ContainEquivalentOf(expected, ComparisonOptions.Default, reason);
+    }
+
+    /// <summary>
+    /// Asserts that the collection contains at least one element that is structurally equivalent
+    /// to <paramref name="expected"/> using comparison options configured via the <paramref name="configure"/> builder.
+    /// </summary>
+    /// <typeparam name="TExpected">The type of the expected template object.</typeparam>
+    /// <param name="expected">The template object to compare against each element.</param>
+    /// <param name="configure">A lambda that configures the comparison options.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public CollectionOperationsManager<T> ContainEquivalentOf<TExpected>(
+        TExpected expected,
+        Action<ComparisonOptionsBuilder> configure,
+        Reason? reason = null
+    )
+    {
+        var builder = new ComparisonOptionsBuilder();
+        configure(builder);
+        return ContainEquivalentOf(expected, builder.Build(), reason);
+    }
+
+    /// <summary>
+    /// Asserts that the collection contains at least one element that is structurally equivalent
+    /// to <paramref name="expected"/> using the specified <paramref name="options"/>.
+    /// </summary>
+    /// <typeparam name="TExpected">The type of the expected template object.</typeparam>
+    /// <param name="expected">The template object to compare against each element.</param>
+    /// <param name="options">Options controlling the comparison behaviour.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public CollectionOperationsManager<T> ContainEquivalentOf<TExpected>(
+        TExpected expected,
+        ComparisonOptions options,
+        Reason? reason = null
+    )
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Collection.ContainEquivalentOf))
+        {
+            return this;
+        }
+
+        ExecutionEngine<CollectionOperationsManager<T>, IEnumerable<T>>
+            .New(this)
+            .WithOperation(
+                CollectionContainEquivalentOfValidator<T, TExpected>.New(
+                    PrincipalChain,
+                    expected,
+                    options
+                )
+            )
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.ResultValidation,
+                            BaseFormatter.Format(expected)
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue().IsNull(),
+                        Fail.New(
+                            $"The {nameof(ContainEquivalentOf)} operation failed because the collection was null."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    // =========================================================================
+    // NotContainEquivalentOf
+    // =========================================================================
+
+    /// <summary>
+    /// Asserts that no element in the collection is structurally equivalent
+    /// to <paramref name="expected"/> using deep property-by-property comparison with default options.
+    /// </summary>
+    /// <typeparam name="TExpected">The type of the expected template object.</typeparam>
+    /// <param name="expected">The template object to compare against each element.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public CollectionOperationsManager<T> NotContainEquivalentOf<TExpected>(
+        TExpected expected,
+        Reason? reason = null
+    )
+    {
+        return NotContainEquivalentOf(expected, ComparisonOptions.Default, reason);
+    }
+
+    /// <summary>
+    /// Asserts that no element in the collection is structurally equivalent
+    /// to <paramref name="expected"/> using comparison options configured via the <paramref name="configure"/> builder.
+    /// </summary>
+    /// <typeparam name="TExpected">The type of the expected template object.</typeparam>
+    /// <param name="expected">The template object to compare against each element.</param>
+    /// <param name="configure">A lambda that configures the comparison options.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public CollectionOperationsManager<T> NotContainEquivalentOf<TExpected>(
+        TExpected expected,
+        Action<ComparisonOptionsBuilder> configure,
+        Reason? reason = null
+    )
+    {
+        var builder = new ComparisonOptionsBuilder();
+        configure(builder);
+        return NotContainEquivalentOf(expected, builder.Build(), reason);
+    }
+
+    /// <summary>
+    /// Asserts that no element in the collection is structurally equivalent
+    /// to <paramref name="expected"/> using the specified <paramref name="options"/>.
+    /// </summary>
+    /// <typeparam name="TExpected">The type of the expected template object.</typeparam>
+    /// <param name="expected">The template object to compare against each element.</param>
+    /// <param name="options">Options controlling the comparison behaviour.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public CollectionOperationsManager<T> NotContainEquivalentOf<TExpected>(
+        TExpected expected,
+        ComparisonOptions options,
+        Reason? reason = null
+    )
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Collection.NotContainEquivalentOf))
+        {
+            return this;
+        }
+
+        ExecutionEngine<CollectionOperationsManager<T>, IEnumerable<T>>
+            .New(this)
+            .WithOperation(
+                CollectionNotContainEquivalentOfValidator<T, TExpected>.New(
+                    PrincipalChain,
+                    expected,
+                    options
+                )
+            )
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.ResultValidation,
+                            BaseFormatter.Format(expected)
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue().IsNull(),
+                        Fail.New(
+                            $"The {nameof(NotContainEquivalentOf)} operation failed because the collection was null."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
     /// <summary>
     /// Extracts a sub-value from the current collection using the given selector.
     /// Returns a connector that exposes the sub-value for further assertions.
