@@ -63,25 +63,7 @@ public class BlueprintValidationFilter : IActionFilter
                 continue;
             }
 
-            context.Result = new BadRequestObjectResult(
-                new
-                {
-                    Title = "Validation Failed",
-                    Status = 400,
-                    Errors = report
-                        .Failures.Select(
-                            f =>
-                                new
-                                {
-                                    Property = f.PropertyName,
-                                    f.Message,
-                                    f.AttemptedValue
-                                }
-                        )
-                        .ToList(),
-                    report.RulesEvaluated
-                }
-            );
+            context.Result = new BadRequestObjectResult(report.ToProblemDetails());
             return;
         }
     }
@@ -130,25 +112,7 @@ public class BlueprintValidationFilter<TModel, TBlueprint> : IActionFilter
                 continue;
             }
 
-            context.Result = new BadRequestObjectResult(
-                new
-                {
-                    Title = "Validation Failed",
-                    Status = 400,
-                    Errors = report
-                        .Failures.Select(
-                            f =>
-                                new
-                                {
-                                    Property = f.PropertyName,
-                                    f.Message,
-                                    f.AttemptedValue
-                                }
-                        )
-                        .ToList(),
-                    report.RulesEvaluated
-                }
-            );
+            context.Result = new BadRequestObjectResult(report.ToProblemDetails());
             return;
         }
     }
