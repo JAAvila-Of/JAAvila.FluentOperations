@@ -1169,6 +1169,9 @@ public struct Operations
 
         [EnumStringValue("becloseto")]
         BeCloseTo,
+
+        [EnumStringValue("notbecloseto")]
+        NotBeCloseTo,
     }
 
     /// <summary>
@@ -1313,6 +1316,12 @@ public struct Operations
 
         [EnumStringValue("nothavevalue")]
         NotHaveValue,
+
+        [EnumStringValue("beclosetodatetime")]
+        BeCloseTo,
+
+        [EnumStringValue("notbeclosetodatetime")]
+        NotBeCloseTo,
     }
 
     /// <summary>
@@ -1729,6 +1738,9 @@ public struct Operations
         [EnumStringValue("becloseto")]
         BeCloseTo,
 
+        [EnumStringValue("notbeclosetodatetimeoffset")]
+        NotBeCloseTo,
+
         [EnumStringValue("haveoffset")]
         HaveOffset,
 
@@ -1758,6 +1770,12 @@ public struct Operations
 
         [EnumStringValue("nothavevalue")]
         NotHaveValue,
+
+        [EnumStringValue("beclosetodatetimeoffset")]
+        BeCloseTo,
+
+        [EnumStringValue("notbeclosetodatetimeoffset")]
+        NotBeCloseTo,
     }
 
     /// <summary>
