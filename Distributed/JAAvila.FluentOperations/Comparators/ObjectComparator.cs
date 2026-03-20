@@ -175,18 +175,29 @@ public class ObjectComparator : IComparator<object?>
             }
 
             var propName = prop.Name;
-
-            // Check if a property is excluded (by simple name or full path)
-            if (options.ExcludedProperties.Contains(propName))
-            {
-                continue;
-            }
-
             var childPath = string.IsNullOrEmpty(path) ? propName : $"{path}.{propName}";
 
-            if (options.ExcludedProperties.Contains(childPath))
+            // When IncludedProperties is set, ONLY compare those properties
+            if (options.IncludedProperties.Count > 0)
             {
-                continue;
+                if (!options.IncludedProperties.Contains(propName)
+                    && !options.IncludedProperties.Contains(childPath))
+                {
+                    continue;
+                }
+            }
+            else
+            {
+                // Check if a property is excluded (by simple name or full path)
+                if (options.ExcludedProperties.Contains(propName))
+                {
+                    continue;
+                }
+
+                if (options.ExcludedProperties.Contains(childPath))
+                {
+                    continue;
+                }
             }
 
             object? actualVal;

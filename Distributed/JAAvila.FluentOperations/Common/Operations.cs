@@ -1419,6 +1419,9 @@ public struct Operations
         [EnumStringValue("allsatisfy")]
         AllSatisfy,
 
+        [EnumStringValue("onlycontain")]
+        OnlyContain,
+
         [EnumStringValue("anysatisfy")]
         AnySatisfy,
 
@@ -1529,6 +1532,9 @@ public struct Operations
 
         [EnumStringValue("containpair")]
         ContainPair,
+
+        [EnumStringValue("containkeys")]
+        ContainKeys,
 
         [EnumStringValue("havecount")]
         HaveCount,
