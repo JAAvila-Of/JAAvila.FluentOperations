@@ -1,6 +1,6 @@
 # JAAvila.FluentOperations
 
-[![Tests](https://img.shields.io/badge/tests-5716%20passing-brightgreen)]()
+[![Tests](https://img.shields.io/badge/tests-6086%20passing-brightgreen)]()
 [![.NET](https://img.shields.io/badge/.NET-8.0-blue)](https://dotnet.microsoft.com)
 [![C#](https://img.shields.io/badge/C%23-13.0-blue)](https://docs.microsoft.com/dotnet/csharp/)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
@@ -83,11 +83,11 @@ if (!report.IsValid)
 
 | Category | Types | Operations |
 |----------|-------|------------|
-| **String** | `string?` | 45+ ops: Be, NotBe, BeEmpty, Contain, Match (regex), BeEmail, BeUrl, BeJson, BeXml, BeSemVer, BeIPAddress, BeCreditCard, MatchWildcard, ContainAll, ContainAny... |
+| **String** | `string?` | 45+ ops: Be, NotBe, BeEmpty, NotBeNullOrEmpty, Contain, NotContain, Match (regex), BeEmail, BeUrl, BeJson, BeXml, BeSemVer, BeIPAddress, BeCreditCard, MatchWildcard, ContainAll, ContainAny, HaveLengthGreaterThan, HaveLengthLessThan, BeOneOf, NotBeOneOf... |
 | **Boolean** | `bool`, `bool?` | Be, BeTrue, BeFalse, BeAllTrue, BeAllFalse, Imply, HaveValue |
 | **Numeric** | `int`, `long`, `decimal`, `double`, `float` (+ nullable) | Be, BePositive, BeNegative, BeZero, BeGreaterThan, BeLessThan, BeInRange, BeOneOf, BeDivisibleBy, BeEven, BeOdd, BeApproximately (decimal, double, float), HavePrecision, BeNaN, BeInfinity, BeFinite... |
-| **Date/Time** | `DateTime`, `DateOnly`, `TimeOnly`, `TimeSpan`, `DateTimeOffset` (+ nullable) | Be, BeAfter, BeBefore, BeInRange, BeToday, BeInThePast, BeInTheFuture, BeWeekday, BeCloseTo, HaveYear... |
-| **Collections** | `IEnumerable<T>`, `T[]`, `Dictionary<TKey,TValue>` | HaveCount, Contain, ContainAll, ContainInOrder, BeSubsetOf, BeInAscendingOrder, BeInAscendingOrder(keySelector), AllSatisfy, BeUnique, HaveElementAt, SatisfyRespectively, HaveMinCount, Inspect, ExtractSingle... |
+| **Date/Time** | `DateTime`, `DateOnly`, `TimeOnly`, `TimeSpan`, `DateTimeOffset` (+ nullable) | Be, BeAfter, BeBefore, BeInRange, BeToday, BeInThePast, BeInTheFuture, BeWeekday, BeCloseTo, NotBeCloseTo, HaveYear... |
+| **Collections** | `IEnumerable<T>`, `T[]`, `Dictionary<TKey,TValue>` | HaveCount, Contain, ContainAll, ContainInOrder, OnlyContain, BeSubsetOf, BeInAscendingOrder, BeInAscendingOrder(keySelector), AllSatisfy, BeUnique, HaveElementAt, SatisfyRespectively, HaveMinCount, Inspect, ExtractSingle, ContainEquivalentOf, NotContainEquivalentOf, ContainKeys (dictionary)... |
 | **Special** | `Guid`, `Guid?`, `Enum<T>`, `Uri?` | Be, BeEmpty, BeDefined, HaveFlag, HaveScheme, BeAbsolute... |
 | **Object** | `object?` | BeNull, NotBeNull, BeSameAs, BeOfType, BeAssignableTo, BeEquivalentTo (with builder options) |
 | **Action** | `Action`, `Func<Task>` | Throw, ThrowExactly, NotThrow, NotThrowAfter, CompleteWithinAsync |
@@ -290,16 +290,13 @@ See [Integration Guide](./docs/INTEGRATION.md) for full examples.
 
 - [API Reference](./docs/API.md) - Complete API documentation
 - [Integration Guide](./docs/INTEGRATION.md) - ASP.NET Core and MediatR setup
-- [NuGet Publishing](./docs/NUGET_PUBLISHING.md) - Packaging and release workflow
-- [Roadmap](./ROADMAP.md) - Completed phases and future plans
 
 ## Project Stats
 
-- **5716 tests** across NUnit test projects
-- **440+ validators** covering 20+ data types
+- **6086+ tests** across NUnit test projects
+- **460+ validators** covering 20+ data types
 - **37 operation managers** with fluent chaining
 - **4 NuGet packages** (core + 3 integrations)
-- **CI/CD** via GitHub Actions (build + test matrix, NuGet release on tags)
 - **Performance optimized** with lazy initialization, caching, and zero-allocation patterns
 
 ## License

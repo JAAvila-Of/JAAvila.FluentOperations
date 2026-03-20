@@ -26,6 +26,7 @@ Complete API documentation for JAAvila.FluentOperations.
   - [Enum](#enum-validations)
   - [Uri](#uri-validations)
   - [Object / Reference](#object-validations)
+  - [Custom Validator Operations](#custom-validator-operations)
   - [Action / Async Action](#action-validations)
   - [ActionStats (Execution Statistics)](#actionstats-execution-statistics)
 - [Quality Blueprints](#quality-blueprints)
@@ -153,8 +154,17 @@ Manager: `StringOperationsManager`
 | `ContainOnlyDigits()` | Alias for BeNumeric |
 | `ContainOnlyLetters()` | Alias for BeAlphabetic |
 | `ContainNoWhitespace()` | No whitespace characters |
+| `NotContain(string)` | Does not contain substring |
+| `NotContain(string, StringComparison)` | Does not contain with comparison mode |
+| `NotBeNullOrEmpty()` | Is not null and not empty |
+| `HaveLengthGreaterThan(int)` | Length strictly greater than N |
+| `HaveLengthLessThan(int)` | Length strictly less than N |
+| `BeOneOf(params string?[])` | Is one of the specified values |
+| `BeOneOf(StringComparison, params string?[])` | Is one of with comparison mode |
+| `NotBeOneOf(params string?[])` | Is not one of the specified values |
+| `NotBeOneOf(StringComparison, params string?[])` | Is not one of with comparison mode |
 
-StringComparison overloads available for: `Be()`, `Contain()`, `StartWith()`, `EndWith()`, `ContainAll()`, `ContainAny()`.
+StringComparison overloads available for: `Be()`, `Contain()`, `NotContain()`, `StartWith()`, `EndWith()`, `ContainAll()`, `ContainAny()`, `BeOneOf()`, `NotBeOneOf()`.
 
 ---
 
@@ -500,6 +510,7 @@ Manager: `DateTimeOperationsManager` / `NullableDateTimeOperationsManager`
 | `BeWeekday()` | Monday-Friday |
 | `BeWeekend()` | Saturday-Sunday |
 | `BeCloseTo(DateTime, TimeSpan)` | Within tolerance |
+| `NotBeCloseTo(DateTime, TimeSpan)` | Not within tolerance of expected |
 | `HaveYear(int)` | Specific year |
 | `HaveMonth(int)` | Specific month |
 | `HaveDay(int)` | Specific day |
@@ -568,6 +579,7 @@ Same as DateTime plus:
 |--------|-------------|
 | `HaveOffset(TimeSpan)` | Specific UTC offset |
 | `BeCloseTo(DateTimeOffset, TimeSpan)` | Within tolerance |
+| `NotBeCloseTo(DateTimeOffset, TimeSpan)` | Not within tolerance of expected |
 
 ---
 
@@ -632,6 +644,13 @@ Manager: `CollectionOperationsManager<T>`
 | `BeOfType(Type)` | Runtime type is exactly the specified type |
 | `NotBeOfType<TType>()` | Runtime type is not TType |
 | `NotBeOfType(Type)` | Runtime type is not the specified type |
+| `OnlyContain(Func<T, bool>)` | All elements match predicate (reports first non-match) |
+| `ContainEquivalentOf<TExpected>(TExpected)` | Contains structurally equivalent element |
+| `ContainEquivalentOf<TExpected>(TExpected, Action<ComparisonOptionsBuilder>)` | Contains equivalent with builder options |
+| `ContainEquivalentOf<TExpected>(TExpected, ComparisonOptions)` | Contains equivalent with static options |
+| `NotContainEquivalentOf<TExpected>(TExpected)` | No element is structurally equivalent |
+| `NotContainEquivalentOf<TExpected>(TExpected, Action<ComparisonOptionsBuilder>)` | No equivalent with builder options |
+| `NotContainEquivalentOf<TExpected>(TExpected, ComparisonOptions)` | No equivalent with static options |
 
 ---
 
@@ -639,7 +658,7 @@ Manager: `CollectionOperationsManager<T>`
 
 Manager: `ArrayOperationsManager<T>`
 
-All Collection operations plus (including equivalence: `BeEquivalentTo`, `BeEquivalentTo(builder)`, `NotBeEquivalentTo`, `BeSequenceEqualTo`, `NotBeSequenceEqualTo`, `NotContainAny`, `NotContainAll`, `BeInAscendingOrder(keySelector)`, `BeInDescendingOrder(keySelector)`, `Inspect`, `ExtractSingle`):
+All Collection operations plus (including equivalence: `BeEquivalentTo`, `BeEquivalentTo(builder)`, `NotBeEquivalentTo`, `BeSequenceEqualTo`, `NotBeSequenceEqualTo`, `NotContainAny`, `NotContainAll`, `BeInAscendingOrder(keySelector)`, `BeInDescendingOrder(keySelector)`, `Inspect`, `ExtractSingle`, `OnlyContain`, `ContainEquivalentOf`, `NotContainEquivalentOf`):
 
 | Method | Description |
 |--------|-------------|
@@ -679,6 +698,7 @@ Manager: `DictionaryOperationsManager<TKey, TValue>`
 | `BeOfType(Type)` | Runtime type is exactly the specified type |
 | `NotBeOfType<TType>()` | Runtime type is not TType |
 | `NotBeOfType(Type)` | Runtime type is not the specified type |
+| `ContainKeys(params TKey[])` | Contains all specified keys |
 | `Which<TResult>(Func<IDictionary<TKey, TValue>, TResult>)` | Extract sub-value for chained assertions |
 
 ---
@@ -843,6 +863,8 @@ obj.Test().BeEquivalentTo(expected, opts => opts
 
 | Method | Description |
 |--------|-------------|
+| `Including(params string[])` | Include only specified properties |
+| `Including<T>(Expression<Func<T, object>>)` | Include property by expression |
 | `Excluding(params string[])` | Exclude properties by name |
 | `Excluding<T>(Expression<Func<T, object>>)` | Exclude property by expression |
 | `WithTolerance<T>(T)` | Numeric tolerance (decimal, double, float) |
@@ -851,6 +873,29 @@ obj.Test().BeEquivalentTo(expected, opts => opts
 | `IgnoringCollectionOrder()` | Ignore element order in nested collections |
 | `IgnoringCase()` | Case-insensitive string comparison |
 | `WithMaxDepth(int)` | Maximum recursion depth (default: 10) |
+
+---
+
+### Custom Validator Operations
+
+Available on all managers via `BaseOperationsManager`:
+
+| Method | Description |
+|--------|-------------|
+| `Evaluate(ICustomValidator<T>)` | Runs a synchronous custom validator |
+| `EvaluateAsync(IAsyncCustomValidator<T>)` | Runs an asynchronous custom validator |
+
+```csharp
+public class StrongPasswordValidator : ICustomValidator<string?>
+{
+    public bool IsValid(string? value) => value?.Length >= 12 && value.Any(char.IsSymbol);
+    public string GetFailureMessage(string? value) => "Password must be at least 12 characters and contain a symbol";
+}
+
+"weak".Test().Evaluate(new StrongPasswordValidator()); // throws
+```
+
+For Blueprint usage, see [ForCustom](#forcustom).
 
 ---
 
