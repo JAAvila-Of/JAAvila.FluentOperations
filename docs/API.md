@@ -5,6 +5,7 @@ Complete API documentation for JAAvila.FluentOperations.
 ## Table of Contents
 
 - [Test Extensions](#test-extensions)
+  - [Automatic Subject Capture](#automatic-subject-capture)
 - [Validation Operations by Type](#validation-operations-by-type)
   - [String](#string-validations)
   - [Boolean](#boolean-validations)
@@ -90,6 +91,50 @@ asyncAct.Test().NotThrowAsync();
 ```
 
 All methods support an optional `Reason? reason` parameter for custom failure context. All methods return the manager instance for chaining.
+
+### Automatic Subject Capture
+
+Every `.Test()` overload uses `[CallerArgumentExpression]` to automatically capture the expression being validated. This expression appears as the **Subject** in error messages, giving you clear context about what failed without needing to specify names manually.
+
+```csharp
+var order = new Order { Customer = new Customer { Email = "bad" } };
+
+// The error message will show: Subject: variable "order.Customer.Email"
+order.Customer.Email.Test().BeEmail();
+```
+
+The captured expression is classified into one of these categories:
+
+| Category | Example Expression | Subject in Message |
+|----------|-------------------|-------------------|
+| **Variable** | `userName` | `variable "userName"` |
+| **Variable** (nested) | `order.Customer.Email` | `variable "order.Customer.Email"` |
+| **Function** | `GetValue()` | `function "GetValue()"` |
+| **Expression** | `list[0]` | `expression "list[0]"` |
+| **Primitive** | `42`, `"hello"`, `true` | `primitive "42"` |
+
+#### Blueprint Mode
+
+Inside a `QualityBlueprint<T>`, the subject comes from the `For()` expression, not from `CallerArgumentExpression`. The property name is extracted from the lambda expression:
+
+```csharp
+// Subject will be "Email", not the full CallerArgumentExpression
+For(x => x.Email).Test().BeEmail();
+```
+
+This is reflected in `QualityFailure.PropertyName` as well.
+
+#### AssertionScope
+
+Inside an `AssertionScope`, each assertion retains its own captured subject. The accumulated failure messages each show their respective subject:
+
+```csharp
+using (var scope = new AssertionScope())
+{
+    order.Customer.Email.Test().BeEmail();   // Subject: variable "order.Customer.Email"
+    order.Total.Test().BePositive();          // Subject: variable "order.Total"
+}
+```
 
 ---
 
