@@ -780,7 +780,7 @@ public class StringOperationsManager
                         manager.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(NotContain)} operation failed because the parent value was <null>. {{0}}.",
-                            $"It is recommended to run the {nameof(NotContain)} operation first to cover all possible scenarios"
+                            $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
                         )
                     )
             )
