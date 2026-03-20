@@ -1505,6 +1505,12 @@ public struct Operations
 
         [EnumStringValue("extractsinglematch")]
         ExtractSingleMatch,
+
+        [EnumStringValue("containequivalentof")]
+        ContainEquivalentOf,
+
+        [EnumStringValue("notcontainequivalentof")]
+        NotContainEquivalentOf,
     }
 
     /// <summary>
