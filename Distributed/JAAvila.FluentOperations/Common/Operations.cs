@@ -1511,6 +1511,12 @@ public struct Operations
 
         [EnumStringValue("notcontainequivalentof")]
         NotContainEquivalentOf,
+
+        [EnumStringValue("notcontainnull")]
+        NotContainNull,
+
+        [EnumStringValue("havecountbetween")]
+        HaveCountBetween,
     }
 
     /// <summary>
