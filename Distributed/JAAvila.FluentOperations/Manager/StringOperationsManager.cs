@@ -3253,4 +3253,232 @@ public class StringOperationsManager
 
         return this;
     }
+
+    // =========================================================================
+    // BeOneOf / NotBeOneOf
+    // =========================================================================
+
+    /// <summary>
+    /// Asserts that the string is one of the specified allowed values (ordinal comparison).
+    /// </summary>
+    /// <param name="expected">The set of allowed values.</param>
+    /// <returns>The current instance of <see cref="StringOperationsManager"/> for method chaining.</returns>
+    /// <remarks>
+    /// Fails immediately if <paramref name="expected"/> is null or empty, or if the string is <c>null</c>.
+    /// </remarks>
+    public StringOperationsManager BeOneOf(params string?[] expected)
+    {
+        return BeOneOfCore(null, null, expected);
+    }
+
+    /// <summary>
+    /// Asserts that the string is one of the specified allowed values using the given string comparison mode.
+    /// </summary>
+    /// <param name="comparison">The <see cref="StringComparison"/> mode to use.</param>
+    /// <param name="expected">The set of allowed values.</param>
+    /// <returns>The current instance of <see cref="StringOperationsManager"/> for method chaining.</returns>
+    /// <remarks>
+    /// Fails immediately if <paramref name="expected"/> is null or empty, or if the string is <c>null</c>.
+    /// </remarks>
+    public StringOperationsManager BeOneOf(
+        StringComparison comparison,
+        params string?[] expected
+    )
+    {
+        return BeOneOfCore(comparison, null, expected);
+    }
+
+    /// <summary>
+    /// Asserts that the string is one of the specified allowed values (ordinal comparison).
+    /// </summary>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <param name="expected">The set of allowed values.</param>
+    /// <returns>The current instance of <see cref="StringOperationsManager"/> for method chaining.</returns>
+    /// <remarks>
+    /// Fails immediately if <paramref name="expected"/> is null or empty, or if the string is <c>null</c>.
+    /// </remarks>
+    public StringOperationsManager BeOneOf(Reason? reason, params string?[] expected)
+    {
+        return BeOneOfCore(null, reason, expected);
+    }
+
+    /// <summary>
+    /// Asserts that the string is one of the specified allowed values using the given string comparison mode.
+    /// </summary>
+    /// <param name="comparison">The <see cref="StringComparison"/> mode to use.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <param name="expected">The set of allowed values.</param>
+    /// <returns>The current instance of <see cref="StringOperationsManager"/> for method chaining.</returns>
+    /// <remarks>
+    /// Fails immediately if <paramref name="expected"/> is null or empty, or if the string is <c>null</c>.
+    /// </remarks>
+    public StringOperationsManager BeOneOf(
+        StringComparison comparison,
+        Reason? reason,
+        params string?[] expected
+    )
+    {
+        return BeOneOfCore(comparison, reason, expected);
+    }
+
+    private StringOperationsManager BeOneOfCore(
+        StringComparison? comparison,
+        Reason? reason,
+        string?[] expected
+    )
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.String.BeOneOf))
+        {
+            return this;
+        }
+
+        ExecutionEngine<StringOperationsManager, string?>
+            .New(this)
+            .WithOperation(StringBeOneOfValidator.New(PrincipalChain, expected, comparison))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.ResultValidation,
+                            string.Join(", ", expected.Select(e => e is null ? "<null>" : $"\"{e}\"")),
+                            PrincipalChain.GetValue() is null ? "<null>" : $"\"{PrincipalChain.GetValue()}\""
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                _ =>
+                    (
+                        expected is null || expected.Length == 0,
+                        Fail.New(
+                            $"The {nameof(BeOneOf)} operation failed because you have not provided any values."
+                        )
+                    )
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(BeOneOf)} operation failed because the parent value was <null>. {{0}}.",
+                            $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the string is not one of the specified disallowed values (ordinal comparison).
+    /// </summary>
+    /// <param name="expected">The set of disallowed values.</param>
+    /// <returns>The current instance of <see cref="StringOperationsManager"/> for method chaining.</returns>
+    /// <remarks>
+    /// Fails immediately if <paramref name="expected"/> is null or empty, or if the string is <c>null</c>.
+    /// </remarks>
+    public StringOperationsManager NotBeOneOf(params string?[] expected)
+    {
+        return NotBeOneOfCore(null, null, expected);
+    }
+
+    /// <summary>
+    /// Asserts that the string is not one of the specified disallowed values using the given string comparison mode.
+    /// </summary>
+    /// <param name="comparison">The <see cref="StringComparison"/> mode to use.</param>
+    /// <param name="expected">The set of disallowed values.</param>
+    /// <returns>The current instance of <see cref="StringOperationsManager"/> for method chaining.</returns>
+    /// <remarks>
+    /// Fails immediately if <paramref name="expected"/> is null or empty, or if the string is <c>null</c>.
+    /// </remarks>
+    public StringOperationsManager NotBeOneOf(
+        StringComparison comparison,
+        params string?[] expected
+    )
+    {
+        return NotBeOneOfCore(comparison, null, expected);
+    }
+
+    /// <summary>
+    /// Asserts that the string is not one of the specified disallowed values (ordinal comparison).
+    /// </summary>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <param name="expected">The set of disallowed values.</param>
+    /// <returns>The current instance of <see cref="StringOperationsManager"/> for method chaining.</returns>
+    /// <remarks>
+    /// Fails immediately if <paramref name="expected"/> is null or empty, or if the string is <c>null</c>.
+    /// </remarks>
+    public StringOperationsManager NotBeOneOf(Reason? reason, params string?[] expected)
+    {
+        return NotBeOneOfCore(null, reason, expected);
+    }
+
+    /// <summary>
+    /// Asserts that the string is not one of the specified disallowed values using the given string comparison mode.
+    /// </summary>
+    /// <param name="comparison">The <see cref="StringComparison"/> mode to use.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <param name="expected">The set of disallowed values.</param>
+    /// <returns>The current instance of <see cref="StringOperationsManager"/> for method chaining.</returns>
+    /// <remarks>
+    /// Fails immediately if <paramref name="expected"/> is null or empty, or if the string is <c>null</c>.
+    /// </remarks>
+    public StringOperationsManager NotBeOneOf(
+        StringComparison comparison,
+        Reason? reason,
+        params string?[] expected
+    )
+    {
+        return NotBeOneOfCore(comparison, reason, expected);
+    }
+
+    private StringOperationsManager NotBeOneOfCore(
+        StringComparison? comparison,
+        Reason? reason,
+        string?[] expected
+    )
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.String.NotBeOneOf))
+        {
+            return this;
+        }
+
+        ExecutionEngine<StringOperationsManager, string?>
+            .New(this)
+            .WithOperation(StringNotBeOneOfValidator.New(PrincipalChain, expected, comparison))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.ResultValidation,
+                            string.Join(", ", expected.Select(e => e is null ? "<null>" : $"\"{e}\"")),
+                            PrincipalChain.GetValue() is null ? "<null>" : $"\"{PrincipalChain.GetValue()}\""
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                _ =>
+                    (
+                        expected is null || expected.Length == 0,
+                        Fail.New(
+                            $"The {nameof(NotBeOneOf)} operation failed because you have not provided any values."
+                        )
+                    )
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(NotBeOneOf)} operation failed because the parent value was <null>. {{0}}.",
+                            $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
 }
