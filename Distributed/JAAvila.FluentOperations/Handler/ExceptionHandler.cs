@@ -1,4 +1,5 @@
 using System.Reflection;
+using JAAvila.FluentOperations.Common;
 using JAAvila.FluentOperations.Exceptions;
 
 namespace JAAvila.FluentOperations.Handler;
@@ -6,55 +7,88 @@ namespace JAAvila.FluentOperations.Handler;
 /// <summary>
 /// Resolves the correct exception type for the active test framework (NUnit, xUnit, MSTest, etc.)
 /// and either throws it directly or routes the failure message into the active
-/// <see cref="TransactionalOperations"/> scope. The framework assembly and exception constructor
-/// are resolved once and cached via <see cref="Lazy{T}"/> for performance.
+/// <see cref="TransactionalOperations"/> scope. The resolved throwable factory is cached via
+/// volatile field + double-checked locking and can be invalidated when the framework config changes.
 /// </summary>
 internal class ExceptionHandler
 {
-    private static readonly Lazy<Assembly?> CachedTestFramework =
-        new(
-            () =>
+    private static volatile Func<string, Exception>? _cachedThrowable;
+    private static readonly object Lock = new();
+
+    /// <summary>
+    /// Invalidates the cached throwable factory so the next call to <see cref="Throwable"/>
+    /// re-resolves from the current <see cref="Config.GlobalConfig"/>.
+    /// </summary>
+    public static void InvalidateCache()
+    {
+        _cachedThrowable = null;
+    }
+
+    private static Func<string, Exception> Throwable
+    {
+        get
+        {
+            var cached = _cachedThrowable;
+            if (cached is not null) return cached;
+
+            lock (Lock)
             {
-                var tf = new TestFrameworkHandler();
-                return tf.GetFramework();
-            },
-            LazyThreadSafetyMode.ExecutionAndPublication
+                cached = _cachedThrowable;
+                if (cached is not null) return cached;
+
+                cached = ResolveThrowable();
+                _cachedThrowable = cached;
+                return cached;
+            }
+        }
+    }
+
+    private static Func<string, Exception> ResolveThrowable()
+    {
+        var config = Config.GlobalConfig.GetTestFrameworkConfig();
+
+        Assembly? framework = config.Framework switch
+        {
+            TestFramework.None => null,
+            TestFramework.Auto => new TestFrameworkHandler().GetFramework(),
+            _ => new TestFrameworkHandler().GetFrameworkForExplicit(config.Framework)
+        };
+
+        if (config.Framework == TestFramework.None || framework is null)
+        {
+            return message => new FluentOperationsException(message);
+        }
+
+        var enumFramework = TestFrameworkHandler.TestFrameworkAssemblyNames.FirstOrDefault(
+            x => x.ObjectValue.Equals(
+                framework.GetName().Name,
+                StringComparison.OrdinalIgnoreCase
+            )
         );
 
-    private static readonly Lazy<Func<string, Exception>> CachedThrowable =
-        new(
-            () =>
-            {
-                var framework = CachedTestFramework.Value;
+        if (enumFramework is null)
+        {
+            return message => new FluentOperationsException(message);
+        }
 
-                if (framework is null)
-                {
-                    return message => new FluentOperationsException(message);
-                }
-
-                var enumFramework = TestFrameworkHandler.TestFrameworkAssemblyNames.First(
-                    x =>
-                        x.ObjectValue.Equals(
-                            framework.GetName().Name,
-                            StringComparison.CurrentCultureIgnoreCase
-                        )
-                );
-                var exceptionNamespace = TestFrameworkHandler.TestFrameworkExceptionNamespace.First(
-                    x => x.Value == enumFramework.Value
-                );
-                var exceptionType = framework.GetType(exceptionNamespace.ObjectValue);
-
-                if (exceptionType is null)
-                {
-                    return message => new FluentOperationsException(message);
-                }
-
-                return message => (Exception)Activator.CreateInstance(exceptionType, message)!;
-            },
-            LazyThreadSafetyMode.ExecutionAndPublication
+        var exceptionNamespace = TestFrameworkHandler.TestFrameworkExceptionNamespace.FirstOrDefault(
+            x => x.Value == enumFramework.Value
         );
 
-    private static Func<string, Exception> Throwable => CachedThrowable.Value;
+        if (exceptionNamespace is null)
+        {
+            return message => new FluentOperationsException(message);
+        }
+
+        var exceptionType = framework.GetType(exceptionNamespace.ObjectValue);
+
+        if (exceptionType is null)
+        {
+            return message => new FluentOperationsException(message);
+        }
+
+        return message => (Exception)Activator.CreateInstance(exceptionType, message)!;
+    }
 
     /// <summary>
     /// Handles a validation failure described by <paramref name="template"/>.

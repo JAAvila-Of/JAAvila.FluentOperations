@@ -1,4 +1,5 @@
 using System.Globalization;
+using JAAvila.FluentOperations.Common;
 
 namespace JAAvila.FluentOperations.Config;
 
@@ -88,6 +89,11 @@ public static class FluentOperationsConfig
     /// Returns the current effective FormattingConfig.
     /// </summary>
     public static FormattingConfig GetFormattingConfig() => GlobalConfig.GetFormattingConfig();
+
+    /// <summary>
+    /// Returns the current effective TestFrameworkConfig.
+    /// </summary>
+    public static TestFrameworkConfig GetTestFrameworkConfig() => GlobalConfig.GetTestFrameworkConfig();
 }
 
 /// <summary>
@@ -116,6 +122,11 @@ public class ConfigBuilder
     /// </summary>
     public FormattingConfigBuilder Formatting { get; } = new();
 
+    /// <summary>
+    /// Configuration options for the test framework used to throw assertion exceptions.
+    /// </summary>
+    public TestFrameworkConfigBuilder TestFramework { get; } = new();
+
     internal static ConfigBuilder FromExisting(GlobalConfig existing)
     {
         var builder = new ConfigBuilder();
@@ -138,6 +149,9 @@ public class ConfigBuilder
         builder.Formatting.EmptyDisplay = fc.EmptyDisplay;
         builder.Formatting.MaxCollectionItems = fc.MaxCollectionItems;
         builder.Formatting.MaxDepth = fc.MaxDepth;
+
+        var tfc = existing.GetTestFrameworkConfigInternal();
+        builder.TestFramework.Framework = tfc.Framework;
 
         return builder;
     }
@@ -170,6 +184,9 @@ public class ConfigBuilder
             MaxCollectionItems = Math.Max(Formatting.MaxCollectionItems, 1),
             MaxDepth = Math.Max(Formatting.MaxDepth, 1)
         };
+
+    internal TestFrameworkConfig BuildTestFrameworkConfig() =>
+        new() { Framework = TestFramework.Framework };
 }
 
 /// <summary>
@@ -264,4 +281,16 @@ public class FormattingConfigBuilder
     /// Minimum effective value is 1. Defaults to <c>3</c>.
     /// </summary>
     public int MaxDepth { get; set; } = 3;
+}
+
+/// <summary>
+/// Mutable builder for TestFrameworkConfig.
+/// </summary>
+public class TestFrameworkConfigBuilder
+{
+    /// <summary>
+    /// The test framework to use for assertion exceptions.
+    /// Default: <see cref="TestFramework.Auto"/> (auto-detect from loaded assemblies).
+    /// </summary>
+    public TestFramework Framework { get; set; } = TestFramework.Auto;
 }

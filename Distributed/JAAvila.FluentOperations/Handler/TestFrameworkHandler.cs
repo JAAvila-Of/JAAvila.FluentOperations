@@ -15,17 +15,37 @@ internal class TestFrameworkHandler
 {
     private static readonly Type Frameworks = typeof(TestFramework);
     public static List<EnumKeyValueData<int, string>> TestFrameworkAssemblyNames { get; } =
-        Frameworks.GetKeyValues<int, string>("assembly");
+        Frameworks.GetKeyValues<int, string>("assembly")
+            .Where(x => x.ObjectValue is not null)
+            .ToList();
 
     public static List<EnumKeyValueData<int, string>> TestFrameworkExceptionNamespace { get; } =
-        Frameworks.GetKeyValues<int, string>("exception");
+        Frameworks.GetKeyValues<int, string>("exception")
+            .Where(x => x.ObjectValue is not null)
+            .ToList();
 
     private List<EnumBooleanData<int>> TestFrameworkForceAssembly { get; } =
-        Frameworks.GetBooleanValues<int>();
+        Frameworks.GetBooleanValues<int>()
+            .Where(x => Frameworks.GetKeyValues<int, string>("assembly")
+                .Any(a => a.Value == x.Value && a.ObjectValue is not null))
+            .ToList();
 
     private Assembly? Framework => GetFrameworkAssemby();
 
     public Assembly? GetFramework() => Framework;
+
+    public Assembly? GetFrameworkForExplicit(Common.TestFramework framework)
+    {
+        var assemblyEntry = TestFrameworkAssemblyNames.FirstOrDefault(x => x.Value == (int)framework);
+        if (assemblyEntry is null) return null;
+
+        var assembly = AppDomain.CurrentDomain.GetAssemblies()
+            .FirstOrDefault(x => string.Equals(x.GetName().Name, assemblyEntry.ObjectValue, StringComparison.OrdinalIgnoreCase));
+        if (assembly is not null) return assembly;
+
+        try { return Assembly.Load(new AssemblyName(assemblyEntry.ObjectValue)); }
+        catch { return null; }
+    }
 
     #region PRIVATE METHODS
 
