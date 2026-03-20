@@ -37,6 +37,14 @@ public record ComparisonOptions
     public HashSet<string> ExcludedProperties { get; init; } = [];
 
     /// <summary>
+    /// Properties to include exclusively in the comparison.
+    /// When non-empty, ONLY these properties are compared -- all others are ignored.
+    /// Mutually exclusive with <see cref="ExcludedProperties"/>: if both are set,
+    /// <see cref="IncludedProperties"/> takes precedence.
+    /// </summary>
+    public HashSet<string> IncludedProperties { get; init; } = [];
+
+    /// <summary>
     /// Maximum number of differences to report before stopping comparison.
     /// Used by ObjectComparator to limit verbose output. Default: 5.
     /// </summary>

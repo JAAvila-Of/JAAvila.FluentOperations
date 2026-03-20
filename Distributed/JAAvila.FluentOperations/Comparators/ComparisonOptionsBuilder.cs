@@ -9,6 +9,7 @@ namespace JAAvila.FluentOperations.Comparators;
 public class ComparisonOptionsBuilder
 {
     private readonly HashSet<string> _excludedProperties = [];
+    private readonly HashSet<string> _includedProperties = [];
     private readonly Dictionary<Type, object> _tolerances = new();
     private readonly Dictionary<string, string> _memberMappings = new();
     private StringComparison _stringComparison = StringComparison.Ordinal;
@@ -38,6 +39,30 @@ public class ComparisonOptionsBuilder
     {
         var memberName = ExtractMemberName(expression);
         _excludedProperties.Add(memberName);
+        return this;
+    }
+
+    /// <summary>
+    /// Includes only the specified properties by name in the comparison.
+    /// When any properties are included, all other properties are excluded.
+    /// </summary>
+    public ComparisonOptionsBuilder Including(params string[] properties)
+    {
+        foreach (var prop in properties)
+        {
+            _includedProperties.Add(prop);
+        }
+        return this;
+    }
+
+    /// <summary>
+    /// Includes only the specified property in the comparison using a strongly-typed expression.
+    /// When any properties are included, all other properties are excluded.
+    /// </summary>
+    public ComparisonOptionsBuilder Including<T>(Expression<Func<T, object>> expression)
+    {
+        var memberName = ExtractMemberName(expression);
+        _includedProperties.Add(memberName);
         return this;
     }
 
@@ -108,6 +133,7 @@ public class ComparisonOptionsBuilder
             IgnoreNewLineStyle = _ignoreNewLineStyle,
             MaxRecursionDepth = _maxRecursionDepth,
             ExcludedProperties = _excludedProperties,
+            IncludedProperties = _includedProperties,
             MaxDifferencesReported = _maxDifferencesReported,
             IgnoreCollectionOrder = _ignoreCollectionOrder,
             Tolerances = _tolerances.Count > 0 ? _tolerances : null,

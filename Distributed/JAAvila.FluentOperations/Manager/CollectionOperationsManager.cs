@@ -1652,6 +1652,56 @@ public class CollectionOperationsManager<T>
     }
 
     /// <summary>
+    /// Asserts that every element in the collection matches the specified predicate.
+    /// Unlike <see cref="AllSatisfy"/>, this reports the index and value of the first non-matching element.
+    /// </summary>
+    /// <param name="predicate">A function that each element must satisfy.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// This operation fails immediately if the collection is <c>null</c> or if <paramref name="predicate"/> is <c>null</c>.
+    /// </remarks>
+    public CollectionOperationsManager<T> OnlyContain(Func<T, bool> predicate, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Collection.OnlyContain))
+        {
+            return this;
+        }
+
+        ExecutionEngine<CollectionOperationsManager<T>, IEnumerable<T>>
+            .New(this)
+            .WithOperation(CollectionOnlyContainValidator<T>.New(PrincipalChain, predicate))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue().IsNull(),
+                        Fail.New(
+                            $"The {nameof(OnlyContain)} operation failed because the collection was null."
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        predicate.IsNull(),
+                        Fail.New(
+                            $"The {nameof(OnlyContain)} operation failed because the predicate cannot be null."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
     /// Asserts that every element in the collection passes the assertions defined by the inspector callback.
     /// The inspector receives each element and its zero-based index, and can use <c>.Test()</c> assertions
     /// to validate the element. Failures are captured per element and reported with positional context.

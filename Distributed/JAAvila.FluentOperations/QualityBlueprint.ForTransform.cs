@@ -2334,6 +2334,41 @@ public abstract partial class QualityBlueprint<T>
         where TKey : notnull
         => ForTransform<TProp, Dictionary<TKey, TValue>, DictionaryOperationsManager<TKey, TValue>>(expression, transform, ruleConfig);
 
+    // IDictionary<TKey, TValue> -> Dictionary<TKey, TValue> same-type transformation
+    /// <summary>
+    /// Registers an <see cref="IDictionary{TKey, TValue}"/> property with a transformation to
+    /// <see cref="Dictionary{TKey, TValue}"/> applied before validation.
+    /// </summary>
+    /// <typeparam name="TKey">The type of dictionary keys (inferred by the compiler).</typeparam>
+    /// <typeparam name="TValue">The type of dictionary values (inferred by the compiler).</typeparam>
+    /// <param name="expression">An expression selecting the IDictionary property to transform and validate.</param>
+    /// <param name="transform">A function that transforms the IDictionary to a Dictionary before validation.</param>
+    /// <returns>A property proxy that exposes <see cref="DictionaryOperationsManager{TKey, TValue}"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<DictionaryOperationsManager<TKey, TValue>> ForTransformDictionary<TKey, TValue>(
+        Expression<Func<T, IDictionary<TKey, TValue>>> expression,
+        Func<IDictionary<TKey, TValue>, Dictionary<TKey, TValue>> transform
+    )
+        where TKey : notnull
+        => ForTransform<IDictionary<TKey, TValue>, Dictionary<TKey, TValue>, DictionaryOperationsManager<TKey, TValue>>(expression, transform);
+
+    /// <summary>
+    /// Registers an <see cref="IDictionary{TKey, TValue}"/> property with a transformation to
+    /// <see cref="Dictionary{TKey, TValue}"/> applied before validation, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    /// <typeparam name="TKey">The type of dictionary keys (inferred by the compiler).</typeparam>
+    /// <typeparam name="TValue">The type of dictionary values (inferred by the compiler).</typeparam>
+    /// <param name="expression">An expression selecting the IDictionary property to transform and validate.</param>
+    /// <param name="transform">A function that transforms the IDictionary to a Dictionary before validation.</param>
+    /// <param name="ruleConfig">Configuration for this rule (severity, error code, cascade mode).</param>
+    /// <returns>A property proxy that exposes <see cref="DictionaryOperationsManager{TKey, TValue}"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<DictionaryOperationsManager<TKey, TValue>> ForTransformDictionary<TKey, TValue>(
+        Expression<Func<T, IDictionary<TKey, TValue>>> expression,
+        Func<IDictionary<TKey, TValue>, Dictionary<TKey, TValue>> transform,
+        RuleConfig ruleConfig
+    )
+        where TKey : notnull
+        => ForTransform<IDictionary<TKey, TValue>, Dictionary<TKey, TValue>, DictionaryOperationsManager<TKey, TValue>>(expression, transform, ruleConfig);
+
     // TEnum -> TEnum same-type transformation
     /// <summary>
     /// Registers an <see cref="Enum"/> property with a same-type transformation applied before validation.
