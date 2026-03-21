@@ -55,7 +55,7 @@ public class EnumOperationsManager<T> : ITestManager<EnumOperationsManager<T>, T
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -86,7 +86,7 @@ public class EnumOperationsManager<T> : ITestManager<EnumOperationsManager<T>, T
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation, BaseFormatter.Format(expected))
+                        .WithResult(operation.MessageKey, operation.ResultValidation, BaseFormatter.Format(expected))
                         .WithReason(reason?.ToString())
             )
             .Execute();
@@ -114,7 +114,7 @@ public class EnumOperationsManager<T> : ITestManager<EnumOperationsManager<T>, T
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue()),
                             typeof(T).Name
                         )
@@ -159,7 +159,7 @@ public class EnumOperationsManager<T> : ITestManager<EnumOperationsManager<T>, T
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             string.Join(", ", expected.Select(e => BaseFormatter.Format(e))),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -213,7 +213,7 @@ public class EnumOperationsManager<T> : ITestManager<EnumOperationsManager<T>, T
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             string.Join(", ", expected.Select(e => BaseFormatter.Format(e)))
                         )
                         .WithReason(reason?.ToString())
@@ -254,7 +254,7 @@ public class EnumOperationsManager<T> : ITestManager<EnumOperationsManager<T>, T
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue()),
                             BaseFormatter.Format(flag)
                         )
@@ -287,7 +287,7 @@ public class EnumOperationsManager<T> : ITestManager<EnumOperationsManager<T>, T
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue()),
                             BaseFormatter.Format(flag)
                         )
@@ -351,7 +351,7 @@ public class EnumOperationsManager<T> : ITestManager<EnumOperationsManager<T>, T
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -373,7 +373,7 @@ public class EnumOperationsManager<T> : ITestManager<EnumOperationsManager<T>, T
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(

@@ -18,6 +18,7 @@ internal class DictionaryBeValidator<TKey, TValue>(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Dictionary.Be";
 
     public bool Validate()
     {

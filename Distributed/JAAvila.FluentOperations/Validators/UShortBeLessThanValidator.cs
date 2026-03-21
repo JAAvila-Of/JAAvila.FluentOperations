@@ -12,6 +12,7 @@ internal class UShortBeLessThanValidator(PrincipalChain<ushort> chain, ushort ex
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "UShort.BeLessThan";
 
     public bool Validate()
     {

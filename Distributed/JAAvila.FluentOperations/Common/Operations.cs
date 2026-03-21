@@ -52,6 +52,12 @@ public struct Operations
 
         [EnumStringValue("notbe")]
         NotBe,
+
+        [EnumStringValue("beassignableto")]
+        BeAssignableTo,
+
+        [EnumStringValue("notbeassignableto")]
+        NotBeAssignableTo,
     }
 
     /// <summary>
@@ -89,6 +95,9 @@ public struct Operations
 
         [EnumStringValue("notbenullorwhitespace")]
         NotBeNullOrWhiteSpace,
+
+        [EnumStringValue("notbenullorempty")]
+        NotBeNullOrEmpty,
 
         [EnumStringValue("havelength")]
         HaveLength,
@@ -171,6 +180,12 @@ public struct Operations
         [EnumStringValue("havelengthbetween")]
         HaveLengthBetween,
 
+        [EnumStringValue("havelengthgreaterthan")]
+        HaveLengthGreaterThan,
+
+        [EnumStringValue("havelengthlessthan")]
+        HaveLengthLessThan,
+
         [EnumStringValue("containonlydigits")]
         ContainOnlyDigits,
 
@@ -179,6 +194,9 @@ public struct Operations
 
         [EnumStringValue("containnowhitespace")]
         ContainNoWhitespace,
+
+        [EnumStringValue("notcontain")]
+        NotContain,
 
         [EnumStringValue("containall")]
         ContainAll,
@@ -209,6 +227,12 @@ public struct Operations
 
         [EnumStringValue("beipv6")]
         BeIPv6,
+
+        [EnumStringValue("beoneof")]
+        BeOneOf,
+
+        [EnumStringValue("notbeoneof")]
+        NotBeOneOf,
     }
 
     /// <summary>
@@ -833,6 +857,9 @@ public struct Operations
 
         [EnumStringValue("beroundedto")]
         BeRoundedTo,
+
+        [EnumStringValue("beapproximately")]
+        BeApproximately,
     }
 
     /// <summary>
@@ -1142,6 +1169,9 @@ public struct Operations
 
         [EnumStringValue("becloseto")]
         BeCloseTo,
+
+        [EnumStringValue("notbecloseto")]
+        NotBeCloseTo,
     }
 
     /// <summary>
@@ -1286,6 +1316,12 @@ public struct Operations
 
         [EnumStringValue("nothavevalue")]
         NotHaveValue,
+
+        [EnumStringValue("beclosetodatetime")]
+        BeCloseTo,
+
+        [EnumStringValue("notbeclosetodatetime")]
+        NotBeCloseTo,
     }
 
     /// <summary>
@@ -1398,6 +1434,9 @@ public struct Operations
         [EnumStringValue("allsatisfy")]
         AllSatisfy,
 
+        [EnumStringValue("onlycontain")]
+        OnlyContain,
+
         [EnumStringValue("anysatisfy")]
         AnySatisfy,
 
@@ -1457,6 +1496,27 @@ public struct Operations
 
         [EnumStringValue("notbe")]
         NotBe,
+
+        [EnumStringValue("inspect")]
+        Inspect,
+
+        [EnumStringValue("extractsingle")]
+        ExtractSingle,
+
+        [EnumStringValue("extractsinglematch")]
+        ExtractSingleMatch,
+
+        [EnumStringValue("containequivalentof")]
+        ContainEquivalentOf,
+
+        [EnumStringValue("notcontainequivalentof")]
+        NotContainEquivalentOf,
+
+        [EnumStringValue("notcontainnull")]
+        NotContainNull,
+
+        [EnumStringValue("havecountbetween")]
+        HaveCountBetween,
     }
 
     /// <summary>
@@ -1499,6 +1559,9 @@ public struct Operations
 
         [EnumStringValue("containpair")]
         ContainPair,
+
+        [EnumStringValue("containkeys")]
+        ContainKeys,
 
         [EnumStringValue("havecount")]
         HaveCount,
@@ -1687,6 +1750,9 @@ public struct Operations
         [EnumStringValue("becloseto")]
         BeCloseTo,
 
+        [EnumStringValue("notbeclosetodatetimeoffset")]
+        NotBeCloseTo,
+
         [EnumStringValue("haveoffset")]
         HaveOffset,
 
@@ -1716,6 +1782,12 @@ public struct Operations
 
         [EnumStringValue("nothavevalue")]
         NotHaveValue,
+
+        [EnumStringValue("beclosetodatetimeoffset")]
+        BeCloseTo,
+
+        [EnumStringValue("notbeclosetodatetimeoffset")]
+        NotBeCloseTo,
     }
 
     /// <summary>

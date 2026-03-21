@@ -15,6 +15,7 @@ internal class FloatHavePrecisionValidator(PrincipalChain<float> chain, int expe
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Float.HavePrecision";
 
     public bool Validate()
     {

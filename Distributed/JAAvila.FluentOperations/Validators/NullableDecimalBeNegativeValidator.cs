@@ -12,6 +12,7 @@ internal class NullableDecimalBeNegativeValidator(PrincipalChain<decimal?> chain
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableDecimal.BeNegative";
 
     public bool Validate()
     {

@@ -5,6 +5,7 @@ Complete API documentation for JAAvila.FluentOperations.
 ## Table of Contents
 
 - [Test Extensions](#test-extensions)
+  - [Automatic Subject Capture](#automatic-subject-capture)
 - [Validation Operations by Type](#validation-operations-by-type)
   - [String](#string-validations)
   - [Boolean](#boolean-validations)
@@ -26,6 +27,7 @@ Complete API documentation for JAAvila.FluentOperations.
   - [Enum](#enum-validations)
   - [Uri](#uri-validations)
   - [Object / Reference](#object-validations)
+  - [Custom Validator Operations](#custom-validator-operations)
   - [Action / Async Action](#action-validations)
   - [ActionStats (Execution Statistics)](#actionstats-execution-statistics)
 - [Quality Blueprints](#quality-blueprints)
@@ -90,6 +92,50 @@ asyncAct.Test().NotThrowAsync();
 
 All methods support an optional `Reason? reason` parameter for custom failure context. All methods return the manager instance for chaining.
 
+### Automatic Subject Capture
+
+Every `.Test()` overload uses `[CallerArgumentExpression]` to automatically capture the expression being validated. This expression appears as the **Subject** in error messages, giving you clear context about what failed without needing to specify names manually.
+
+```csharp
+var order = new Order { Customer = new Customer { Email = "bad" } };
+
+// The error message will show: Subject: variable "order.Customer.Email"
+order.Customer.Email.Test().BeEmail();
+```
+
+The captured expression is classified into one of these categories:
+
+| Category | Example Expression | Subject in Message |
+|----------|-------------------|-------------------|
+| **Variable** | `userName` | `variable "userName"` |
+| **Variable** (nested) | `order.Customer.Email` | `variable "order.Customer.Email"` |
+| **Function** | `GetValue()` | `function "GetValue()"` |
+| **Expression** | `list[0]` | `expression "list[0]"` |
+| **Primitive** | `42`, `"hello"`, `true` | `primitive "42"` |
+
+#### Blueprint Mode
+
+Inside a `QualityBlueprint<T>`, the subject comes from the `For()` expression, not from `CallerArgumentExpression`. The property name is extracted from the lambda expression:
+
+```csharp
+// Subject will be "Email", not the full CallerArgumentExpression
+For(x => x.Email).Test().BeEmail();
+```
+
+This is reflected in `QualityFailure.PropertyName` as well.
+
+#### AssertionScope
+
+Inside an `AssertionScope`, each assertion retains its own captured subject. The accumulated failure messages each show their respective subject:
+
+```csharp
+using (var scope = new AssertionScope())
+{
+    order.Customer.Email.Test().BeEmail();   // Subject: variable "order.Customer.Email"
+    order.Total.Test().BePositive();          // Subject: variable "order.Total"
+}
+```
+
 ---
 
 ## Validation Operations by Type
@@ -153,8 +199,17 @@ Manager: `StringOperationsManager`
 | `ContainOnlyDigits()` | Alias for BeNumeric |
 | `ContainOnlyLetters()` | Alias for BeAlphabetic |
 | `ContainNoWhitespace()` | No whitespace characters |
+| `NotContain(string)` | Does not contain substring |
+| `NotContain(string, StringComparison)` | Does not contain with comparison mode |
+| `NotBeNullOrEmpty()` | Is not null and not empty |
+| `HaveLengthGreaterThan(int)` | Length strictly greater than N |
+| `HaveLengthLessThan(int)` | Length strictly less than N |
+| `BeOneOf(params string?[])` | Is one of the specified values |
+| `BeOneOf(StringComparison, params string?[])` | Is one of with comparison mode |
+| `NotBeOneOf(params string?[])` | Is not one of the specified values |
+| `NotBeOneOf(StringComparison, params string?[])` | Is not one of with comparison mode |
 
-StringComparison overloads available for: `Be()`, `Contain()`, `StartWith()`, `EndWith()`, `ContainAll()`, `ContainAny()`.
+StringComparison overloads available for: `Be()`, `Contain()`, `NotContain()`, `StartWith()`, `EndWith()`, `ContainAll()`, `ContainAny()`, `BeOneOf()`, `NotBeOneOf()`.
 
 ---
 
@@ -446,6 +501,7 @@ All Integer operations plus:
 |--------|-------------|
 | `HavePrecision(int)` | Exact decimal places |
 | `BeRoundedTo(int)` | Rounded to N places |
+| `BeApproximately(decimal, decimal)` | Within tolerance of expected value |
 
 ---
 
@@ -499,6 +555,7 @@ Manager: `DateTimeOperationsManager` / `NullableDateTimeOperationsManager`
 | `BeWeekday()` | Monday-Friday |
 | `BeWeekend()` | Saturday-Sunday |
 | `BeCloseTo(DateTime, TimeSpan)` | Within tolerance |
+| `NotBeCloseTo(DateTime, TimeSpan)` | Not within tolerance of expected |
 | `HaveYear(int)` | Specific year |
 | `HaveMonth(int)` | Specific month |
 | `HaveDay(int)` | Specific day |
@@ -567,6 +624,7 @@ Same as DateTime plus:
 |--------|-------------|
 | `HaveOffset(TimeSpan)` | Specific UTC offset |
 | `BeCloseTo(DateTimeOffset, TimeSpan)` | Within tolerance |
+| `NotBeCloseTo(DateTimeOffset, TimeSpan)` | Not within tolerance of expected |
 
 ---
 
@@ -586,6 +644,7 @@ Manager: `CollectionOperationsManager<T>`
 | `HaveCountLessThan(int)` | Fewer than N elements |
 | `HaveMinCount(int)` | At least N elements |
 | `HaveMaxCount(int)` | At most N elements |
+| `HaveCountBetween(int, int)` | Count is within [min, max] inclusive range |
 | `HaveLength(int)` | Exact length (element count) |
 | `HaveLengthGreaterThan(int)` | More than N elements |
 | `HaveLengthLessThan(int)` | Fewer than N elements |
@@ -593,6 +652,7 @@ Manager: `CollectionOperationsManager<T>`
 | `Contain(T, OccurrenceConstraint)` | Contains with occurrence |
 | `Contain(Func<T, bool>)` | Contains element matching predicate |
 | `NotContain(T)` | Does not contain |
+| `NotContainNull()` | No element is null (reports count and indexes of nulls found) |
 | `ContainSingle()` | Exactly one element |
 | `ContainSingle(Func<T, bool>)` | Exactly one element matching predicate |
 | `ContainAll(params T[])` | Contains all elements |
@@ -615,15 +675,29 @@ Manager: `CollectionOperationsManager<T>`
 | `StartWith(T)` | First element matches |
 | `EndWith(T)` | Last element matches |
 | `BeEquivalentTo(IEnumerable<T>)` | Same elements, any order |
+| `BeEquivalentTo(IEnumerable<T>, Action<ComparisonOptionsBuilder>)` | Same elements with builder options |
 | `BeSequenceEqualTo(IEnumerable<T>)` | Same elements, same order |
 | `NotBeEquivalentTo(IEnumerable<T>)` | NOT same elements (any order) |
 | `NotBeSequenceEqualTo(IEnumerable<T>)` | NOT same elements/order |
+| `BeInAscendingOrder<TKey>(Func<T, TKey>)` | Sorted ascending by key selector |
+| `BeInDescendingOrder<TKey>(Func<T, TKey>)` | Sorted descending by key selector |
+| `Inspect(Action<T, int>)` | Deep inspection of each element with index |
+| `Inspect(Action<T>)` | Deep inspection of each element |
+| `ExtractSingle()` | Extract the single element via `AndWhichConnector` |
+| `ExtractSingle(Func<T, bool>)` | Extract single matching element via `AndWhichConnector` |
 | `Be(IEnumerable<T>)` | Same reference as expected |
 | `NotBe(IEnumerable<T>)` | Not the same reference |
 | `BeOfType<TType>()` | Runtime type is exactly TType |
 | `BeOfType(Type)` | Runtime type is exactly the specified type |
 | `NotBeOfType<TType>()` | Runtime type is not TType |
 | `NotBeOfType(Type)` | Runtime type is not the specified type |
+| `OnlyContain(Func<T, bool>)` | All elements match predicate (reports first non-match) |
+| `ContainEquivalentOf<TExpected>(TExpected)` | Contains structurally equivalent element |
+| `ContainEquivalentOf<TExpected>(TExpected, Action<ComparisonOptionsBuilder>)` | Contains equivalent with builder options |
+| `ContainEquivalentOf<TExpected>(TExpected, ComparisonOptions)` | Contains equivalent with static options |
+| `NotContainEquivalentOf<TExpected>(TExpected)` | No element is structurally equivalent |
+| `NotContainEquivalentOf<TExpected>(TExpected, Action<ComparisonOptionsBuilder>)` | No equivalent with builder options |
+| `NotContainEquivalentOf<TExpected>(TExpected, ComparisonOptions)` | No equivalent with static options |
 
 ---
 
@@ -631,7 +705,7 @@ Manager: `CollectionOperationsManager<T>`
 
 Manager: `ArrayOperationsManager<T>`
 
-All Collection operations plus (including equivalence: `BeEquivalentTo`, `NotBeEquivalentTo`, `BeSequenceEqualTo`, `NotBeSequenceEqualTo`, `NotContainAny`, `NotContainAll`):
+All Collection operations plus (including equivalence: `BeEquivalentTo`, `BeEquivalentTo(builder)`, `NotBeEquivalentTo`, `BeSequenceEqualTo`, `NotBeSequenceEqualTo`, `NotContainAny`, `NotContainAll`, `BeInAscendingOrder(keySelector)`, `BeInDescendingOrder(keySelector)`, `Inspect`, `ExtractSingle`, `OnlyContain`, `ContainEquivalentOf`, `NotContainEquivalentOf`):
 
 | Method | Description |
 |--------|-------------|
@@ -671,6 +745,7 @@ Manager: `DictionaryOperationsManager<TKey, TValue>`
 | `BeOfType(Type)` | Runtime type is exactly the specified type |
 | `NotBeOfType<TType>()` | Runtime type is not TType |
 | `NotBeOfType(Type)` | Runtime type is not the specified type |
+| `ContainKeys(params TKey[])` | Contains all specified keys |
 | `Which<TResult>(Func<IDictionary<TKey, TValue>, TResult>)` | Extract sub-value for chained assertions |
 
 ---
@@ -761,8 +836,13 @@ Manager: `ObjectOperationsManager` / `ReferenceOperationsManager`
 | `NotBe(object?)` | Does not equal expected |
 | `BeEquivalentTo(object)` | Deep structural equality |
 | `BeEquivalentTo(object, ComparisonOptions)` | Deep structural equality with options |
+| `BeEquivalentTo(object, Action<ComparisonOptionsBuilder>)` | Deep structural equality with builder options |
 | `NotBeEquivalentTo(object)` | Not structurally equal |
 | `NotBeEquivalentTo(object, ComparisonOptions)` | Not structurally equal with options |
+| `BeAssignableTo<T>()` | Runtime type assignable to T (inheritance + interfaces) |
+| `BeAssignableTo(Type)` | Runtime type assignable to specified type |
+| `NotBeAssignableTo<T>()` | Runtime type NOT assignable to T |
+| `NotBeAssignableTo(Type)` | Runtime type NOT assignable to specified type |
 | `BeSequenceEqualTo(IEnumerable)` | Sequence equality |
 
 #### ComparisonOptions
@@ -779,6 +859,8 @@ Options for `BeEquivalentTo` / `NotBeEquivalentTo` deep comparison:
 | `ExcludedProperties` | `HashSet<string>` | `[]` | Properties to skip |
 | `MaxDifferencesReported` | `int` | `5` | Max differences in output |
 | `IgnoreCollectionOrder` | `bool` | `false` | Compare collections as unordered bags |
+| `Tolerances` | `IReadOnlyDictionary<Type, object>?` | `null` | Per-type numeric tolerances for approximate comparison |
+| `MemberMappings` | `IReadOnlyDictionary<string, string>?` | `null` | Property name mappings for cross-type comparison |
 
 Predefined options: `ComparisonOptions.Default`, `ComparisonOptions.CaseInsensitive`, `ComparisonOptions.IgnoreOrder`
 
@@ -796,6 +878,71 @@ obj.Test().BeEquivalentTo(expected, new ComparisonOptions
     ExcludedProperties = ["Id", "CreatedAt"]
 });
 ```
+
+#### ComparisonOptionsBuilder
+
+Fluent builder for configuring `ComparisonOptions` via lambda:
+
+```csharp
+// Exclude properties
+obj.Test().BeEquivalentTo(expected, opts => opts
+    .Excluding("Id")
+    .Excluding<Order>(x => x.CreatedAt));
+
+// Numeric tolerance
+obj.Test().BeEquivalentTo(expected, opts => opts
+    .WithTolerance(0.05m));
+
+// DateTime tolerance
+obj.Test().BeEquivalentTo(expected, opts => opts
+    .WithDateTimeTolerance(TimeSpan.FromSeconds(5)));
+
+// Member mapping (cross-type comparison)
+obj.Test().BeEquivalentTo(expected, opts => opts
+    .WithMapping("Email", "CustomerEmail"));
+
+// Collection order + case insensitive + max depth
+obj.Test().BeEquivalentTo(expected, opts => opts
+    .IgnoringCollectionOrder()
+    .IgnoringCase()
+    .WithMaxDepth(3));
+```
+
+| Method | Description |
+|--------|-------------|
+| `Including(params string[])` | Include only specified properties |
+| `Including<T>(Expression<Func<T, object>>)` | Include property by expression |
+| `Excluding(params string[])` | Exclude properties by name |
+| `Excluding<T>(Expression<Func<T, object>>)` | Exclude property by expression |
+| `WithTolerance<T>(T)` | Numeric tolerance (decimal, double, float) |
+| `WithDateTimeTolerance(TimeSpan)` | DateTime comparison tolerance |
+| `WithMapping(string, string)` | Map source member to target member |
+| `IgnoringCollectionOrder()` | Ignore element order in nested collections |
+| `IgnoringCase()` | Case-insensitive string comparison |
+| `WithMaxDepth(int)` | Maximum recursion depth (default: 10) |
+
+---
+
+### Custom Validator Operations
+
+Available on all managers via `BaseOperationsManager`:
+
+| Method | Description |
+|--------|-------------|
+| `Evaluate(ICustomValidator<T>)` | Runs a synchronous custom validator |
+| `EvaluateAsync(IAsyncCustomValidator<T>)` | Runs an asynchronous custom validator |
+
+```csharp
+public class StrongPasswordValidator : ICustomValidator<string?>
+{
+    public bool IsValid(string? value) => value?.Length >= 12 && value.Any(char.IsSymbol);
+    public string GetFailureMessage(string? value) => "Password must be at least 12 characters and contain a symbol";
+}
+
+"weak".Test().Evaluate(new StrongPasswordValidator()); // throws
+```
+
+For Blueprint usage, see [ForCustom](#forcustom).
 
 ---
 

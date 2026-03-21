@@ -19,6 +19,7 @@ internal class NullableTimeOnlyNotBeInRangeValidator(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableTimeOnly.NotBeInRange";
 
     public bool Validate()
     {

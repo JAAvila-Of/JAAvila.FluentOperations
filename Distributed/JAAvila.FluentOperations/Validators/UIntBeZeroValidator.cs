@@ -11,6 +11,7 @@ internal class UIntBeZeroValidator(PrincipalChain<uint> chain) : IValidator
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "UInt.BeZero";
 
     public bool Validate()
     {

@@ -11,6 +11,7 @@ internal class NullableUIntBePositiveValidator(PrincipalChain<uint?> chain) : IV
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableUInt.BePositive";
 
     public bool Validate()
     {

@@ -15,6 +15,7 @@ internal class CollectionBeValidator<T>(PrincipalChain<IEnumerable<T>> chain, IE
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Collection.Be";
 
     public bool Validate()
     {

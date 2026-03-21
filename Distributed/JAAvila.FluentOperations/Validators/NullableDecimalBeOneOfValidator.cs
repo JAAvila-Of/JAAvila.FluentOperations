@@ -16,6 +16,7 @@ internal class NullableDecimalBeOneOfValidator(PrincipalChain<decimal?> chain, d
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableDecimal.BeOneOf";
 
     public bool Validate()
     {

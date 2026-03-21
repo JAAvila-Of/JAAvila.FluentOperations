@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Linq.Expressions;
 using JAAvila.FluentOperations.Common;
 using JAAvila.FluentOperations.Contract;
@@ -33,7 +34,7 @@ namespace JAAvila.FluentOperations;
 /// if (!report.IsValid) { /* handle failures */ }
 /// </code>
 /// </example>
-public abstract partial class QualityBlueprint<T>
+public abstract partial class QualityBlueprint<T> : IBlueprintValidator
     where T : notnull
 {
     private record RuleDefinition(
@@ -678,6 +679,115 @@ public abstract partial class QualityBlueprint<T>
         }
 
         return report;
+    }
+
+    // --- Assert methods ------------------------------------------------
+
+    /// <summary>
+    /// Validates the specified instance against all rules defined in this blueprint
+    /// and throws if any Error-level failures are found.
+    /// Warning and Info failures do not cause an exception.
+    /// </summary>
+    /// <param name="instance">The model instance to validate.</param>
+    /// <exception cref="Exceptions.FluentOperationsException">
+    /// Thrown (or the active test framework's assertion exception) when validation produces Error-level failures
+    /// and no <see cref="AssertionScope"/> is active.
+    /// </exception>
+    /// <remarks>
+    /// When called inside an <see cref="AssertionScope"/>, failures are accumulated instead of thrown immediately.
+    /// Scenario detection works identically to <see cref="Check(T)"/>.
+    /// </remarks>
+    public void Assert(T instance)
+    {
+        var report = Check(instance);
+        if (report.IsValid) return;
+        Handler.ExceptionHandler.Handle(FormatAssertMessage(report));
+    }
+
+    /// <summary>
+    /// Validates the specified instance using only the rules that belong to <paramref name="activeScenario"/>
+    /// and throws if any Error-level failures are found.
+    /// </summary>
+    /// <param name="instance">The model instance to validate.</param>
+    /// <param name="activeScenario">The scenario type to activate, or <c>null</c> to run all non-scenario rules.</param>
+    /// <exception cref="Exceptions.FluentOperationsException">
+    /// Thrown (or the active test framework's assertion exception) when validation produces Error-level failures
+    /// and no <see cref="AssertionScope"/> is active.
+    /// </exception>
+    public void Assert(T instance, Type? activeScenario)
+    {
+        var report = Check(instance, activeScenario);
+        if (report.IsValid) return;
+        Handler.ExceptionHandler.Handle(FormatAssertMessage(report));
+    }
+
+    /// <summary>
+    /// Asynchronously validates the specified instance against all rules defined in this blueprint
+    /// and throws if any Error-level failures are found.
+    /// Use this overload when the blueprint contains async custom validators.
+    /// </summary>
+    /// <param name="instance">The model instance to validate.</param>
+    /// <exception cref="Exceptions.FluentOperationsException">
+    /// Thrown (or the active test framework's assertion exception) when validation produces Error-level failures
+    /// and no <see cref="AssertionScope"/> is active.
+    /// </exception>
+    /// <remarks>
+    /// When called inside an <see cref="AssertionScope"/>, failures are accumulated instead of thrown immediately.
+    /// Scenario detection works identically to <see cref="CheckAsync(T)"/>.
+    /// </remarks>
+    public async Task AssertAsync(T instance)
+    {
+        var report = await CheckAsync(instance);
+        if (report.IsValid) return;
+        Handler.ExceptionHandler.Handle(FormatAssertMessage(report));
+    }
+
+    /// <summary>
+    /// Asynchronously validates the specified instance using only the rules that belong to
+    /// <paramref name="activeScenario"/> and throws if any Error-level failures are found.
+    /// </summary>
+    /// <param name="instance">The model instance to validate.</param>
+    /// <param name="activeScenario">The scenario type to activate, or <c>null</c> to run all non-scenario rules.</param>
+    /// <exception cref="Exceptions.FluentOperationsException">
+    /// Thrown (or the active test framework's assertion exception) when validation produces Error-level failures
+    /// and no <see cref="AssertionScope"/> is active.
+    /// </exception>
+    public async Task AssertAsync(T instance, Type? activeScenario)
+    {
+        var report = await CheckAsync(instance, activeScenario);
+        if (report.IsValid) return;
+        Handler.ExceptionHandler.Handle(FormatAssertMessage(report));
+    }
+
+    /// <summary>
+    /// Builds a human-readable failure message from the Error-level failures in the report.
+    /// Each failure is formatted using <see cref="QualityFailure.ToString()"/> which includes
+    /// severity prefix, property name, message, and optional error code.
+    /// </summary>
+    private static string FormatAssertMessage(QualityReport report)
+    {
+        var errors = report.Errors;
+        var failures = errors.Select(f => $"  {f}");
+        return $"Blueprint validation failed with {errors.Count} error(s):\n"
+            + string.Join("\n", failures);
+    }
+
+    bool IBlueprintValidator.CanValidate(Type modelType)
+    {
+        ArgumentNullException.ThrowIfNull(modelType);
+        return typeof(T).IsAssignableFrom(modelType);
+    }
+
+    QualityReport IBlueprintValidator.Validate(object instance)
+    {
+        ArgumentNullException.ThrowIfNull(instance);
+        return Check((T)instance);
+    }
+
+    async Task<QualityReport> IBlueprintValidator.ValidateAsync(object instance)
+    {
+        ArgumentNullException.ThrowIfNull(instance);
+        return await CheckAsync((T)instance);
     }
 
     private static string GetPropertyName<TTarget>(Expression<Func<T, TTarget>> expression)

@@ -19,6 +19,7 @@ internal class DateTimeNotBeInRangeValidator(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "DateTime.NotBeInRange";
 
     public bool Validate()
     {

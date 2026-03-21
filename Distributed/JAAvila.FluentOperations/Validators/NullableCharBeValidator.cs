@@ -12,6 +12,7 @@ internal class NullableCharBeValidator(PrincipalChain<char?> chain, char? expect
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableChar.Be";
 
     public bool Validate()
     {

@@ -12,6 +12,7 @@ internal class LongBeDivisibleByValidator(PrincipalChain<long> chain, long divis
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Long.BeDivisibleBy";
 
     public bool Validate()
     {

@@ -12,6 +12,7 @@ internal class LongBeOneOfValidator(PrincipalChain<long> chain, params long[] ex
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Long.BeOneOf";
 
     public bool Validate()
     {

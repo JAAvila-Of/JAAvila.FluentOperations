@@ -12,6 +12,7 @@ internal class ActionStatsTakeShorterThanValidator(PrincipalChain<Model.ActionSt
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "ActionStats.TakeShorterThan";
 
     public bool Validate()
     {

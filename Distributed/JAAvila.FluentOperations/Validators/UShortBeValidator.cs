@@ -12,6 +12,7 @@ internal class UShortBeValidator(PrincipalChain<ushort> chain, ushort expected) 
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "UShort.Be";
 
     public bool Validate()
     {

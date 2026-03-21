@@ -12,6 +12,7 @@ internal class LongBeLessThanOrEqualToValidator(PrincipalChain<long> chain, long
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Long.BeLessThanOrEqualTo";
 
     public bool Validate()
     {

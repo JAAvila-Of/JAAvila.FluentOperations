@@ -12,6 +12,7 @@ internal class ArrayHaveLengthValidator<T>(PrincipalChain<IEnumerable<T>> chain,
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Array.HaveLength";
 
     public bool Validate()
     {

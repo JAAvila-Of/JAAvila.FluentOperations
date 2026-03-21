@@ -20,6 +20,7 @@ internal class NullableFloatBeApproximatelyValidator(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableFloat.BeApproximately";
 
     public bool Validate()
     {

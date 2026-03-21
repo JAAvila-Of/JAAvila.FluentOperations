@@ -14,6 +14,7 @@ internal class NullableDateTimeOffsetHaveValueValidator(PrincipalChain<DateTimeO
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableDateTimeOffset.HaveValue";
 
     public bool Validate()
     {

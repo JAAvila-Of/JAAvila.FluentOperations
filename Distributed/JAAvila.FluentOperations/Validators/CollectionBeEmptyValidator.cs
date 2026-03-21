@@ -12,6 +12,7 @@ internal class CollectionBeEmptyValidator<T>(PrincipalChain<IEnumerable<T>> chai
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Collection.BeEmpty";
 
     public bool Validate()
     {

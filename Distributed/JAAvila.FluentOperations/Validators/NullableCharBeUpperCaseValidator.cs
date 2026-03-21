@@ -11,6 +11,7 @@ internal class NullableCharBeUpperCaseValidator(PrincipalChain<char?> chain) : I
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableChar.BeUpperCase";
 
     public bool Validate()
     {

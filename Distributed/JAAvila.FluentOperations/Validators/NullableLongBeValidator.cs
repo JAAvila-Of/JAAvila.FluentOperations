@@ -12,6 +12,7 @@ internal class NullableLongBeValidator(PrincipalChain<long?> chain, long? expect
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableLong.Be";
 
     public bool Validate()
     {

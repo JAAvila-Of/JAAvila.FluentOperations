@@ -11,6 +11,7 @@ internal class NullableShortBeOddValidator(PrincipalChain<short?> chain) : IVali
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableShort.BeOdd";
 
     public bool Validate()
     {

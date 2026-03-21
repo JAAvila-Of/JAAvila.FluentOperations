@@ -13,6 +13,7 @@ internal class IntegerNotBeInRangeValidator(PrincipalChain<int> chain, int min, 
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Integer.NotBeInRange";
 
     public bool Validate()
     {

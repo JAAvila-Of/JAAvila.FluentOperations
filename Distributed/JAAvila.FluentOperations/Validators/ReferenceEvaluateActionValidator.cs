@@ -18,6 +18,7 @@ internal class ReferenceEvaluateActionValidator<TSubject, TType>(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Reference.EvaluateAction";
 
     public bool Validate()
     {

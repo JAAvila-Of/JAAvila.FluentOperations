@@ -12,6 +12,7 @@ internal class NullableByteNotHaveValueValidator(PrincipalChain<byte?> chain) : 
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableByte.NotHaveValue";
 
     public bool Validate()
     {

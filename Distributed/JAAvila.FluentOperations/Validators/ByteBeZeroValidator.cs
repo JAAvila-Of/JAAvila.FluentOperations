@@ -11,6 +11,7 @@ internal class ByteBeZeroValidator(PrincipalChain<byte> chain) : IValidator
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Byte.BeZero";
 
     public bool Validate()
     {

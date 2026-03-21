@@ -11,6 +11,7 @@ internal class NullableByteBePositiveValidator(PrincipalChain<byte?> chain) : IV
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableByte.BePositive";
 
     public bool Validate()
     {

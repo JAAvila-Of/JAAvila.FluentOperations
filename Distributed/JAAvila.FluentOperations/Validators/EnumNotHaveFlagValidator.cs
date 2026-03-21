@@ -13,6 +13,7 @@ internal class EnumNotHaveFlagValidator<T>(PrincipalChain<T> chain, T flag) : IV
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Enum.NotHaveFlag";
 
     public bool Validate()
     {

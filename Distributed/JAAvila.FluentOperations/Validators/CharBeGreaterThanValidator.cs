@@ -12,6 +12,7 @@ internal class CharBeGreaterThanValidator(PrincipalChain<char> chain, char expec
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Char.BeGreaterThan";
 
     public bool Validate()
     {

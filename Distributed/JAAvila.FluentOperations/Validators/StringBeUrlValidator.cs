@@ -11,6 +11,7 @@ internal class StringBeUrlValidator(PrincipalChain<string?> chain) : IValidator
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "String.BeUrl";
 
     public bool Validate()
     {

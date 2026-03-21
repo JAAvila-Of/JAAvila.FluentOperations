@@ -12,6 +12,7 @@ internal class FloatNotBeValidator(PrincipalChain<float> chain, float expected) 
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Float.NotBe";
 
     public bool Validate()
     {

@@ -26,13 +26,16 @@ internal class GlobalConfig
     private NumericConfig Numeric { get; init; } = new();
     private DateTimeConfig DateTime { get; init; } = new();
     private FormattingConfig Formatting { get; init; } = new();
+    private TestFrameworkConfig TestFramework { get; init; } = new();
+    private LocalizationConfig? Localization { get; init; }
 
     private static GlobalConfig Default => new()
     {
         String = new StringConfig { MaxDisplayLength = 30 },
         Numeric = new NumericConfig(),
         DateTime = new DateTimeConfig(),
-        Formatting = new FormattingConfig()
+        Formatting = new FormattingConfig(),
+        TestFramework = new TestFrameworkConfig()
     };
 
     /// <summary>
@@ -108,6 +111,8 @@ internal class GlobalConfig
     public static NumericConfig GetNumericConfig() => GetInstance().Numeric;
     public static DateTimeConfig GetDateTimeConfig() => GetInstance().DateTime;
     public static FormattingConfig GetFormattingConfig() => GetInstance().Formatting;
+    public static TestFrameworkConfig GetTestFrameworkConfig() => GetInstance().TestFramework;
+    public static LocalizationConfig? GetLocalizationConfig() => GetInstance().Localization;
 
     // --- Internal accessors for ConfigBuilder.FromExisting() ---
 
@@ -115,6 +120,8 @@ internal class GlobalConfig
     internal NumericConfig GetNumericConfigInternal() => Numeric;
     internal DateTimeConfig GetDateTimeConfigInternal() => DateTime;
     internal FormattingConfig GetFormattingConfigInternal() => Formatting;
+    internal TestFrameworkConfig GetTestFrameworkConfigInternal() => TestFramework;
+    internal LocalizationConfig? GetLocalizationConfigInternal() => Localization;
 
     // --- Scope management (used by FluentOperationsConfig) ---
 
@@ -125,22 +132,39 @@ internal class GlobalConfig
 
     internal static void ApplyConfig(ConfigBuilder builder)
     {
+        var previousFramework = Instance.Value?.TestFramework.Framework;
+        var newTestFrameworkConfig = builder.BuildTestFrameworkConfig();
+
         Instance.Value = new GlobalConfig
         {
             String = builder.BuildStringConfig(),
             Numeric = builder.BuildNumericConfig(),
             DateTime = builder.BuildDateTimeConfig(),
-            Formatting = builder.BuildFormattingConfig()
+            Formatting = builder.BuildFormattingConfig(),
+            TestFramework = newTestFrameworkConfig,
+            Localization = builder.BuildLocalizationConfig()
         };
+
+        if (previousFramework != newTestFrameworkConfig.Framework)
+        {
+            Handler.ExceptionHandler.InvalidateCache();
+        }
     }
 
     internal static void RestoreConfig(GlobalConfig previous)
     {
+        var currentFramework = Instance.Value?.TestFramework.Framework;
         Instance.Value = previous;
+
+        if (currentFramework != previous.TestFramework.Framework)
+        {
+            Handler.ExceptionHandler.InvalidateCache();
+        }
     }
 
     internal static void ResetConfig()
     {
         Instance.Value = null;
+        Handler.ExceptionHandler.InvalidateCache();
     }
 }

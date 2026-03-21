@@ -15,7 +15,8 @@ internal class StringBeNullOrWhiteSpaceValidator(PrincipalChain<string?> chain) 
     public string Expected => "Be white space - \" \"";
 
     /// <inheritdoc />
-    public string ResultValidation { get; set; } = string.Empty;
+    public string ResultValidation { get; set; }
+    public string MessageKey => "String.BeNullOrWhiteSpace";
 
     /// <inheritdoc />
     public bool Validate()

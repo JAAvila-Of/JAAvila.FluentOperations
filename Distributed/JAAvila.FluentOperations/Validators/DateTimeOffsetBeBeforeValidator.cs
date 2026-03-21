@@ -12,6 +12,7 @@ internal class DateTimeOffsetBeBeforeValidator(PrincipalChain<DateTimeOffset> ch
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "DateTimeOffset.BeBefore";
 
     public bool Validate()
     {

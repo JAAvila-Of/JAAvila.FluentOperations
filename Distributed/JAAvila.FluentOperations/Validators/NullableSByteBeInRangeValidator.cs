@@ -16,6 +16,7 @@ internal class NullableSByteBeInRangeValidator(PrincipalChain<sbyte?> chain, sby
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableSByte.BeInRange";
 
     public bool Validate()
     {

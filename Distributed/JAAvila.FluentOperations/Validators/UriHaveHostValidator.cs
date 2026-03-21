@@ -12,6 +12,7 @@ internal class UriHaveHostValidator(PrincipalChain<Uri?> chain, string host) : I
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Uri.HaveHost";
 
     public bool Validate()
     {

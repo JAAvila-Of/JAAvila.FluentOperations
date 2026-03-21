@@ -12,6 +12,7 @@ internal class StringBePhoneNumberValidator(PrincipalChain<string?> chain) : IVa
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "String.BePhoneNumber";
 
     public bool Validate()
     {

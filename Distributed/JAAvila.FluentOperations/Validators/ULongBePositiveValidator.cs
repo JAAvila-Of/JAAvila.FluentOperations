@@ -12,6 +12,7 @@ internal class ULongBePositiveValidator(PrincipalChain<ulong> chain) : IValidato
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "ULong.BePositive";
 
     public bool Validate()
     {

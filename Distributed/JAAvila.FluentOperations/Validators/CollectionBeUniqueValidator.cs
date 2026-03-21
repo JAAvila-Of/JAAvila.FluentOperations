@@ -12,6 +12,7 @@ internal class CollectionBeUniqueValidator<T>(PrincipalChain<IEnumerable<T>> cha
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Collection.BeUnique";
 
     public bool Validate()
     {

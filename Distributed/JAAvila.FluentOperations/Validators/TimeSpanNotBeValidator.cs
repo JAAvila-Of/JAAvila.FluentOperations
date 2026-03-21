@@ -12,6 +12,7 @@ internal class TimeSpanNotBeValidator(PrincipalChain<TimeSpan> chain, TimeSpan e
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "TimeSpan.NotBe";
 
     public bool Validate()
     {

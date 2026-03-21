@@ -11,6 +11,7 @@ internal class NullableCharBeControlValidator(PrincipalChain<char?> chain) : IVa
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableChar.BeControl";
 
     public bool Validate()
     {

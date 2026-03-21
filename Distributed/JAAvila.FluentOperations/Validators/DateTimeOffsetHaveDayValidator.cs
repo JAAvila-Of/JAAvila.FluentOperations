@@ -15,6 +15,7 @@ internal class DateTimeOffsetHaveDayValidator(PrincipalChain<DateTimeOffset> cha
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "DateTimeOffset.HaveDay";
 
     public bool Validate()
     {

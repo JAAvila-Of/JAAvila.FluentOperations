@@ -12,6 +12,7 @@ internal class DoubleBeNaNValidator(PrincipalChain<double> chain) : IValidator
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Double.BeNaN";
 
     public bool Validate()
     {

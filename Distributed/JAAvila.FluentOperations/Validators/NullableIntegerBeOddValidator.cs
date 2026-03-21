@@ -11,6 +11,7 @@ internal class NullableIntegerBeOddValidator(PrincipalChain<int?> chain) : IVali
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableInteger.BeOdd";
 
     public bool Validate()
     {

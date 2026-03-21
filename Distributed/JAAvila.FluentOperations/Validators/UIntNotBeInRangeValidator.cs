@@ -13,6 +13,7 @@ internal class UIntNotBeInRangeValidator(PrincipalChain<uint> chain, uint min, u
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "UInt.NotBeInRange";
 
     public bool Validate()
     {

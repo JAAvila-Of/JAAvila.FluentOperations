@@ -13,6 +13,7 @@ internal class ByteNotBeInRangeValidator(PrincipalChain<byte> chain, byte min, b
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Byte.NotBeInRange";
 
     public bool Validate()
     {

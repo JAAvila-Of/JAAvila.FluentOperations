@@ -12,6 +12,7 @@ internal class TimeSpanBeLessThanValidator(PrincipalChain<TimeSpan> chain, TimeS
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "TimeSpan.BeLessThan";
 
     public bool Validate()
     {

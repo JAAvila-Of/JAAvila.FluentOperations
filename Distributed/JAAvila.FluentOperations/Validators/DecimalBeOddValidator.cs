@@ -12,6 +12,7 @@ internal class DecimalBeOddValidator(PrincipalChain<decimal> chain) : IValidator
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Decimal.BeOdd";
 
     public bool Validate()
     {

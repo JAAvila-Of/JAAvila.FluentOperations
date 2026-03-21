@@ -11,6 +11,7 @@ internal class CharBeLowerCaseValidator(PrincipalChain<char> chain) : IValidator
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Char.BeLowerCase";
 
     public bool Validate()
     {

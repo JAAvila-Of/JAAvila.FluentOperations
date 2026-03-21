@@ -12,6 +12,7 @@ internal class ByteBeEvenValidator(PrincipalChain<byte> chain) : IValidator
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Byte.BeEven";
 
     public bool Validate()
     {

@@ -17,6 +17,7 @@ internal class CollectionHaveLengthValidator<T>(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Collection.HaveLength";
 
     public bool Validate()
     {

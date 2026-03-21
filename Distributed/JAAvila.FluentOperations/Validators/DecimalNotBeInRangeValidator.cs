@@ -12,6 +12,7 @@ internal class DecimalNotBeInRangeValidator(PrincipalChain<decimal> chain, decim
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Decimal.NotBeInRange";
 
     public bool Validate()
     {

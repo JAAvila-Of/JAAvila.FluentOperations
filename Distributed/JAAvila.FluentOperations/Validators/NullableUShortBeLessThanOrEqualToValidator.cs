@@ -17,6 +17,7 @@ internal class NullableUShortBeLessThanOrEqualToValidator(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableUShort.BeLessThanOrEqualTo";
 
     public bool Validate()
     {

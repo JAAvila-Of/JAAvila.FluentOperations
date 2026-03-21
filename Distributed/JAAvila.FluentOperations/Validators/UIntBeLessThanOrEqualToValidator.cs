@@ -12,6 +12,7 @@ internal class UIntBeLessThanOrEqualToValidator(PrincipalChain<uint> chain, uint
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "UInt.BeLessThanOrEqualTo";
 
     public bool Validate()
     {

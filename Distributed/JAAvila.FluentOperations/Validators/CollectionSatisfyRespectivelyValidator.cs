@@ -17,6 +17,7 @@ internal class CollectionSatisfyRespectivelyValidator<T>(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Collection.SatisfyRespectively";
 
     public bool Validate()
     {

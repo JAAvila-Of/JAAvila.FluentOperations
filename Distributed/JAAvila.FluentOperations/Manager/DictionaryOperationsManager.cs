@@ -54,7 +54,7 @@ public class DictionaryOperationsManager<TKey, TValue>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -85,7 +85,7 @@ public class DictionaryOperationsManager<TKey, TValue>
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .Execute();
@@ -117,7 +117,7 @@ public class DictionaryOperationsManager<TKey, TValue>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(expected)
                         )
                         .WithReason(reason?.ToString())
@@ -160,7 +160,7 @@ public class DictionaryOperationsManager<TKey, TValue>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(expected)
                         )
                         .WithReason(reason?.ToString())
@@ -275,7 +275,7 @@ public class DictionaryOperationsManager<TKey, TValue>
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation, BaseFormatter.Format(key))
+                        .WithResult(operation.MessageKey, operation.ResultValidation, BaseFormatter.Format(key))
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -315,7 +315,7 @@ public class DictionaryOperationsManager<TKey, TValue>
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation, BaseFormatter.Format(key))
+                        .WithResult(operation.MessageKey, operation.ResultValidation, BaseFormatter.Format(key))
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -358,7 +358,7 @@ public class DictionaryOperationsManager<TKey, TValue>
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation, BaseFormatter.Format(value))
+                        .WithResult(operation.MessageKey, operation.ResultValidation, BaseFormatter.Format(value))
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -403,7 +403,7 @@ public class DictionaryOperationsManager<TKey, TValue>
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation, BaseFormatter.Format(value))
+                        .WithResult(operation.MessageKey, operation.ResultValidation, BaseFormatter.Format(value))
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -451,7 +451,7 @@ public class DictionaryOperationsManager<TKey, TValue>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(key),
                             BaseFormatter.Format(value)
                         )
@@ -463,6 +463,77 @@ public class DictionaryOperationsManager<TKey, TValue>
                         manager.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(ContainPair)} operation failed because the dictionary was null."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the dictionary contains entries for all of the specified keys.
+    /// </summary>
+    /// <param name="keys">The keys expected to be present in the dictionary.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// This operation fails immediately if the dictionary is <c>null</c> or if <paramref name="keys"/> is empty.
+    /// </remarks>
+    public DictionaryOperationsManager<TKey, TValue> ContainKeys(params TKey[] keys)
+    {
+        return ContainKeys(null, keys);
+    }
+
+    /// <summary>
+    /// Asserts that the dictionary contains entries for all of the specified keys.
+    /// </summary>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <param name="keys">The keys expected to be present in the dictionary.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// This operation fails immediately if the dictionary is <c>null</c> or if <paramref name="keys"/> is empty.
+    /// </remarks>
+    public DictionaryOperationsManager<TKey, TValue> ContainKeys(
+        Reason? reason,
+        params TKey[] keys
+    )
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Dictionary.ContainKeys))
+        {
+            return this;
+        }
+
+        var validator = DictionaryContainKeysValidator<TKey, TValue>.New(PrincipalChain, keys);
+
+        ExecutionEngine<DictionaryOperationsManager<TKey, TValue>, IDictionary<TKey, TValue>>
+            .New(this)
+            .WithOperation(validator)
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.MessageKey, operation.ResultValidation,
+                            BaseFormatter.Format(keys),
+                            BaseFormatter.Format(validator.MissingKeys)
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue().IsNull(),
+                        Fail.New(
+                            $"The {nameof(ContainKeys)} operation failed because the dictionary was null."
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        keys.IsNull() || keys.Length == 0,
+                        Fail.New(
+                            $"The {nameof(ContainKeys)} operation failed because no keys were specified."
                         )
                     )
             )
@@ -495,7 +566,7 @@ public class DictionaryOperationsManager<TKey, TValue>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             expected.ToString(),
                             PrincipalChain.GetValue().Count.ToString()
                         )
@@ -547,7 +618,7 @@ public class DictionaryOperationsManager<TKey, TValue>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             PrincipalChain.GetValue().Count.ToString()
                         )
                         .WithReason(reason?.ToString())
@@ -588,7 +659,7 @@ public class DictionaryOperationsManager<TKey, TValue>
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -642,7 +713,7 @@ public class DictionaryOperationsManager<TKey, TValue>
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -680,7 +751,7 @@ public class DictionaryOperationsManager<TKey, TValue>
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(

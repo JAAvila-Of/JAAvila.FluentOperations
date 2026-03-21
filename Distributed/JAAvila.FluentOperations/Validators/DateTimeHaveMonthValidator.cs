@@ -12,6 +12,7 @@ internal class DateTimeHaveMonthValidator(PrincipalChain<DateTime> chain, int ex
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "DateTime.HaveMonth";
 
     public bool Validate()
     {

@@ -16,6 +16,7 @@ internal class NullableDoubleBeOneOfValidator(PrincipalChain<double?> chain, dou
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableDouble.BeOneOf";
 
     public bool Validate()
     {

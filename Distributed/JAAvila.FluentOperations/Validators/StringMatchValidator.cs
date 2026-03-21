@@ -12,7 +12,8 @@ internal class StringMatchValidator(string pattern, PrincipalChain<string?> chai
         new(pattern, chain);
 
     public string Expected => $"Match pattern \"{pattern}\"";
-    public string ResultValidation { get; set; } = string.Empty;
+    public string ResultValidation { get; set; }
+    public string MessageKey => "String.Match";
 
     public bool Validate()
     {

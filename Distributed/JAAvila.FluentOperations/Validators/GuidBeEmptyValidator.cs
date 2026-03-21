@@ -12,6 +12,7 @@ internal class GuidBeEmptyValidator(PrincipalChain<Guid> chain) : IValidator
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Guid.BeEmpty";
 
     public bool Validate()
     {

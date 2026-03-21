@@ -19,7 +19,8 @@ internal class StringBeWithComparisonValidator(
     ) => new(chain, expectedValue, comparison);
 
     public string Expected { get; } = $"Be - <{comparison}>";
-    public string ResultValidation { get; set; } = string.Empty;
+    public string ResultValidation { get; set; }
+    public string MessageKey => "String.Be";
 
     public bool Validate()
     {

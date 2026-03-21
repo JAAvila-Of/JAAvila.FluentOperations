@@ -12,6 +12,7 @@ internal class NullableDateTimeNotBeValidator(PrincipalChain<DateTime?> chain, D
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableDateTime.NotBe";
 
     public bool Validate()
     {

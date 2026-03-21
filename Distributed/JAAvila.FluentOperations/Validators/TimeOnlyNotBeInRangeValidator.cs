@@ -12,6 +12,7 @@ internal class TimeOnlyNotBeInRangeValidator(PrincipalChain<TimeOnly> chain, Tim
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "TimeOnly.NotBeInRange";
 
     public bool Validate()
     {

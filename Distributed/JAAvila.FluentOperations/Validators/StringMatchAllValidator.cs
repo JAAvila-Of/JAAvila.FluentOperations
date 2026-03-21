@@ -13,7 +13,8 @@ internal class StringMatchAllValidator(string[] patterns, PrincipalChain<string?
         new(patterns, chain);
 
     public string Expected => "Match all of the provided patterns";
-    public string ResultValidation { get; set; } = string.Empty;
+    public string ResultValidation { get; set; }
+    public string MessageKey => "String.MatchAll";
 
     public bool Validate()
     {

@@ -12,6 +12,7 @@ internal class ShortBePositiveValidator(PrincipalChain<short> chain) : IValidato
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Short.BePositive";
 
     public bool Validate()
     {

@@ -13,6 +13,7 @@ internal class EnumHaveFlagValidator<T>(PrincipalChain<T> chain, T flag) : IVali
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Enum.HaveFlag";
 
     public bool Validate()
     {

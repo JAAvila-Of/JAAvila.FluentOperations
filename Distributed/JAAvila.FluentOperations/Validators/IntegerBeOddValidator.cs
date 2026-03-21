@@ -12,6 +12,7 @@ internal class IntegerBeOddValidator(PrincipalChain<int> chain) : IValidator
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Integer.BeOdd";
 
     public bool Validate()
     {

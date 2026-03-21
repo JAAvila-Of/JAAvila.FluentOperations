@@ -15,6 +15,7 @@ internal class NullableDoubleNotBeValidator(PrincipalChain<double?> chain, doubl
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableDouble.NotBe";
 
     public bool Validate()
     {

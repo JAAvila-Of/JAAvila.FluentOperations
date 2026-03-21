@@ -17,6 +17,7 @@ internal class NullableFloatBeLessThanOrEqualToValidator(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableFloat.BeLessThanOrEqualTo";
 
     public bool Validate()
     {

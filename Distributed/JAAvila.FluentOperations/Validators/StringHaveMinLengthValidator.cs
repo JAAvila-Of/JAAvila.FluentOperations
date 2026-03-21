@@ -13,6 +13,7 @@ internal class StringHaveMinLengthValidator(PrincipalChain<string?> chain, int m
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "String.HaveMinLength";
 
     public bool Validate()
     {

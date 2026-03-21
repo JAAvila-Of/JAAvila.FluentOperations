@@ -13,6 +13,7 @@ internal class CollectionEndWithValidator<T>(PrincipalChain<IEnumerable<T>> chai
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Collection.EndWith";
 
     public bool Validate()
     {

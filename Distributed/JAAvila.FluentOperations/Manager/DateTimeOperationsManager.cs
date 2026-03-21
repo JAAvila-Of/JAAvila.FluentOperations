@@ -54,7 +54,7 @@ public class DateTimeOperationsManager : ITestManager<DateTimeOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -86,7 +86,7 @@ public class DateTimeOperationsManager : ITestManager<DateTimeOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -118,7 +118,7 @@ public class DateTimeOperationsManager : ITestManager<DateTimeOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -150,7 +150,7 @@ public class DateTimeOperationsManager : ITestManager<DateTimeOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -182,7 +182,7 @@ public class DateTimeOperationsManager : ITestManager<DateTimeOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -214,7 +214,7 @@ public class DateTimeOperationsManager : ITestManager<DateTimeOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -250,7 +250,7 @@ public class DateTimeOperationsManager : ITestManager<DateTimeOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(min),
                             BaseFormatter.Format(max),
                             BaseFormatter.Format(PrincipalChain.GetValue())
@@ -296,7 +296,7 @@ public class DateTimeOperationsManager : ITestManager<DateTimeOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(min),
                             BaseFormatter.Format(max),
                             BaseFormatter.Format(PrincipalChain.GetValue())
@@ -338,7 +338,7 @@ public class DateTimeOperationsManager : ITestManager<DateTimeOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -370,7 +370,7 @@ public class DateTimeOperationsManager : ITestManager<DateTimeOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -402,7 +402,7 @@ public class DateTimeOperationsManager : ITestManager<DateTimeOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -433,7 +433,7 @@ public class DateTimeOperationsManager : ITestManager<DateTimeOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -463,7 +463,7 @@ public class DateTimeOperationsManager : ITestManager<DateTimeOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -493,7 +493,7 @@ public class DateTimeOperationsManager : ITestManager<DateTimeOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -523,7 +523,7 @@ public class DateTimeOperationsManager : ITestManager<DateTimeOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -553,7 +553,7 @@ public class DateTimeOperationsManager : ITestManager<DateTimeOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -583,7 +583,7 @@ public class DateTimeOperationsManager : ITestManager<DateTimeOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -613,7 +613,7 @@ public class DateTimeOperationsManager : ITestManager<DateTimeOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -644,7 +644,7 @@ public class DateTimeOperationsManager : ITestManager<DateTimeOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(expectedYear),
                             BaseFormatter.Format(PrincipalChain.GetValue().Year)
                         )
@@ -676,7 +676,7 @@ public class DateTimeOperationsManager : ITestManager<DateTimeOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(expectedMonth),
                             BaseFormatter.Format(PrincipalChain.GetValue().Month)
                         )
@@ -708,7 +708,7 @@ public class DateTimeOperationsManager : ITestManager<DateTimeOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(expectedDay),
                             BaseFormatter.Format(PrincipalChain.GetValue().Day)
                         )
@@ -748,7 +748,7 @@ public class DateTimeOperationsManager : ITestManager<DateTimeOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             expected.ToString("O"),
                             BaseFormatter.Format(tolerance),
                             BaseFormatter.Format(PrincipalChain.GetValue())
@@ -761,6 +761,56 @@ public class DateTimeOperationsManager : ITestManager<DateTimeOperationsManager,
                         tolerance < TimeSpan.Zero,
                         Fail.New(
                             $"The {nameof(BeCloseTo)} operation failed because the tolerance cannot be negative."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the value is NOT within <paramref name="tolerance"/> of <paramref name="expected"/>.
+    /// </summary>
+    /// <param name="expected">The date and time to compare against.</param>
+    /// <param name="tolerance">The minimum required difference from the expected value.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// Throws immediately if <paramref name="tolerance"/> is negative.
+    /// </remarks>
+    public DateTimeOperationsManager NotBeCloseTo(
+        DateTime expected,
+        TimeSpan tolerance,
+        Reason? reason = null
+    )
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.DateTime.NotBeCloseTo))
+        {
+            return this;
+        }
+
+        ExecutionEngine<DateTimeOperationsManager, DateTime>
+            .New(this)
+            .WithOperation(DateTimeNotBeCloseToValidator.New(PrincipalChain, expected, tolerance))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.MessageKey, operation.ResultValidation,
+                            expected.ToString("O"),
+                            BaseFormatter.Format(tolerance),
+                            BaseFormatter.Format(PrincipalChain.GetValue())
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                _ =>
+                    (
+                        tolerance < TimeSpan.Zero,
+                        Fail.New(
+                            $"The {nameof(NotBeCloseTo)} operation failed because the tolerance cannot be negative."
                         )
                     )
             )
@@ -822,7 +872,7 @@ public class DateTimeOperationsManager : ITestManager<DateTimeOperationsManager,
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -844,7 +894,7 @@ public class DateTimeOperationsManager : ITestManager<DateTimeOperationsManager,
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(

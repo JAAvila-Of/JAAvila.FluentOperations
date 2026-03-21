@@ -12,6 +12,7 @@ internal class ULongBeOneOfValidator(PrincipalChain<ulong> chain, params ulong[]
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "ULong.BeOneOf";
 
     public bool Validate()
     {

@@ -1,6 +1,6 @@
 # JAAvila.FluentOperations
 
-[![Tests](https://img.shields.io/badge/tests-2906%20passing-brightgreen)]()
+[![Tests](https://img.shields.io/badge/tests-6335%20passing-brightgreen)]()
 [![.NET](https://img.shields.io/badge/.NET-8.0-blue)](https://dotnet.microsoft.com)
 [![C#](https://img.shields.io/badge/C%23-13.0-blue)](https://docs.microsoft.com/dotnet/csharp/)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
@@ -15,6 +15,8 @@ A fluent validation and testing library for .NET that unifies inline assertions 
 | `JAAvila.FluentOperations.DependencyInjection` | DI extensions for blueprint registration |
 | `JAAvila.FluentOperations.AspNetCore` | ASP.NET Core action filters for automatic validation |
 | `JAAvila.FluentOperations.MediatR` | MediatR pipeline behavior for request validation |
+| `JAAvila.FluentOperations.MinimalApi` | Minimal API endpoint filters for automatic validation |
+| `JAAvila.FluentOperations.Analyzers` | Roslyn analyzers for compile-time usage checks (FO001, FO003) |
 
 ```bash
 dotnet add package JAAvila.FluentOperations
@@ -83,13 +85,13 @@ if (!report.IsValid)
 
 | Category | Types | Operations |
 |----------|-------|------------|
-| **String** | `string?` | 45+ ops: Be, NotBe, BeEmpty, Contain, Match (regex), BeEmail, BeUrl, BeJson, BeXml, BeSemVer, BeIPAddress, BeCreditCard, MatchWildcard, ContainAll, ContainAny... |
+| **String** | `string?` | 45+ ops: Be, NotBe, BeEmpty, NotBeNullOrEmpty, Contain, NotContain, Match (regex), BeEmail, BeUrl, BeJson, BeXml, BeSemVer, BeIPAddress, BeCreditCard, MatchWildcard, ContainAll, ContainAny, HaveLengthGreaterThan, HaveLengthLessThan, BeOneOf, NotBeOneOf... |
 | **Boolean** | `bool`, `bool?` | Be, BeTrue, BeFalse, BeAllTrue, BeAllFalse, Imply, HaveValue |
-| **Numeric** | `int`, `long`, `decimal`, `double`, `float` (+ nullable) | Be, BePositive, BeNegative, BeZero, BeGreaterThan, BeLessThan, BeInRange, BeOneOf, BeDivisibleBy, BeEven, BeOdd, BeApproximately, HavePrecision, BeNaN, BeInfinity, BeFinite... |
-| **Date/Time** | `DateTime`, `DateOnly`, `TimeOnly`, `TimeSpan`, `DateTimeOffset` (+ nullable) | Be, BeAfter, BeBefore, BeInRange, BeToday, BeInThePast, BeInTheFuture, BeWeekday, BeCloseTo, HaveYear... |
-| **Collections** | `IEnumerable<T>`, `T[]`, `Dictionary<TKey,TValue>` | HaveCount, Contain, ContainAll, ContainInOrder, BeSubsetOf, BeInAscendingOrder, AllSatisfy, BeUnique, HaveElementAt, SatisfyRespectively, HaveMinCount... |
+| **Numeric** | `int`, `long`, `decimal`, `double`, `float` (+ nullable) | Be, BePositive, BeNegative, BeZero, BeGreaterThan, BeLessThan, BeInRange, BeOneOf, BeDivisibleBy, BeEven, BeOdd, BeApproximately (decimal, double, float), HavePrecision, BeNaN, BeInfinity, BeFinite... |
+| **Date/Time** | `DateTime`, `DateOnly`, `TimeOnly`, `TimeSpan`, `DateTimeOffset` (+ nullable) | Be, BeAfter, BeBefore, BeInRange, BeToday, BeInThePast, BeInTheFuture, BeWeekday, BeCloseTo, NotBeCloseTo, HaveYear... |
+| **Collections** | `IEnumerable<T>`, `T[]`, `Dictionary<TKey,TValue>` | HaveCount, Contain, ContainAll, ContainInOrder, OnlyContain, BeSubsetOf, BeInAscendingOrder, BeInAscendingOrder(keySelector), AllSatisfy, BeUnique, HaveElementAt, SatisfyRespectively, HaveMinCount, Inspect, ExtractSingle, ContainEquivalentOf, NotContainEquivalentOf, NotContainNull, HaveCountBetween, ContainKeys (dictionary)... |
 | **Special** | `Guid`, `Guid?`, `Enum<T>`, `Uri?` | Be, BeEmpty, BeDefined, HaveFlag, HaveScheme, BeAbsolute... |
-| **Object** | `object?` | BeNull, NotBeNull, BeSameAs, BeOfType, BeEquivalentTo |
+| **Object** | `object?` | BeNull, NotBeNull, BeSameAs, BeOfType, BeAssignableTo, BeEquivalentTo (with builder options) |
 | **Action** | `Action`, `Func<Task>` | Throw, ThrowExactly, NotThrow, NotThrowAfter, CompleteWithinAsync |
 
 ## Blueprint Features
@@ -255,6 +257,25 @@ using (Define())
 }
 ```
 
+### Blueprint Assertions (Test-to-Production Bridge)
+
+```csharp
+// Use blueprints as direct assertions in tests
+var blueprint = new UserBlueprint();
+blueprint.Assert(user);           // Throws if invalid
+await blueprint.AssertAsync(user); // Async version
+
+// Works with AssertionScope
+using (new AssertionScope())
+{
+    blueprint.Assert(user1);  // Failures accumulate
+    blueprint.Assert(user2);  // All reported together
+}
+
+// In production: returns report (unchanged)
+var report = blueprint.Check(user);
+```
+
 ## Framework Integration
 
 ### ASP.NET Core
@@ -284,22 +305,71 @@ builder.Services.AddBlueprintValidation();
 builder.Services.AddSingleton<CreateOrderCommandBlueprint>();
 ```
 
+### Minimal API
+
+```bash
+dotnet add package JAAvila.FluentOperations.MinimalApi
+```
+
+```csharp
+builder.Services.AddSingleton<CreateOrderBlueprint>();
+
+app.MapPost("/orders", (CreateOrderRequest request) => Results.Ok(request))
+    .WithBlueprint<CreateOrderRequest, CreateOrderBlueprint>();
+// Returns RFC 7807 ValidationProblem on failure
+```
+
 See [Integration Guide](./docs/INTEGRATION.md) for full examples.
+
+## Localization
+
+Configure localized validation messages for any culture:
+
+```csharp
+FluentOperationsConfig.Configure(c =>
+{
+    c.Localization.Provider = new DictionaryMessageProvider()
+        .AddMessage("String.BeEmail", "es-ES", "Se esperaba un correo electronico valido.");
+    c.Localization.Culture = new CultureInfo("es-ES");
+});
+```
+
+Built-in providers: `DictionaryMessageProvider` (in-memory) and `ResourceManagerProvider` (.resx files).
+
+## Roslyn Analyzers
+
+```bash
+dotnet add package JAAvila.FluentOperations.Analyzers
+```
+
+Compile-time detection of common mistakes:
+
+| Diagnostic | Description |
+|------------|-------------|
+| **FO001** | `.Test()` called without chaining an assertion operation |
+| **FO003** | `Define()` in Blueprint without `using` statement |
+
+## Test Framework Configuration
+
+FluentOperations auto-detects your test framework (NUnit, xUnit, MSTest, TUnit). Override explicitly:
+
+```csharp
+FluentOperationsConfig.Configure(c =>
+    c.TestFramework.Framework = TestFramework.None); // Production mode
+```
 
 ## Documentation
 
 - [API Reference](./docs/API.md) - Complete API documentation
-- [Integration Guide](./docs/INTEGRATION.md) - ASP.NET Core and MediatR setup
-- [NuGet Publishing](./docs/NUGET_PUBLISHING.md) - Packaging and release workflow
-- [Roadmap](./ROADMAP.md) - Completed phases and future plans
+- [Integration Guide](./docs/INTEGRATION.md) - ASP.NET Core, MediatR, and Minimal API setup
+- [Localization Guide](./docs/LOCALIZATION.md) - Configuring localized validation messages
 
 ## Project Stats
 
-- **2906 tests** across NUnit and xUnit projects
-- **415+ validators** covering 20+ data types
-- **34 operation managers** with fluent chaining
-- **4 NuGet packages** (core + 3 integrations)
-- **CI/CD** via GitHub Actions (build + test matrix, NuGet release on tags)
+- **6335+ tests** across NUnit test projects
+- **730+ validators** covering 20+ data types
+- **37 operation managers** with fluent chaining
+- **6 NuGet packages** (core + 3 integrations + MinimalApi + Analyzers)
 - **Performance optimized** with lazy initialization, caching, and zero-allocation patterns
 
 ## License

@@ -19,6 +19,7 @@ internal class DateOnlyNotBeInRangeValidator(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "DateOnly.NotBeInRange";
 
     public bool Validate()
     {

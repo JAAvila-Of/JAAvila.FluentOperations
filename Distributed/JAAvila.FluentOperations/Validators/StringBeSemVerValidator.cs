@@ -20,6 +20,7 @@ internal class StringBeSemVerValidator(PrincipalChain<string?> chain) : IValidat
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "String.BeSemVer";
 
     public bool Validate()
     {

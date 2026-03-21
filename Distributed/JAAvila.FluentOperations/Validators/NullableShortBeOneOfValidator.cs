@@ -14,6 +14,7 @@ internal class NullableShortBeOneOfValidator(PrincipalChain<short?> chain, short
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableShort.BeOneOf";
 
     public bool Validate()
     {

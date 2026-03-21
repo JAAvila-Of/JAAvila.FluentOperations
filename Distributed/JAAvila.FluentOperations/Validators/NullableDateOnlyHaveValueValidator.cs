@@ -12,6 +12,7 @@ internal class NullableDateOnlyHaveValueValidator(PrincipalChain<DateOnly?> chai
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableDateOnly.HaveValue";
 
     public bool Validate()
     {

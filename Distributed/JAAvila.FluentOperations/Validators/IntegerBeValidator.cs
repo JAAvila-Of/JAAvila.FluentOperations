@@ -12,6 +12,7 @@ internal class IntegerBeValidator(PrincipalChain<int> chain, int expected) : IVa
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Integer.Be";
 
     public bool Validate()
     {

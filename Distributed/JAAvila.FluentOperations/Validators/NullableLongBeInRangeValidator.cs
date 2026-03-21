@@ -16,6 +16,7 @@ internal class NullableLongBeInRangeValidator(PrincipalChain<long?> chain, long 
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableLong.BeInRange";
 
     public bool Validate()
     {

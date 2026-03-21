@@ -17,6 +17,7 @@ internal class DateTimeOffsetHaveMonthValidator(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "DateTimeOffset.HaveMonth";
 
     public bool Validate()
     {

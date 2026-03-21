@@ -48,7 +48,7 @@ public class ActionStatsOperationsManager : ITestManager<ActionStatsOperationsMa
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -77,7 +77,7 @@ public class ActionStatsOperationsManager : ITestManager<ActionStatsOperationsMa
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .Execute();
@@ -106,7 +106,7 @@ public class ActionStatsOperationsManager : ITestManager<ActionStatsOperationsMa
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(maxDuration),
                             BaseFormatter.Format(PrincipalChain.GetValue()?.ElapsedTime)
                         )
@@ -158,7 +158,7 @@ public class ActionStatsOperationsManager : ITestManager<ActionStatsOperationsMa
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(minDuration),
                             BaseFormatter.Format(PrincipalChain.GetValue()?.ElapsedTime)
                         )
@@ -210,7 +210,7 @@ public class ActionStatsOperationsManager : ITestManager<ActionStatsOperationsMa
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(maxDuration),
                             BaseFormatter.Format(PrincipalChain.GetValue()?.ElapsedTime)
                         )
@@ -267,7 +267,7 @@ public class ActionStatsOperationsManager : ITestManager<ActionStatsOperationsMa
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(min),
                             BaseFormatter.Format(max),
                             BaseFormatter.Format(PrincipalChain.GetValue()?.ElapsedTime)
@@ -319,7 +319,7 @@ public class ActionStatsOperationsManager : ITestManager<ActionStatsOperationsMa
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             validator.ExceptionInfo
                         )
                         .WithReason(reason?.ToString())
@@ -357,7 +357,7 @@ public class ActionStatsOperationsManager : ITestManager<ActionStatsOperationsMa
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -399,14 +399,14 @@ public class ActionStatsOperationsManager : ITestManager<ActionStatsOperationsMa
                         ? template
                             .WithSubject(PrincipalChain.GetSubject())
                             .WithResult(
-                                operation.ResultValidation,
+                                operation.MessageKey, operation.ResultValidation,
                                 typeof(TException).Name
                             )
                             .WithReason(reason?.ToString())
                         : template
                             .WithSubject(PrincipalChain.GetSubject())
                             .WithResult(
-                                operation.ResultValidation,
+                                operation.MessageKey, operation.ResultValidation,
                                 typeof(TException).Name,
                                 PrincipalChain.GetValue()?.Exception?.GetType().Name ?? "null"
                             )
@@ -447,7 +447,7 @@ public class ActionStatsOperationsManager : ITestManager<ActionStatsOperationsMa
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(bytes),
                             BaseFormatter.Format(PrincipalChain.GetValue()?.MemoryDelta)
                         )
@@ -488,7 +488,7 @@ public class ActionStatsOperationsManager : ITestManager<ActionStatsOperationsMa
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(bytes),
                             BaseFormatter.Format(PrincipalChain.GetValue()?.MemoryDelta)
                         )
@@ -561,7 +561,7 @@ public class ActionStatsOperationsManager : ITestManager<ActionStatsOperationsMa
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -590,7 +590,7 @@ public class ActionStatsOperationsManager : ITestManager<ActionStatsOperationsMa
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(

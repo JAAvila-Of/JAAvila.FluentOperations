@@ -16,6 +16,7 @@ internal class NullableFloatBeDivisibleByValidator(PrincipalChain<float?> chain,
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableFloat.BeDivisibleBy";
 
     public bool Validate()
     {

@@ -12,6 +12,7 @@ internal class NullableULongNotBeValidator(PrincipalChain<ulong?> chain, ulong? 
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableULong.NotBe";
 
     public bool Validate()
     {

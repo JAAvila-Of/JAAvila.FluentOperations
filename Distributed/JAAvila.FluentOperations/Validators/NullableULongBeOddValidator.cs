@@ -11,6 +11,7 @@ internal class NullableULongBeOddValidator(PrincipalChain<ulong?> chain) : IVali
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableULong.BeOdd";
 
     public bool Validate()
     {

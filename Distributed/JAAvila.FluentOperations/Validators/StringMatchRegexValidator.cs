@@ -12,7 +12,8 @@ internal class StringMatchRegexValidator(Regex regex, PrincipalChain<string?> ch
         new(regex, chain);
 
     public string Expected => $"Match pattern \"{regex}\"";
-    public string ResultValidation { get; set; } = string.Empty;
+    public string ResultValidation { get; set; }
+    public string MessageKey => "String.MatchRegex";
 
     public bool Validate()
     {

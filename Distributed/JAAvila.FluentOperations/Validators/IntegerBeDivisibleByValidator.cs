@@ -12,6 +12,7 @@ internal class IntegerBeDivisibleByValidator(PrincipalChain<int> chain, int divi
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Integer.BeDivisibleBy";
 
     public bool Validate()
     {

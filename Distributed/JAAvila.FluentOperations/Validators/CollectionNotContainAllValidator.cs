@@ -18,6 +18,7 @@ internal class CollectionNotContainAllValidator<T>(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Collection.NotContainAll";
 
     public bool Validate()
     {

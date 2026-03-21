@@ -74,7 +74,7 @@ public class ObjectOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             result.DifferenceDescription ?? "no differences"
                         )
                         .WithReason(reason?.ToString())
@@ -82,6 +82,25 @@ public class ObjectOperationsManager
             .Execute();
 
         return this;
+    }
+
+    /// <summary>
+    /// Asserts that the object is structurally equivalent to <paramref name="expected"/>
+    /// using deep property-by-property comparison with options configured via the <paramref name="configure"/> builder.
+    /// </summary>
+    /// <param name="expected">The expected object to compare against.</param>
+    /// <param name="configure">A lambda that configures the comparison options using <see cref="ComparisonOptionsBuilder"/>.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public ObjectOperationsManager BeEquivalentTo(
+        object? expected,
+        Action<ComparisonOptionsBuilder> configure,
+        Reason? reason = null
+    )
+    {
+        var builder = new ComparisonOptionsBuilder();
+        configure(builder);
+        return BeEquivalentTo(expected, builder.Build(), reason);
     }
 
     /// <summary>
@@ -121,7 +140,7 @@ public class ObjectOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .Execute();
@@ -150,7 +169,7 @@ public class ObjectOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -181,8 +200,123 @@ public class ObjectOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation, BaseFormatter.Format(expected))
+                        .WithResult(operation.MessageKey, operation.ResultValidation, BaseFormatter.Format(expected))
                         .WithReason(reason?.ToString())
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the runtime type of the value is assignable to <typeparamref name="T"/>
+    /// (i.e., the value can be cast to <typeparamref name="T"/>).
+    /// </summary>
+    /// <typeparam name="T">The target type to check assignability against.</typeparam>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public ObjectOperationsManager BeAssignableTo<T>(Reason? reason = null)
+    {
+        return BeAssignableTo(typeof(T), reason);
+    }
+
+    /// <summary>
+    /// Asserts that the runtime type of the value is assignable to <paramref name="expectedType"/>.
+    /// </summary>
+    /// <param name="expectedType">The target type to check assignability against.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public ObjectOperationsManager BeAssignableTo(Type expectedType, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Common.BeAssignableTo))
+        {
+            return this;
+        }
+
+        ExecutionEngine<ObjectOperationsManager, object?>
+            .New(this)
+            .WithOperation(ReferenceBeAssignableToValidator.New(PrincipalChain, expectedType))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                _ =>
+                    (
+                        expectedType is null,
+                        Fail.New(
+                            $"The {nameof(BeAssignableTo)} operation failed because the expected type was <null>."
+                        )
+                    )
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(BeAssignableTo)} operation failed because the value was <null>."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the runtime type of the value is NOT assignable to <typeparamref name="T"/>.
+    /// </summary>
+    /// <typeparam name="T">The type that should not be assignable from the value's type.</typeparam>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public ObjectOperationsManager NotBeAssignableTo<T>(Reason? reason = null)
+    {
+        return NotBeAssignableTo(typeof(T), reason);
+    }
+
+    /// <summary>
+    /// Asserts that the runtime type of the value is NOT assignable to <paramref name="expectedType"/>.
+    /// </summary>
+    /// <param name="expectedType">The type that should not be assignable from the value's type.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public ObjectOperationsManager NotBeAssignableTo(Type expectedType, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Common.NotBeAssignableTo))
+        {
+            return this;
+        }
+
+        ExecutionEngine<ObjectOperationsManager, object?>
+            .New(this)
+            .WithOperation(ReferenceNotBeAssignableToValidator.New(PrincipalChain, expectedType))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                _ =>
+                    (
+                        expectedType is null,
+                        Fail.New(
+                            $"The {nameof(NotBeAssignableTo)} operation failed because the expected type was <null>."
+                        )
+                    )
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(NotBeAssignableTo)} operation failed because the value was <null>."
+                        )
+                    )
             )
             .Execute();
 

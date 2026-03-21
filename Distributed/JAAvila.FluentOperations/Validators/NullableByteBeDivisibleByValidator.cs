@@ -15,6 +15,7 @@ internal class NullableByteBeDivisibleByValidator(PrincipalChain<byte?> chain, b
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableByte.BeDivisibleBy";
 
     public bool Validate()
     {

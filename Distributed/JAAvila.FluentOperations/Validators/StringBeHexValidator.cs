@@ -11,6 +11,7 @@ internal class StringBeHexValidator(PrincipalChain<string?> chain) : IValidator
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "String.BeHex";
 
     public bool Validate()
     {

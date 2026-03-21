@@ -19,6 +19,7 @@ internal class NullableDecimalBeInRangeValidator(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableDecimal.BeInRange";
 
     public bool Validate()
     {

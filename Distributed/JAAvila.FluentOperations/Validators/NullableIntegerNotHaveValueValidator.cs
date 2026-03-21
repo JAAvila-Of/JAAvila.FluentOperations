@@ -12,6 +12,7 @@ internal class NullableIntegerNotHaveValueValidator(PrincipalChain<int?> chain) 
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableInteger.NotHaveValue";
 
     public bool Validate()
     {

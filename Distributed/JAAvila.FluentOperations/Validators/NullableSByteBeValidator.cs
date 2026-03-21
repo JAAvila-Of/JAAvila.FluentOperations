@@ -12,6 +12,7 @@ internal class NullableSByteBeValidator(PrincipalChain<sbyte?> chain, sbyte? exp
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableSByte.Be";
 
     public bool Validate()
     {

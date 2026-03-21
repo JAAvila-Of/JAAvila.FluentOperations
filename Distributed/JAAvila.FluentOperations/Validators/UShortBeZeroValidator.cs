@@ -11,6 +11,7 @@ internal class UShortBeZeroValidator(PrincipalChain<ushort> chain) : IValidator
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "UShort.BeZero";
 
     public bool Validate()
     {

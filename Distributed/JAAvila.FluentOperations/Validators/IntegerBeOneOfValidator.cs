@@ -12,6 +12,7 @@ internal class IntegerBeOneOfValidator(PrincipalChain<int> chain, params int[] e
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Integer.BeOneOf";
 
     public bool Validate()
     {

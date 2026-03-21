@@ -12,6 +12,7 @@ internal class DecimalBeZeroValidator(PrincipalChain<decimal> chain) : IValidato
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Decimal.BeZero";
 
     public bool Validate()
     {

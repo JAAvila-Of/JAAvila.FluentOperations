@@ -12,6 +12,7 @@ internal class ActionStatsConsumeMemoryLessThanValidator(PrincipalChain<Model.Ac
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "ActionStats.ConsumeMemoryLessThan";
 
     public bool Validate()
     {

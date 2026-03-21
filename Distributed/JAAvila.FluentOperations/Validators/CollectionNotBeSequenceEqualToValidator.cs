@@ -18,6 +18,7 @@ internal class CollectionNotBeSequenceEqualToValidator<T>(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Collection.NotBeSequenceEqualTo";
 
     public bool Validate()
     {

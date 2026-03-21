@@ -11,6 +11,7 @@ internal class NullableCharBePunctuationValidator(PrincipalChain<char?> chain) :
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableChar.BePunctuation";
 
     public bool Validate()
     {

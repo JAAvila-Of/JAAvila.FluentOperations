@@ -12,6 +12,7 @@ internal class ByteBeDivisibleByValidator(PrincipalChain<byte> chain, byte divis
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Byte.BeDivisibleBy";
 
     public bool Validate()
     {

@@ -13,6 +13,7 @@ internal class ObjectBeValidator(PrincipalChain<object?> chain, object? expected
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Object.Be";
 
     public bool Validate()
     {

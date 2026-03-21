@@ -15,6 +15,7 @@ internal class ReferenceBeOfTypeValidator<TSubject>(PrincipalChain<TSubject> cha
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Reference.BeOfType";
 
     public bool Validate()
     {

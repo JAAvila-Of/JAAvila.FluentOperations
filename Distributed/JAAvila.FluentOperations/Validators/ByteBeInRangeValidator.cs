@@ -12,6 +12,7 @@ internal class ByteBeInRangeValidator(PrincipalChain<byte> chain, byte min, byte
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Byte.BeInRange";
 
     public bool Validate()
     {

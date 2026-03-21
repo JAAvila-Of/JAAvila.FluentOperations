@@ -16,6 +16,7 @@ internal class NullableFloatBeOneOfValidator(PrincipalChain<float?> chain, float
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableFloat.BeOneOf";
 
     public bool Validate()
     {

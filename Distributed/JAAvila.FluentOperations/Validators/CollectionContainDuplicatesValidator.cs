@@ -14,6 +14,7 @@ internal class CollectionContainDuplicatesValidator<T>(PrincipalChain<IEnumerabl
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Collection.ContainDuplicates";
 
     public bool Validate()
     {

@@ -12,6 +12,7 @@ internal class CollectionAnySatisfyValidator<T>(PrincipalChain<IEnumerable<T>> c
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Collection.AnySatisfy";
 
     public bool Validate()
     {

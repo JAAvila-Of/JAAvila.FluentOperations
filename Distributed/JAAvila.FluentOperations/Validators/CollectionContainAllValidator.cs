@@ -17,6 +17,7 @@ internal class CollectionContainAllValidator<T>(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Collection.ContainAll";
 
     public bool Validate()
     {

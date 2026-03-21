@@ -12,6 +12,7 @@ internal class NullableTimeSpanNotBeValidator(PrincipalChain<TimeSpan?> chain, T
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableTimeSpan.NotBe";
 
     public bool Validate()
     {

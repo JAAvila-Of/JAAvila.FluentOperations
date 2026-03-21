@@ -37,6 +37,14 @@ public record ComparisonOptions
     public HashSet<string> ExcludedProperties { get; init; } = [];
 
     /// <summary>
+    /// Properties to include exclusively in the comparison.
+    /// When non-empty, ONLY these properties are compared -- all others are ignored.
+    /// Mutually exclusive with <see cref="ExcludedProperties"/>: if both are set,
+    /// <see cref="IncludedProperties"/> takes precedence.
+    /// </summary>
+    public HashSet<string> IncludedProperties { get; init; } = [];
+
+    /// <summary>
     /// Maximum number of differences to report before stopping comparison.
     /// Used by ObjectComparator to limit verbose output. Default: 5.
     /// </summary>
@@ -49,6 +57,21 @@ public record ComparisonOptions
     /// Used by ObjectComparator when comparing nested collections inside deep comparison.
     /// </summary>
     public bool IgnoreCollectionOrder { get; init; }
+
+    /// <summary>
+    /// Per-type numeric tolerances for approximate comparison.
+    /// Key is the compared type (e.g., typeof(decimal), typeof(double), typeof(DateTime)),
+    /// value is the tolerance (decimal for decimal, double for double, TimeSpan for DateTime).
+    /// When set, values within the tolerance are considered equal.
+    /// </summary>
+    public IReadOnlyDictionary<Type, object>? Tolerances { get; init; }
+
+    /// <summary>
+    /// Member name mappings: source property name -> target property name.
+    /// When matching properties on the expected object, uses the mapped name instead.
+    /// Enables cross-type comparison where actual and expected have different property names for the same data.
+    /// </summary>
+    public IReadOnlyDictionary<string, string>? MemberMappings { get; init; }
 
     /// <summary>
     /// Predefined options for case-insensitive ordinal comparison.

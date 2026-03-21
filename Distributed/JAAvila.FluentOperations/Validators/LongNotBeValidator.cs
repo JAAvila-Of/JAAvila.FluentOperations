@@ -12,6 +12,7 @@ internal class LongNotBeValidator(PrincipalChain<long> chain, long expected) : I
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Long.NotBe";
 
     public bool Validate()
     {

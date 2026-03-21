@@ -13,6 +13,7 @@ internal class ShortNotBeInRangeValidator(PrincipalChain<short> chain, short min
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Short.NotBeInRange";
 
     public bool Validate()
     {

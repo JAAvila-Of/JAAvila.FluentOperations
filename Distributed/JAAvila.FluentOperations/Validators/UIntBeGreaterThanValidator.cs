@@ -12,6 +12,7 @@ internal class UIntBeGreaterThanValidator(PrincipalChain<uint> chain, uint expec
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "UInt.BeGreaterThan";
 
     public bool Validate()
     {

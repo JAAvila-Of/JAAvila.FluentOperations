@@ -16,6 +16,7 @@ internal class NullableULongBeInRangeValidator(PrincipalChain<ulong?> chain, ulo
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableULong.BeInRange";
 
     public bool Validate()
     {

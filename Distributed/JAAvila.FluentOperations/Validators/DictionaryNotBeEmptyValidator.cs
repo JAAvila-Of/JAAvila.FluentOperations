@@ -15,6 +15,7 @@ internal class DictionaryNotBeEmptyValidator<TKey, TValue>(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Dictionary.NotBeEmpty";
 
     public bool Validate()
     {

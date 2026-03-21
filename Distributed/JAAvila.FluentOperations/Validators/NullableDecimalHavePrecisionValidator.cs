@@ -18,6 +18,7 @@ internal class NullableDecimalHavePrecisionValidator(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableDecimal.HavePrecision";
 
     public bool Validate()
     {

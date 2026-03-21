@@ -15,6 +15,7 @@ internal class NullableDecimalBeValidator(PrincipalChain<decimal?> chain, decima
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableDecimal.Be";
 
     public bool Validate()
     {

@@ -12,6 +12,7 @@ internal class DateTimeBeBeforeValidator(PrincipalChain<DateTime> chain, DateTim
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "DateTime.BeBefore";
 
     public bool Validate()
     {

@@ -17,6 +17,7 @@ internal class CollectionNotBeSubsetOfValidator<T>(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Collection.NotBeSubsetOf";
 
     public bool Validate()
     {

@@ -17,6 +17,7 @@ internal class DictionaryContainKeyValidator<TKey, TValue>(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Dictionary.ContainKey";
 
     public bool Validate()
     {

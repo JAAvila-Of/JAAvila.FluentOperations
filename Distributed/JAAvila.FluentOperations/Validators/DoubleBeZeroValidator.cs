@@ -12,6 +12,7 @@ internal class DoubleBeZeroValidator(PrincipalChain<double> chain) : IValidator
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Double.BeZero";
 
     public bool Validate()
     {

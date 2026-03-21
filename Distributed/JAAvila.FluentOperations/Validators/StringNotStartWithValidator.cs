@@ -13,6 +13,7 @@ internal class StringNotStartWithValidator(string prefix, PrincipalChain<string?
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "String.NotStartWith";
 
     public bool Validate()
     {

@@ -12,6 +12,7 @@ internal class CharNotBeOneOfValidator(PrincipalChain<char> chain, params char[]
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Char.NotBeOneOf";
 
     public bool Validate()
     {

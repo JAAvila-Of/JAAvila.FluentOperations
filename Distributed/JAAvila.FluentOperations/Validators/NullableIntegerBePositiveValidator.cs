@@ -11,6 +11,7 @@ internal class NullableIntegerBePositiveValidator(PrincipalChain<int?> chain) : 
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableInteger.BePositive";
 
     public bool Validate()
     {

@@ -12,6 +12,7 @@ internal class ActionStatsTakeLongerThanValidator(PrincipalChain<Model.ActionSta
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "ActionStats.TakeLongerThan";
 
     public bool Validate()
     {

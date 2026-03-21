@@ -12,6 +12,7 @@ internal class CharBeLessThanValidator(PrincipalChain<char> chain, char expected
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Char.BeLessThan";
 
     public bool Validate()
     {

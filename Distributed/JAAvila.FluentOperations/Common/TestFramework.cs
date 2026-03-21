@@ -5,8 +5,18 @@ namespace JAAvila.FluentOperations.Common;
 /// <summary>
 /// Represents the available test frameworks recognized and supported within the FluentOperations.
 /// </summary>
-internal enum TestFramework
+public enum TestFramework
 {
+    /// <summary>
+    /// Automatic detection of the test framework from loaded assemblies.
+    /// </summary>
+    Auto,
+
+    /// <summary>
+    /// No test framework. All assertion failures throw FluentOperationsException directly.
+    /// </summary>
+    None,
+
     /// <summary>
     /// Represents the Machine.Specifications (MSpec) testing framework,
     /// which is a Behavior Driven Development (BDD) framework designed for .NET applications.

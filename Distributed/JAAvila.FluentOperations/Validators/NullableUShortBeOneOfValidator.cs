@@ -14,6 +14,7 @@ internal class NullableUShortBeOneOfValidator(PrincipalChain<ushort?> chain, ush
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableUShort.BeOneOf";
 
     public bool Validate()
     {

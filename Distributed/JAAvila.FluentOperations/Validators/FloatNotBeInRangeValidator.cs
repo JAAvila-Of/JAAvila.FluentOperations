@@ -16,6 +16,7 @@ internal class FloatNotBeInRangeValidator(PrincipalChain<float> chain, float min
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Float.NotBeInRange";
 
     public bool Validate()
     {

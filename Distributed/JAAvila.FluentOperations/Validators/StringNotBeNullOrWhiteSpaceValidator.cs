@@ -15,7 +15,8 @@ internal class StringNotBeNullOrWhiteSpaceValidator(PrincipalChain<string?> chai
     public string Expected => "Not be white space - \" \"";
 
     /// <inheritdoc />
-    public string ResultValidation { get; set; } = string.Empty;
+    public string ResultValidation { get; set; }
+    public string MessageKey => "String.NotBeNullOrWhiteSpace";
 
     /// <inheritdoc />
     public bool Validate()

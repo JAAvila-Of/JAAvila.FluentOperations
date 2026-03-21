@@ -12,6 +12,7 @@ internal class UriHaveSchemeValidator(PrincipalChain<Uri?> chain, string scheme)
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Uri.HaveScheme";
 
     public bool Validate()
     {

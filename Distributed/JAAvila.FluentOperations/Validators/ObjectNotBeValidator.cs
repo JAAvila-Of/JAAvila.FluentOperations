@@ -12,6 +12,7 @@ internal class ObjectNotBeValidator(PrincipalChain<object?> chain, object? expec
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Object.NotBe";
 
     public bool Validate()
     {

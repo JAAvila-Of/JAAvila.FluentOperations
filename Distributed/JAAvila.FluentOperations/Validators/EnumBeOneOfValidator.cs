@@ -13,6 +13,7 @@ internal class EnumBeOneOfValidator<T>(PrincipalChain<T> chain, params T[] expec
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Enum.BeOneOf";
 
     public bool Validate()
     {

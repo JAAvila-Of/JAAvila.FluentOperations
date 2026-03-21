@@ -12,6 +12,7 @@ internal class ByteBeLessThanValidator(PrincipalChain<byte> chain, byte expected
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Byte.BeLessThan";
 
     public bool Validate()
     {

@@ -12,6 +12,7 @@ internal class NullableFloatNotHaveValueValidator(PrincipalChain<float?> chain) 
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableFloat.NotHaveValue";
 
     public bool Validate()
     {

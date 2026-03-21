@@ -12,6 +12,7 @@ internal class UIntBeDivisibleByValidator(PrincipalChain<uint> chain, uint divis
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "UInt.BeDivisibleBy";
 
     public bool Validate()
     {

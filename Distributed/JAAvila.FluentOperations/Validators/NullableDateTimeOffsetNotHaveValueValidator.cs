@@ -14,6 +14,7 @@ internal class NullableDateTimeOffsetNotHaveValueValidator(PrincipalChain<DateTi
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableDateTimeOffset.NotHaveValue";
 
     public bool Validate()
     {

@@ -12,6 +12,7 @@ internal class UShortBeEvenValidator(PrincipalChain<ushort> chain) : IValidator
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "UShort.BeEven";
 
     public bool Validate()
     {

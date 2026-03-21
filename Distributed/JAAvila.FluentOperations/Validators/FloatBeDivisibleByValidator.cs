@@ -12,6 +12,7 @@ internal class FloatBeDivisibleByValidator(PrincipalChain<float> chain, float di
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Float.BeDivisibleBy";
 
     public bool Validate()
     {

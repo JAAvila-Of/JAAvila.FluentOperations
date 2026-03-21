@@ -12,6 +12,7 @@ internal class NullableUIntNotBeValidator(PrincipalChain<uint?> chain, uint? exp
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableUInt.NotBe";
 
     public bool Validate()
     {

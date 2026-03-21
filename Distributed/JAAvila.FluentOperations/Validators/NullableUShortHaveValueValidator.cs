@@ -11,6 +11,7 @@ internal class NullableUShortHaveValueValidator(PrincipalChain<ushort?> chain) :
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableUShort.HaveValue";
 
     public bool Validate()
     {

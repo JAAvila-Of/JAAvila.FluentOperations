@@ -11,6 +11,7 @@ internal class NullableCharBeLetterOrDigitValidator(PrincipalChain<char?> chain)
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableChar.BeLetterOrDigit";
 
     public bool Validate()
     {

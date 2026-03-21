@@ -11,6 +11,7 @@ internal class NullableCharBeSurrogateValidator(PrincipalChain<char?> chain) : I
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableChar.BeSurrogate";
 
     public bool Validate()
     {

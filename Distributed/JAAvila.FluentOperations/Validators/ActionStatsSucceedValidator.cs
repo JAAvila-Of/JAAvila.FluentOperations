@@ -12,6 +12,7 @@ internal class ActionStatsSucceedValidator(PrincipalChain<Model.ActionStats?> ch
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "ActionStats.Succeed";
 
     /// <summary>
     /// Returns the exception info string for use in the failure message template.

@@ -12,6 +12,7 @@ internal class DecimalBeDivisibleByValidator(PrincipalChain<decimal> chain, deci
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Decimal.BeDivisibleBy";
 
     public bool Validate()
     {

@@ -11,6 +11,7 @@ internal class NullableCharBeLetterValidator(PrincipalChain<char?> chain) : IVal
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableChar.BeLetter";
 
     public bool Validate()
     {

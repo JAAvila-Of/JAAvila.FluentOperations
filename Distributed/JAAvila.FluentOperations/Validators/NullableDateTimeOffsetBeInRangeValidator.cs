@@ -19,6 +19,7 @@ internal class NullableDateTimeOffsetBeInRangeValidator(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableDateTimeOffset.BeInRange";
 
     public bool Validate()
     {

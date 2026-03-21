@@ -11,6 +11,7 @@ internal class CharBeLetterOrDigitValidator(PrincipalChain<char> chain) : IValid
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Char.BeLetterOrDigit";
 
     public bool Validate()
     {
