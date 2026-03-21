@@ -1,6 +1,6 @@
 # JAAvila.FluentOperations
 
-[![Tests](https://img.shields.io/badge/tests-6335%20passing-brightgreen)]()
+[![Tests](https://img.shields.io/badge/tests-6528%2B%20passing-brightgreen)]()
 [![.NET](https://img.shields.io/badge/.NET-8.0-blue)](https://dotnet.microsoft.com)
 [![C#](https://img.shields.io/badge/C%23-13.0-blue)](https://docs.microsoft.com/dotnet/csharp/)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
@@ -17,6 +17,9 @@ A fluent validation and testing library for .NET that unifies inline assertions 
 | `JAAvila.FluentOperations.MediatR` | MediatR pipeline behavior for request validation |
 | `JAAvila.FluentOperations.MinimalApi` | Minimal API endpoint filters for automatic validation |
 | `JAAvila.FluentOperations.Analyzers` | Roslyn analyzers for compile-time usage checks (FO001, FO003) |
+| `JAAvila.FluentOperations.OpenApi` | Swashbuckle schema filter that enriches OpenAPI schemas with blueprint constraints |
+| `JAAvila.FluentOperations.Grpc` | gRPC server interceptor for automatic request validation |
+| `JAAvila.FluentOperations.DataAnnotations` | DataAnnotations bridge — generate blueprint rules from attributes |
 
 ```bash
 dotnet add package JAAvila.FluentOperations
@@ -319,7 +322,131 @@ app.MapPost("/orders", (CreateOrderRequest request) => Results.Ok(request))
 // Returns RFC 7807 ValidationProblem on failure
 ```
 
+### gRPC
+
+```bash
+dotnet add package JAAvila.FluentOperations.Grpc
+```
+
+```csharp
+builder.Services.AddGrpcBlueprintValidation();
+builder.Services.AddGrpc(o => o.Interceptors.Add<GrpcBlueprintInterceptor>());
+builder.Services.AddBlueprints(typeof(Program).Assembly);
+```
+
+When validation fails, the interceptor throws an `RpcException` with `StatusCode.InvalidArgument` and per-property validation errors in gRPC trailers.
+
 See [Integration Guide](./docs/INTEGRATION.md) for full examples.
+
+## OpenAPI Schema Generation
+
+```bash
+dotnet add package JAAvila.FluentOperations.OpenApi
+```
+
+Automatically enrich Swashbuckle OpenAPI schemas with validation constraints derived from registered blueprints:
+
+```csharp
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddFluentOperationsValidation(
+        app.Services.GetRequiredService<IEnumerable<IBlueprintValidator>>());
+});
+```
+
+## JSON Schema Generation
+
+Generate a JSON Schema document or string directly from any blueprint — no additional package required:
+
+```csharp
+var blueprint = new UserBlueprint();
+
+// Returns JsonDocument
+JsonDocument schema = blueprint.ToJsonSchema();
+
+// Returns formatted JSON string
+string schemaJson = blueprint.ToJsonSchemaString();
+```
+
+## Validation Telemetry
+
+Emit metrics via `System.Diagnostics.Metrics` (OpenTelemetry-compatible, zero external dependencies):
+
+```csharp
+FluentOperationsConfig.Configure(c =>
+{
+    c.Telemetry.Enabled = true;
+    c.Telemetry.TrackBlueprintExecutionTime = true;
+    c.Telemetry.TrackRuleExecutionTime = true;
+    c.Telemetry.TrackFailureRates = true;
+});
+```
+
+| Instrument | Kind | Description |
+|------------|------|-------------|
+| `fo.rules.evaluated` | Counter | Total rules evaluated |
+| `fo.rules.failed` | Counter | Total rules that failed |
+| `fo.rule.duration` | Histogram (ms) | Duration of individual eager rule execution |
+| `fo.blueprint.duration` | Histogram (ms) | Duration of a full `Check()` / `CheckAsync()` call |
+
+Metrics are tagged with `blueprint`, `model`, `is_valid`, `passed`, and `severity` dimensions.
+
+## Snapshot Validation
+
+Compare `QualityReport` results against stored JSON snapshots for regression testing:
+
+```csharp
+var report = blueprint.Check(model);
+
+// First run: creates the snapshot file
+report.UpdateSnapshot("UserBlueprint_CreateUser");
+
+// Subsequent runs: assert the report matches the stored snapshot
+report.ShouldMatchSnapshot("UserBlueprint_CreateUser");
+```
+
+## DataAnnotations Bridge
+
+```bash
+dotnet add package JAAvila.FluentOperations.DataAnnotations
+```
+
+Generate blueprint rules automatically from `System.ComponentModel.DataAnnotations` attributes:
+
+```csharp
+// Auto-generate from annotations only
+var blueprint = DataAnnotationsBlueprint<User>.FromAnnotations();
+var report = blueprint.Check(user);
+
+// Or subclass to combine with custom rules
+public class UserBlueprint : DataAnnotationsBlueprint<User>
+{
+    public UserBlueprint()
+    {
+        using (Define())
+        {
+            IncludeAnnotations(); // maps [Required], [EmailAddress], [StringLength], [Range], etc.
+            For(x => x.Name).Test().NotBeEmpty(); // additional custom rules
+        }
+    }
+}
+```
+
+## Blueprint Introspection
+
+Inspect the rules registered in any blueprint at runtime:
+
+```csharp
+var blueprint = new UserBlueprint();
+IReadOnlyList<BlueprintRuleInfo> rules = blueprint.GetRuleDescriptors();
+
+foreach (var rule in rules)
+{
+    Console.WriteLine($"{rule.PropertyName}: {rule.OperationName} ({rule.Severity})");
+}
+```
+
+`BlueprintRuleInfo` exposes `PropertyName`, `OperationName`, `PropertyType`, `Parameters`, `Severity`, `ErrorCode`, and `Scenario`.
 
 ## Localization
 
@@ -361,15 +488,15 @@ FluentOperationsConfig.Configure(c =>
 ## Documentation
 
 - [API Reference](./docs/API.md) - Complete API documentation
-- [Integration Guide](./docs/INTEGRATION.md) - ASP.NET Core, MediatR, and Minimal API setup
+- [Integration Guide](./docs/INTEGRATION.md) - ASP.NET Core, MediatR, Minimal API, gRPC, and more
 - [Localization Guide](./docs/LOCALIZATION.md) - Configuring localized validation messages
 
 ## Project Stats
 
-- **6335+ tests** across NUnit test projects
+- **6528+ tests** across NUnit test projects
 - **730+ validators** covering 20+ data types
-- **37 operation managers** with fluent chaining
-- **6 NuGet packages** (core + 3 integrations + MinimalApi + Analyzers)
+- **37+ operation managers** with fluent chaining
+- **9 NuGet packages** (core + integrations + analyzers + tooling)
 - **Performance optimized** with lazy initialization, caching, and zero-allocation patterns
 
 ## License
