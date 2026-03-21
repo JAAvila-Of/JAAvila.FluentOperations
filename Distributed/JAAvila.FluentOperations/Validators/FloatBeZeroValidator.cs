@@ -5,13 +5,18 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the float value is zero.
 /// </summary>
-internal class FloatBeZeroValidator(PrincipalChain<float> chain) : IValidator
+internal class FloatBeZeroValidator(PrincipalChain<float> chain) : IValidator, IRuleDescriptor
 {
     public static FloatBeZeroValidator New(PrincipalChain<float> chain) =>
         new(chain);
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Float.BeZero";
+    string IRuleDescriptor.OperationName => "BeZero";
+    Type IRuleDescriptor.SubjectType => typeof(float);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

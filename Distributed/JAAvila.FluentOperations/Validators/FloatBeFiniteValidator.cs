@@ -5,12 +5,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the float value is a finite number (not NaN or Infinity).
 /// </summary>
-internal class FloatBeFiniteValidator(PrincipalChain<float> chain) : IValidator
+internal class FloatBeFiniteValidator(PrincipalChain<float> chain) : IValidator, IRuleDescriptor
 {
     public static FloatBeFiniteValidator New(PrincipalChain<float> chain) => new(chain);
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Float.BeFinite";
+    string IRuleDescriptor.OperationName => "BeFinite";
+    Type IRuleDescriptor.SubjectType => typeof(float);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

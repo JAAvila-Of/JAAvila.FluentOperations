@@ -85,6 +85,26 @@ public static partial class TestExtension
     }
 
     /// <summary>
+    /// Begins a fluent assertion chain for the specified nullable enum value.
+    /// </summary>
+    /// <typeparam name="T">The enum type to test. Must be a struct and derive from <see cref="Enum"/>.</typeparam>
+    /// <param name="value">The nullable enum value to test.</param>
+    /// <param name="callerName">
+    /// Automatically captured expression name of the variable being tested.
+    /// Used in failure messages for contextual reporting.
+    /// </param>
+    /// <returns>A <see cref="NullableEnumOperationsManager{T}"/> for chaining nullable enum-specific assertions.</returns>
+    [Pure]
+    public static NullableEnumOperationsManager<T> TestEnum<T>(
+        this T? value,
+        [CallerArgumentExpression("value")] string callerName = ""
+    )
+        where T : struct, Enum
+    {
+        return new NullableEnumOperationsManager<T>(value, callerName);
+    }
+
+    /// <summary>
     /// Begins a fluent assertion chain for the specified nullable <see cref="Uri"/> value.
     /// </summary>
     /// <param name="value">The Uri value to test. Can be null.</param>

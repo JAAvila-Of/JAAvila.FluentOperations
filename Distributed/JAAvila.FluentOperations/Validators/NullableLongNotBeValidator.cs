@@ -5,13 +5,18 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable long value does not equal the expected value.
 /// </summary>
-internal class NullableLongNotBeValidator(PrincipalChain<long?> chain, long? expected) : IValidator
+internal class NullableLongNotBeValidator(PrincipalChain<long?> chain, long? expected) : IValidator, IRuleDescriptor
 {
     public static NullableLongNotBeValidator New(PrincipalChain<long?> chain, long? expected) =>
         new(chain, expected);
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableLong.NotBe";
+    string IRuleDescriptor.OperationName => "NotBe";
+    Type IRuleDescriptor.SubjectType => typeof(long?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expected };
 
     public bool Validate()
     {

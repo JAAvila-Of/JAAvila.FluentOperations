@@ -8,7 +8,7 @@ namespace JAAvila.FluentOperations.Validators;
 internal class ReferenceEvaluateActionValidator<TSubject, TType>(
     PrincipalChain<TSubject> chain,
     Action<TType> action
-) : IValidator
+) : IValidator, IRuleDescriptor
     where TType : TSubject
 {
     public static ReferenceEvaluateActionValidator<TSubject, TType> New(
@@ -18,6 +18,11 @@ internal class ReferenceEvaluateActionValidator<TSubject, TType>(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Reference.EvaluateAction";
+    string IRuleDescriptor.OperationName => "EvaluateAction";
+    Type IRuleDescriptor.SubjectType => typeof(TSubject);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = action };
 
     public bool Validate()
     {

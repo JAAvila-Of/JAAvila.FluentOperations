@@ -1,3 +1,4 @@
+using JAAvila.FluentOperations.Contract;
 using JAAvila.FluentOperations.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -8,14 +9,19 @@ namespace JAAvila.FluentOperations.Integration;
 /// Action filter that automatically validates action parameters using Quality Blueprints.
 /// Apply to controllers or actions to enable automatic validation.
 /// </summary>
+/// <remarks>
+/// This filter is AOT-safe: it depends on <see cref="IBlueprintValidator"/> via DI
+/// and never uses <c>MakeGenericType</c> or <c>GetMethod</c> at runtime.
+/// Register blueprints with the DI helpers (e.g. <c>AddBlueprint&lt;T&gt;</c>) so that
+/// <see cref="IEnumerable{IBlueprintValidator}"/> is populated.
+/// </remarks>
 public class BlueprintValidationFilter : IActionFilter
 {
-    private readonly IServiceProvider _serviceProvider;
+    private readonly IEnumerable<IBlueprintValidator> _validators;
 
-    public BlueprintValidationFilter(IServiceProvider serviceProvider)
+    public BlueprintValidationFilter(IEnumerable<IBlueprintValidator> validators)
     {
-        _serviceProvider =
-            serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+        _validators = validators ?? throw new ArgumentNullException(nameof(validators));
     }
 
     public void OnActionExecuting(ActionExecutingContext context)
@@ -27,66 +33,40 @@ public class BlueprintValidationFilter : IActionFilter
                 continue;
             }
 
-            object? blueprint = null;
-            Type? resolvedType = null;
-            var currentType = argument.Value.GetType();
+            var type = argument.Value.GetType();
+            var validator = FindValidator(type);
 
-            while (currentType != null && blueprint == null)
-            {
-                var blueprintType = typeof(QualityBlueprint<>).MakeGenericType(currentType);
-                blueprint = _serviceProvider.GetService(blueprintType);
-
-                if (blueprint != null)
-                {
-                    resolvedType = currentType;
-                }
-
-                currentType = currentType.BaseType;
-            }
-
-            if (blueprint == null || resolvedType == null)
+            if (validator == null)
             {
                 continue;
             }
 
-            var checkMethod = blueprint.GetType().GetMethod("Check", [resolvedType]);
-
-            if (checkMethod == null)
-            {
-                continue;
-            }
-
-            var report = (QualityReport)checkMethod.Invoke(blueprint, [argument.Value])!;
+            var report = validator.Validate(argument.Value);
 
             if (report.IsValid)
             {
                 continue;
             }
 
-            context.Result = new BadRequestObjectResult(
-                new
-                {
-                    Title = "Validation Failed",
-                    Status = 400,
-                    Errors = report
-                        .Failures.Select(
-                            f =>
-                                new
-                                {
-                                    Property = f.PropertyName,
-                                    f.Message,
-                                    f.AttemptedValue
-                                }
-                        )
-                        .ToList(),
-                    report.RulesEvaluated
-                }
-            );
+            context.Result = new BadRequestObjectResult(report.ToProblemDetails());
             return;
         }
     }
 
     public void OnActionExecuted(ActionExecutedContext context) { }
+
+    private IBlueprintValidator? FindValidator(Type modelType)
+    {
+        foreach (var validator in _validators)
+        {
+            if (validator.CanValidate(modelType))
+            {
+                return validator;
+            }
+        }
+
+        return null;
+    }
 }
 
 /// <summary>
@@ -130,25 +110,7 @@ public class BlueprintValidationFilter<TModel, TBlueprint> : IActionFilter
                 continue;
             }
 
-            context.Result = new BadRequestObjectResult(
-                new
-                {
-                    Title = "Validation Failed",
-                    Status = 400,
-                    Errors = report
-                        .Failures.Select(
-                            f =>
-                                new
-                                {
-                                    Property = f.PropertyName,
-                                    f.Message,
-                                    f.AttemptedValue
-                                }
-                        )
-                        .ToList(),
-                    report.RulesEvaluated
-                }
-            );
+            context.Result = new BadRequestObjectResult(report.ToProblemDetails());
             return;
         }
     }

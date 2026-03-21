@@ -5,13 +5,18 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the array length is less than the expected value.
 /// </summary>
-internal class ArrayHaveLengthLessThanValidator<T>(PrincipalChain<IEnumerable<T>> chain, T[] array, int expected) : IValidator
+internal class ArrayHaveLengthLessThanValidator<T>(PrincipalChain<IEnumerable<T>> chain, T[] array, int expected) : IValidator, IRuleDescriptor
 {
     public static ArrayHaveLengthLessThanValidator<T> New(PrincipalChain<IEnumerable<T>> chain, T[] array, int expected) =>
         new(chain, array, expected);
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Array.HaveLengthLessThan";
+    string IRuleDescriptor.OperationName => "HaveLengthLessThan";
+    Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["values"] = array, ["value"] = expected };
 
     public bool Validate()
     {

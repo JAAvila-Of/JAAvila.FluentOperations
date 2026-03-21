@@ -5,13 +5,18 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the dateonly value is on or before the expected value.
 /// </summary>
-internal class DateOnlyBeOnOrBeforeValidator(PrincipalChain<DateOnly> chain, DateOnly expected) : IValidator
+internal class DateOnlyBeOnOrBeforeValidator(PrincipalChain<DateOnly> chain, DateOnly expected) : IValidator, IRuleDescriptor
 {
     public static DateOnlyBeOnOrBeforeValidator New(PrincipalChain<DateOnly> chain, DateOnly expected) =>
         new(chain, expected);
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "DateOnly.BeOnOrBefore";
+    string IRuleDescriptor.OperationName => "BeOnOrBefore";
+    Type IRuleDescriptor.SubjectType => typeof(DateOnly);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expected };
 
     public bool Validate()
     {

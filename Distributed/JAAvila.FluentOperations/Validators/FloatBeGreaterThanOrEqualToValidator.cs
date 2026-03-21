@@ -5,13 +5,18 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the float value is greater than or equal to the expected value.
 /// </summary>
-internal class FloatBeGreaterThanOrEqualToValidator(PrincipalChain<float> chain, float expected) : IValidator
+internal class FloatBeGreaterThanOrEqualToValidator(PrincipalChain<float> chain, float expected) : IValidator, IRuleDescriptor
 {
     public static FloatBeGreaterThanOrEqualToValidator New(PrincipalChain<float> chain, float expected) =>
         new(chain, expected);
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Float.BeGreaterThanOrEqualTo";
+    string IRuleDescriptor.OperationName => "BeGreaterThanOrEqualTo";
+    Type IRuleDescriptor.SubjectType => typeof(float);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expected };
 
     public bool Validate()
     {

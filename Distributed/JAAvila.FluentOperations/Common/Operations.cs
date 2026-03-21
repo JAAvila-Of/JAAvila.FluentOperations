@@ -46,6 +46,18 @@ public struct Operations
 
         [EnumStringValue("notbeequivalentto")]
         NotBeEquivalentTo,
+
+        [EnumStringValue("be")]
+        Be,
+
+        [EnumStringValue("notbe")]
+        NotBe,
+
+        [EnumStringValue("beassignableto")]
+        BeAssignableTo,
+
+        [EnumStringValue("notbeassignableto")]
+        NotBeAssignableTo,
     }
 
     /// <summary>
@@ -83,6 +95,9 @@ public struct Operations
 
         [EnumStringValue("notbenullorwhitespace")]
         NotBeNullOrWhiteSpace,
+
+        [EnumStringValue("notbenullorempty")]
+        NotBeNullOrEmpty,
 
         [EnumStringValue("havelength")]
         HaveLength,
@@ -165,6 +180,12 @@ public struct Operations
         [EnumStringValue("havelengthbetween")]
         HaveLengthBetween,
 
+        [EnumStringValue("havelengthgreaterthan")]
+        HaveLengthGreaterThan,
+
+        [EnumStringValue("havelengthlessthan")]
+        HaveLengthLessThan,
+
         [EnumStringValue("containonlydigits")]
         ContainOnlyDigits,
 
@@ -173,6 +194,9 @@ public struct Operations
 
         [EnumStringValue("containnowhitespace")]
         ContainNoWhitespace,
+
+        [EnumStringValue("notcontain")]
+        NotContain,
 
         [EnumStringValue("containall")]
         ContainAll,
@@ -203,6 +227,12 @@ public struct Operations
 
         [EnumStringValue("beipv6")]
         BeIPv6,
+
+        [EnumStringValue("beoneof")]
+        BeOneOf,
+
+        [EnumStringValue("notbeoneof")]
+        NotBeOneOf,
     }
 
     /// <summary>
@@ -257,6 +287,468 @@ public struct Operations
 
         [EnumStringValue("beodd")]
         BeOdd,
+    }
+
+    /// <summary>
+    /// Operations available for <see cref="byte"/> values.
+    /// </summary>
+    public enum Byte
+    {
+        [EnumStringValue("be")]
+        Be,
+
+        [EnumStringValue("notbe")]
+        NotBe,
+
+        [EnumStringValue("bepositive")]
+        BePositive,
+
+        [EnumStringValue("bezero")]
+        BeZero,
+
+        [EnumStringValue("begreaterthan")]
+        BeGreaterThan,
+
+        [EnumStringValue("begreaterthanorequalto")]
+        BeGreaterThanOrEqualTo,
+
+        [EnumStringValue("belessthan")]
+        BeLessThan,
+
+        [EnumStringValue("belessthanorequalto")]
+        BeLessThanOrEqualTo,
+
+        [EnumStringValue("beinrange")]
+        BeInRange,
+
+        [EnumStringValue("notbeinrange")]
+        NotBeInRange,
+
+        [EnumStringValue("beoneof")]
+        BeOneOf,
+
+        [EnumStringValue("notbeoneof")]
+        NotBeOneOf,
+
+        [EnumStringValue("bedivisibleby")]
+        BeDivisibleBy,
+
+        [EnumStringValue("beeven")]
+        BeEven,
+
+        [EnumStringValue("beodd")]
+        BeOdd,
+    }
+
+    /// <summary>
+    /// Operations available for <see cref="byte?"/> (nullable byte) values.
+    /// </summary>
+    public enum NullableByte
+    {
+        [EnumStringValue("havevaluebyte")]
+        HaveValue,
+
+        [EnumStringValue("nothavevaluebyte")]
+        NotHaveValue,
+    }
+
+    /// <summary>
+    /// Operations available for <see cref="sbyte"/> values.
+    /// </summary>
+    public enum SByte
+    {
+        [EnumStringValue("be")]
+        Be,
+
+        [EnumStringValue("notbe")]
+        NotBe,
+
+        [EnumStringValue("bepositive")]
+        BePositive,
+
+        [EnumStringValue("benegative")]
+        BeNegative,
+
+        [EnumStringValue("bezero")]
+        BeZero,
+
+        [EnumStringValue("begreaterthan")]
+        BeGreaterThan,
+
+        [EnumStringValue("begreaterthanorequalto")]
+        BeGreaterThanOrEqualTo,
+
+        [EnumStringValue("belessthan")]
+        BeLessThan,
+
+        [EnumStringValue("belessthanorequalto")]
+        BeLessThanOrEqualTo,
+
+        [EnumStringValue("beinrange")]
+        BeInRange,
+
+        [EnumStringValue("notbeinrange")]
+        NotBeInRange,
+
+        [EnumStringValue("beoneof")]
+        BeOneOf,
+
+        [EnumStringValue("notbeoneof")]
+        NotBeOneOf,
+
+        [EnumStringValue("bedivisibleby")]
+        BeDivisibleBy,
+
+        [EnumStringValue("beeven")]
+        BeEven,
+
+        [EnumStringValue("beodd")]
+        BeOdd,
+    }
+
+    /// <summary>
+    /// Operations available for <see cref="sbyte?"/> (nullable sbyte) values.
+    /// </summary>
+    public enum NullableSByte
+    {
+        [EnumStringValue("havevaluesbyte")]
+        HaveValue,
+
+        [EnumStringValue("nothavevaluesbyte")]
+        NotHaveValue,
+    }
+
+    /// <summary>
+    /// Operations available for <see cref="uint"/> values.
+    /// </summary>
+    public enum UInt
+    {
+        [EnumStringValue("be")]
+        Be,
+
+        [EnumStringValue("notbe")]
+        NotBe,
+
+        [EnumStringValue("bepositive")]
+        BePositive,
+
+        [EnumStringValue("bezero")]
+        BeZero,
+
+        [EnumStringValue("begreaterthan")]
+        BeGreaterThan,
+
+        [EnumStringValue("begreaterthanorequalto")]
+        BeGreaterThanOrEqualTo,
+
+        [EnumStringValue("belessthan")]
+        BeLessThan,
+
+        [EnumStringValue("belessthanorequalto")]
+        BeLessThanOrEqualTo,
+
+        [EnumStringValue("beinrange")]
+        BeInRange,
+
+        [EnumStringValue("notbeinrange")]
+        NotBeInRange,
+
+        [EnumStringValue("beoneof")]
+        BeOneOf,
+
+        [EnumStringValue("notbeoneof")]
+        NotBeOneOf,
+
+        [EnumStringValue("bedivisibleby")]
+        BeDivisibleBy,
+
+        [EnumStringValue("beeven")]
+        BeEven,
+
+        [EnumStringValue("beodd")]
+        BeOdd,
+    }
+
+    /// <summary>
+    /// Operations available for <see cref="uint?"/> (nullable uint) values.
+    /// </summary>
+    public enum NullableUInt
+    {
+        [EnumStringValue("havevalueuint")]
+        HaveValue,
+
+        [EnumStringValue("nothavevalueuint")]
+        NotHaveValue,
+    }
+
+    /// <summary>
+    /// Operations available for <see cref="ushort"/> values.
+    /// </summary>
+    public enum UShort
+    {
+        [EnumStringValue("be")]
+        Be,
+
+        [EnumStringValue("notbe")]
+        NotBe,
+
+        [EnumStringValue("bepositive")]
+        BePositive,
+
+        [EnumStringValue("bezero")]
+        BeZero,
+
+        [EnumStringValue("begreaterthan")]
+        BeGreaterThan,
+
+        [EnumStringValue("begreaterthanorequalto")]
+        BeGreaterThanOrEqualTo,
+
+        [EnumStringValue("belessthan")]
+        BeLessThan,
+
+        [EnumStringValue("belessthanorequalto")]
+        BeLessThanOrEqualTo,
+
+        [EnumStringValue("beinrange")]
+        BeInRange,
+
+        [EnumStringValue("notbeinrange")]
+        NotBeInRange,
+
+        [EnumStringValue("beoneof")]
+        BeOneOf,
+
+        [EnumStringValue("notbeoneof")]
+        NotBeOneOf,
+
+        [EnumStringValue("bedivisibleby")]
+        BeDivisibleBy,
+
+        [EnumStringValue("beeven")]
+        BeEven,
+
+        [EnumStringValue("beodd")]
+        BeOdd,
+    }
+
+    /// <summary>
+    /// Operations available for <see cref="ushort?"/> (nullable ushort) values.
+    /// </summary>
+    public enum NullableUShort
+    {
+        [EnumStringValue("havevalueushort")]
+        HaveValue,
+
+        [EnumStringValue("nothavevalueushort")]
+        NotHaveValue,
+    }
+
+    /// <summary>
+    /// Operations available for <see cref="ulong"/> values.
+    /// </summary>
+    public enum ULong
+    {
+        [EnumStringValue("be")]
+        Be,
+
+        [EnumStringValue("notbe")]
+        NotBe,
+
+        [EnumStringValue("bepositive")]
+        BePositive,
+
+        [EnumStringValue("bezero")]
+        BeZero,
+
+        [EnumStringValue("begreaterthan")]
+        BeGreaterThan,
+
+        [EnumStringValue("begreaterthanorequalto")]
+        BeGreaterThanOrEqualTo,
+
+        [EnumStringValue("belessthan")]
+        BeLessThan,
+
+        [EnumStringValue("belessthanorequalto")]
+        BeLessThanOrEqualTo,
+
+        [EnumStringValue("beinrange")]
+        BeInRange,
+
+        [EnumStringValue("notbeinrange")]
+        NotBeInRange,
+
+        [EnumStringValue("beoneof")]
+        BeOneOf,
+
+        [EnumStringValue("notbeoneof")]
+        NotBeOneOf,
+
+        [EnumStringValue("bedivisibleby")]
+        BeDivisibleBy,
+
+        [EnumStringValue("beeven")]
+        BeEven,
+
+        [EnumStringValue("beodd")]
+        BeOdd,
+    }
+
+    /// <summary>
+    /// Operations available for <see cref="ulong?"/> (nullable ulong) values.
+    /// </summary>
+    public enum NullableULong
+    {
+        [EnumStringValue("havevalueulong")]
+        HaveValue,
+
+        [EnumStringValue("nothavevalueulong")]
+        NotHaveValue,
+    }
+
+    /// <summary>
+    /// Operations available for <see cref="short"/> values.
+    /// </summary>
+    public enum Short
+    {
+        [EnumStringValue("be")]
+        Be,
+
+        [EnumStringValue("notbe")]
+        NotBe,
+
+        [EnumStringValue("bepositive")]
+        BePositive,
+
+        [EnumStringValue("benegative")]
+        BeNegative,
+
+        [EnumStringValue("bezero")]
+        BeZero,
+
+        [EnumStringValue("begreaterthan")]
+        BeGreaterThan,
+
+        [EnumStringValue("begreaterthanorequalto")]
+        BeGreaterThanOrEqualTo,
+
+        [EnumStringValue("belessthan")]
+        BeLessThan,
+
+        [EnumStringValue("belessthanorequalto")]
+        BeLessThanOrEqualTo,
+
+        [EnumStringValue("beinrange")]
+        BeInRange,
+
+        [EnumStringValue("notbeinrange")]
+        NotBeInRange,
+
+        [EnumStringValue("beoneof")]
+        BeOneOf,
+
+        [EnumStringValue("notbeoneof")]
+        NotBeOneOf,
+
+        [EnumStringValue("bedivisibleby")]
+        BeDivisibleBy,
+
+        [EnumStringValue("beeven")]
+        BeEven,
+
+        [EnumStringValue("beodd")]
+        BeOdd,
+    }
+
+    /// <summary>
+    /// Operations available for <see cref="short?"/> (nullable short) values.
+    /// </summary>
+    public enum NullableShort
+    {
+        [EnumStringValue("havevalueshort")]
+        HaveValue,
+
+        [EnumStringValue("nothavevalueshort")]
+        NotHaveValue,
+    }
+
+    /// <summary>
+    /// Operations available for <see cref="char"/> values.
+    /// </summary>
+    public enum Char
+    {
+        [EnumStringValue("be")]
+        Be,
+
+        [EnumStringValue("notbe")]
+        NotBe,
+
+        [EnumStringValue("begreaterthan")]
+        BeGreaterThan,
+
+        [EnumStringValue("begreaterthanorequalto")]
+        BeGreaterThanOrEqualTo,
+
+        [EnumStringValue("belessthan")]
+        BeLessThan,
+
+        [EnumStringValue("belessthanorequalto")]
+        BeLessThanOrEqualTo,
+
+        [EnumStringValue("beinrange")]
+        BeInRange,
+
+        [EnumStringValue("notbeinrange")]
+        NotBeInRange,
+
+        [EnumStringValue("beoneof")]
+        BeOneOf,
+
+        [EnumStringValue("notbeoneof")]
+        NotBeOneOf,
+
+        [EnumStringValue("beuppercase")]
+        BeUpperCase,
+
+        [EnumStringValue("belowercase")]
+        BeLowerCase,
+
+        [EnumStringValue("bedigit")]
+        BeDigit,
+
+        [EnumStringValue("beletter")]
+        BeLetter,
+
+        [EnumStringValue("beletterordigit")]
+        BeLetterOrDigit,
+
+        [EnumStringValue("bewhitespace")]
+        BeWhiteSpace,
+
+        [EnumStringValue("bepunctuation")]
+        BePunctuation,
+
+        [EnumStringValue("becontrol")]
+        BeControl,
+
+        [EnumStringValue("beascii")]
+        BeAscii,
+
+        [EnumStringValue("besurrogate")]
+        BeSurrogate,
+    }
+
+    /// <summary>
+    /// Operations available for <see cref="char?"/> (nullable char) values.
+    /// </summary>
+    public enum NullableChar
+    {
+        [EnumStringValue("havevaluechar")]
+        HaveValue,
+
+        [EnumStringValue("nothavevaluechar")]
+        NotHaveValue,
     }
 
     /// <summary>
@@ -365,6 +857,9 @@ public struct Operations
 
         [EnumStringValue("beroundedto")]
         BeRoundedTo,
+
+        [EnumStringValue("beapproximately")]
+        BeApproximately,
     }
 
     /// <summary>
@@ -674,6 +1169,9 @@ public struct Operations
 
         [EnumStringValue("becloseto")]
         BeCloseTo,
+
+        [EnumStringValue("notbecloseto")]
+        NotBeCloseTo,
     }
 
     /// <summary>
@@ -759,6 +1257,9 @@ public struct Operations
         [EnumStringValue("beinrange")]
         BeInRange,
 
+        [EnumStringValue("notbeinrange")]
+        NotBeInRange,
+
         [EnumStringValue("havedays")]
         HaveDays,
 
@@ -792,6 +1293,9 @@ public struct Operations
         [EnumStringValue("beinrange")]
         BeInRange,
 
+        [EnumStringValue("notbeinrange")]
+        NotBeInRange,
+
         [EnumStringValue("havehour")]
         HaveHour,
 
@@ -812,6 +1316,12 @@ public struct Operations
 
         [EnumStringValue("nothavevalue")]
         NotHaveValue,
+
+        [EnumStringValue("beclosetodatetime")]
+        BeCloseTo,
+
+        [EnumStringValue("notbeclosetodatetime")]
+        NotBeCloseTo,
     }
 
     /// <summary>
@@ -882,11 +1392,26 @@ public struct Operations
         [EnumStringValue("containsingle")]
         ContainSingle,
 
+        [EnumStringValue("containmatch")]
+        ContainMatch,
+
+        [EnumStringValue("notcontainmatch")]
+        NotContainMatch,
+
+        [EnumStringValue("containsinglematch")]
+        ContainSingleMatch,
+
         [EnumStringValue("containall")]
         ContainAll,
 
         [EnumStringValue("containany")]
         ContainAny,
+
+        [EnumStringValue("notcontainany")]
+        NotContainAny,
+
+        [EnumStringValue("notcontainall")]
+        NotContainAll,
 
         [EnumStringValue("besubsetof")]
         BeSubsetOf,
@@ -908,6 +1433,9 @@ public struct Operations
 
         [EnumStringValue("allsatisfy")]
         AllSatisfy,
+
+        [EnumStringValue("onlycontain")]
+        OnlyContain,
 
         [EnumStringValue("anysatisfy")]
         AnySatisfy,
@@ -933,6 +1461,12 @@ public struct Operations
         [EnumStringValue("besequenceequalto")]
         BeSequenceEqualTo,
 
+        [EnumStringValue("notbeequivalentto")]
+        NotBeEquivalentTo,
+
+        [EnumStringValue("notbesequenceequalto")]
+        NotBeSequenceEqualTo,
+
         [EnumStringValue("haveelementat")]
         HaveElementAt,
 
@@ -947,6 +1481,42 @@ public struct Operations
 
         [EnumStringValue("havemaxcount")]
         HaveMaxCount,
+
+        [EnumStringValue("havelength")]
+        HaveLength,
+
+        [EnumStringValue("havelengthgreaterthan")]
+        HaveLengthGreaterThan,
+
+        [EnumStringValue("havelengthlessthan")]
+        HaveLengthLessThan,
+
+        [EnumStringValue("be")]
+        Be,
+
+        [EnumStringValue("notbe")]
+        NotBe,
+
+        [EnumStringValue("inspect")]
+        Inspect,
+
+        [EnumStringValue("extractsingle")]
+        ExtractSingle,
+
+        [EnumStringValue("extractsinglematch")]
+        ExtractSingleMatch,
+
+        [EnumStringValue("containequivalentof")]
+        ContainEquivalentOf,
+
+        [EnumStringValue("notcontainequivalentof")]
+        NotContainEquivalentOf,
+
+        [EnumStringValue("notcontainnull")]
+        NotContainNull,
+
+        [EnumStringValue("havecountbetween")]
+        HaveCountBetween,
     }
 
     /// <summary>
@@ -962,6 +1532,12 @@ public struct Operations
 
         [EnumStringValue("havelengthlessthan")]
         HaveLengthLessThan,
+
+        [EnumStringValue("be")]
+        Be,
+
+        [EnumStringValue("notbe")]
+        NotBe,
     }
 
     /// <summary>
@@ -984,6 +1560,9 @@ public struct Operations
         [EnumStringValue("containpair")]
         ContainPair,
 
+        [EnumStringValue("containkeys")]
+        ContainKeys,
+
         [EnumStringValue("havecount")]
         HaveCount,
 
@@ -992,6 +1571,12 @@ public struct Operations
 
         [EnumStringValue("notbeempty")]
         NotBeEmpty,
+
+        [EnumStringValue("be")]
+        Be,
+
+        [EnumStringValue("notbe")]
+        NotBe,
     }
 
     /// <summary>
@@ -1055,6 +1640,18 @@ public struct Operations
 
         [EnumStringValue("nothaveflag")]
         NotHaveFlag,
+    }
+
+    /// <summary>
+    /// Operations available for nullable enum values (used with <c>NullableEnumOperationsManager&lt;T&gt;</c>).
+    /// </summary>
+    public enum NullableEnum
+    {
+        [EnumStringValue("havevalueenum")]
+        HaveValue,
+
+        [EnumStringValue("nothavevalueenum")]
+        NotHaveValue,
     }
 
     /// <summary>
@@ -1153,6 +1750,9 @@ public struct Operations
         [EnumStringValue("becloseto")]
         BeCloseTo,
 
+        [EnumStringValue("notbeclosetodatetimeoffset")]
+        NotBeCloseTo,
+
         [EnumStringValue("haveoffset")]
         HaveOffset,
 
@@ -1182,5 +1782,53 @@ public struct Operations
 
         [EnumStringValue("nothavevalue")]
         NotHaveValue,
+
+        [EnumStringValue("beclosetodatetimeoffset")]
+        BeCloseTo,
+
+        [EnumStringValue("notbeclosetodatetimeoffset")]
+        NotBeCloseTo,
+    }
+
+    /// <summary>
+    /// Operations available for <see cref="Model.ActionStats"/> execution statistics assertions.
+    /// </summary>
+    public enum ActionStats
+    {
+        [EnumStringValue("completewithin")]
+        CompleteWithin,
+
+        [EnumStringValue("completewithinmilliseconds")]
+        CompleteWithinMilliseconds,
+
+        [EnumStringValue("takelongerthan")]
+        TakeLongerThan,
+
+        [EnumStringValue("takelongerthanmilliseconds")]
+        TakeLongerThanMilliseconds,
+
+        [EnumStringValue("takeshorterthan")]
+        TakeShorterThan,
+
+        [EnumStringValue("takeshorterthanmilliseconds")]
+        TakeShorterThanMilliseconds,
+
+        [EnumStringValue("haveelapsedtimebetween")]
+        HaveElapsedTimeBetween,
+
+        [EnumStringValue("succeed")]
+        Succeed,
+
+        [EnumStringValue("notsucceed")]
+        NotSucceed,
+
+        [EnumStringValue("haveexception")]
+        HaveException,
+
+        [EnumStringValue("consumememorylessthan")]
+        ConsumeMemoryLessThan,
+
+        [EnumStringValue("consumememorygreaterthan")]
+        ConsumeMemoryGreaterThan,
     }
 }

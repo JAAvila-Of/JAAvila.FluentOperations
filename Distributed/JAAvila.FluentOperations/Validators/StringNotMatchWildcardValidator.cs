@@ -10,7 +10,7 @@ internal class StringNotMatchWildcardValidator(
     PrincipalChain<string?> chain,
     string pattern,
     StringComparison comparison = StringComparison.Ordinal
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static StringNotMatchWildcardValidator New(
         PrincipalChain<string?> chain,
@@ -19,7 +19,12 @@ internal class StringNotMatchWildcardValidator(
     ) => new(chain, pattern, comparison);
 
     public string Expected => pattern;
-    public string ResultValidation { get; set; } = string.Empty;
+    public string ResultValidation { get; set; }
+    public string MessageKey => "String.NotMatchWildcard";
+    string IRuleDescriptor.OperationName => "NotMatchWildcard";
+    Type IRuleDescriptor.SubjectType => typeof(string);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["pattern"] = pattern, ["comparison"] = StringComparison.Ordinal.ToString() };
 
     public bool Validate()
     {

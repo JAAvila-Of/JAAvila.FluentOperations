@@ -6,12 +6,18 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the string is a valid email address.
 /// </summary>
-internal class StringBeEmailValidator(PrincipalChain<string?> chain) : IValidator
+internal class StringBeEmailValidator(PrincipalChain<string?> chain) : IValidator, IRuleDescriptor
 {
     public static StringBeEmailValidator New(PrincipalChain<string?> chain) => new(chain);
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "String.BeEmail";
+
+    string IRuleDescriptor.OperationName => "BeEmail";
+    Type IRuleDescriptor.SubjectType => typeof(string);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

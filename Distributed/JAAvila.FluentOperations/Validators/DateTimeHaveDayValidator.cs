@@ -5,13 +5,18 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the datetime value has the expected day.
 /// </summary>
-internal class DateTimeHaveDayValidator(PrincipalChain<DateTime> chain, int expectedDay) : IValidator
+internal class DateTimeHaveDayValidator(PrincipalChain<DateTime> chain, int expectedDay) : IValidator, IRuleDescriptor
 {
     public static DateTimeHaveDayValidator New(PrincipalChain<DateTime> chain, int expectedDay) =>
         new(chain, expectedDay);
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "DateTime.HaveDay";
+    string IRuleDescriptor.OperationName => "HaveDay";
+    Type IRuleDescriptor.SubjectType => typeof(DateTime);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expectedDay };
 
     public bool Validate()
     {

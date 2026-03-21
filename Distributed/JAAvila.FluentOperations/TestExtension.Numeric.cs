@@ -238,4 +238,196 @@ public static partial class TestExtension
     {
         return new NullableFloatOperationsManager(value, callerName);
     }
+
+    /// <summary>
+    /// Begins a fluent assertion chain for the specified <see cref="byte"/> value.
+    /// </summary>
+    /// <param name="value">The byte value to test.</param>
+    /// <param name="callerName">
+    /// Automatically captured expression name of the variable being tested.
+    /// Used in failure messages for contextual reporting.
+    /// </param>
+    /// <returns>A <see cref="ByteOperationsManager"/> for chaining byte-specific assertions.</returns>
+    /// <example>
+    /// <code>
+    /// byte age = 25;
+    /// age.Test().BePositive().BeLessThan(128);
+    /// </code>
+    /// </example>
+    [Pure]
+    public static ByteOperationsManager Test(
+        this byte value,
+        [CallerArgumentExpression("value")] string callerName = ""
+    )
+    {
+        return new ByteOperationsManager(value, callerName);
+    }
+
+    /// <summary>
+    /// Begins a fluent assertion chain for the specified nullable <see cref="byte"/> value.
+    /// </summary>
+    /// <param name="value">The nullable byte value to test.</param>
+    /// <param name="callerName">
+    /// Automatically captured expression name of the variable being tested.
+    /// Used in failure messages for contextual reporting.
+    /// </param>
+    /// <returns>A <see cref="NullableByteOperationsManager"/> for chaining nullable byte-specific assertions.</returns>
+    /// <example>
+    /// <code>
+    /// byte? channel = null;
+    /// channel.Test().NotHaveValue();
+    /// </code>
+    /// </example>
+    [Pure]
+    public static NullableByteOperationsManager Test(
+        this byte? value,
+        [CallerArgumentExpression("value")] string callerName = ""
+    )
+    {
+        return new NullableByteOperationsManager(value, callerName);
+    }
+
+    /// <summary>
+    /// Begins a fluent assertion chain for the specified <see cref="sbyte"/> value.
+    /// </summary>
+    /// <param name="value">The sbyte value to test.</param>
+    /// <param name="callerName">
+    /// Automatically captured expression name of the variable being tested.
+    /// Used in failure messages for contextual reporting.
+    /// </param>
+    /// <returns>A <see cref="SByteOperationsManager"/> for chaining sbyte-specific assertions.</returns>
+    /// <example>
+    /// <code>
+    /// sbyte temperature = -10;
+    /// temperature.Test().BeNegative().BeLessThan(0);
+    /// </code>
+    /// </example>
+    [Pure]
+    public static SByteOperationsManager Test(
+        this sbyte value,
+        [CallerArgumentExpression("value")] string callerName = ""
+    )
+    {
+        return new SByteOperationsManager(value, callerName);
+    }
+
+    /// <summary>
+    /// Begins a fluent assertion chain for the specified nullable <see cref="sbyte"/> value.
+    /// </summary>
+    /// <param name="value">The nullable sbyte value to test.</param>
+    /// <param name="callerName">
+    /// Automatically captured expression name of the variable being tested.
+    /// Used in failure messages for contextual reporting.
+    /// </param>
+    /// <returns>A <see cref="NullableSByteOperationsManager"/> for chaining nullable sbyte-specific assertions.</returns>
+    /// <example>
+    /// <code>
+    /// sbyte? offset = null;
+    /// offset.Test().NotHaveValue();
+    /// </code>
+    /// </example>
+    [Pure]
+    public static NullableSByteOperationsManager Test(
+        this sbyte? value,
+        [CallerArgumentExpression("value")] string callerName = ""
+    )
+    {
+        return new NullableSByteOperationsManager(value, callerName);
+    }
+
+    /// <summary>
+    /// Begins a fluent assertion chain for the specified <see cref="short"/> value.
+    /// </summary>
+    /// <param name="value">The short value to test.</param>
+    /// <param name="callerName">
+    /// Automatically captured expression name of the variable being tested.
+    /// Used in failure messages for contextual reporting.
+    /// </param>
+    /// <returns>A <see cref="ShortOperationsManager"/> for chaining short-specific assertions.</returns>
+    /// <example>
+    /// <code>
+    /// short temperature = -100;
+    /// temperature.Test().BeNegative().BeLessThan(0);
+    /// </code>
+    /// </example>
+    [Pure]
+    public static ShortOperationsManager Test(
+        this short value,
+        [CallerArgumentExpression("value")] string callerName = ""
+    )
+    {
+        return new ShortOperationsManager(value, callerName);
+    }
+
+    /// <summary>
+    /// Begins a fluent assertion chain for the specified nullable <see cref="short"/> value.
+    /// </summary>
+    /// <param name="value">The nullable short value to test.</param>
+    /// <param name="callerName">
+    /// Automatically captured expression name of the variable being tested.
+    /// Used in failure messages for contextual reporting.
+    /// </param>
+    /// <returns>A <see cref="NullableShortOperationsManager"/> for chaining nullable short-specific assertions.</returns>
+    /// <example>
+    /// <code>
+    /// short? offset = null;
+    /// offset.Test().NotHaveValue();
+    /// </code>
+    /// </example>
+    [Pure]
+    public static NullableShortOperationsManager Test(
+        this short? value,
+        [CallerArgumentExpression("value")] string callerName = ""
+    )
+    {
+        return new NullableShortOperationsManager(value, callerName);
+    }
+
+    /// <summary>
+    /// Begins a fluent assertion chain for the specified <see cref="char"/> value.
+    /// </summary>
+    /// <param name="value">The char value to test.</param>
+    /// <param name="callerName">
+    /// Automatically captured expression name of the variable being tested.
+    /// Used in failure messages for contextual reporting.
+    /// </param>
+    /// <returns>A <see cref="CharOperationsManager"/> for chaining char-specific assertions.</returns>
+    /// <example>
+    /// <code>
+    /// char letter = 'A';
+    /// letter.Test().BeUpperCase().BeLetter();
+    /// </code>
+    /// </example>
+    [Pure]
+    public static CharOperationsManager Test(
+        this char value,
+        [CallerArgumentExpression("value")] string callerName = ""
+    )
+    {
+        return new CharOperationsManager(value, callerName);
+    }
+
+    /// <summary>
+    /// Begins a fluent assertion chain for the specified nullable <see cref="char"/> value.
+    /// </summary>
+    /// <param name="value">The nullable char value to test.</param>
+    /// <param name="callerName">
+    /// Automatically captured expression name of the variable being tested.
+    /// Used in failure messages for contextual reporting.
+    /// </param>
+    /// <returns>A <see cref="NullableCharOperationsManager"/> for chaining nullable char-specific assertions.</returns>
+    /// <example>
+    /// <code>
+    /// char? initial = null;
+    /// initial.Test().NotHaveValue();
+    /// </code>
+    /// </example>
+    [Pure]
+    public static NullableCharOperationsManager Test(
+        this char? value,
+        [CallerArgumentExpression("value")] string callerName = ""
+    )
+    {
+        return new NullableCharOperationsManager(value, callerName);
+    }
 }

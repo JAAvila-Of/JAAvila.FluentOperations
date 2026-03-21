@@ -1,4 +1,5 @@
-﻿using JAAvila.FluentOperations.Common;
+﻿using System.Text.RegularExpressions;
+using JAAvila.FluentOperations.Common;
 using JAAvila.FluentOperations.Config;
 using JAAvila.FluentOperations.Connector;
 using JAAvila.FluentOperations.Constraints;
@@ -57,7 +58,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .Execute();
@@ -92,7 +93,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .Execute();
@@ -156,7 +157,7 @@ public class StringOperationsManager
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithValue(StringFormatter.Format(PrincipalChain.GetValueAsString()))
                         .WithExpected(operation.Expected)
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -198,7 +199,7 @@ public class StringOperationsManager
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithValue(StringFormatter.Format(PrincipalChain.GetValueAsString()))
                         .WithExpected(operation.Expected)
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -236,7 +237,35 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithValue(StringFormatter.Format(PrincipalChain.GetValueAsString()))
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the string is not <c>null</c> and not empty (<c>""</c>).
+    /// </summary>
+    /// <param name="reason">An optional reason to provide context for the operation.</param>
+    /// <returns>The current instance of <see cref="StringOperationsManager"/> for method chaining.</returns>
+    public StringOperationsManager NotBeNullOrEmpty(Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.String.NotBeNullOrEmpty))
+        {
+            return this;
+        }
+
+        ExecutionEngine<StringOperationsManager, string?>
+            .New(this)
+            .WithOperation(StringNotBeNullOrEmptyValidator.New(PrincipalChain))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithValue(StringFormatter.Format(PrincipalChain.GetValueAsString()))
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .Execute();
@@ -264,7 +293,7 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithValue(StringFormatter.Format(PrincipalChain.GetValueAsString()))
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .Execute();
@@ -297,7 +326,7 @@ public class StringOperationsManager
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithValue(StringFormatter.Format(PrincipalChain.GetValueAsString()))
                         .WithExpected(operation.Expected, length)
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -347,7 +376,7 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithValue(StringFormatter.Format(PrincipalChain.GetValueAsString()))
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -398,7 +427,7 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithValue(StringFormatter.Format(PrincipalChain.GetValueAsString()))
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -449,7 +478,7 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithValue(StringFormatter.Format(PrincipalChain.GetValueAsString()))
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -500,7 +529,7 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithValue(StringFormatter.Format(PrincipalChain.GetValueAsString()))
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -552,7 +581,7 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithValue(StringFormatter.Format(PrincipalChain.GetValueAsString()))
-                        .WithResult(operation.ResultValidation, StringFormatter.Format(expected))
+                        .WithResult(operation.MessageKey, operation.ResultValidation, StringFormatter.Format(expected))
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -617,7 +646,7 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithValue(StringFormatter.Format(PrincipalChain.GetValueAsString()))
-                        .WithResult(operation.ResultValidation, StringFormatter.Format(expected))
+                        .WithResult(operation.MessageKey, operation.ResultValidation, StringFormatter.Format(expected))
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -654,6 +683,131 @@ public class StringOperationsManager
     }
 
     /// <summary>
+    /// Asserts that the string does not contain the specified substring (ordinal comparison).
+    /// </summary>
+    /// <param name="expected">The substring that should not appear in the string. Cannot be <c>null</c> or empty.</param>
+    /// <param name="reason">An optional reason to provide context for the operation.</param>
+    /// <returns>The current instance of <see cref="StringOperationsManager"/> for method chaining.</returns>
+    /// <remarks>
+    /// This operation fails immediately if the string is <c>null</c>, or if <paramref name="expected"/> is <c>null</c> or empty.
+    /// </remarks>
+    public StringOperationsManager NotContain(string expected, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.String.NotContain))
+        {
+            return this;
+        }
+
+        ExecutionEngine<StringOperationsManager, string?>
+            .New(this)
+            .WithOperation(StringNotContainValidator.New(expected, PrincipalChain))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithValue(StringFormatter.Format(PrincipalChain.GetValueAsString()))
+                        .WithResult(operation.MessageKey, operation.ResultValidation, StringFormatter.Format(expected))
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(NotContain)} operation failed because the parent value was <null>. {{0}}.",
+                            $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        expected.IsNull(),
+                        Fail.New(
+                            $"The {nameof(NotContain)} operation failed because expected was <null>."
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        expected == "",
+                        Fail.New(
+                            $"The {nameof(NotContain)} operation failed because expected was empty."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the string does not contain the specified substring using the given StringComparison.
+    /// </summary>
+    /// <param name="expected">The substring that should not appear in the string. Cannot be <c>null</c> or empty.</param>
+    /// <param name="comparison">The <see cref="StringComparison"/> mode to use.</param>
+    /// <param name="reason">An optional reason to provide context for the operation.</param>
+    /// <returns>The current instance of <see cref="StringOperationsManager"/> for method chaining.</returns>
+    /// <remarks>
+    /// This operation fails immediately if the string is <c>null</c>, or if <paramref name="expected"/> is <c>null</c> or empty.
+    /// </remarks>
+    public StringOperationsManager NotContain(
+        string expected,
+        StringComparison comparison,
+        Reason? reason = null
+    )
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.String.NotContain))
+        {
+            return this;
+        }
+
+        ExecutionEngine<StringOperationsManager, string?>
+            .New(this)
+            .WithOperation(StringNotContainValidator.New(expected, PrincipalChain, comparison))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithValue(StringFormatter.Format(PrincipalChain.GetValueAsString()))
+                        .WithResult(operation.MessageKey, operation.ResultValidation, StringFormatter.Format(expected))
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(NotContain)} operation failed because the parent value was <null>. {{0}}.",
+                            $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        expected.IsNull(),
+                        Fail.New(
+                            $"The {nameof(NotContain)} operation failed because expected was <null>."
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        expected == "",
+                        Fail.New(
+                            $"The {nameof(NotContain)} operation failed because expected was empty."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
     /// Asserts that the string is a valid email address.
     /// </summary>
     /// <param name="reason">An optional reason to provide context for the operation.</param>
@@ -675,7 +829,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -725,7 +879,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -775,7 +929,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -825,7 +979,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -875,7 +1029,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -925,7 +1079,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -977,7 +1131,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation, pattern)
+                        .WithResult(operation.MessageKey, operation.ResultValidation, pattern)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -996,6 +1150,57 @@ public class StringOperationsManager
                         pattern.IsNull(),
                         Fail.New(
                             $"The {nameof(Match)} operation failed because the pattern was <null>."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the string matches the specified precompiled regular expression.
+    /// </summary>
+    /// <param name="regex">The precompiled regular expression to test against the string.</param>
+    /// <param name="reason">An optional reason to provide context for the operation.</param>
+    /// <returns>The current instance of <see cref="StringOperationsManager"/> for method chaining.</returns>
+    /// <remarks>
+    /// This operation fails immediately if the string is <c>null</c> or if <paramref name="regex"/> is <c>null</c>.
+    /// Use a precompiled <see cref="Regex"/> when the same pattern is applied repeatedly for better performance.
+    /// </remarks>
+    public StringOperationsManager Match(Regex regex, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.String.Match))
+        {
+            return this;
+        }
+
+        ExecutionEngine<StringOperationsManager, string?>
+            .New(this)
+            .WithOperation(StringMatchRegexValidator.New(regex, PrincipalChain))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.MessageKey, operation.ResultValidation, regex.ToString())
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(Match)} operation failed because the parent value was <null>. {{0}}.",
+                            $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        regex.IsNull(),
+                        Fail.New(
+                            $"The {nameof(Match)} operation failed because the regex was <null>."
                         )
                     )
             )
@@ -1028,7 +1233,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation, pattern)
+                        .WithResult(operation.MessageKey, operation.ResultValidation, pattern)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -1047,6 +1252,57 @@ public class StringOperationsManager
                         pattern.IsNull(),
                         Fail.New(
                             $"The {nameof(NotMatch)} operation failed because the pattern was <null>."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the string does not match the specified precompiled regular expression.
+    /// </summary>
+    /// <param name="regex">The precompiled regular expression that must not match the string.</param>
+    /// <param name="reason">An optional reason to provide context for the operation.</param>
+    /// <returns>The current instance of <see cref="StringOperationsManager"/> for method chaining.</returns>
+    /// <remarks>
+    /// This operation fails immediately if the string is <c>null</c> or if <paramref name="regex"/> is <c>null</c>.
+    /// Use a precompiled <see cref="Regex"/> when the same pattern is applied repeatedly for better performance.
+    /// </remarks>
+    public StringOperationsManager NotMatch(Regex regex, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.String.NotMatch))
+        {
+            return this;
+        }
+
+        ExecutionEngine<StringOperationsManager, string?>
+            .New(this)
+            .WithOperation(StringNotMatchRegexValidator.New(regex, PrincipalChain))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.MessageKey, operation.ResultValidation, regex.ToString())
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(NotMatch)} operation failed because the parent value was <null>. {{0}}.",
+                            $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        regex.IsNull(),
+                        Fail.New(
+                            $"The {nameof(NotMatch)} operation failed because the regex was <null>."
                         )
                     )
             )
@@ -1077,7 +1333,107 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(MatchAny)} operation failed because the parent value was <null>. {{0}}.",
+                            $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        patterns.IsNullOrEmpty(),
+                        Fail.New(
+                            $"The {nameof(MatchAny)} operation failed because the patterns array was null or empty."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the string matches at least one of the specified precompiled regular expressions.
+    /// </summary>
+    /// <param name="patterns">The precompiled regular expressions, at least one of which must match the string.</param>
+    /// <returns>The current instance of <see cref="StringOperationsManager"/> for method chaining.</returns>
+    /// <remarks>
+    /// This operation fails immediately if the string is <c>null</c> or if <paramref name="patterns"/> is null or empty.
+    /// Use precompiled <see cref="Regex"/> instances when the same patterns are applied repeatedly for better performance.
+    /// </remarks>
+    public StringOperationsManager MatchAny(params Regex[] patterns)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.String.MatchAny))
+        {
+            return this;
+        }
+
+        ExecutionEngine<StringOperationsManager, string?>
+            .New(this)
+            .WithOperation(StringMatchAnyRegexValidator.New(patterns, PrincipalChain))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(MatchAny)} operation failed because the parent value was <null>. {{0}}.",
+                            $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        patterns.IsNullOrEmpty(),
+                        Fail.New(
+                            $"The {nameof(MatchAny)} operation failed because the patterns array was null or empty."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the string matches at least one of the specified precompiled regular expressions.
+    /// </summary>
+    /// <param name="reason">An optional reason to provide context for the operation.</param>
+    /// <param name="patterns">The precompiled regular expressions, at least one of which must match the string.</param>
+    /// <returns>The current instance of <see cref="StringOperationsManager"/> for method chaining.</returns>
+    /// <remarks>
+    /// This operation fails immediately if the string is <c>null</c> or if <paramref name="patterns"/> is null or empty.
+    /// Use precompiled <see cref="Regex"/> instances when the same patterns are applied repeatedly for better performance.
+    /// </remarks>
+    public StringOperationsManager MatchAny(Reason? reason, params Regex[] patterns)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.String.MatchAny))
+        {
+            return this;
+        }
+
+        ExecutionEngine<StringOperationsManager, string?>
+            .New(this)
+            .WithOperation(StringMatchAnyRegexValidator.New(patterns, PrincipalChain))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
+                        .WithReason(reason?.ToString())
             )
             .FailIf(
                 manager =>
@@ -1125,7 +1481,107 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(MatchAll)} operation failed because the parent value was <null>. {{0}}.",
+                            $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        patterns.IsNullOrEmpty(),
+                        Fail.New(
+                            $"The {nameof(MatchAll)} operation failed because the patterns array was null or empty."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the string matches all of the specified precompiled regular expressions.
+    /// </summary>
+    /// <param name="patterns">The precompiled regular expressions that must all match the string.</param>
+    /// <returns>The current instance of <see cref="StringOperationsManager"/> for method chaining.</returns>
+    /// <remarks>
+    /// This operation fails immediately if the string is <c>null</c> or if <paramref name="patterns"/> is null or empty.
+    /// Use precompiled <see cref="Regex"/> instances when the same patterns are applied repeatedly for better performance.
+    /// </remarks>
+    public StringOperationsManager MatchAll(params Regex[] patterns)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.String.MatchAll))
+        {
+            return this;
+        }
+
+        ExecutionEngine<StringOperationsManager, string?>
+            .New(this)
+            .WithOperation(StringMatchAllRegexValidator.New(patterns, PrincipalChain))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(MatchAll)} operation failed because the parent value was <null>. {{0}}.",
+                            $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        patterns.IsNullOrEmpty(),
+                        Fail.New(
+                            $"The {nameof(MatchAll)} operation failed because the patterns array was null or empty."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the string matches all of the specified precompiled regular expressions.
+    /// </summary>
+    /// <param name="reason">An optional reason to provide context for the operation.</param>
+    /// <param name="patterns">The precompiled regular expressions that must all match the string.</param>
+    /// <returns>The current instance of <see cref="StringOperationsManager"/> for method chaining.</returns>
+    /// <remarks>
+    /// This operation fails immediately if the string is <c>null</c> or if <paramref name="patterns"/> is null or empty.
+    /// Use precompiled <see cref="Regex"/> instances when the same patterns are applied repeatedly for better performance.
+    /// </remarks>
+    public StringOperationsManager MatchAll(Reason? reason, params Regex[] patterns)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.String.MatchAll))
+        {
+            return this;
+        }
+
+        ExecutionEngine<StringOperationsManager, string?>
+            .New(this)
+            .WithOperation(StringMatchAllRegexValidator.New(patterns, PrincipalChain))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
+                        .WithReason(reason?.ToString())
             )
             .FailIf(
                 manager =>
@@ -1173,7 +1629,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -1223,7 +1679,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -1273,7 +1729,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -1323,7 +1779,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -1373,7 +1829,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -1423,7 +1879,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -1473,7 +1929,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -1515,7 +1971,7 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             min.ToString(),
                             PrincipalChain.GetValue()!.Length.ToString()
                         )
@@ -1569,7 +2025,7 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             max.ToString(),
                             PrincipalChain.GetValue()!.Length.ToString()
                         )
@@ -1625,7 +2081,7 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             min.ToString(),
                             max.ToString(),
                             PrincipalChain.GetValue()!.Length.ToString()
@@ -1657,6 +2113,114 @@ public class StringOperationsManager
     }
 
     /// <summary>
+    /// Asserts that the string length is strictly greater than <paramref name="expected"/>.
+    /// </summary>
+    /// <param name="expected">The exclusive lower bound for character count. Must be non-negative.</param>
+    /// <param name="reason">An optional reason to provide context for the operation.</param>
+    /// <returns>The current instance of <see cref="StringOperationsManager"/> for method chaining.</returns>
+    /// <remarks>
+    /// This operation fails immediately if the string is <c>null</c> or if <paramref name="expected"/> is negative.
+    /// </remarks>
+    public StringOperationsManager HaveLengthGreaterThan(int expected, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.String.HaveLengthGreaterThan))
+        {
+            return this;
+        }
+
+        ExecutionEngine<StringOperationsManager, string?>
+            .New(this)
+            .WithOperation(StringHaveLengthGreaterThanValidator.New(PrincipalChain, expected))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.MessageKey, operation.ResultValidation,
+                            expected.ToString(),
+                            PrincipalChain.GetValue()!.Length.ToString()
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(HaveLengthGreaterThan)} operation failed because the parent value was <null>. {{0}}.",
+                            $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        expected < 0,
+                        Fail.New(
+                            $"The {nameof(HaveLengthGreaterThan)} operation failed because the expected length cannot be negative."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the string length is strictly less than <paramref name="expected"/>.
+    /// </summary>
+    /// <param name="expected">The exclusive upper bound for character count. Must be non-negative.</param>
+    /// <param name="reason">An optional reason to provide context for the operation.</param>
+    /// <returns>The current instance of <see cref="StringOperationsManager"/> for method chaining.</returns>
+    /// <remarks>
+    /// This operation fails immediately if the string is <c>null</c> or if <paramref name="expected"/> is negative.
+    /// </remarks>
+    public StringOperationsManager HaveLengthLessThan(int expected, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.String.HaveLengthLessThan))
+        {
+            return this;
+        }
+
+        ExecutionEngine<StringOperationsManager, string?>
+            .New(this)
+            .WithOperation(StringHaveLengthLessThanValidator.New(PrincipalChain, expected))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.MessageKey, operation.ResultValidation,
+                            expected.ToString(),
+                            PrincipalChain.GetValue()!.Length.ToString()
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(HaveLengthLessThan)} operation failed because the parent value was <null>. {{0}}.",
+                            $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        expected < 0,
+                        Fail.New(
+                            $"The {nameof(HaveLengthLessThan)} operation failed because the expected length cannot be negative."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
     /// Asserts that the string starts with the specified prefix (ordinal comparison).
     /// </summary>
     /// <param name="prefix">The prefix the string must start with. Cannot be <c>null</c>.</param>
@@ -1677,10 +2241,17 @@ public class StringOperationsManager
             .WithOperation(StringStartWithValidator.New(prefix, PrincipalChain))
             .WithTemplate(
                 (template, operation) =>
-                    template
+                {
+                    var actual = PrincipalChain.GetValue();
+                    var actualPrefix = actual is not null && actual.Length >= prefix.Length
+                        ? actual[..prefix.Length]
+                        : actual;
+                    return template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation, prefix)
-                        .WithReason(reason?.ToString())
+                        .WithResult(operation.MessageKey, operation.ResultValidation, prefix)
+                        .WithStringDiff(prefix, actualPrefix)
+                        .WithReason(reason?.ToString());
+                }
             )
             .FailIf(
                 manager =>
@@ -1732,11 +2303,19 @@ public class StringOperationsManager
             .WithOperation(StringStartWithValidator.New(prefix, PrincipalChain, comparison))
             .WithTemplate(
                 (template, operation) =>
-                    template
+                {
+                    var actual = PrincipalChain.GetValue();
+                    var actualPrefix = actual is not null && actual.Length >= prefix.Length
+                        ? actual[..prefix.Length]
+                        : actual;
+                    var diff = comparison == StringComparison.Ordinal ? actualPrefix : null;
+                    return template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithValue(StringFormatter.Format(PrincipalChain.GetValueAsString()))
-                        .WithResult(operation.ResultValidation, StringFormatter.Format(prefix))
-                        .WithReason(reason?.ToString())
+                        .WithResult(operation.MessageKey, operation.ResultValidation, StringFormatter.Format(prefix))
+                        .WithStringDiff(prefix, diff)
+                        .WithReason(reason?.ToString());
+                }
             )
             .FailIf(
                 manager =>
@@ -1785,7 +2364,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation, prefix)
+                        .WithResult(operation.MessageKey, operation.ResultValidation, prefix)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -1833,10 +2412,17 @@ public class StringOperationsManager
             .WithOperation(StringEndWithValidator.New(suffix, PrincipalChain))
             .WithTemplate(
                 (template, operation) =>
-                    template
+                {
+                    var actual = PrincipalChain.GetValue();
+                    var actualSuffix = actual is not null && actual.Length >= suffix.Length
+                        ? actual[^suffix.Length..]
+                        : actual;
+                    return template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation, suffix)
-                        .WithReason(reason?.ToString())
+                        .WithResult(operation.MessageKey, operation.ResultValidation, suffix)
+                        .WithStringDiff(suffix, actualSuffix)
+                        .WithReason(reason?.ToString());
+                }
             )
             .FailIf(
                 manager =>
@@ -1888,11 +2474,19 @@ public class StringOperationsManager
             .WithOperation(StringEndWithValidator.New(suffix, PrincipalChain, comparison))
             .WithTemplate(
                 (template, operation) =>
-                    template
+                {
+                    var actual = PrincipalChain.GetValue();
+                    var actualSuffix = actual is not null && actual.Length >= suffix.Length
+                        ? actual[^suffix.Length..]
+                        : actual;
+                    var diff = comparison == StringComparison.Ordinal ? actualSuffix : null;
+                    return template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithValue(StringFormatter.Format(PrincipalChain.GetValueAsString()))
-                        .WithResult(operation.ResultValidation, StringFormatter.Format(suffix))
-                        .WithReason(reason?.ToString())
+                        .WithResult(operation.MessageKey, operation.ResultValidation, StringFormatter.Format(suffix))
+                        .WithStringDiff(suffix, diff)
+                        .WithReason(reason?.ToString());
+                }
             )
             .FailIf(
                 manager =>
@@ -1941,7 +2535,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation, suffix)
+                        .WithResult(operation.MessageKey, operation.ResultValidation, suffix)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -2000,7 +2594,7 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithValue(StringFormatter.Format(PrincipalChain.GetValueAsString()))
-                        .WithResult(operation.ResultValidation, StringFormatter.Format(expected))
+                        .WithResult(operation.MessageKey, operation.ResultValidation, StringFormatter.Format(expected))
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -2128,7 +2722,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -2208,7 +2802,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -2250,7 +2844,7 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             pattern,
                             PrincipalChain.GetValue() ?? "<null>"
                         )
@@ -2300,7 +2894,7 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             pattern,
                             PrincipalChain.GetValue() ?? "<null>"
                         )
@@ -2342,7 +2936,7 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             pattern,
                             PrincipalChain.GetValue() ?? "<null>"
                         )
@@ -2379,7 +2973,7 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             pattern,
                             PrincipalChain.GetValue() ?? "<null>"
                         )
@@ -2412,7 +3006,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -2462,7 +3056,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -2512,7 +3106,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -2562,7 +3156,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -2612,7 +3206,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -2662,7 +3256,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -2682,6 +3276,234 @@ public class StringOperationsManager
                         Fail.New(
                             $"The {nameof(BeIPv6)} operation failed because the value was empty. {{0}}.",
                             $"It is recommended to validate that the string is not empty first"
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    // =========================================================================
+    // BeOneOf / NotBeOneOf
+    // =========================================================================
+
+    /// <summary>
+    /// Asserts that the string is one of the specified allowed values (ordinal comparison).
+    /// </summary>
+    /// <param name="expected">The set of allowed values.</param>
+    /// <returns>The current instance of <see cref="StringOperationsManager"/> for method chaining.</returns>
+    /// <remarks>
+    /// Fails immediately if <paramref name="expected"/> is null or empty, or if the string is <c>null</c>.
+    /// </remarks>
+    public StringOperationsManager BeOneOf(params string?[] expected)
+    {
+        return BeOneOfCore(null, null, expected);
+    }
+
+    /// <summary>
+    /// Asserts that the string is one of the specified allowed values using the given string comparison mode.
+    /// </summary>
+    /// <param name="comparison">The <see cref="StringComparison"/> mode to use.</param>
+    /// <param name="expected">The set of allowed values.</param>
+    /// <returns>The current instance of <see cref="StringOperationsManager"/> for method chaining.</returns>
+    /// <remarks>
+    /// Fails immediately if <paramref name="expected"/> is null or empty, or if the string is <c>null</c>.
+    /// </remarks>
+    public StringOperationsManager BeOneOf(
+        StringComparison comparison,
+        params string?[] expected
+    )
+    {
+        return BeOneOfCore(comparison, null, expected);
+    }
+
+    /// <summary>
+    /// Asserts that the string is one of the specified allowed values (ordinal comparison).
+    /// </summary>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <param name="expected">The set of allowed values.</param>
+    /// <returns>The current instance of <see cref="StringOperationsManager"/> for method chaining.</returns>
+    /// <remarks>
+    /// Fails immediately if <paramref name="expected"/> is null or empty, or if the string is <c>null</c>.
+    /// </remarks>
+    public StringOperationsManager BeOneOf(Reason? reason, params string?[] expected)
+    {
+        return BeOneOfCore(null, reason, expected);
+    }
+
+    /// <summary>
+    /// Asserts that the string is one of the specified allowed values using the given string comparison mode.
+    /// </summary>
+    /// <param name="comparison">The <see cref="StringComparison"/> mode to use.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <param name="expected">The set of allowed values.</param>
+    /// <returns>The current instance of <see cref="StringOperationsManager"/> for method chaining.</returns>
+    /// <remarks>
+    /// Fails immediately if <paramref name="expected"/> is null or empty, or if the string is <c>null</c>.
+    /// </remarks>
+    public StringOperationsManager BeOneOf(
+        StringComparison comparison,
+        Reason? reason,
+        params string?[] expected
+    )
+    {
+        return BeOneOfCore(comparison, reason, expected);
+    }
+
+    private StringOperationsManager BeOneOfCore(
+        StringComparison? comparison,
+        Reason? reason,
+        string?[] expected
+    )
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.String.BeOneOf))
+        {
+            return this;
+        }
+
+        ExecutionEngine<StringOperationsManager, string?>
+            .New(this)
+            .WithOperation(StringBeOneOfValidator.New(PrincipalChain, expected, comparison))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.MessageKey, operation.ResultValidation,
+                            string.Join(", ", expected.Select(e => e is null ? "<null>" : $"\"{e}\"")),
+                            PrincipalChain.GetValue() is null ? "<null>" : $"\"{PrincipalChain.GetValue()}\""
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                _ =>
+                    (
+                        expected is null || expected.Length == 0,
+                        Fail.New(
+                            $"The {nameof(BeOneOf)} operation failed because you have not provided any values."
+                        )
+                    )
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(BeOneOf)} operation failed because the parent value was <null>. {{0}}.",
+                            $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the string is not one of the specified disallowed values (ordinal comparison).
+    /// </summary>
+    /// <param name="expected">The set of disallowed values.</param>
+    /// <returns>The current instance of <see cref="StringOperationsManager"/> for method chaining.</returns>
+    /// <remarks>
+    /// Fails immediately if <paramref name="expected"/> is null or empty, or if the string is <c>null</c>.
+    /// </remarks>
+    public StringOperationsManager NotBeOneOf(params string?[] expected)
+    {
+        return NotBeOneOfCore(null, null, expected);
+    }
+
+    /// <summary>
+    /// Asserts that the string is not one of the specified disallowed values using the given string comparison mode.
+    /// </summary>
+    /// <param name="comparison">The <see cref="StringComparison"/> mode to use.</param>
+    /// <param name="expected">The set of disallowed values.</param>
+    /// <returns>The current instance of <see cref="StringOperationsManager"/> for method chaining.</returns>
+    /// <remarks>
+    /// Fails immediately if <paramref name="expected"/> is null or empty, or if the string is <c>null</c>.
+    /// </remarks>
+    public StringOperationsManager NotBeOneOf(
+        StringComparison comparison,
+        params string?[] expected
+    )
+    {
+        return NotBeOneOfCore(comparison, null, expected);
+    }
+
+    /// <summary>
+    /// Asserts that the string is not one of the specified disallowed values (ordinal comparison).
+    /// </summary>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <param name="expected">The set of disallowed values.</param>
+    /// <returns>The current instance of <see cref="StringOperationsManager"/> for method chaining.</returns>
+    /// <remarks>
+    /// Fails immediately if <paramref name="expected"/> is null or empty, or if the string is <c>null</c>.
+    /// </remarks>
+    public StringOperationsManager NotBeOneOf(Reason? reason, params string?[] expected)
+    {
+        return NotBeOneOfCore(null, reason, expected);
+    }
+
+    /// <summary>
+    /// Asserts that the string is not one of the specified disallowed values using the given string comparison mode.
+    /// </summary>
+    /// <param name="comparison">The <see cref="StringComparison"/> mode to use.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <param name="expected">The set of disallowed values.</param>
+    /// <returns>The current instance of <see cref="StringOperationsManager"/> for method chaining.</returns>
+    /// <remarks>
+    /// Fails immediately if <paramref name="expected"/> is null or empty, or if the string is <c>null</c>.
+    /// </remarks>
+    public StringOperationsManager NotBeOneOf(
+        StringComparison comparison,
+        Reason? reason,
+        params string?[] expected
+    )
+    {
+        return NotBeOneOfCore(comparison, reason, expected);
+    }
+
+    private StringOperationsManager NotBeOneOfCore(
+        StringComparison? comparison,
+        Reason? reason,
+        string?[] expected
+    )
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.String.NotBeOneOf))
+        {
+            return this;
+        }
+
+        ExecutionEngine<StringOperationsManager, string?>
+            .New(this)
+            .WithOperation(StringNotBeOneOfValidator.New(PrincipalChain, expected, comparison))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.MessageKey, operation.ResultValidation,
+                            string.Join(", ", expected.Select(e => e is null ? "<null>" : $"\"{e}\"")),
+                            PrincipalChain.GetValue() is null ? "<null>" : $"\"{PrincipalChain.GetValue()}\""
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                _ =>
+                    (
+                        expected is null || expected.Length == 0,
+                        Fail.New(
+                            $"The {nameof(NotBeOneOf)} operation failed because you have not provided any values."
+                        )
+                    )
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(NotBeOneOf)} operation failed because the parent value was <null>. {{0}}.",
+                            $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
                         )
                     )
             )

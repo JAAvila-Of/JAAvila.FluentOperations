@@ -6,12 +6,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable float value is not NaN.
 /// </summary>
-internal class NullableFloatNotBeNaNValidator(PrincipalChain<float?> chain) : IValidator
+internal class NullableFloatNotBeNaNValidator(PrincipalChain<float?> chain) : IValidator, IRuleDescriptor
 {
     public static NullableFloatNotBeNaNValidator New(PrincipalChain<float?> chain) => new(chain);
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableFloat.NotBeNaN";
+    string IRuleDescriptor.OperationName => "NotBeNaN";
+    Type IRuleDescriptor.SubjectType => typeof(float?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

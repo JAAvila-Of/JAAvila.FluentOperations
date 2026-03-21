@@ -9,7 +9,7 @@ internal class CollectionHaveElementAtValidator<T>(
     PrincipalChain<IEnumerable<T>> chain,
     int index,
     T expected
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static CollectionHaveElementAtValidator<T> New(
         PrincipalChain<IEnumerable<T>> chain,
@@ -19,6 +19,11 @@ internal class CollectionHaveElementAtValidator<T>(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Collection.HaveElementAt";
+    string IRuleDescriptor.OperationName => "HaveElementAt";
+    Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["index"] = index, ["value"] = expected };
 
     public bool Validate()
     {

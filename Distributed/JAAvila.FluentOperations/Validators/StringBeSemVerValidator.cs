@@ -6,7 +6,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the string is a valid semantic version (SemVer).
 /// </summary>
-internal class StringBeSemVerValidator(PrincipalChain<string?> chain) : IValidator
+internal class StringBeSemVerValidator(PrincipalChain<string?> chain) : IValidator, IRuleDescriptor
 {
     public static StringBeSemVerValidator New(PrincipalChain<string?> chain) => new(chain);
 
@@ -20,6 +20,11 @@ internal class StringBeSemVerValidator(PrincipalChain<string?> chain) : IValidat
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "String.BeSemVer";
+    string IRuleDescriptor.OperationName => "BeSemVer";
+    Type IRuleDescriptor.SubjectType => typeof(string);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

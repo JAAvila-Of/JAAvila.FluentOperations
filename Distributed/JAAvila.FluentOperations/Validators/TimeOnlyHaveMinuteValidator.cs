@@ -5,13 +5,18 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the timeonly value has the expected minute.
 /// </summary>
-internal class TimeOnlyHaveMinuteValidator(PrincipalChain<TimeOnly> chain, int minute) : IValidator
+internal class TimeOnlyHaveMinuteValidator(PrincipalChain<TimeOnly> chain, int minute) : IValidator, IRuleDescriptor
 {
     public static TimeOnlyHaveMinuteValidator New(PrincipalChain<TimeOnly> chain, int minute) =>
         new(chain, minute);
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "TimeOnly.HaveMinute";
+    string IRuleDescriptor.OperationName => "HaveMinute";
+    Type IRuleDescriptor.SubjectType => typeof(TimeOnly);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = minute };
 
     public bool Validate()
     {

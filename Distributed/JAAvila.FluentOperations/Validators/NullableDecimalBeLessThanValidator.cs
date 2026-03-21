@@ -8,7 +8,7 @@ namespace JAAvila.FluentOperations.Validators;
 internal class NullableDecimalBeLessThanValidator(
     PrincipalChain<decimal?> chain,
     decimal comparison
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static NullableDecimalBeLessThanValidator New(
         PrincipalChain<decimal?> chain,
@@ -17,6 +17,11 @@ internal class NullableDecimalBeLessThanValidator(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableDecimal.BeLessThan";
+    string IRuleDescriptor.OperationName => "BeLessThan";
+    Type IRuleDescriptor.SubjectType => typeof(decimal?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = comparison };
 
     public bool Validate()
     {

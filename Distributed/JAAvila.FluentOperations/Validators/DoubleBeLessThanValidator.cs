@@ -5,13 +5,18 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the double value is less than the expected value.
 /// </summary>
-internal class DoubleBeLessThanValidator(PrincipalChain<double> chain, double expected) : IValidator
+internal class DoubleBeLessThanValidator(PrincipalChain<double> chain, double expected) : IValidator, IRuleDescriptor
 {
     public static DoubleBeLessThanValidator New(PrincipalChain<double> chain, double expected) =>
         new(chain, expected);
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Double.BeLessThan";
+    string IRuleDescriptor.OperationName => "BeLessThan";
+    Type IRuleDescriptor.SubjectType => typeof(double);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expected };
 
     public bool Validate()
     {

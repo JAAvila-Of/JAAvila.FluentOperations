@@ -18,6 +18,12 @@ public interface IValidator
     string ResultValidation { get; set; }
 
     /// <summary>
+    /// A stable key identifying this validator's failure message, used for localization lookup.
+    /// Format: <c>"TypePrefix.OperationName"</c> (e.g., <c>"String.BeEmail"</c>).
+    /// </summary>
+    string MessageKey { get; }
+
+    /// <summary>
     /// Validates the associated value based on the implemented validation logic.
     /// </summary>
     /// <returns>

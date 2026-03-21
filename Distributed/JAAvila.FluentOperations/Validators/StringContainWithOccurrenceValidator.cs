@@ -11,7 +11,7 @@ internal class StringContainWithOccurrenceValidator(
     string expected,
     OccurrenceConstraint constraint,
     PrincipalChain<string?> chain
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static StringContainWithOccurrenceValidator New(
         string expected,
@@ -21,6 +21,11 @@ internal class StringContainWithOccurrenceValidator(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "String.Contain";
+    string IRuleDescriptor.OperationName => "Contain";
+    Type IRuleDescriptor.SubjectType => typeof(string);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expected };
 
     public bool Validate()
     {

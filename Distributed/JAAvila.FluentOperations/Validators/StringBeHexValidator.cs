@@ -5,12 +5,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the string is a valid hexadecimal value.
 /// </summary>
-internal class StringBeHexValidator(PrincipalChain<string?> chain) : IValidator
+internal class StringBeHexValidator(PrincipalChain<string?> chain) : IValidator, IRuleDescriptor
 {
     public static StringBeHexValidator New(PrincipalChain<string?> chain) => new(chain);
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "String.BeHex";
+    string IRuleDescriptor.OperationName => "BeHex";
+    Type IRuleDescriptor.SubjectType => typeof(string);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

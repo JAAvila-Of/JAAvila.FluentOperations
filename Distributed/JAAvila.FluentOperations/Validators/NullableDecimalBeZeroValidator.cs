@@ -5,12 +5,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable decimal value is zero.
 /// </summary>
-internal class NullableDecimalBeZeroValidator(PrincipalChain<decimal?> chain) : IValidator
+internal class NullableDecimalBeZeroValidator(PrincipalChain<decimal?> chain) : IValidator, IRuleDescriptor
 {
     public static NullableDecimalBeZeroValidator New(PrincipalChain<decimal?> chain) => new(chain);
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableDecimal.BeZero";
+    string IRuleDescriptor.OperationName => "BeZero";
+    Type IRuleDescriptor.SubjectType => typeof(decimal?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

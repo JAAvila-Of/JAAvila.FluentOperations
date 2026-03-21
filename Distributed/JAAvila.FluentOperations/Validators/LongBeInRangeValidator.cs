@@ -5,13 +5,18 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the long value is within the specified inclusive range.
 /// </summary>
-internal class LongBeInRangeValidator(PrincipalChain<long> chain, long min, long max) : IValidator
+internal class LongBeInRangeValidator(PrincipalChain<long> chain, long min, long max) : IValidator, IRuleDescriptor
 {
     public static LongBeInRangeValidator New(PrincipalChain<long> chain, long min, long max) =>
         new(chain, min, max);
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Long.BeInRange";
+    string IRuleDescriptor.OperationName => "BeInRange";
+    Type IRuleDescriptor.SubjectType => typeof(long);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["min"] = min, ["max"] = max };
 
     public bool Validate()
     {
