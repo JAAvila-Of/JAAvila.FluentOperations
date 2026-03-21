@@ -2241,10 +2241,17 @@ public class StringOperationsManager
             .WithOperation(StringStartWithValidator.New(prefix, PrincipalChain))
             .WithTemplate(
                 (template, operation) =>
-                    template
+                {
+                    var actual = PrincipalChain.GetValue();
+                    var actualPrefix = actual is not null && actual.Length >= prefix.Length
+                        ? actual[..prefix.Length]
+                        : actual;
+                    return template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(operation.ResultValidation, prefix)
-                        .WithReason(reason?.ToString())
+                        .WithStringDiff(prefix, actualPrefix)
+                        .WithReason(reason?.ToString());
+                }
             )
             .FailIf(
                 manager =>
@@ -2296,11 +2303,19 @@ public class StringOperationsManager
             .WithOperation(StringStartWithValidator.New(prefix, PrincipalChain, comparison))
             .WithTemplate(
                 (template, operation) =>
-                    template
+                {
+                    var actual = PrincipalChain.GetValue();
+                    var actualPrefix = actual is not null && actual.Length >= prefix.Length
+                        ? actual[..prefix.Length]
+                        : actual;
+                    var diff = comparison == StringComparison.Ordinal ? actualPrefix : null;
+                    return template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithValue(StringFormatter.Format(PrincipalChain.GetValueAsString()))
                         .WithResult(operation.ResultValidation, StringFormatter.Format(prefix))
-                        .WithReason(reason?.ToString())
+                        .WithStringDiff(prefix, diff)
+                        .WithReason(reason?.ToString());
+                }
             )
             .FailIf(
                 manager =>
@@ -2397,10 +2412,17 @@ public class StringOperationsManager
             .WithOperation(StringEndWithValidator.New(suffix, PrincipalChain))
             .WithTemplate(
                 (template, operation) =>
-                    template
+                {
+                    var actual = PrincipalChain.GetValue();
+                    var actualSuffix = actual is not null && actual.Length >= suffix.Length
+                        ? actual[^suffix.Length..]
+                        : actual;
+                    return template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(operation.ResultValidation, suffix)
-                        .WithReason(reason?.ToString())
+                        .WithStringDiff(suffix, actualSuffix)
+                        .WithReason(reason?.ToString());
+                }
             )
             .FailIf(
                 manager =>
@@ -2452,11 +2474,19 @@ public class StringOperationsManager
             .WithOperation(StringEndWithValidator.New(suffix, PrincipalChain, comparison))
             .WithTemplate(
                 (template, operation) =>
-                    template
+                {
+                    var actual = PrincipalChain.GetValue();
+                    var actualSuffix = actual is not null && actual.Length >= suffix.Length
+                        ? actual[^suffix.Length..]
+                        : actual;
+                    var diff = comparison == StringComparison.Ordinal ? actualSuffix : null;
+                    return template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithValue(StringFormatter.Format(PrincipalChain.GetValueAsString()))
                         .WithResult(operation.ResultValidation, StringFormatter.Format(suffix))
-                        .WithReason(reason?.ToString())
+                        .WithStringDiff(suffix, diff)
+                        .WithReason(reason?.ToString());
+                }
             )
             .FailIf(
                 manager =>

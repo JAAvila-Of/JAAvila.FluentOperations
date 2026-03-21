@@ -132,6 +132,9 @@ public class ConfigBuilder
         var builder = new ConfigBuilder();
         var sc = existing.GetStringConfigInternal();
         builder.String.MaxDisplayLength = sc.MaxDisplayLength;
+        builder.String.EnableStringDiff = sc.EnableStringDiff;
+        builder.String.StringDiffContextChars = sc.StringDiffContextChars;
+        builder.String.StringDiffMaxLength = sc.StringDiffMaxLength;
 
         var nc = existing.GetNumericConfigInternal();
         builder.Numeric.DecimalPlaces = nc.DecimalPlaces;
@@ -157,7 +160,13 @@ public class ConfigBuilder
     }
 
     internal StringConfig BuildStringConfig() =>
-        new() { MaxDisplayLength = Math.Max(String.MaxDisplayLength, 10) };
+        new()
+        {
+            MaxDisplayLength = Math.Max(String.MaxDisplayLength, 10),
+            EnableStringDiff = String.EnableStringDiff,
+            StringDiffContextChars = Math.Max(String.StringDiffContextChars, 5),
+            StringDiffMaxLength = Math.Max(String.StringDiffMaxLength, 50)
+        };
 
     internal NumericConfig BuildNumericConfig() =>
         new()
@@ -199,6 +208,24 @@ public class StringConfigBuilder
     /// Longer strings are truncated. Minimum effective value is 10.
     /// </summary>
     public int MaxDisplayLength { get; set; } = 30;
+
+    /// <summary>
+    /// When <c>true</c>, string diff output is appended to failure messages for StartWith and EndWith.
+    /// Default: <c>true</c>.
+    /// </summary>
+    public bool EnableStringDiff { get; set; } = true;
+
+    /// <summary>
+    /// Number of characters shown on each side of the first difference in the diff output.
+    /// Minimum effective value is 5. Default: 20.
+    /// </summary>
+    public int StringDiffContextChars { get; set; } = 20;
+
+    /// <summary>
+    /// Maximum string length for which diff output is generated.
+    /// Minimum effective value is 50. Default: 1000.
+    /// </summary>
+    public int StringDiffMaxLength { get; set; } = 1000;
 }
 
 /// <summary>
