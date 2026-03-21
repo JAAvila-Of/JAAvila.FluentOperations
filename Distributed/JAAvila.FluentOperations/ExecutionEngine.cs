@@ -1,6 +1,9 @@
+using System.Diagnostics;
+using JAAvila.FluentOperations.Config;
 using JAAvila.FluentOperations.Contract;
 using JAAvila.FluentOperations.Handler;
 using JAAvila.FluentOperations.Model;
+using JAAvila.FluentOperations.Telemetry;
 
 namespace JAAvila.FluentOperations;
 
@@ -176,6 +179,10 @@ internal class ExecutionEngine<T, TS>(T manager) : IQualityRule, IRuleDescriptor
             return;
         }
 
+        var telemetryConfig = GlobalConfig.GetTelemetryConfig();
+        var sw = (telemetryConfig is { Enabled: true, TrackRuleExecutionTime: true })
+            ? Stopwatch.StartNew() : null;
+
         var fail = EnsureFailConditions();
 
         if (fail)
@@ -185,11 +192,30 @@ internal class ExecutionEngine<T, TS>(T manager) : IQualityRule, IRuleDescriptor
             {
                 ExceptionHandler.Handle(_customMessage ?? _template);
             }
+
+            if (telemetryConfig is { Enabled: true })
+            {
+                sw?.Stop();
+                FluentOperationsMeter.RecordEagerRuleExecution(
+                    false,
+                    _severity.ToString(),
+                    sw?.Elapsed.TotalMilliseconds ?? 0);
+            }
+
             // Warning and Info are silently ignored in eager mode for FailIf conditions
             return;
         }
 
         var result = BaseOperations.SafeExecute(() => _operation!.Validate());
+
+        if (telemetryConfig is { Enabled: true })
+        {
+            sw?.Stop();
+            FluentOperationsMeter.RecordEagerRuleExecution(
+                result,
+                _severity.ToString(),
+                sw?.Elapsed.TotalMilliseconds ?? 0);
+        }
 
         if (!result)
         {
@@ -281,15 +307,38 @@ internal class ExecutionEngine<T, TS>(T manager) : IQualityRule, IRuleDescriptor
             return;
         }
 
+        var telemetryConfig = GlobalConfig.GetTelemetryConfig();
+        var sw = (telemetryConfig is { Enabled: true, TrackRuleExecutionTime: true })
+            ? Stopwatch.StartNew() : null;
+
         var fail = EnsureFailConditions();
 
         if (fail)
         {
             ExceptionHandler.Handle(_template);
+
+            if (telemetryConfig is { Enabled: true })
+            {
+                sw?.Stop();
+                FluentOperationsMeter.RecordEagerRuleExecution(
+                    false,
+                    _severity.ToString(),
+                    sw?.Elapsed.TotalMilliseconds ?? 0);
+            }
+
             return;
         }
 
         var result = await BaseOperations.SafeExecuteAsync(() => _operation!.ValidateAsync());
+
+        if (telemetryConfig is { Enabled: true })
+        {
+            sw?.Stop();
+            FluentOperationsMeter.RecordEagerRuleExecution(
+                result,
+                _severity.ToString(),
+                sw?.Elapsed.TotalMilliseconds ?? 0);
+        }
 
         if (!result)
         {
