@@ -11,6 +11,7 @@ internal class NullableLongBePositiveValidator(PrincipalChain<long?> chain) : IV
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableLong.BePositive";
 
     public bool Validate()
     {

@@ -12,6 +12,7 @@ internal class DateOnlyBeOnOrBeforeValidator(PrincipalChain<DateOnly> chain, Dat
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "DateOnly.BeOnOrBefore";
 
     public bool Validate()
     {

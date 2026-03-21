@@ -15,6 +15,7 @@ internal class DoubleHavePrecisionValidator(PrincipalChain<double> chain, int ex
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Double.HavePrecision";
 
     public bool Validate()
     {

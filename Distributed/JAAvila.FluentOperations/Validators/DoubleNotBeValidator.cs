@@ -12,6 +12,7 @@ internal class DoubleNotBeValidator(PrincipalChain<double> chain, double expecte
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Double.NotBe";
 
     public bool Validate()
     {

@@ -17,6 +17,7 @@ internal class ReferenceEvaluateCustomValidator<TSubject>(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Custom.Evaluate";
 
     public bool Validate()
     {

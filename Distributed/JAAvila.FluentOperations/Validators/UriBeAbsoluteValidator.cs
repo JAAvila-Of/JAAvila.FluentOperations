@@ -12,6 +12,7 @@ internal class UriBeAbsoluteValidator(PrincipalChain<Uri?> chain) : IValidator
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Uri.BeAbsolute";
 
     public bool Validate()
     {

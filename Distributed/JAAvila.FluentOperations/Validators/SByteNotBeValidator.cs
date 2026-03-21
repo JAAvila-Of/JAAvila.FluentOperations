@@ -12,6 +12,7 @@ internal class SByteNotBeValidator(PrincipalChain<sbyte> chain, sbyte expected) 
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "SByte.NotBe";
 
     public bool Validate()
     {

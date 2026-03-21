@@ -12,6 +12,7 @@ internal class DecimalBeNegativeValidator(PrincipalChain<decimal> chain) : IVali
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Decimal.BeNegative";
 
     public bool Validate()
     {

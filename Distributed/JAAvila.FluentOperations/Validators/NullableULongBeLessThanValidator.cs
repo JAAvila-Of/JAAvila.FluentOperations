@@ -15,6 +15,7 @@ internal class NullableULongBeLessThanValidator(PrincipalChain<ulong?> chain, ul
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableULong.BeLessThan";
 
     public bool Validate()
     {

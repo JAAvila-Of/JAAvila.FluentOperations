@@ -12,6 +12,7 @@ internal class TimeOnlyHaveMinuteValidator(PrincipalChain<TimeOnly> chain, int m
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "TimeOnly.HaveMinute";
 
     public bool Validate()
     {

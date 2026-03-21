@@ -16,6 +16,7 @@ internal class NullableByteNotBeOneOfValidator(PrincipalChain<byte?> chain, byte
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableByte.NotBeOneOf";
 
     public bool Validate()
     {

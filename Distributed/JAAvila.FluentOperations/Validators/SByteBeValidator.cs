@@ -12,6 +12,7 @@ internal class SByteBeValidator(PrincipalChain<sbyte> chain, sbyte expected) : I
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "SByte.Be";
 
     public bool Validate()
     {

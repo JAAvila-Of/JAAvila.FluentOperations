@@ -12,6 +12,7 @@ internal class TimeOnlyHaveSecondValidator(PrincipalChain<TimeOnly> chain, int s
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "TimeOnly.HaveSecond";
 
     public bool Validate()
     {

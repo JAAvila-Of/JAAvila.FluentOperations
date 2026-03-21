@@ -12,6 +12,7 @@ internal class NullableDecimalHaveValueValidator(PrincipalChain<decimal?> chain)
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableDecimal.HaveValue";
 
     public bool Validate()
     {

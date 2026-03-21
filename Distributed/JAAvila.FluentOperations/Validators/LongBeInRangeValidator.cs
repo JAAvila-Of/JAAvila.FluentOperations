@@ -12,6 +12,7 @@ internal class LongBeInRangeValidator(PrincipalChain<long> chain, long min, long
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Long.BeInRange";
 
     public bool Validate()
     {

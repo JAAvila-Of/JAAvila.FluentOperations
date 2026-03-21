@@ -16,6 +16,7 @@ internal class NullableULongNotBeOneOfValidator(PrincipalChain<ulong?> chain, ul
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableULong.NotBeOneOf";
 
     public bool Validate()
     {

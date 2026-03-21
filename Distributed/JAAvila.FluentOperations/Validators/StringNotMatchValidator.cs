@@ -12,7 +12,8 @@ internal class StringNotMatchValidator(string pattern, PrincipalChain<string?> c
         new(pattern, chain);
 
     public string Expected => $"Not match pattern \"{pattern}\"";
-    public string ResultValidation { get; set; } = string.Empty;
+    public string ResultValidation { get; set; }
+    public string MessageKey => "String.NotMatch";
 
     public bool Validate()
     {

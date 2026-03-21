@@ -12,6 +12,7 @@ internal class UriHavePortValidator(PrincipalChain<Uri?> chain, int port) : IVal
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Uri.HavePort";
 
     public bool Validate()
     {

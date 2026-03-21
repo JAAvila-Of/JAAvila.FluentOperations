@@ -19,6 +19,7 @@ internal class FloatBeApproximatelyValidator(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Float.BeApproximately";
 
     public bool Validate()
     {

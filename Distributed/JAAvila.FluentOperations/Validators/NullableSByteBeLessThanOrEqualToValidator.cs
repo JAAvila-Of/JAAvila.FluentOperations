@@ -17,6 +17,7 @@ internal class NullableSByteBeLessThanOrEqualToValidator(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableSByte.BeLessThanOrEqualTo";
 
     public bool Validate()
     {

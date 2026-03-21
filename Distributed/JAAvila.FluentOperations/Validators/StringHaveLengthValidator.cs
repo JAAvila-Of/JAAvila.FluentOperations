@@ -11,7 +11,8 @@ internal class StringHaveLengthValidator(PrincipalChain<string?> chain, int leng
         new(chain, length);
 
     public string Expected => "(Length {0})";
-    public string ResultValidation { get; set; } = string.Empty;
+    public string ResultValidation { get; set; }
+    public string MessageKey => "String.HaveLength";
 
     public bool Validate()
     {

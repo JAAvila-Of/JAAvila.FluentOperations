@@ -11,6 +11,7 @@ internal class StringBeBase64Validator(PrincipalChain<string?> chain) : IValidat
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "String.BeBase64";
 
     public bool Validate()
     {

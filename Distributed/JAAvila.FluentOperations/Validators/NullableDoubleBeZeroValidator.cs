@@ -11,6 +11,7 @@ internal class NullableDoubleBeZeroValidator(PrincipalChain<double?> chain) : IV
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableDouble.BeZero";
 
     public bool Validate()
     {

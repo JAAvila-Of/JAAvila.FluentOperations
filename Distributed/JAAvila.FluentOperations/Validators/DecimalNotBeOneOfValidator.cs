@@ -12,6 +12,7 @@ internal class DecimalNotBeOneOfValidator(PrincipalChain<decimal> chain, params 
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Decimal.NotBeOneOf";
 
     public bool Validate()
     {

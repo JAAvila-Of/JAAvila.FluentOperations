@@ -94,6 +94,7 @@ public static class FluentOperationsConfig
     /// Returns the current effective TestFrameworkConfig.
     /// </summary>
     public static TestFrameworkConfig GetTestFrameworkConfig() => GlobalConfig.GetTestFrameworkConfig();
+
 }
 
 /// <summary>
@@ -127,6 +128,11 @@ public class ConfigBuilder
     /// </summary>
     public TestFrameworkConfigBuilder TestFramework { get; } = new();
 
+    /// <summary>
+    /// Configuration options for localization of validation failure messages.
+    /// </summary>
+    public LocalizationConfigBuilder Localization { get; } = new();
+
     internal static ConfigBuilder FromExisting(GlobalConfig existing)
     {
         var builder = new ConfigBuilder();
@@ -155,6 +161,14 @@ public class ConfigBuilder
 
         var tfc = existing.GetTestFrameworkConfigInternal();
         builder.TestFramework.Framework = tfc.Framework;
+
+        var lc = existing.GetLocalizationConfigInternal();
+        if (lc is not null)
+        {
+            builder.Localization.Provider = lc.Provider;
+            builder.Localization.Culture = lc.Culture;
+            builder.Localization.EnableCache = lc.EnableCache;
+        }
 
         return builder;
     }
@@ -196,6 +210,18 @@ public class ConfigBuilder
 
     internal TestFrameworkConfig BuildTestFrameworkConfig() =>
         new() { Framework = TestFramework.Framework };
+
+    internal LocalizationConfig? BuildLocalizationConfig()
+    {
+        if (Localization.Provider is null) return null;
+
+        return new LocalizationConfig
+        {
+            Provider = Localization.Provider,
+            Culture = Localization.Culture,
+            EnableCache = Localization.EnableCache
+        };
+    }
 }
 
 /// <summary>

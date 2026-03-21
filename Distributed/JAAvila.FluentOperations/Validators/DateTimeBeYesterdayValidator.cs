@@ -12,6 +12,7 @@ internal class DateTimeBeYesterdayValidator(PrincipalChain<DateTime> chain) : IV
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "DateTime.BeYesterday";
 
     public bool Validate()
     {

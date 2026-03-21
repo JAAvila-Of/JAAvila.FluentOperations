@@ -20,6 +20,7 @@ internal class NullableDecimalBeApproximatelyValidator(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableDecimal.BeApproximately";
 
     public bool Validate()
     {

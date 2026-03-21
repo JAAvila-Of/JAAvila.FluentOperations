@@ -17,6 +17,7 @@ internal class CollectionHaveCountGreaterThanValidator<T>(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Collection.HaveCountGreaterThan";
 
     public bool Validate()
     {

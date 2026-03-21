@@ -12,6 +12,7 @@ internal class NullableCharNotBeValidator(PrincipalChain<char?> chain, char? exp
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableChar.NotBe";
 
     public bool Validate()
     {

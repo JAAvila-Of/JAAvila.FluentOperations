@@ -19,6 +19,7 @@ internal class DateTimeOffsetBeCloseToValidator(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "DateTimeOffset.BeCloseTo";
 
     public bool Validate()
     {

@@ -12,6 +12,7 @@ internal class FloatNotBeOneOfValidator(PrincipalChain<float> chain, params floa
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Float.NotBeOneOf";
 
     public bool Validate()
     {

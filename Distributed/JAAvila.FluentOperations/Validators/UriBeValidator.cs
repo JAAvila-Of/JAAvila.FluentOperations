@@ -12,6 +12,7 @@ internal class UriBeValidator(PrincipalChain<Uri?> chain, Uri expected) : IValid
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Uri.Be";
 
     public bool Validate()
     {

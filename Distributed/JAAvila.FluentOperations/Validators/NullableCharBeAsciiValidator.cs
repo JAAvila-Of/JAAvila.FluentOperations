@@ -11,6 +11,7 @@ internal class NullableCharBeAsciiValidator(PrincipalChain<char?> chain) : IVali
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableChar.BeAscii";
 
     public bool Validate()
     {

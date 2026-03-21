@@ -12,6 +12,7 @@ internal class DateOnlyHaveMonthValidator(PrincipalChain<DateOnly> chain, int ex
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "DateOnly.HaveMonth";
 
     public bool Validate()
     {

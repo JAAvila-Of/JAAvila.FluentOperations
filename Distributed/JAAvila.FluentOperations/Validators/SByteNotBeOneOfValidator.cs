@@ -12,6 +12,7 @@ internal class SByteNotBeOneOfValidator(PrincipalChain<sbyte> chain, params sbyt
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "SByte.NotBeOneOf";
 
     public bool Validate()
     {

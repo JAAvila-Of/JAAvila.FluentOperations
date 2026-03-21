@@ -11,6 +11,7 @@ internal class NullableLongBeOddValidator(PrincipalChain<long?> chain) : IValida
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableLong.BeOdd";
 
     public bool Validate()
     {

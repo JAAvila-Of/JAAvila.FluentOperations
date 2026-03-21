@@ -13,6 +13,7 @@ internal class NullableFloatNotBeValidator(PrincipalChain<float?> chain, float? 
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableFloat.NotBe";
 
     public bool Validate()
     {

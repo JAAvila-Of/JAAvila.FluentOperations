@@ -12,6 +12,7 @@ internal class NullableDoubleBeFiniteValidator(PrincipalChain<double?> chain) : 
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableDouble.BeFinite";
 
     public bool Validate()
     {

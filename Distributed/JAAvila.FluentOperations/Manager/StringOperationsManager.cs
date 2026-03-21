@@ -58,7 +58,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .Execute();
@@ -93,7 +93,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .Execute();
@@ -157,7 +157,7 @@ public class StringOperationsManager
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithValue(StringFormatter.Format(PrincipalChain.GetValueAsString()))
                         .WithExpected(operation.Expected)
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -199,7 +199,7 @@ public class StringOperationsManager
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithValue(StringFormatter.Format(PrincipalChain.GetValueAsString()))
                         .WithExpected(operation.Expected)
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -237,7 +237,7 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithValue(StringFormatter.Format(PrincipalChain.GetValueAsString()))
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .Execute();
@@ -265,7 +265,7 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithValue(StringFormatter.Format(PrincipalChain.GetValueAsString()))
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .Execute();
@@ -293,7 +293,7 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithValue(StringFormatter.Format(PrincipalChain.GetValueAsString()))
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .Execute();
@@ -326,7 +326,7 @@ public class StringOperationsManager
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithValue(StringFormatter.Format(PrincipalChain.GetValueAsString()))
                         .WithExpected(operation.Expected, length)
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -376,7 +376,7 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithValue(StringFormatter.Format(PrincipalChain.GetValueAsString()))
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -427,7 +427,7 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithValue(StringFormatter.Format(PrincipalChain.GetValueAsString()))
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -478,7 +478,7 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithValue(StringFormatter.Format(PrincipalChain.GetValueAsString()))
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -529,7 +529,7 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithValue(StringFormatter.Format(PrincipalChain.GetValueAsString()))
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -581,7 +581,7 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithValue(StringFormatter.Format(PrincipalChain.GetValueAsString()))
-                        .WithResult(operation.ResultValidation, StringFormatter.Format(expected))
+                        .WithResult(operation.MessageKey, operation.ResultValidation, StringFormatter.Format(expected))
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -646,7 +646,7 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithValue(StringFormatter.Format(PrincipalChain.GetValueAsString()))
-                        .WithResult(operation.ResultValidation, StringFormatter.Format(expected))
+                        .WithResult(operation.MessageKey, operation.ResultValidation, StringFormatter.Format(expected))
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -706,7 +706,7 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithValue(StringFormatter.Format(PrincipalChain.GetValueAsString()))
-                        .WithResult(operation.ResultValidation, StringFormatter.Format(expected))
+                        .WithResult(operation.MessageKey, operation.ResultValidation, StringFormatter.Format(expected))
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -771,7 +771,7 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithValue(StringFormatter.Format(PrincipalChain.GetValueAsString()))
-                        .WithResult(operation.ResultValidation, StringFormatter.Format(expected))
+                        .WithResult(operation.MessageKey, operation.ResultValidation, StringFormatter.Format(expected))
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -829,7 +829,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -879,7 +879,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -929,7 +929,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -979,7 +979,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -1029,7 +1029,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -1079,7 +1079,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -1131,7 +1131,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation, pattern)
+                        .WithResult(operation.MessageKey, operation.ResultValidation, pattern)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -1182,7 +1182,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation, regex.ToString())
+                        .WithResult(operation.MessageKey, operation.ResultValidation, regex.ToString())
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -1233,7 +1233,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation, pattern)
+                        .WithResult(operation.MessageKey, operation.ResultValidation, pattern)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -1284,7 +1284,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation, regex.ToString())
+                        .WithResult(operation.MessageKey, operation.ResultValidation, regex.ToString())
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -1333,7 +1333,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
             )
             .FailIf(
                 manager =>
@@ -1382,7 +1382,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
             )
             .FailIf(
                 manager =>
@@ -1432,7 +1432,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -1481,7 +1481,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
             )
             .FailIf(
                 manager =>
@@ -1530,7 +1530,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
             )
             .FailIf(
                 manager =>
@@ -1580,7 +1580,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -1629,7 +1629,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -1679,7 +1679,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -1729,7 +1729,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -1779,7 +1779,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -1829,7 +1829,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -1879,7 +1879,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -1929,7 +1929,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -1971,7 +1971,7 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             min.ToString(),
                             PrincipalChain.GetValue()!.Length.ToString()
                         )
@@ -2025,7 +2025,7 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             max.ToString(),
                             PrincipalChain.GetValue()!.Length.ToString()
                         )
@@ -2081,7 +2081,7 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             min.ToString(),
                             max.ToString(),
                             PrincipalChain.GetValue()!.Length.ToString()
@@ -2136,7 +2136,7 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             expected.ToString(),
                             PrincipalChain.GetValue()!.Length.ToString()
                         )
@@ -2190,7 +2190,7 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             expected.ToString(),
                             PrincipalChain.GetValue()!.Length.ToString()
                         )
@@ -2248,7 +2248,7 @@ public class StringOperationsManager
                         : actual;
                     return template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation, prefix)
+                        .WithResult(operation.MessageKey, operation.ResultValidation, prefix)
                         .WithStringDiff(prefix, actualPrefix)
                         .WithReason(reason?.ToString());
                 }
@@ -2312,7 +2312,7 @@ public class StringOperationsManager
                     return template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithValue(StringFormatter.Format(PrincipalChain.GetValueAsString()))
-                        .WithResult(operation.ResultValidation, StringFormatter.Format(prefix))
+                        .WithResult(operation.MessageKey, operation.ResultValidation, StringFormatter.Format(prefix))
                         .WithStringDiff(prefix, diff)
                         .WithReason(reason?.ToString());
                 }
@@ -2364,7 +2364,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation, prefix)
+                        .WithResult(operation.MessageKey, operation.ResultValidation, prefix)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -2419,7 +2419,7 @@ public class StringOperationsManager
                         : actual;
                     return template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation, suffix)
+                        .WithResult(operation.MessageKey, operation.ResultValidation, suffix)
                         .WithStringDiff(suffix, actualSuffix)
                         .WithReason(reason?.ToString());
                 }
@@ -2483,7 +2483,7 @@ public class StringOperationsManager
                     return template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithValue(StringFormatter.Format(PrincipalChain.GetValueAsString()))
-                        .WithResult(operation.ResultValidation, StringFormatter.Format(suffix))
+                        .WithResult(operation.MessageKey, operation.ResultValidation, StringFormatter.Format(suffix))
                         .WithStringDiff(suffix, diff)
                         .WithReason(reason?.ToString());
                 }
@@ -2535,7 +2535,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation, suffix)
+                        .WithResult(operation.MessageKey, operation.ResultValidation, suffix)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -2594,7 +2594,7 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithValue(StringFormatter.Format(PrincipalChain.GetValueAsString()))
-                        .WithResult(operation.ResultValidation, StringFormatter.Format(expected))
+                        .WithResult(operation.MessageKey, operation.ResultValidation, StringFormatter.Format(expected))
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -2722,7 +2722,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -2802,7 +2802,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -2844,7 +2844,7 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             pattern,
                             PrincipalChain.GetValue() ?? "<null>"
                         )
@@ -2894,7 +2894,7 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             pattern,
                             PrincipalChain.GetValue() ?? "<null>"
                         )
@@ -2936,7 +2936,7 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             pattern,
                             PrincipalChain.GetValue() ?? "<null>"
                         )
@@ -2973,7 +2973,7 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             pattern,
                             PrincipalChain.GetValue() ?? "<null>"
                         )
@@ -3006,7 +3006,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -3056,7 +3056,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -3106,7 +3106,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -3156,7 +3156,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -3206,7 +3206,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -3256,7 +3256,7 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -3370,7 +3370,7 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             string.Join(", ", expected.Select(e => e is null ? "<null>" : $"\"{e}\"")),
                             PrincipalChain.GetValue() is null ? "<null>" : $"\"{PrincipalChain.GetValue()}\""
                         )
@@ -3482,7 +3482,7 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             string.Join(", ", expected.Select(e => e is null ? "<null>" : $"\"{e}\"")),
                             PrincipalChain.GetValue() is null ? "<null>" : $"\"{PrincipalChain.GetValue()}\""
                         )

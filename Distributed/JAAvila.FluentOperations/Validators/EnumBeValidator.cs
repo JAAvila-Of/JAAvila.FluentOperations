@@ -13,6 +13,7 @@ internal class EnumBeValidator<T>(PrincipalChain<T> chain, T expected) : IValida
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Enum.Be";
 
     public bool Validate()
     {

@@ -12,6 +12,7 @@ internal class DoubleBeValidator(PrincipalChain<double> chain, double expected) 
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Double.Be";
 
     public bool Validate()
     {

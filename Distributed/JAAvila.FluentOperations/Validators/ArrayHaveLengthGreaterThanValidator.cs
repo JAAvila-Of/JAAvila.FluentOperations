@@ -12,6 +12,7 @@ internal class ArrayHaveLengthGreaterThanValidator<T>(PrincipalChain<IEnumerable
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Array.HaveLengthGreaterThan";
 
     public bool Validate()
     {

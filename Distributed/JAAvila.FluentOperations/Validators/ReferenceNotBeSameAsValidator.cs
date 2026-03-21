@@ -17,6 +17,7 @@ internal class ReferenceNotBeSameAsValidator<TSubject>(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Reference.NotBeSameAs";
 
     public bool Validate()
     {

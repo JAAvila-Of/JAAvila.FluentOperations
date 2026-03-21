@@ -15,6 +15,7 @@ internal class NullableULongBeDivisibleByValidator(PrincipalChain<ulong?> chain,
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableULong.BeDivisibleBy";
 
     public bool Validate()
     {

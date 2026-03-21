@@ -15,7 +15,8 @@ internal class StringNotBeValidator(PrincipalChain<string?> chain, string? expec
     public string Expected => "Not Be - <not null>";
 
     /// <inheritdoc />
-    public string ResultValidation { get; set; } = string.Empty;
+    public string ResultValidation { get; set; }
+    public string MessageKey => "String.NotBe";
 
     public bool Validate()
     {

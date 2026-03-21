@@ -54,7 +54,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -83,7 +83,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .Execute();
@@ -112,7 +112,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(expected)
                         )
                         .WithReason(reason?.ToString())
@@ -152,7 +152,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(expected)
                         )
                         .WithReason(reason?.ToString())
@@ -265,7 +265,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             expected.ToString(),
                             _array?.Length.ToString() ?? "null"
                         )
@@ -320,7 +320,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             expected.ToString(),
                             _array?.Length.ToString() ?? "null"
                         )
@@ -375,7 +375,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             expected.ToString(),
                             _array?.Length.ToString() ?? "null"
                         )
@@ -424,7 +424,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             PrincipalChain.GetValue().IsNull() ? "null" : "empty"
                         )
                         .WithReason(reason?.ToString())
@@ -456,7 +456,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation, _array?.Length.ToString() ?? "null")
+                        .WithResult(operation.MessageKey, operation.ResultValidation, _array?.Length.ToString() ?? "null")
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -495,7 +495,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -536,7 +536,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             expected.ToString(),
                             _array?.Length.ToString() ?? "null"
                         )
@@ -589,7 +589,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             expected.ToString(),
                             _array?.Length.ToString() ?? "null"
                         )
@@ -642,7 +642,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             expected.ToString(),
                             _array?.Length.ToString() ?? "null"
                         )
@@ -694,7 +694,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation, BaseFormatter.Format(item))
+                        .WithResult(operation.MessageKey, operation.ResultValidation, BaseFormatter.Format(item))
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -741,7 +741,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation, BaseFormatter.Format(item))
+                        .WithResult(operation.MessageKey, operation.ResultValidation, BaseFormatter.Format(item))
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -787,7 +787,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -836,7 +836,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation, BaseFormatter.Format(item))
+                        .WithResult(operation.MessageKey, operation.ResultValidation, BaseFormatter.Format(item))
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -876,7 +876,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -924,7 +924,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation, _array?.Length.ToString() ?? "null")
+                        .WithResult(operation.MessageKey, operation.ResultValidation, _array?.Length.ToString() ?? "null")
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -962,7 +962,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             _array?.Count(predicate).ToString() ?? "0"
                         )
                         .WithReason(reason?.ToString())
@@ -1012,7 +1012,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                         template
                             .WithSubject(PrincipalChain.GetSubject())
                             .WithResult(
-                                operation.ResultValidation,
+                                operation.MessageKey, operation.ResultValidation,
                                 PrincipalChain.GetValue()?.Count().ToString() ?? "0"
                             )
                             .WithReason(reason?.ToString())
@@ -1066,7 +1066,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                         template
                             .WithSubject(PrincipalChain.GetSubject())
                             .WithResult(
-                                operation.ResultValidation,
+                                operation.MessageKey, operation.ResultValidation,
                                 PrincipalChain.GetValue()?.Count(predicate).ToString() ?? "0"
                             )
                             .WithReason(reason?.ToString())
@@ -1138,7 +1138,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             string.Join(", ", items.Select(i => BaseFormatter.Format(i)))
                         )
                         .WithReason(reason?.ToString())
@@ -1200,7 +1200,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             string.Join(", ", items.Select(BaseFormatter.Format))
                         )
                         .WithReason(reason?.ToString())
@@ -1263,7 +1263,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             string.Join(", ", items.Select(BaseFormatter.Format))
                         )
                         .WithReason(reason?.ToString())
@@ -1326,7 +1326,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             string.Join(", ", items.Select(BaseFormatter.Format))
                         )
                         .WithReason(reason?.ToString())
@@ -1378,7 +1378,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             string.Join(", ", superset.Select(BaseFormatter.Format))
                         )
                         .WithReason(reason?.ToString())
@@ -1430,7 +1430,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             string.Join(", ", superset.Select(BaseFormatter.Format))
                         )
                         .WithReason(reason?.ToString())
@@ -1482,7 +1482,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             string.Join(", ", other.Select(BaseFormatter.Format))
                         )
                         .WithReason(reason?.ToString())
@@ -1534,7 +1534,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             string.Join(", ", other.Select(BaseFormatter.Format))
                         )
                         .WithReason(reason?.ToString())
@@ -1585,7 +1585,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -1625,7 +1625,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -1669,7 +1669,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -1722,7 +1722,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -1771,7 +1771,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -1821,7 +1821,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -1871,7 +1871,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -1934,7 +1934,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -1982,7 +1982,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -2021,7 +2021,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -2062,7 +2062,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(item),
                             FormatterPipeline.Format(
                                 PrincipalChain.GetValue() is { } aFirst
@@ -2111,7 +2111,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(item),
                             FormatterPipeline.Format(
                                 PrincipalChain.GetValue() is { } aLast
@@ -2161,7 +2161,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             index.ToString(),
                             FormatterPipeline.Format(
@@ -2228,7 +2228,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             string.Join(", ", items.Select(BaseFormatter.Format))
                         )
                         .WithReason(reason?.ToString())
@@ -2296,7 +2296,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             _array?.Length.ToString() ?? "null",
                             predicates.Length.ToString()
                         )
@@ -2349,7 +2349,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             min.ToString(),
                             _array?.Length.ToString() ?? "null"
                         )
@@ -2402,7 +2402,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             max.ToString(),
                             _array?.Length.ToString() ?? "null"
                         )
@@ -2458,7 +2458,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             expected.Count().ToString(),
                             _array?.Length.ToString() ?? "null"
                         )
@@ -2509,7 +2509,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             expected.Count().ToString(),
                             _array?.Length.ToString() ?? "null"
                         )
@@ -2553,7 +2553,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation
+                            operation.MessageKey, operation.ResultValidation
                         )
                         .WithReason(reason?.ToString())
             )
@@ -2598,7 +2598,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             expected.Count().ToString(),
                             _array?.Length.ToString() ?? "null"
                         )
@@ -2642,7 +2642,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation
+                            operation.MessageKey, operation.ResultValidation
                         )
                         .WithReason(reason?.ToString())
             )
@@ -2734,7 +2734,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(expected)
                         )
                         .WithReason(reason?.ToString())
@@ -2827,7 +2827,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(expected)
                         )
                         .WithReason(reason?.ToString())
@@ -2881,7 +2881,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -2916,7 +2916,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(

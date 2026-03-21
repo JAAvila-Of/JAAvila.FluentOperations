@@ -17,6 +17,7 @@ internal class CollectionNotBeValidator<T>(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Collection.NotBe";
 
     public bool Validate()
     {

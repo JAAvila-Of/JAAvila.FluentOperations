@@ -51,7 +51,7 @@ public class NullableEnumOperationsManager<T>
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .Execute();
@@ -79,7 +79,7 @@ public class NullableEnumOperationsManager<T>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             PrincipalChain.GetValue()?.ToString() ?? "<null>"
                         )
                         .WithReason(reason?.ToString())
@@ -110,7 +110,7 @@ public class NullableEnumOperationsManager<T>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -141,7 +141,7 @@ public class NullableEnumOperationsManager<T>
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation, BaseFormatter.Format(expected))
+                        .WithResult(operation.MessageKey, operation.ResultValidation, BaseFormatter.Format(expected))
                         .WithReason(reason?.ToString())
             )
             .Execute();
@@ -169,7 +169,7 @@ public class NullableEnumOperationsManager<T>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue()),
                             typeof(T).Name
                         )
@@ -220,7 +220,7 @@ public class NullableEnumOperationsManager<T>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             string.Join(", ", expected.Select(e => BaseFormatter.Format(e))),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -280,7 +280,7 @@ public class NullableEnumOperationsManager<T>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             string.Join(", ", expected.Select(e => BaseFormatter.Format(e)))
                         )
                         .WithReason(reason?.ToString())
@@ -330,7 +330,7 @@ public class NullableEnumOperationsManager<T>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue()),
                             BaseFormatter.Format(flag)
                         )
@@ -372,7 +372,7 @@ public class NullableEnumOperationsManager<T>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue()),
                             BaseFormatter.Format(flag)
                         )
@@ -445,7 +445,7 @@ public class NullableEnumOperationsManager<T>
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -474,7 +474,7 @@ public class NullableEnumOperationsManager<T>
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(

@@ -12,6 +12,7 @@ internal class UIntNotBeOneOfValidator(PrincipalChain<uint> chain, params uint[]
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "UInt.NotBeOneOf";
 
     public bool Validate()
     {

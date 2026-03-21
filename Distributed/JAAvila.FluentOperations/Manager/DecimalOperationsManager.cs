@@ -53,7 +53,7 @@ public class DecimalOperationsManager : ITestManager<DecimalOperationsManager, d
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation, expected, PrincipalChain.GetValue())
+                        .WithResult(operation.MessageKey, operation.ResultValidation, expected, PrincipalChain.GetValue())
                         .WithReason(reason?.ToString())
             )
             .Execute();
@@ -81,7 +81,7 @@ public class DecimalOperationsManager : ITestManager<DecimalOperationsManager, d
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation, expected)
+                        .WithResult(operation.MessageKey, operation.ResultValidation, expected)
                         .WithReason(reason?.ToString())
             )
             .Execute();
@@ -108,7 +108,7 @@ public class DecimalOperationsManager : ITestManager<DecimalOperationsManager, d
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation, PrincipalChain.GetValue())
+                        .WithResult(operation.MessageKey, operation.ResultValidation, PrincipalChain.GetValue())
                         .WithReason(reason?.ToString())
             )
             .Execute();
@@ -135,7 +135,7 @@ public class DecimalOperationsManager : ITestManager<DecimalOperationsManager, d
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation, PrincipalChain.GetValue())
+                        .WithResult(operation.MessageKey, operation.ResultValidation, PrincipalChain.GetValue())
                         .WithReason(reason?.ToString())
             )
             .Execute();
@@ -162,7 +162,7 @@ public class DecimalOperationsManager : ITestManager<DecimalOperationsManager, d
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation, PrincipalChain.GetValue())
+                        .WithResult(operation.MessageKey, operation.ResultValidation, PrincipalChain.GetValue())
                         .WithReason(reason?.ToString())
             )
             .Execute();
@@ -190,7 +190,7 @@ public class DecimalOperationsManager : ITestManager<DecimalOperationsManager, d
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation, expected, PrincipalChain.GetValue())
+                        .WithResult(operation.MessageKey, operation.ResultValidation, expected, PrincipalChain.GetValue())
                         .WithReason(reason?.ToString())
             )
             .Execute();
@@ -218,7 +218,7 @@ public class DecimalOperationsManager : ITestManager<DecimalOperationsManager, d
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation, expected, PrincipalChain.GetValue())
+                        .WithResult(operation.MessageKey, operation.ResultValidation, expected, PrincipalChain.GetValue())
                         .WithReason(reason?.ToString())
             )
             .Execute();
@@ -246,7 +246,7 @@ public class DecimalOperationsManager : ITestManager<DecimalOperationsManager, d
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation, expected, PrincipalChain.GetValue())
+                        .WithResult(operation.MessageKey, operation.ResultValidation, expected, PrincipalChain.GetValue())
                         .WithReason(reason?.ToString())
             )
             .Execute();
@@ -274,7 +274,7 @@ public class DecimalOperationsManager : ITestManager<DecimalOperationsManager, d
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation, expected, PrincipalChain.GetValue())
+                        .WithResult(operation.MessageKey, operation.ResultValidation, expected, PrincipalChain.GetValue())
                         .WithReason(reason?.ToString())
             )
             .Execute();
@@ -306,7 +306,7 @@ public class DecimalOperationsManager : ITestManager<DecimalOperationsManager, d
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation, min, max, PrincipalChain.GetValue())
+                        .WithResult(operation.MessageKey, operation.ResultValidation, min, max, PrincipalChain.GetValue())
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -347,7 +347,7 @@ public class DecimalOperationsManager : ITestManager<DecimalOperationsManager, d
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation, min, max, PrincipalChain.GetValue())
+                        .WithResult(operation.MessageKey, operation.ResultValidation, min, max, PrincipalChain.GetValue())
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -388,7 +388,7 @@ public class DecimalOperationsManager : ITestManager<DecimalOperationsManager, d
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             string.Join(", ", expected),
                             PrincipalChain.GetValue()
                         )
@@ -432,7 +432,7 @@ public class DecimalOperationsManager : ITestManager<DecimalOperationsManager, d
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             string.Join(", ", expected),
                             PrincipalChain.GetValue()
                         )
@@ -475,7 +475,7 @@ public class DecimalOperationsManager : ITestManager<DecimalOperationsManager, d
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation, divisor, PrincipalChain.GetValue())
+                        .WithResult(operation.MessageKey, operation.ResultValidation, divisor, PrincipalChain.GetValue())
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -516,7 +516,7 @@ public class DecimalOperationsManager : ITestManager<DecimalOperationsManager, d
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             expectedDecimals,
                             PrincipalChain.GetValue()
                         )
@@ -559,7 +559,7 @@ public class DecimalOperationsManager : ITestManager<DecimalOperationsManager, d
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation, decimals, PrincipalChain.GetValue())
+                        .WithResult(operation.MessageKey, operation.ResultValidation, decimals, PrincipalChain.GetValue())
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -605,7 +605,7 @@ public class DecimalOperationsManager : ITestManager<DecimalOperationsManager, d
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(tolerance),
                             BaseFormatter.Format(PrincipalChain.GetValue())
@@ -679,7 +679,7 @@ public class DecimalOperationsManager : ITestManager<DecimalOperationsManager, d
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -701,7 +701,7 @@ public class DecimalOperationsManager : ITestManager<DecimalOperationsManager, d
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(

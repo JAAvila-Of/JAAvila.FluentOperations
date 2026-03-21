@@ -16,6 +16,7 @@ internal class NullableIntegerNotBeInRangeValidator(PrincipalChain<int?> chain, 
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableInteger.NotBeInRange";
 
     public bool Validate()
     {

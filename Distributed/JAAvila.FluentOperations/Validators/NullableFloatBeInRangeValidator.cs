@@ -16,6 +16,7 @@ internal class NullableFloatBeInRangeValidator(PrincipalChain<float?> chain, flo
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableFloat.BeInRange";
 
     public bool Validate()
     {

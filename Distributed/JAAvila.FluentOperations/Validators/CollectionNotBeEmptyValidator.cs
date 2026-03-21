@@ -12,6 +12,7 @@ internal class CollectionNotBeEmptyValidator<T>(PrincipalChain<IEnumerable<T>> c
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Collection.NotBeEmpty";
 
     public bool Validate()
     {

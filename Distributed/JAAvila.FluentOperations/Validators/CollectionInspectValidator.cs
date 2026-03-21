@@ -21,7 +21,8 @@ internal class CollectionInspectValidator<T>(
     ) => new(chain, inspector);
 
     public string Expected { get; } = string.Empty;
-    public string ResultValidation { get; set; } = string.Empty;
+    public string ResultValidation { get; set; }
+    public string MessageKey => "Collection.Inspect";
 
     public bool Validate()
     {

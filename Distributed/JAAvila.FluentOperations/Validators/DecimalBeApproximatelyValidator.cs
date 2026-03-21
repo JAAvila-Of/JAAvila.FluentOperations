@@ -19,6 +19,7 @@ internal class DecimalBeApproximatelyValidator(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Decimal.BeApproximately";
 
     public bool Validate()
     {

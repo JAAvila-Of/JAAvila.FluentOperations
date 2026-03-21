@@ -19,6 +19,7 @@ internal class DateTimeNotBeCloseToValidator(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "DateTime.NotBeCloseTo";
 
     public bool Validate()
     {

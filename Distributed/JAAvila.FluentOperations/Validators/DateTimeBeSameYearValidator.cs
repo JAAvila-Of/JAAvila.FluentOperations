@@ -12,6 +12,7 @@ internal class DateTimeBeSameYearValidator(PrincipalChain<DateTime> chain, DateT
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "DateTime.BeSameYear";
 
     public bool Validate()
     {

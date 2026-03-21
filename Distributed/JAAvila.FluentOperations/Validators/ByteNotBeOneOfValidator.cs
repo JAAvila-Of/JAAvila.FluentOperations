@@ -12,6 +12,7 @@ internal class ByteNotBeOneOfValidator(PrincipalChain<byte> chain, params byte[]
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Byte.NotBeOneOf";
 
     public bool Validate()
     {

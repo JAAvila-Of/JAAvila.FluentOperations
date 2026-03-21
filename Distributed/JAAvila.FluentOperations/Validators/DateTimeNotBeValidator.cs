@@ -12,6 +12,7 @@ internal class DateTimeNotBeValidator(PrincipalChain<DateTime> chain, DateTime e
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "DateTime.NotBe";
 
     public bool Validate()
     {

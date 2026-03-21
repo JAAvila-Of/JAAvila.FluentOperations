@@ -13,6 +13,7 @@ internal class CollectionContainSingleValidator<T>(PrincipalChain<IEnumerable<T>
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Collection.ContainSingle";
 
     public bool Validate()
     {

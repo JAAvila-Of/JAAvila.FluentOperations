@@ -12,6 +12,7 @@ internal class UriHaveFragmentValidator(PrincipalChain<Uri?> chain) : IValidator
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Uri.HaveFragment";
 
     public bool Validate()
     {

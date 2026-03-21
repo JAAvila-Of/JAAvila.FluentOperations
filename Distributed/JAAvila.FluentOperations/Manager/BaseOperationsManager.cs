@@ -140,7 +140,7 @@ public abstract class BaseOperationsManager<TManager, TSubject>
                     template
                         .WithSubject(Manager.PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(Manager.PrincipalChain.GetValue())
                         )
@@ -173,7 +173,7 @@ public abstract class BaseOperationsManager<TManager, TSubject>
                 (template, operation) =>
                     template
                         .WithSubject(Manager.PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation, BaseFormatter.Format(expected))
+                        .WithResult(operation.MessageKey, operation.ResultValidation, BaseFormatter.Format(expected))
                         .WithReason(reason?.ToString())
             )
             .Execute();
@@ -273,7 +273,7 @@ public abstract class BaseOperationsManager<TManager, TSubject>
                 (template, operation) =>
                     template
                         .WithSubject(Manager.PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithExpression(expression.ToString())
                         .WithReason(reason?.ToString())
             )
@@ -394,7 +394,7 @@ public abstract class BaseOperationsManager<TManager, TSubject>
                 (template, operation) =>
                     template
                         .WithSubject(Manager.PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -442,7 +442,7 @@ public abstract class BaseOperationsManager<TManager, TSubject>
                 (template, operation) =>
                     template
                         .WithSubject(Manager.PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -472,7 +472,7 @@ public abstract class BaseOperationsManager<TManager, TSubject>
                 (template, operation) =>
                     template
                         .WithSubject(Manager.PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -510,7 +510,7 @@ public abstract class BaseOperationsManager<TManager, TSubject>
                 (template, operation) =>
                     template
                         .WithSubject(Manager.PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -539,7 +539,7 @@ public abstract class BaseOperationsManager<TManager, TSubject>
                 (template, operation) =>
                     template
                         .WithSubject(Manager.PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -575,7 +575,7 @@ public abstract class BaseOperationsManager<TManager, TSubject>
                 (template, operation) =>
                     template
                         .WithSubject(Manager.PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -611,7 +611,7 @@ public abstract class BaseOperationsManager<TManager, TSubject>
                 (template, operation) =>
                     template
                         .WithSubject(Manager.PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(

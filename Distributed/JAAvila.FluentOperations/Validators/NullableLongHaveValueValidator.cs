@@ -11,6 +11,7 @@ internal class NullableLongHaveValueValidator(PrincipalChain<long?> chain) : IVa
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableLong.HaveValue";
 
     public bool Validate()
     {

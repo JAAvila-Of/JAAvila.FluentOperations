@@ -14,6 +14,7 @@ internal class CollectionNotContainNullValidator<T>(PrincipalChain<IEnumerable<T
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Collection.NotContainNull";
 
     public bool Validate()
     {

@@ -16,6 +16,7 @@ internal class NullableCharNotBeInRangeValidator(PrincipalChain<char?> chain, ch
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableChar.NotBeInRange";
 
     public bool Validate()
     {

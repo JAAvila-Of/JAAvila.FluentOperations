@@ -12,6 +12,7 @@ internal class ActionStatsCompleteWithinValidator(PrincipalChain<Model.ActionSta
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "ActionStats.CompleteWithin";
 
     public bool Validate()
     {

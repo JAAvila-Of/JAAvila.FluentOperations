@@ -11,6 +11,7 @@ internal class CharBeWhiteSpaceValidator(PrincipalChain<char> chain) : IValidato
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Char.BeWhiteSpace";
 
     public bool Validate()
     {

@@ -12,6 +12,7 @@ internal class ByteNotBeValidator(PrincipalChain<byte> chain, byte expected) : I
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Byte.NotBe";
 
     public bool Validate()
     {

@@ -12,6 +12,7 @@ internal class DateTimeHaveDayValidator(PrincipalChain<DateTime> chain, int expe
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "DateTime.HaveDay";
 
     public bool Validate()
     {

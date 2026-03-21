@@ -14,6 +14,7 @@ internal class NullableCharBeOneOfValidator(PrincipalChain<char?> chain, char[] 
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableChar.BeOneOf";
 
     public bool Validate()
     {

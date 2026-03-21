@@ -19,6 +19,7 @@ internal class CollectionHaveCountBetweenValidator<T>(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Collection.HaveCountBetween";
 
     public bool Validate()
     {

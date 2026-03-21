@@ -12,6 +12,7 @@ internal class NullableDateTimeOffsetBeValidator(PrincipalChain<DateTimeOffset?>
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableDateTimeOffset.Be";
 
     public bool Validate()
     {

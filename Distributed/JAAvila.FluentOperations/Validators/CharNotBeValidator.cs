@@ -12,6 +12,7 @@ internal class CharNotBeValidator(PrincipalChain<char> chain, char expected) : I
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Char.NotBe";
 
     public bool Validate()
     {

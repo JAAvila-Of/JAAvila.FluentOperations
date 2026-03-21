@@ -12,6 +12,7 @@ internal class DateTimeBeInThePastValidator(PrincipalChain<DateTime> chain) : IV
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "DateTime.BeInThePast";
 
     public bool Validate()
     {

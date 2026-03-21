@@ -11,6 +11,7 @@ internal class DateOnlyBeWeekdayValidator(PrincipalChain<DateOnly> chain) : IVal
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "DateOnly.BeWeekday";
 
     public bool Validate()
     {

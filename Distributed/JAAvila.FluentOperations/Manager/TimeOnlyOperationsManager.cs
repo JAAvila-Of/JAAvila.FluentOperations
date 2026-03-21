@@ -54,7 +54,7 @@ public class TimeOnlyOperationsManager : ITestManager<TimeOnlyOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -86,7 +86,7 @@ public class TimeOnlyOperationsManager : ITestManager<TimeOnlyOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -118,7 +118,7 @@ public class TimeOnlyOperationsManager : ITestManager<TimeOnlyOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -150,7 +150,7 @@ public class TimeOnlyOperationsManager : ITestManager<TimeOnlyOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -186,7 +186,7 @@ public class TimeOnlyOperationsManager : ITestManager<TimeOnlyOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(min),
                             BaseFormatter.Format(max),
                             BaseFormatter.Format(PrincipalChain.GetValue())
@@ -232,7 +232,7 @@ public class TimeOnlyOperationsManager : ITestManager<TimeOnlyOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(min),
                             BaseFormatter.Format(max),
                             BaseFormatter.Format(PrincipalChain.GetValue())
@@ -274,7 +274,7 @@ public class TimeOnlyOperationsManager : ITestManager<TimeOnlyOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(hour),
                             BaseFormatter.Format(PrincipalChain.GetValue().Hour)
                         )
@@ -306,7 +306,7 @@ public class TimeOnlyOperationsManager : ITestManager<TimeOnlyOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(minute),
                             BaseFormatter.Format(PrincipalChain.GetValue().Minute)
                         )
@@ -338,7 +338,7 @@ public class TimeOnlyOperationsManager : ITestManager<TimeOnlyOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(second),
                             BaseFormatter.Format(PrincipalChain.GetValue().Second)
                         )
@@ -402,7 +402,7 @@ public class TimeOnlyOperationsManager : ITestManager<TimeOnlyOperationsManager,
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -424,7 +424,7 @@ public class TimeOnlyOperationsManager : ITestManager<TimeOnlyOperationsManager,
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(

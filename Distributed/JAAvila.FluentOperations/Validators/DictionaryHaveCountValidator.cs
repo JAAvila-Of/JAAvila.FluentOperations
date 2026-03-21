@@ -17,6 +17,7 @@ internal class DictionaryHaveCountValidator<TKey, TValue>(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Dictionary.HaveCount";
 
     public bool Validate()
     {

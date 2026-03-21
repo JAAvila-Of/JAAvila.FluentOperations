@@ -11,6 +11,7 @@ internal class NullableCharBeDigitValidator(PrincipalChain<char?> chain) : IVali
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableChar.BeDigit";
 
     public bool Validate()
     {

@@ -13,6 +13,7 @@ internal class StringHaveLengthGreaterThanValidator(PrincipalChain<string?> chai
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "String.HaveLengthGreaterThan";
 
     public bool Validate()
     {

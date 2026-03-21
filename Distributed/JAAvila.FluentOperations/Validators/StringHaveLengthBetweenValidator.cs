@@ -16,6 +16,7 @@ internal class StringHaveLengthBetweenValidator(PrincipalChain<string?> chain, i
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "String.HaveLengthBetween";
 
     public bool Validate()
     {

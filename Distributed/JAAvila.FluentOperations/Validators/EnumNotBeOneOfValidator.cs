@@ -13,6 +13,7 @@ internal class EnumNotBeOneOfValidator<T>(PrincipalChain<T> chain, params T[] ex
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Enum.NotBeOneOf";
 
     public bool Validate()
     {

@@ -15,6 +15,7 @@ internal class NullableShortBeDivisibleByValidator(PrincipalChain<short?> chain,
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableShort.BeDivisibleBy";
 
     public bool Validate()
     {

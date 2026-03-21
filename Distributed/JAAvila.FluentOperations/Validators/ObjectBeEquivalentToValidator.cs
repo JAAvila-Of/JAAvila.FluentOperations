@@ -19,7 +19,8 @@ internal class ObjectBeEquivalentToValidator(
     ) => new(chain, expected, options);
 
     public string Expected { get; } = string.Empty;
-    public string ResultValidation { get; set; } = string.Empty;
+    public string ResultValidation { get; set; }
+    public string MessageKey => "Object.BeEquivalentTo";
 
     public bool Validate()
     {

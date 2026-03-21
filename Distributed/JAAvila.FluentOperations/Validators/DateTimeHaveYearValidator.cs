@@ -12,6 +12,7 @@ internal class DateTimeHaveYearValidator(PrincipalChain<DateTime> chain, int exp
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "DateTime.HaveYear";
 
     public bool Validate()
     {

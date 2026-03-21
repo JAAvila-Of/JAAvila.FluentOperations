@@ -12,6 +12,7 @@ internal class DateTimeBeInTheFutureValidator(PrincipalChain<DateTime> chain) : 
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "DateTime.BeInTheFuture";
 
     public bool Validate()
     {

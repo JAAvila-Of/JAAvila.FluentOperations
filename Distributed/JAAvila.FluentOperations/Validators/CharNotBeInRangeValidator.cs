@@ -13,6 +13,7 @@ internal class CharNotBeInRangeValidator(PrincipalChain<char> chain, char min, c
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Char.NotBeInRange";
 
     public bool Validate()
     {

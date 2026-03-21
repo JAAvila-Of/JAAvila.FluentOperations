@@ -12,6 +12,7 @@ internal class UShortBePositiveValidator(PrincipalChain<ushort> chain) : IValida
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "UShort.BePositive";
 
     public bool Validate()
     {

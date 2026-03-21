@@ -22,6 +22,7 @@ internal class StringStartWithValidator(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "String.StartWith";
 
     public bool Validate()
     {

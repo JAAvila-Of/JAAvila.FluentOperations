@@ -12,6 +12,7 @@ internal class ActionStatsNotSucceedValidator(PrincipalChain<Model.ActionStats?>
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "ActionStats.NotSucceed";
 
     public bool Validate()
     {

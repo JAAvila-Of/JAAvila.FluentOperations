@@ -12,6 +12,7 @@ internal class ByteBeGreaterThanOrEqualToValidator(PrincipalChain<byte> chain, b
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Byte.BeGreaterThanOrEqualTo";
 
     public bool Validate()
     {

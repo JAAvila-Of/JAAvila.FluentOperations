@@ -12,6 +12,7 @@ internal class TimeOnlyBeValidator(PrincipalChain<TimeOnly> chain, TimeOnly expe
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "TimeOnly.Be";
 
     public bool Validate()
     {

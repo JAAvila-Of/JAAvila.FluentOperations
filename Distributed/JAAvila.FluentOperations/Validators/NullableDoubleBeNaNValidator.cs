@@ -12,6 +12,7 @@ internal class NullableDoubleBeNaNValidator(PrincipalChain<double?> chain) : IVa
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableDouble.BeNaN";
 
     public bool Validate()
     {

@@ -15,6 +15,7 @@ internal class NullableULongBeGreaterThanValidator(PrincipalChain<ulong?> chain,
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableULong.BeGreaterThan";
 
     public bool Validate()
     {

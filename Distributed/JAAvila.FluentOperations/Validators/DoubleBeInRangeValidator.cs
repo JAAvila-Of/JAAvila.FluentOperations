@@ -16,6 +16,7 @@ internal class DoubleBeInRangeValidator(PrincipalChain<double> chain, double min
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Double.BeInRange";
 
     public bool Validate()
     {

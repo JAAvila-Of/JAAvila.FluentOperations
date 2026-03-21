@@ -12,6 +12,7 @@ internal class DateOnlyBeValidator(PrincipalChain<DateOnly> chain, DateOnly expe
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "DateOnly.Be";
 
     public bool Validate()
     {

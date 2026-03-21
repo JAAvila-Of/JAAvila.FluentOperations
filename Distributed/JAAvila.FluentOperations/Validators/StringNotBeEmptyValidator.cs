@@ -13,7 +13,8 @@ internal class StringNotBeEmptyValidator(PrincipalChain<string?> chain) : IValid
     public string Expected => "Not be empty - \"\"";
 
     /// <inheritdoc />
-    public string ResultValidation { get; set; } = string.Empty;
+    public string ResultValidation { get; set; }
+    public string MessageKey => "String.NotBeEmpty";
 
     /// <inheritdoc />
     public bool Validate()

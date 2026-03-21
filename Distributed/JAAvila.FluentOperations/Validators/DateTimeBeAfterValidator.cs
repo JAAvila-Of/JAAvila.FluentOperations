@@ -12,6 +12,7 @@ internal class DateTimeBeAfterValidator(PrincipalChain<DateTime> chain, DateTime
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "DateTime.BeAfter";
 
     public bool Validate()
     {

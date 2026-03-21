@@ -12,6 +12,7 @@ internal class StringBeIPAddressValidator(PrincipalChain<string?> chain) : IVali
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "String.BeIPAddress";
 
     public bool Validate()
     {

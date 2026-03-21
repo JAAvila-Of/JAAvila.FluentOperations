@@ -24,7 +24,8 @@ internal class CollectionNotContainEquivalentOfValidator<T, TExpected>(
     ) => new(chain, expected, options);
 
     public string Expected { get; } = string.Empty;
-    public string ResultValidation { get; set; } = string.Empty;
+    public string ResultValidation { get; set; }
+    public string MessageKey => "Collection.NotContainEquivalentOf";
 
     public bool Validate()
     {

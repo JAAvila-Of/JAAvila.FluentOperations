@@ -11,6 +11,7 @@ internal class ULongBeZeroValidator(PrincipalChain<ulong> chain) : IValidator
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "ULong.BeZero";
 
     public bool Validate()
     {

@@ -16,6 +16,7 @@ internal class DoubleNotBeInRangeValidator(PrincipalChain<double> chain, double 
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Double.NotBeInRange";
 
     public bool Validate()
     {

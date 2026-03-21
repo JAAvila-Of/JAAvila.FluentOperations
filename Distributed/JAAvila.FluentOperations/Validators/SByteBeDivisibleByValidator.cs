@@ -12,6 +12,7 @@ internal class SByteBeDivisibleByValidator(PrincipalChain<sbyte> chain, sbyte di
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "SByte.BeDivisibleBy";
 
     public bool Validate()
     {

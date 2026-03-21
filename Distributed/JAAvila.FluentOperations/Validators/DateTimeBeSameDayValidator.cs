@@ -12,6 +12,7 @@ internal class DateTimeBeSameDayValidator(PrincipalChain<DateTime> chain, DateTi
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "DateTime.BeSameDay";
 
     public bool Validate()
     {

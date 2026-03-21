@@ -11,6 +11,7 @@ internal class NullableLongNotHaveValueValidator(PrincipalChain<long?> chain) : 
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableLong.NotHaveValue";
 
     public bool Validate()
     {

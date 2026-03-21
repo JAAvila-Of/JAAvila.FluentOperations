@@ -12,6 +12,7 @@ internal class DecimalBeLessThanOrEqualToValidator(PrincipalChain<decimal> chain
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Decimal.BeLessThanOrEqualTo";
 
     public bool Validate()
     {

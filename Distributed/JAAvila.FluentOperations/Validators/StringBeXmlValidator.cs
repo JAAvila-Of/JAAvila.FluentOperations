@@ -13,6 +13,7 @@ internal class StringBeXmlValidator(PrincipalChain<string?> chain) : IValidator
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "String.BeXml";
 
     public bool Validate()
     {

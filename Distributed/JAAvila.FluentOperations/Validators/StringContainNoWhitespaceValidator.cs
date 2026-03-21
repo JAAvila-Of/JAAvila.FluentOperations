@@ -12,6 +12,7 @@ internal class StringContainNoWhitespaceValidator(PrincipalChain<string?> chain)
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "String.ContainNoWhitespace";
 
     public bool Validate()
     {

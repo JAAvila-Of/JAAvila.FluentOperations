@@ -12,6 +12,7 @@ internal class GuidNotBeValidator(PrincipalChain<Guid> chain, Guid expected) : I
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Guid.NotBe";
 
     public bool Validate()
     {

@@ -17,6 +17,7 @@ internal class NullableDecimalBeDivisibleByValidator(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableDecimal.BeDivisibleBy";
 
     public bool Validate()
     {

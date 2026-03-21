@@ -19,7 +19,8 @@ internal class StringMatchWildcardValidator(
     ) => new(chain, pattern, comparison);
 
     public string Expected => pattern;
-    public string ResultValidation { get; set; } = string.Empty;
+    public string ResultValidation { get; set; }
+    public string MessageKey => "String.MatchWildcard";
 
     public bool Validate()
     {

@@ -17,6 +17,7 @@ internal class CollectionExtractSinglePredicateValidator<T>(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Collection.ExtractSinglePredicate";
 
     /// <summary>
     /// The extracted element after successful validation.

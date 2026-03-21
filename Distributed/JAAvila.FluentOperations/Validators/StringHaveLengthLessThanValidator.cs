@@ -13,6 +13,7 @@ internal class StringHaveLengthLessThanValidator(PrincipalChain<string?> chain, 
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "String.HaveLengthLessThan";
 
     public bool Validate()
     {

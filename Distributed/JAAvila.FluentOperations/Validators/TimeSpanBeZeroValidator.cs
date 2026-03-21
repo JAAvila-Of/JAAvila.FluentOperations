@@ -12,6 +12,7 @@ internal class TimeSpanBeZeroValidator(PrincipalChain<TimeSpan> chain) : IValida
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "TimeSpan.BeZero";
 
     public bool Validate()
     {

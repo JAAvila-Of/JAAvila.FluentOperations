@@ -11,6 +11,7 @@ internal class NullableUIntBeOddValidator(PrincipalChain<uint?> chain) : IValida
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableUInt.BeOdd";
 
     public bool Validate()
     {

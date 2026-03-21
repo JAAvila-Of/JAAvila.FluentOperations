@@ -12,6 +12,7 @@ internal class BooleanNotBeValidator(PrincipalChain<bool> chain, bool? expectedV
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Boolean.NotBe";
 
     public bool Validate()
     {

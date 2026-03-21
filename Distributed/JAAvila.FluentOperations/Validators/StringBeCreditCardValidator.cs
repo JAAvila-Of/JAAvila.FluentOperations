@@ -11,6 +11,7 @@ internal class StringBeCreditCardValidator(PrincipalChain<string?> chain) : IVal
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "String.BeCreditCard";
 
     public bool Validate()
     {

@@ -12,6 +12,7 @@ internal class DecimalBeRoundedToValidator(PrincipalChain<decimal> chain, int de
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Decimal.BeRoundedTo";
 
     public bool Validate()
     {

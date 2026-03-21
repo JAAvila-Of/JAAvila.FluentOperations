@@ -12,6 +12,7 @@ internal class UriBeRelativeValidator(PrincipalChain<Uri?> chain) : IValidator
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Uri.BeRelative";
 
     public bool Validate()
     {

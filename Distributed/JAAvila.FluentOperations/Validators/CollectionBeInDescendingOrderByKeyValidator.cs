@@ -19,6 +19,7 @@ internal class CollectionBeInDescendingOrderByKeyValidator<T, TKey>(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Collection.BeInDescendingOrderByKey";
 
     public bool Validate()
     {

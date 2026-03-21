@@ -16,6 +16,7 @@ internal class ReferenceNotBeCastToValidator<TSubject>(PrincipalChain<TSubject> 
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Reference.NotBeCastTo";
 
     public bool Validate()
     {

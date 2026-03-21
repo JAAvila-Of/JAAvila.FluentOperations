@@ -15,6 +15,7 @@ internal class DateTimeBeSameMonthValidator(PrincipalChain<DateTime> chain, Date
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "DateTime.BeSameMonth";
 
     public bool Validate()
     {

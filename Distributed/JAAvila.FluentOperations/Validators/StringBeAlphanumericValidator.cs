@@ -11,6 +11,7 @@ internal class StringBeAlphanumericValidator(PrincipalChain<string?> chain) : IV
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "String.BeAlphanumeric";
 
     public bool Validate()
     {

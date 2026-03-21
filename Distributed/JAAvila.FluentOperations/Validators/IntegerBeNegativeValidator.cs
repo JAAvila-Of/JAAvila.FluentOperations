@@ -12,6 +12,7 @@ internal class IntegerBeNegativeValidator(PrincipalChain<int> chain) : IValidato
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Integer.BeNegative";
 
     public bool Validate()
     {

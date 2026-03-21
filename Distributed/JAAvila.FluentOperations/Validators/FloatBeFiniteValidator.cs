@@ -11,6 +11,7 @@ internal class FloatBeFiniteValidator(PrincipalChain<float> chain) : IValidator
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Float.BeFinite";
 
     public bool Validate()
     {

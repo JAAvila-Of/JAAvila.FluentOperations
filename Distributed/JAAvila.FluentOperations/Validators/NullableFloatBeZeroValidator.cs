@@ -11,6 +11,7 @@ internal class NullableFloatBeZeroValidator(PrincipalChain<float?> chain) : IVal
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableFloat.BeZero";
 
     public bool Validate()
     {

@@ -12,6 +12,7 @@ internal class UShortNotBeValidator(PrincipalChain<ushort> chain, ushort expecte
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "UShort.NotBe";
 
     public bool Validate()
     {

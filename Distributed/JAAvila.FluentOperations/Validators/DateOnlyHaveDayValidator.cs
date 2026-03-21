@@ -12,6 +12,7 @@ internal class DateOnlyHaveDayValidator(PrincipalChain<DateOnly> chain, int expe
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "DateOnly.HaveDay";
 
     public bool Validate()
     {

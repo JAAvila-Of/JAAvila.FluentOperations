@@ -19,6 +19,7 @@ internal class NullableTimeSpanNotBeInRangeValidator(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableTimeSpan.NotBeInRange";
 
     public bool Validate()
     {
