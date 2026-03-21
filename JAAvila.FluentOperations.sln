@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JAAvila.FluentOperations.Me
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JAAvila.FluentOperations.MinimalApi", "Distributed\JAAvila.FluentOperations.MinimalApi\JAAvila.FluentOperations.MinimalApi.csproj", "{35A4BEB5-3B2D-465C-96B9-D044E250E1E2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JAAvila.FluentOperations.Analyzers", "Distributed\JAAvila.FluentOperations.Analyzers\JAAvila.FluentOperations.Analyzers.csproj", "{F110E7AD-E8D9-45CC-AB0D-763B61475D26}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -82,6 +84,18 @@ Global
 		{35A4BEB5-3B2D-465C-96B9-D044E250E1E2}.Release|x64.Build.0 = Release|Any CPU
 		{35A4BEB5-3B2D-465C-96B9-D044E250E1E2}.Release|x86.ActiveCfg = Release|Any CPU
 		{35A4BEB5-3B2D-465C-96B9-D044E250E1E2}.Release|x86.Build.0 = Release|Any CPU
+		{F110E7AD-E8D9-45CC-AB0D-763B61475D26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F110E7AD-E8D9-45CC-AB0D-763B61475D26}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F110E7AD-E8D9-45CC-AB0D-763B61475D26}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F110E7AD-E8D9-45CC-AB0D-763B61475D26}.Debug|x64.Build.0 = Debug|Any CPU
+		{F110E7AD-E8D9-45CC-AB0D-763B61475D26}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F110E7AD-E8D9-45CC-AB0D-763B61475D26}.Debug|x86.Build.0 = Debug|Any CPU
+		{F110E7AD-E8D9-45CC-AB0D-763B61475D26}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F110E7AD-E8D9-45CC-AB0D-763B61475D26}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F110E7AD-E8D9-45CC-AB0D-763B61475D26}.Release|x64.ActiveCfg = Release|Any CPU
+		{F110E7AD-E8D9-45CC-AB0D-763B61475D26}.Release|x64.Build.0 = Release|Any CPU
+		{F110E7AD-E8D9-45CC-AB0D-763B61475D26}.Release|x86.ActiveCfg = Release|Any CPU
+		{F110E7AD-E8D9-45CC-AB0D-763B61475D26}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -92,5 +106,6 @@ Global
 		{05D5C54F-44E0-4193-9F7C-F7CDCB58C685} = {13A139BD-5932-41F1-96B3-EC6BB0C219B9}
 		{AD2F74A8-8CB7-493D-85E5-30E4205B2D4F} = {13A139BD-5932-41F1-96B3-EC6BB0C219B9}
 		{35A4BEB5-3B2D-465C-96B9-D044E250E1E2} = {13A139BD-5932-41F1-96B3-EC6BB0C219B9}
+		{F110E7AD-E8D9-45CC-AB0D-763B61475D26} = {13A139BD-5932-41F1-96B3-EC6BB0C219B9}
 	EndGlobalSection
 EndGlobal
