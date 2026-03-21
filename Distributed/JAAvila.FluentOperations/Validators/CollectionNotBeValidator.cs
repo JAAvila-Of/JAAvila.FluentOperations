@@ -8,7 +8,7 @@ namespace JAAvila.FluentOperations.Validators;
 internal class CollectionNotBeValidator<T>(
     PrincipalChain<IEnumerable<T>> chain,
     IEnumerable<T> expected
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static CollectionNotBeValidator<T> New(
         PrincipalChain<IEnumerable<T>> chain,
@@ -18,6 +18,10 @@ internal class CollectionNotBeValidator<T>(
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Collection.NotBe";
+    string IRuleDescriptor.OperationName => "NotBe";
+    Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["values"] = expected };
 
     public bool Validate()
     {

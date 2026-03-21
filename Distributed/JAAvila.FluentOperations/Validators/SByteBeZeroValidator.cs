@@ -5,13 +5,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the sbyte value is zero.
 /// </summary>
-internal class SByteBeZeroValidator(PrincipalChain<sbyte> chain) : IValidator
+internal class SByteBeZeroValidator(PrincipalChain<sbyte> chain) : IValidator, IRuleDescriptor
 {
     public static SByteBeZeroValidator New(PrincipalChain<sbyte> chain) => new(chain);
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "SByte.BeZero";
+    string IRuleDescriptor.OperationName => "BeZero";
+    Type IRuleDescriptor.SubjectType => typeof(sbyte);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

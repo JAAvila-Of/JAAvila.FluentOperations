@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the datetime value represents tomorrow.
 /// </summary>
-internal class DateTimeBeTomorrowValidator(PrincipalChain<DateTime> chain) : IValidator
+internal class DateTimeBeTomorrowValidator(PrincipalChain<DateTime> chain) : IValidator, IRuleDescriptor
 {
     public static DateTimeBeTomorrowValidator New(PrincipalChain<DateTime> chain) =>
         new(chain);
@@ -13,6 +13,10 @@ internal class DateTimeBeTomorrowValidator(PrincipalChain<DateTime> chain) : IVa
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "DateTime.BeTomorrow";
+    string IRuleDescriptor.OperationName => "BeTomorrow";
+    Type IRuleDescriptor.SubjectType => typeof(DateTime);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

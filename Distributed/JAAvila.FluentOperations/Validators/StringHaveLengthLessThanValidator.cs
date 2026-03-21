@@ -6,7 +6,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the string length is strictly less than the expected value.
 /// </summary>
 internal class StringHaveLengthLessThanValidator(PrincipalChain<string?> chain, int expected)
-    : IValidator
+    : IValidator, IRuleDescriptor
 {
     public static StringHaveLengthLessThanValidator New(PrincipalChain<string?> chain, int expected) =>
         new(chain, expected);
@@ -14,6 +14,10 @@ internal class StringHaveLengthLessThanValidator(PrincipalChain<string?> chain, 
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "String.HaveLengthLessThan";
+    string IRuleDescriptor.OperationName => "HaveLengthLessThan";
+    Type IRuleDescriptor.SubjectType => typeof(string);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expected };
 
     public bool Validate()
     {

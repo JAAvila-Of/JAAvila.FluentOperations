@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the float value is strictly positive.
 /// </summary>
-internal class FloatBePositiveValidator(PrincipalChain<float> chain) : IValidator
+internal class FloatBePositiveValidator(PrincipalChain<float> chain) : IValidator, IRuleDescriptor
 {
     public static FloatBePositiveValidator New(PrincipalChain<float> chain) =>
         new(chain);
@@ -13,6 +13,10 @@ internal class FloatBePositiveValidator(PrincipalChain<float> chain) : IValidato
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Float.BePositive";
+    string IRuleDescriptor.OperationName => "BePositive";
+    Type IRuleDescriptor.SubjectType => typeof(float);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that all elements in the collection are unique.
 /// </summary>
-internal class CollectionBeUniqueValidator<T>(PrincipalChain<IEnumerable<T>> chain) : IValidator
+internal class CollectionBeUniqueValidator<T>(PrincipalChain<IEnumerable<T>> chain) : IValidator, IRuleDescriptor
 {
     public static CollectionBeUniqueValidator<T> New(PrincipalChain<IEnumerable<T>> chain) =>
         new(chain);
@@ -13,6 +13,10 @@ internal class CollectionBeUniqueValidator<T>(PrincipalChain<IEnumerable<T>> cha
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Collection.BeUnique";
+    string IRuleDescriptor.OperationName => "BeUnique";
+    Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

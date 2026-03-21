@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the byte value is evenly divisible by the specified divisor.
 /// </summary>
-internal class ByteBeDivisibleByValidator(PrincipalChain<byte> chain, byte divisor) : IValidator
+internal class ByteBeDivisibleByValidator(PrincipalChain<byte> chain, byte divisor) : IValidator, IRuleDescriptor
 {
     public static ByteBeDivisibleByValidator New(PrincipalChain<byte> chain, byte divisor) =>
         new(chain, divisor);
@@ -13,6 +13,10 @@ internal class ByteBeDivisibleByValidator(PrincipalChain<byte> chain, byte divis
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Byte.BeDivisibleBy";
+    string IRuleDescriptor.OperationName => "BeDivisibleBy";
+    Type IRuleDescriptor.SubjectType => typeof(byte);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = divisor };
 
     public bool Validate()
     {

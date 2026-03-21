@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the collection does not contain the expected element.
 /// </summary>
-internal class CollectionNotContainValidator<T>(PrincipalChain<IEnumerable<T>> chain, T item) : IValidator
+internal class CollectionNotContainValidator<T>(PrincipalChain<IEnumerable<T>> chain, T item) : IValidator, IRuleDescriptor
 {
     public static CollectionNotContainValidator<T> New(PrincipalChain<IEnumerable<T>> chain, T item) =>
         new(chain, item);
@@ -13,6 +13,10 @@ internal class CollectionNotContainValidator<T>(PrincipalChain<IEnumerable<T>> c
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Collection.NotContain";
+    string IRuleDescriptor.OperationName => "NotContain";
+    Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = item };
 
     public bool Validate()
     {

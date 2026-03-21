@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the byte value is not one of the specified disallowed values.
 /// </summary>
-internal class ByteNotBeOneOfValidator(PrincipalChain<byte> chain, params byte[] expected) : IValidator
+internal class ByteNotBeOneOfValidator(PrincipalChain<byte> chain, params byte[] expected) : IValidator, IRuleDescriptor
 {
     public static ByteNotBeOneOfValidator New(PrincipalChain<byte> chain, params byte[] expected) =>
         new(chain, expected);
@@ -13,6 +13,10 @@ internal class ByteNotBeOneOfValidator(PrincipalChain<byte> chain, params byte[]
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Byte.NotBeOneOf";
+    string IRuleDescriptor.OperationName => "NotBeOneOf";
+    Type IRuleDescriptor.SubjectType => typeof(byte);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["values"] = expected };
 
     public bool Validate()
     {

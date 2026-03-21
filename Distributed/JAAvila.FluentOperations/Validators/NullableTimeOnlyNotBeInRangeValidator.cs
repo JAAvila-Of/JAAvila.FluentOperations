@@ -9,7 +9,7 @@ internal class NullableTimeOnlyNotBeInRangeValidator(
     PrincipalChain<TimeOnly?> chain,
     TimeOnly min,
     TimeOnly max
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static NullableTimeOnlyNotBeInRangeValidator New(
         PrincipalChain<TimeOnly?> chain,
@@ -20,6 +20,10 @@ internal class NullableTimeOnlyNotBeInRangeValidator(
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "NullableTimeOnly.NotBeInRange";
+    string IRuleDescriptor.OperationName => "NotBeInRange";
+    Type IRuleDescriptor.SubjectType => typeof(TimeOnly?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["min"] = min, ["max"] = max };
 
     public bool Validate()
     {

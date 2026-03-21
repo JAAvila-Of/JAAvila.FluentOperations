@@ -5,13 +5,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable char value is an uppercase letter.
 /// </summary>
-internal class NullableCharBeUpperCaseValidator(PrincipalChain<char?> chain) : IValidator
+internal class NullableCharBeUpperCaseValidator(PrincipalChain<char?> chain) : IValidator, IRuleDescriptor
 {
     public static NullableCharBeUpperCaseValidator New(PrincipalChain<char?> chain) => new(chain);
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "NullableChar.BeUpperCase";
+    string IRuleDescriptor.OperationName => "BeUpperCase";
+    Type IRuleDescriptor.SubjectType => typeof(char?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

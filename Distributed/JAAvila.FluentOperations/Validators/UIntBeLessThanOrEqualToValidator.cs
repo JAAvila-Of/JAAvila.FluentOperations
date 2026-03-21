@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the uint value is less than or equal to the expected value.
 /// </summary>
-internal class UIntBeLessThanOrEqualToValidator(PrincipalChain<uint> chain, uint expected) : IValidator
+internal class UIntBeLessThanOrEqualToValidator(PrincipalChain<uint> chain, uint expected) : IValidator, IRuleDescriptor
 {
     public static UIntBeLessThanOrEqualToValidator New(PrincipalChain<uint> chain, uint expected) =>
         new(chain, expected);
@@ -13,6 +13,10 @@ internal class UIntBeLessThanOrEqualToValidator(PrincipalChain<uint> chain, uint
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "UInt.BeLessThanOrEqualTo";
+    string IRuleDescriptor.OperationName => "BeLessThanOrEqualTo";
+    Type IRuleDescriptor.SubjectType => typeof(uint);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expected };
 
     public bool Validate()
     {

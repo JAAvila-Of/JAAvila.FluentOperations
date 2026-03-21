@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the uri URI has the expected fragment.
 /// </summary>
-internal class UriHaveFragmentValidator(PrincipalChain<Uri?> chain) : IValidator
+internal class UriHaveFragmentValidator(PrincipalChain<Uri?> chain) : IValidator, IRuleDescriptor
 {
     public static UriHaveFragmentValidator New(PrincipalChain<Uri?> chain) =>
         new(chain);
@@ -13,6 +13,10 @@ internal class UriHaveFragmentValidator(PrincipalChain<Uri?> chain) : IValidator
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Uri.HaveFragment";
+    string IRuleDescriptor.OperationName => "HaveFragment";
+    Type IRuleDescriptor.SubjectType => typeof(Uri);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

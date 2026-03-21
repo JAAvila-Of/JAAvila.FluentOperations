@@ -6,7 +6,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates if the value in the associated <see cref="PrincipalChain{T}"/> of type <c>string?</c> is null.
 /// This class implements the <see cref="IValidator"/> interface to enable validation functionality.
 /// </summary>
-internal class StringBeNullValidator(PrincipalChain<string?> chain) : IValidator
+internal class StringBeNullValidator(PrincipalChain<string?> chain) : IValidator, IRuleDescriptor
 {
     /// <summary>
     /// Creates a new instance of <see cref="StringBeNullValidator"/> with the given <see cref="PrincipalChain{T}"/>.
@@ -21,6 +21,10 @@ internal class StringBeNullValidator(PrincipalChain<string?> chain) : IValidator
     /// <inheritdoc />
     public string ResultValidation { get; set; }
     public string MessageKey => "String.BeNull";
+    string IRuleDescriptor.OperationName => "BeNull";
+    Type IRuleDescriptor.SubjectType => typeof(string);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     /// <inheritdoc />
     public bool Validate()

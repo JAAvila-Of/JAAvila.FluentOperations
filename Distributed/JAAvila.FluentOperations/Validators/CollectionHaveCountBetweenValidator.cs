@@ -9,7 +9,7 @@ internal class CollectionHaveCountBetweenValidator<T>(
     PrincipalChain<IEnumerable<T>> chain,
     int min,
     int max
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static CollectionHaveCountBetweenValidator<T> New(
         PrincipalChain<IEnumerable<T>> chain,
@@ -20,6 +20,10 @@ internal class CollectionHaveCountBetweenValidator<T>(
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Collection.HaveCountBetween";
+    string IRuleDescriptor.OperationName => "HaveCountBetween";
+    Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["min"] = min, ["max"] = max };
 
     public bool Validate()
     {

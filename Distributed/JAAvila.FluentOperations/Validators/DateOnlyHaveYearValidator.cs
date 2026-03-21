@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the dateonly value has the expected year.
 /// </summary>
-internal class DateOnlyHaveYearValidator(PrincipalChain<DateOnly> chain, int expectedYear) : IValidator
+internal class DateOnlyHaveYearValidator(PrincipalChain<DateOnly> chain, int expectedYear) : IValidator, IRuleDescriptor
 {
     public static DateOnlyHaveYearValidator New(PrincipalChain<DateOnly> chain, int expectedYear) =>
         new(chain, expectedYear);
@@ -13,6 +13,10 @@ internal class DateOnlyHaveYearValidator(PrincipalChain<DateOnly> chain, int exp
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "DateOnly.HaveYear";
+    string IRuleDescriptor.OperationName => "HaveYear";
+    Type IRuleDescriptor.SubjectType => typeof(DateOnly);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expectedYear };
 
     public bool Validate()
     {

@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the reference value is not null.
 /// </summary>
-internal class ReferenceNotBeNullValidator<TSubject>(PrincipalChain<TSubject> chain) : IValidator
+internal class ReferenceNotBeNullValidator<TSubject>(PrincipalChain<TSubject> chain) : IValidator, IRuleDescriptor
 {
     public static ReferenceNotBeNullValidator<TSubject> New(PrincipalChain<TSubject> chain) =>
         new(chain);
@@ -13,6 +13,11 @@ internal class ReferenceNotBeNullValidator<TSubject>(PrincipalChain<TSubject> ch
     public string Expected => "Not Be Null <not null>";
     public string ResultValidation { get; set; }
     public string MessageKey => "Reference.NotBeNull";
+
+    string IRuleDescriptor.OperationName => "NotBeNull";
+    Type IRuleDescriptor.SubjectType => typeof(TSubject);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

@@ -9,7 +9,7 @@ internal class StringEndWithValidator(
     string suffix,
     PrincipalChain<string?> chain,
     StringComparison comparison = StringComparison.Ordinal
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static StringEndWithValidator New(string suffix, PrincipalChain<string?> chain) =>
         new(suffix, chain);
@@ -23,6 +23,10 @@ internal class StringEndWithValidator(
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "String.EndWith";
+    string IRuleDescriptor.OperationName => "EndWith";
+    Type IRuleDescriptor.SubjectType => typeof(string);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = suffix, ["comparison"] = StringComparison.Ordinal.ToString() };
 
     public bool Validate()
     {

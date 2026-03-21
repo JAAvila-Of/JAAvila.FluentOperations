@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the ulong value equals the expected value.
 /// </summary>
-internal class ULongBeValidator(PrincipalChain<ulong> chain, ulong expected) : IValidator
+internal class ULongBeValidator(PrincipalChain<ulong> chain, ulong expected) : IValidator, IRuleDescriptor
 {
     public static ULongBeValidator New(PrincipalChain<ulong> chain, ulong expected) =>
         new(chain, expected);
@@ -13,6 +13,10 @@ internal class ULongBeValidator(PrincipalChain<ulong> chain, ulong expected) : I
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "ULong.Be";
+    string IRuleDescriptor.OperationName => "Be";
+    Type IRuleDescriptor.SubjectType => typeof(ulong);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expected };
 
     public bool Validate()
     {

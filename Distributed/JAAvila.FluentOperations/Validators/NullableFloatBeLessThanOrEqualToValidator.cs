@@ -8,7 +8,7 @@ namespace JAAvila.FluentOperations.Validators;
 internal class NullableFloatBeLessThanOrEqualToValidator(
     PrincipalChain<float?> chain,
     float comparison
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static NullableFloatBeLessThanOrEqualToValidator New(
         PrincipalChain<float?> chain,
@@ -18,6 +18,10 @@ internal class NullableFloatBeLessThanOrEqualToValidator(
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "NullableFloat.BeLessThanOrEqualTo";
+    string IRuleDescriptor.OperationName => "BeLessThanOrEqualTo";
+    Type IRuleDescriptor.SubjectType => typeof(float?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = comparison };
 
     public bool Validate()
     {

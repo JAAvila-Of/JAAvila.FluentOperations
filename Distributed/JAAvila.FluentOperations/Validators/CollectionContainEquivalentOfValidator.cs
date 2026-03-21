@@ -16,7 +16,7 @@ internal class CollectionContainEquivalentOfValidator<T, TExpected>(
     PrincipalChain<IEnumerable<T>> chain,
     TExpected expected,
     ComparisonOptions options
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static CollectionContainEquivalentOfValidator<T, TExpected> New(
         PrincipalChain<IEnumerable<T>> chain,
@@ -27,6 +27,10 @@ internal class CollectionContainEquivalentOfValidator<T, TExpected>(
     public string Expected { get; } = string.Empty;
     public string ResultValidation { get; set; }
     public string MessageKey => "Collection.ContainEquivalentOf";
+    string IRuleDescriptor.OperationName => "ContainEquivalentOf";
+    Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expected };
 
     public bool Validate()
     {

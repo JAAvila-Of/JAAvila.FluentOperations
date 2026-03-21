@@ -6,13 +6,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable double value is not NaN.
 /// </summary>
-internal class NullableDoubleNotBeNaNValidator(PrincipalChain<double?> chain) : IValidator
+internal class NullableDoubleNotBeNaNValidator(PrincipalChain<double?> chain) : IValidator, IRuleDescriptor
 {
     public static NullableDoubleNotBeNaNValidator New(PrincipalChain<double?> chain) => new(chain);
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "NullableDouble.NotBeNaN";
+    string IRuleDescriptor.OperationName => "NotBeNaN";
+    Type IRuleDescriptor.SubjectType => typeof(double?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

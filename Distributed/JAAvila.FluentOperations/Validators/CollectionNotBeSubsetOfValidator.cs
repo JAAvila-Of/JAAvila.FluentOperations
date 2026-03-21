@@ -8,7 +8,7 @@ namespace JAAvila.FluentOperations.Validators;
 internal class CollectionNotBeSubsetOfValidator<T>(
     PrincipalChain<IEnumerable<T>> chain,
     IEnumerable<T> superset
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static CollectionNotBeSubsetOfValidator<T> New(
         PrincipalChain<IEnumerable<T>> chain,
@@ -18,6 +18,10 @@ internal class CollectionNotBeSubsetOfValidator<T>(
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Collection.NotBeSubsetOf";
+    string IRuleDescriptor.OperationName => "NotBeSubsetOf";
+    Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["values"] = superset };
 
     public bool Validate()
     {

@@ -9,7 +9,7 @@ namespace JAAvila.FluentOperations.Validators;
 internal class CollectionContainInOrderValidator<T>(
     PrincipalChain<IEnumerable<T>> chain,
     T[] expected
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static CollectionContainInOrderValidator<T> New(
         PrincipalChain<IEnumerable<T>> chain,
@@ -19,6 +19,10 @@ internal class CollectionContainInOrderValidator<T>(
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Collection.ContainInOrder";
+    string IRuleDescriptor.OperationName => "ContainInOrder";
+    Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["values"] = expected };
 
     public bool Validate()
     {

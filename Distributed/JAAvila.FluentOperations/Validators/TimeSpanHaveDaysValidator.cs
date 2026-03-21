@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the timespan value has the expected days component.
 /// </summary>
-internal class TimeSpanHaveDaysValidator(PrincipalChain<TimeSpan> chain, int days) : IValidator
+internal class TimeSpanHaveDaysValidator(PrincipalChain<TimeSpan> chain, int days) : IValidator, IRuleDescriptor
 {
     public static TimeSpanHaveDaysValidator New(PrincipalChain<TimeSpan> chain, int days) =>
         new(chain, days);
@@ -13,6 +13,10 @@ internal class TimeSpanHaveDaysValidator(PrincipalChain<TimeSpan> chain, int day
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "TimeSpan.HaveDays";
+    string IRuleDescriptor.OperationName => "HaveDays";
+    Type IRuleDescriptor.SubjectType => typeof(TimeSpan);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = days };
 
     public bool Validate()
     {

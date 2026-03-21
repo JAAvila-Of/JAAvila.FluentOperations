@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the long value equals the expected value.
 /// </summary>
-internal class LongBeValidator(PrincipalChain<long> chain, long expected) : IValidator
+internal class LongBeValidator(PrincipalChain<long> chain, long expected) : IValidator, IRuleDescriptor
 {
     public static LongBeValidator New(PrincipalChain<long> chain, long expected) =>
         new(chain, expected);
@@ -13,6 +13,10 @@ internal class LongBeValidator(PrincipalChain<long> chain, long expected) : IVal
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Long.Be";
+    string IRuleDescriptor.OperationName => "Be";
+    Type IRuleDescriptor.SubjectType => typeof(long);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expected };
 
     public bool Validate()
     {

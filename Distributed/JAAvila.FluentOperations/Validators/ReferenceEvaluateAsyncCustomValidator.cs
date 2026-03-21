@@ -8,7 +8,7 @@ namespace JAAvila.FluentOperations.Validators;
 internal class ReferenceEvaluateAsyncCustomValidator<TSubject>(
     PrincipalChain<TSubject> chain,
     IAsyncCustomValidator<TSubject> customValidator
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static ReferenceEvaluateAsyncCustomValidator<TSubject> New(
         PrincipalChain<TSubject> chain,
@@ -18,6 +18,10 @@ internal class ReferenceEvaluateAsyncCustomValidator<TSubject>(
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Custom.EvaluateAsync";
+    string IRuleDescriptor.OperationName => "EvaluateAsync";
+    Type IRuleDescriptor.SubjectType => typeof(TSubject);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

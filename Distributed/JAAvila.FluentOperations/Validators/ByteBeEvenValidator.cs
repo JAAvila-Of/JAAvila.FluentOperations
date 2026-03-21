@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the byte value is even.
 /// </summary>
-internal class ByteBeEvenValidator(PrincipalChain<byte> chain) : IValidator
+internal class ByteBeEvenValidator(PrincipalChain<byte> chain) : IValidator, IRuleDescriptor
 {
     public static ByteBeEvenValidator New(PrincipalChain<byte> chain) =>
         new(chain);
@@ -13,6 +13,10 @@ internal class ByteBeEvenValidator(PrincipalChain<byte> chain) : IValidator
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Byte.BeEven";
+    string IRuleDescriptor.OperationName => "BeEven";
+    Type IRuleDescriptor.SubjectType => typeof(byte);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

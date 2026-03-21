@@ -6,7 +6,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the nullable short value is less than the expected value.
 /// </summary>
 internal class NullableShortBeLessThanValidator(PrincipalChain<short?> chain, short comparison)
-    : IValidator
+    : IValidator, IRuleDescriptor
 {
     public static NullableShortBeLessThanValidator New(
         PrincipalChain<short?> chain,
@@ -16,6 +16,10 @@ internal class NullableShortBeLessThanValidator(PrincipalChain<short?> chain, sh
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "NullableShort.BeLessThan";
+    string IRuleDescriptor.OperationName => "BeLessThan";
+    Type IRuleDescriptor.SubjectType => typeof(short?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = comparison };
 
     public bool Validate()
     {

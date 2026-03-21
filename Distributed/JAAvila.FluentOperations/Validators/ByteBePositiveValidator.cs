@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the byte value is strictly positive (greater than zero).
 /// </summary>
-internal class ByteBePositiveValidator(PrincipalChain<byte> chain) : IValidator
+internal class ByteBePositiveValidator(PrincipalChain<byte> chain) : IValidator, IRuleDescriptor
 {
     public static ByteBePositiveValidator New(PrincipalChain<byte> chain) =>
         new(chain);
@@ -13,6 +13,10 @@ internal class ByteBePositiveValidator(PrincipalChain<byte> chain) : IValidator
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Byte.BePositive";
+    string IRuleDescriptor.OperationName => "BePositive";
+    Type IRuleDescriptor.SubjectType => typeof(byte);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

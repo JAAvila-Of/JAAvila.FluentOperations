@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the decimal value is strictly negative.
 /// </summary>
-internal class DecimalBeNegativeValidator(PrincipalChain<decimal> chain) : IValidator
+internal class DecimalBeNegativeValidator(PrincipalChain<decimal> chain) : IValidator, IRuleDescriptor
 {
     public static DecimalBeNegativeValidator New(PrincipalChain<decimal> chain) =>
         new(chain);
@@ -13,6 +13,10 @@ internal class DecimalBeNegativeValidator(PrincipalChain<decimal> chain) : IVali
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Decimal.BeNegative";
+    string IRuleDescriptor.OperationName => "BeNegative";
+    Type IRuleDescriptor.SubjectType => typeof(decimal);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

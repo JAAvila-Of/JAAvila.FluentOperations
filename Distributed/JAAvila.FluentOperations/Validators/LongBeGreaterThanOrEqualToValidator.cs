@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the long value is greater than or equal to the expected value.
 /// </summary>
-internal class LongBeGreaterThanOrEqualToValidator(PrincipalChain<long> chain, long expected) : IValidator
+internal class LongBeGreaterThanOrEqualToValidator(PrincipalChain<long> chain, long expected) : IValidator, IRuleDescriptor
 {
     public static LongBeGreaterThanOrEqualToValidator New(PrincipalChain<long> chain, long expected) =>
         new(chain, expected);
@@ -13,6 +13,10 @@ internal class LongBeGreaterThanOrEqualToValidator(PrincipalChain<long> chain, l
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Long.BeGreaterThanOrEqualTo";
+    string IRuleDescriptor.OperationName => "BeGreaterThanOrEqualTo";
+    Type IRuleDescriptor.SubjectType => typeof(long);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expected };
 
     public bool Validate()
     {
