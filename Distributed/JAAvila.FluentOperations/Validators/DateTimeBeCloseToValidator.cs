@@ -9,7 +9,7 @@ internal class DateTimeBeCloseToValidator(
     PrincipalChain<DateTime> chain,
     DateTime expected,
     TimeSpan tolerance
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static DateTimeBeCloseToValidator New(
         PrincipalChain<DateTime> chain,
@@ -19,6 +19,11 @@ internal class DateTimeBeCloseToValidator(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "DateTime.BeCloseTo";
+    string IRuleDescriptor.OperationName => "BeCloseTo";
+    Type IRuleDescriptor.SubjectType => typeof(DateTime);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expected, ["value"] = tolerance };
 
     public bool Validate()
     {

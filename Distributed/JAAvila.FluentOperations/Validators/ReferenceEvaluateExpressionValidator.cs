@@ -9,7 +9,7 @@ namespace JAAvila.FluentOperations.Validators;
 internal class ReferenceEvaluateExpressionValidator<TSubject>(
     PrincipalChain<TSubject> chain,
     Expression<Func<TSubject, bool>> expression
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static ReferenceEvaluateExpressionValidator<TSubject> New(
         PrincipalChain<TSubject> chain,
@@ -18,6 +18,11 @@ internal class ReferenceEvaluateExpressionValidator<TSubject>(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Reference.EvaluateExpression";
+    string IRuleDescriptor.OperationName => "EvaluateExpression";
+    Type IRuleDescriptor.SubjectType => typeof(TSubject);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

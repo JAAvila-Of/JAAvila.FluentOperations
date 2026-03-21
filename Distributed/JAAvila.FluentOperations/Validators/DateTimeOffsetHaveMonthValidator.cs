@@ -8,7 +8,7 @@ namespace JAAvila.FluentOperations.Validators;
 internal class DateTimeOffsetHaveMonthValidator(
     PrincipalChain<DateTimeOffset> chain,
     int expectedMonth
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static DateTimeOffsetHaveMonthValidator New(
         PrincipalChain<DateTimeOffset> chain,
@@ -17,6 +17,11 @@ internal class DateTimeOffsetHaveMonthValidator(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "DateTimeOffset.HaveMonth";
+    string IRuleDescriptor.OperationName => "HaveMonth";
+    Type IRuleDescriptor.SubjectType => typeof(DateTimeOffset);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expectedMonth };
 
     public bool Validate()
     {

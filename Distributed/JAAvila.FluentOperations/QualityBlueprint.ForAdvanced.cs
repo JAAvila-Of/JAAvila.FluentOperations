@@ -74,6 +74,71 @@ public abstract partial class QualityBlueprint<T>
     }
 
     /// <summary>
+    /// Defines a validation rule for a nullable enum property of the model.
+    /// Call <see cref="IPropertyProxy{TManager}.Test"/> on the result to access nullable enum assertions.
+    /// </summary>
+    /// <typeparam name="TEnum">The enum type of the property. Must be a struct and derive from <see cref="Enum"/>.</typeparam>
+    /// <param name="propertyExpression">
+    /// An expression selecting the nullable enum property to validate (e.g., <c>x =&gt; x.Status</c>).
+    /// </param>
+    /// <returns>A property proxy that exposes <see cref="NullableEnumOperationsManager{TEnum}"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<NullableEnumOperationsManager<TEnum>> ForEnum<TEnum>(
+        Expression<Func<T, TEnum?>> propertyExpression
+    )
+        where TEnum : struct, Enum
+    {
+        var propertyName = GetPropertyName(propertyExpression);
+        var valueExtractor = propertyExpression.Compile();
+        _extractors[propertyName] = x => valueExtractor(x);
+        var currentScenario = _currentScenario;
+        RuleCaptureContext.BeginPropertyCapture(
+            _capturedDuringDefinition,
+            propertyName,
+            currentScenario
+        );
+        RuleCaptureContext.SetRuleConfig(null);
+        return new PropertyProxy<TEnum?, NullableEnumOperationsManager<TEnum>>(
+            propertyName,
+            _capturedDuringDefinition,
+            () => currentScenario,
+            caller => new NullableEnumOperationsManager<TEnum>(null, caller)
+        );
+    }
+
+    /// <summary>
+    /// Defines a validation rule for a nullable enum property of the model, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    /// <typeparam name="TEnum">The enum type of the property. Must be a struct and derive from <see cref="Enum"/>.</typeparam>
+    /// <param name="propertyExpression">
+    /// An expression selecting the nullable enum property to validate (e.g., <c>x =&gt; x.Status</c>).
+    /// </param>
+    /// <param name="config">Configuration for this rule (severity, error code, cascade mode).</param>
+    /// <returns>A property proxy that exposes <see cref="NullableEnumOperationsManager{TEnum}"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<NullableEnumOperationsManager<TEnum>> ForEnum<TEnum>(
+        Expression<Func<T, TEnum?>> propertyExpression,
+        RuleConfig config
+    )
+        where TEnum : struct, Enum
+    {
+        var propertyName = GetPropertyName(propertyExpression);
+        var valueExtractor = propertyExpression.Compile();
+        _extractors[propertyName] = x => valueExtractor(x);
+        var currentScenario = _currentScenario;
+        RuleCaptureContext.BeginPropertyCapture(
+            _capturedDuringDefinition,
+            propertyName,
+            currentScenario
+        );
+        RuleCaptureContext.SetRuleConfig(config);
+        return new PropertyProxy<TEnum?, NullableEnumOperationsManager<TEnum>>(
+            propertyName,
+            _capturedDuringDefinition,
+            () => currentScenario,
+            caller => new NullableEnumOperationsManager<TEnum>(null, caller)
+        );
+    }
+
+    /// <summary>
     /// Defines a cross-property validation rule that compares one property against another on the same model.
     /// Use the returned manager to assert relational constraints (e.g., StartDate &lt; EndDate).
     /// </summary>

@@ -6,13 +6,18 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable long value is one of the specified allowed values.
 /// </summary>
-internal class NullableLongBeOneOfValidator(PrincipalChain<long?> chain, long[] values) : IValidator
+internal class NullableLongBeOneOfValidator(PrincipalChain<long?> chain, long[] values) : IValidator, IRuleDescriptor
 {
     public static NullableLongBeOneOfValidator New(PrincipalChain<long?> chain, long[] values) =>
         new(chain, values);
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableLong.BeOneOf";
+    string IRuleDescriptor.OperationName => "BeOneOf";
+    Type IRuleDescriptor.SubjectType => typeof(long?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["values"] = values };
 
     public bool Validate()
     {

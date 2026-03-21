@@ -7,7 +7,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the nullable float value is evenly divisible by the specified divisor.
 /// </summary>
 internal class NullableFloatBeDivisibleByValidator(PrincipalChain<float?> chain, float divisor)
-    : IValidator
+    : IValidator, IRuleDescriptor
 {
     public static NullableFloatBeDivisibleByValidator New(
         PrincipalChain<float?> chain,
@@ -16,6 +16,11 @@ internal class NullableFloatBeDivisibleByValidator(PrincipalChain<float?> chain,
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableFloat.BeDivisibleBy";
+    string IRuleDescriptor.OperationName => "BeDivisibleBy";
+    Type IRuleDescriptor.SubjectType => typeof(float?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = divisor };
 
     public bool Validate()
     {

@@ -1,0 +1,80 @@
+JAAvila.FluentOperations
+Copyright 2025-2026 JAAvila (Jose Angel Avila)
+https://github.com/JAAvila-Of/JAAvila.FluentOperations
+
+This product includes software developed by JAAvila (Jose Angel Avila).
+
+===============================================================================
+
+ATTRIBUTION REQUIREMENTS
+
+This software is licensed under the Apache License, Version 2.0.
+As required by Section 4(d) of the Apache License, any Derivative Works
+that you distribute MUST include a readable copy of this NOTICE file.
+
+If you redistribute this software or derivative works thereof, you must:
+
+  1. Retain this NOTICE file in its entirety in the Source form of any
+     Derivative Works you distribute.
+
+  2. Include the following attribution in any documentation, README, or
+     "About" section of your Derivative Work:
+
+       "Based on JAAvila.FluentOperations, originally created by JAAvila
+       (Jose Angel Avila). https://github.com/JAAvila-Of/JAAvila.FluentOperations"
+
+  3. If your Derivative Work includes a user-visible "About", "Credits",
+     or "Acknowledgments" section, include the attribution above.
+
+===============================================================================
+
+TRADEMARK NOTICE
+
+"JAAvila", "JAAvila.FluentOperations", "FluentOperations", "Quality Blueprint",
+and "QualityBlueprint" are trademarks of Jose Angel Avila.
+
+The Apache License, Version 2.0 (Section 6) does NOT grant permission to use
+the trade names, trademarks, service marks, or product names of the Licensor,
+except as required for describing the origin of the Work and reproducing the
+content of this NOTICE file.
+
+Specifically, Derivative Works (forks) MAY NOT:
+
+  - Use "JAAvila.FluentOperations" or "JAAvila" as the product name,
+    package name, NuGet package ID, or any identifier that could cause
+    confusion with the original project.
+
+  - Use the names "FluentOperations" or "Quality Blueprint" as the primary
+    name of a Derivative Work without clearly distinguishing it from the
+    original (e.g., "MyProject powered by FluentOperations" is acceptable;
+    "FluentOperations v2" is not).
+
+  - Use the project's icon, logo, or visual branding in any way that
+    implies endorsement by or affiliation with the original author.
+
+Derivative Works MUST:
+
+  - Choose a distinct name that does not create confusion with the original
+    project.
+
+  - Clearly state that the Derivative Work is not the official
+    JAAvila.FluentOperations project.
+
+If you have questions about permitted use of these marks, contact the
+original author via the project's GitHub repository.
+
+===============================================================================
+
+THIRD-PARTY NOTICES
+
+This software depends on the following third-party libraries:
+
+  - JAAvila.SafeTypes (Apache-2.0) — Copyright JAAvila
+  - JetBrains.Annotations (MIT) — Copyright JetBrains s.r.o.
+  - MinVer (Apache-2.0) — Copyright Adam Ralph
+  - MediatR (Apache-2.0) — Copyright Jimmy Bogard
+  - Swashbuckle.AspNetCore (MIT) — Copyright Richard Morris
+  - Grpc.AspNetCore.Server (Apache-2.0) — Copyright The gRPC Authors
+  - System.ComponentModel.Annotations (MIT) — Copyright .NET Foundation
+
+Each library is subject to its own license terms.

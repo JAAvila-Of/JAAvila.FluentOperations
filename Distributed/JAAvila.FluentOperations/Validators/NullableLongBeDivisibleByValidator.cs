@@ -6,7 +6,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the nullable long value is evenly divisible by the specified divisor.
 /// </summary>
 internal class NullableLongBeDivisibleByValidator(PrincipalChain<long?> chain, long divisor)
-    : IValidator
+    : IValidator, IRuleDescriptor
 {
     public static NullableLongBeDivisibleByValidator New(
         PrincipalChain<long?> chain,
@@ -15,6 +15,11 @@ internal class NullableLongBeDivisibleByValidator(PrincipalChain<long?> chain, l
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableLong.BeDivisibleBy";
+    string IRuleDescriptor.OperationName => "BeDivisibleBy";
+    Type IRuleDescriptor.SubjectType => typeof(long?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = divisor };
 
     public bool Validate()
     {

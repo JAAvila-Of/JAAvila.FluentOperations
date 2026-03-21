@@ -5,13 +5,18 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the decimal value is not one of the specified disallowed values.
 /// </summary>
-internal class DecimalNotBeOneOfValidator(PrincipalChain<decimal> chain, params decimal[] expected) : IValidator
+internal class DecimalNotBeOneOfValidator(PrincipalChain<decimal> chain, params decimal[] expected) : IValidator, IRuleDescriptor
 {
     public static DecimalNotBeOneOfValidator New(PrincipalChain<decimal> chain, params decimal[] expected) =>
         new(chain, expected);
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Decimal.NotBeOneOf";
+    string IRuleDescriptor.OperationName => "NotBeOneOf";
+    Type IRuleDescriptor.SubjectType => typeof(decimal);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["values"] = expected };
 
     public bool Validate()
     {

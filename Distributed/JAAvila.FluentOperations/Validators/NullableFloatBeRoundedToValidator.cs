@@ -7,7 +7,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the nullable float value equals itself when rounded to the specified decimal places.
 /// </summary>
 internal class NullableFloatBeRoundedToValidator(PrincipalChain<float?> chain, int decimals)
-    : IValidator
+    : IValidator, IRuleDescriptor
 {
     public static NullableFloatBeRoundedToValidator New(
         PrincipalChain<float?> chain,
@@ -16,6 +16,11 @@ internal class NullableFloatBeRoundedToValidator(PrincipalChain<float?> chain, i
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableFloat.BeRoundedTo";
+    string IRuleDescriptor.OperationName => "BeRoundedTo";
+    Type IRuleDescriptor.SubjectType => typeof(float?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = decimals };
 
     public bool Validate()
     {

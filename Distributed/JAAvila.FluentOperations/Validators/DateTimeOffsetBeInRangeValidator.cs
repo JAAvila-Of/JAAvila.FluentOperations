@@ -9,7 +9,7 @@ internal class DateTimeOffsetBeInRangeValidator(
     PrincipalChain<DateTimeOffset> chain,
     DateTimeOffset min,
     DateTimeOffset max
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static DateTimeOffsetBeInRangeValidator New(
         PrincipalChain<DateTimeOffset> chain,
@@ -19,6 +19,11 @@ internal class DateTimeOffsetBeInRangeValidator(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "DateTimeOffset.BeInRange";
+    string IRuleDescriptor.OperationName => "BeInRange";
+    Type IRuleDescriptor.SubjectType => typeof(DateTimeOffset);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = min, ["value"] = max };
 
     public bool Validate()
     {

@@ -9,7 +9,7 @@ namespace JAAvila.FluentOperations.Validators;
 internal class CollectionBeSequenceEqualToValidator<T>(
     PrincipalChain<IEnumerable<T>> chain,
     IEnumerable<T> expected
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static CollectionBeSequenceEqualToValidator<T> New(
         PrincipalChain<IEnumerable<T>> chain,
@@ -18,6 +18,11 @@ internal class CollectionBeSequenceEqualToValidator<T>(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Collection.BeSequenceEqualTo";
+    string IRuleDescriptor.OperationName => "BeSequenceEqualTo";
+    Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["values"] = expected };
 
     public bool Validate()
     {
@@ -44,16 +49,23 @@ internal class CollectionBeSequenceEqualToValidator<T>(
             return false;
         }
 
-        if (
-            !actualList
-                .Where((t, i) => !EqualityComparer<T>.Default.Equals(t, expectedList[i]))
-                .Any()
-        )
+        var firstMismatchIndex = -1;
+        for (var i = 0; i < actualList.Count; i++)
+        {
+            if (!EqualityComparer<T>.Default.Equals(actualList[i], expectedList[i]))
+            {
+                firstMismatchIndex = i;
+                break;
+            }
+        }
+
+        if (firstMismatchIndex < 0)
         {
             return true;
         }
 
-        ResultValidation = "The collection differs at index {0}: expected {1} but found {2}.";
+        ResultValidation =
+            $"The collection differs at index {firstMismatchIndex}: expected \"{expectedList[firstMismatchIndex]}\" but found \"{actualList[firstMismatchIndex]}\".";
         return false;
     }
 

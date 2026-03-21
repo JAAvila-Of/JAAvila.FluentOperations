@@ -7,13 +7,18 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the string matches at least one of the specified regular expressions.
 /// </summary>
 internal class StringMatchAnyValidator(string[] patterns, PrincipalChain<string?> chain)
-    : IValidator
+    : IValidator, IRuleDescriptor
 {
     public static StringMatchAnyValidator New(string[] patterns, PrincipalChain<string?> chain) =>
         new(patterns, chain);
 
     public string Expected => "Match at least one of the provided patterns";
-    public string ResultValidation { get; set; } = string.Empty;
+    public string ResultValidation { get; set; }
+    public string MessageKey => "String.MatchAny";
+    string IRuleDescriptor.OperationName => "MatchAny";
+    Type IRuleDescriptor.SubjectType => typeof(string);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["values"] = patterns };
 
     public bool Validate()
     {

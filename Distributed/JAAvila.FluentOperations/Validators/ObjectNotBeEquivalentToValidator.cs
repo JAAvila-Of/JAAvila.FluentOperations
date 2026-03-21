@@ -10,7 +10,7 @@ internal class ObjectNotBeEquivalentToValidator(
     PrincipalChain<object?> chain,
     object? expected,
     ComparisonOptions? options = null
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static ObjectNotBeEquivalentToValidator New(
         PrincipalChain<object?> chain,
@@ -19,7 +19,12 @@ internal class ObjectNotBeEquivalentToValidator(
     ) => new(chain, expected, options);
 
     public string Expected { get; } = string.Empty;
-    public string ResultValidation { get; set; } = string.Empty;
+    public string ResultValidation { get; set; }
+    public string MessageKey => "Object.NotBeEquivalentTo";
+    string IRuleDescriptor.OperationName => "NotBeEquivalentTo";
+    Type IRuleDescriptor.SubjectType => typeof(object);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expected };
 
     public bool Validate()
     {

@@ -9,7 +9,7 @@ internal class DateTimeBeInRangeValidator(
     PrincipalChain<DateTime> chain,
     DateTime min,
     DateTime max
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static DateTimeBeInRangeValidator New(
         PrincipalChain<DateTime> chain,
@@ -19,6 +19,11 @@ internal class DateTimeBeInRangeValidator(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "DateTime.BeInRange";
+    string IRuleDescriptor.OperationName => "BeInRange";
+    Type IRuleDescriptor.SubjectType => typeof(DateTime);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = min, ["value"] = max };
 
     public bool Validate()
     {

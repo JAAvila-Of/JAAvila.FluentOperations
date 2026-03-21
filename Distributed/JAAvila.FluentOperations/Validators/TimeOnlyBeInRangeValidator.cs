@@ -5,13 +5,18 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the timeonly value is within the specified inclusive range.
 /// </summary>
-internal class TimeOnlyBeInRangeValidator(PrincipalChain<TimeOnly> chain, TimeOnly min, TimeOnly max) : IValidator
+internal class TimeOnlyBeInRangeValidator(PrincipalChain<TimeOnly> chain, TimeOnly min, TimeOnly max) : IValidator, IRuleDescriptor
 {
     public static TimeOnlyBeInRangeValidator New(PrincipalChain<TimeOnly> chain, TimeOnly min, TimeOnly max) =>
         new(chain, min, max);
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "TimeOnly.BeInRange";
+    string IRuleDescriptor.OperationName => "BeInRange";
+    Type IRuleDescriptor.SubjectType => typeof(TimeOnly);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["min"] = min, ["max"] = max };
 
     public bool Validate()
     {

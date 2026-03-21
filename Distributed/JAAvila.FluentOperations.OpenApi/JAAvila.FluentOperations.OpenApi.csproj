@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <PackageIcon>icon.png</PackageIcon>
+    <Authors>JAAvila</Authors>
+    <Description>OpenAPI / Swagger schema filter for JAAvila.FluentOperations Quality Blueprints. Automatically enriches generated schemas with validation constraints defined in blueprints.</Description>
+    <PackageId>JAAvila.FluentOperations.OpenApi</PackageId>
+    <PackageTags>FluentOperations;OpenAPI;Swagger;Validation;SchemaFilter;QualityBlueprints</PackageTags>
+    <PackageProjectUrl>https://github.com/JAAvila-Of/JAAvila.FluentOperations</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/JAAvila-Of/JAAvila.FluentOperations</RepositoryUrl>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Copyright>Copyright (C) $([System.DateTime]::Now.Year) JAAvila</Copyright>
+    <MinVerTagPrefix>openapi-</MinVerTagPrefix>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="[6.5.0,7.0.0)" />
+    <PackageReference Include="MinVer" Version="6.0.0" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\JAAvila.FluentOperations\JAAvila.FluentOperations.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="../../icon.png" Pack="true" Visible="false" PackagePath="" />
+    <None Include="README.md" Pack="true" PackagePath=""/>
+  </ItemGroup>
+
+  <Target Name="SetAssemblyVersion" AfterTargets="MinVer">
+    <PropertyGroup>
+      <AssemblyVersion>$(MinVerMajor).$(MinVerMinor).$(MinVerPatch)</AssemblyVersion>
+    </PropertyGroup>
+  </Target>
+
+</Project>

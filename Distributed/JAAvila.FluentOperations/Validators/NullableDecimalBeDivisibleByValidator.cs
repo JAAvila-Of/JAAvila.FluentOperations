@@ -8,7 +8,7 @@ namespace JAAvila.FluentOperations.Validators;
 internal class NullableDecimalBeDivisibleByValidator(
     PrincipalChain<decimal?> chain,
     decimal divisor
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static NullableDecimalBeDivisibleByValidator New(
         PrincipalChain<decimal?> chain,
@@ -17,6 +17,11 @@ internal class NullableDecimalBeDivisibleByValidator(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableDecimal.BeDivisibleBy";
+    string IRuleDescriptor.OperationName => "BeDivisibleBy";
+    Type IRuleDescriptor.SubjectType => typeof(decimal?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = divisor };
 
     public bool Validate()
     {

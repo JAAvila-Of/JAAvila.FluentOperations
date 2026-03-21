@@ -9,7 +9,7 @@ namespace JAAvila.FluentOperations.Validators;
 internal class NullableDoubleHavePrecisionValidator(
     PrincipalChain<double?> chain,
     int expectedDecimals
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static NullableDoubleHavePrecisionValidator New(
         PrincipalChain<double?> chain,
@@ -18,6 +18,11 @@ internal class NullableDoubleHavePrecisionValidator(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableDouble.HavePrecision";
+    string IRuleDescriptor.OperationName => "HavePrecision";
+    Type IRuleDescriptor.SubjectType => typeof(double?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expectedDecimals };
 
     public bool Validate()
     {

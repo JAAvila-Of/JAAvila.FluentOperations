@@ -18,4 +18,5 @@ internal struct TemplatePart
     public const string Transaction = "Transaction";
     public const string ErrorCode = "ErrorCode";
     public const string SeverityLevel = "Severity";
+    public const string Diff = "Diff";
 }

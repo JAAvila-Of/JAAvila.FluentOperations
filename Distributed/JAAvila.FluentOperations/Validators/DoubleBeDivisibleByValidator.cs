@@ -6,13 +6,18 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the double value is evenly divisible by the specified divisor.
 /// </summary>
 internal class DoubleBeDivisibleByValidator(PrincipalChain<double> chain, double divisor)
-    : IValidator
+    : IValidator, IRuleDescriptor
 {
     public static DoubleBeDivisibleByValidator New(PrincipalChain<double> chain, double divisor) =>
         new(chain, divisor);
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Double.BeDivisibleBy";
+    string IRuleDescriptor.OperationName => "BeDivisibleBy";
+    Type IRuleDescriptor.SubjectType => typeof(double);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = divisor };
 
     public bool Validate()
     {

@@ -5,13 +5,18 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the enum value is a defined member of the enumeration.
 /// </summary>
-internal class EnumBeDefinedValidator<T>(PrincipalChain<T> chain) : IValidator
+internal class EnumBeDefinedValidator<T>(PrincipalChain<T> chain) : IValidator, IRuleDescriptor
     where T : Enum
 {
     public static EnumBeDefinedValidator<T> New(PrincipalChain<T> chain) => new(chain);
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Enum.BeDefined";
+    string IRuleDescriptor.OperationName => "BeDefined";
+    Type IRuleDescriptor.SubjectType => typeof(T);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

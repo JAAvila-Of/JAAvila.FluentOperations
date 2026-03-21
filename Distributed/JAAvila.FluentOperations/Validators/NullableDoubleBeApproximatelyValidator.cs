@@ -10,7 +10,7 @@ internal class NullableDoubleBeApproximatelyValidator(
     PrincipalChain<double?> chain,
     double expected,
     double tolerance
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static NullableDoubleBeApproximatelyValidator New(
         PrincipalChain<double?> chain,
@@ -20,6 +20,11 @@ internal class NullableDoubleBeApproximatelyValidator(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableDouble.BeApproximately";
+    string IRuleDescriptor.OperationName => "BeApproximately";
+    Type IRuleDescriptor.SubjectType => typeof(double?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expected, ["value"] = tolerance };
 
     public bool Validate()
     {

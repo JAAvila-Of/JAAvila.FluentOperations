@@ -5,13 +5,18 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the decimal value is odd.
 /// </summary>
-internal class DecimalBeOddValidator(PrincipalChain<decimal> chain) : IValidator
+internal class DecimalBeOddValidator(PrincipalChain<decimal> chain) : IValidator, IRuleDescriptor
 {
     public static DecimalBeOddValidator New(PrincipalChain<decimal> principalChain) =>
         new(principalChain);
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Decimal.BeOdd";
+    string IRuleDescriptor.OperationName => "BeOdd";
+    Type IRuleDescriptor.SubjectType => typeof(decimal);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

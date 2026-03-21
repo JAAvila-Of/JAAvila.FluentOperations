@@ -108,9 +108,28 @@ public class ObjectComparator : IComparator<object?>
 
         var actualType = actual.GetType();
 
-        // Primitive types: use Equals
+        // Primitive types: use Equals (with tolerance and string comparison support)
         if (IsPrimitive(actualType))
         {
+            if (options.Tolerances is not null && TryCompareWithTolerance(actual, expected, options.Tolerances))
+            {
+                return;
+            }
+
+            // String comparison: respect options.StringComparison
+            if (actual is string actualStr && expected is string expectedStr)
+            {
+                if (!string.Equals(actualStr, expectedStr, options.StringComparison))
+                {
+                    var label = string.IsNullOrEmpty(path) ? "<root>" : $"Property '{path}'";
+                    differences.Add(
+                        $"{label}: expected '{FormatValue(expected)}' but found '{FormatValue(actual)}'"
+                    );
+                }
+
+                return;
+            }
+
             if (!actual.Equals(expected))
             {
                 var label = string.IsNullOrEmpty(path) ? "<root>" : $"Property '{path}'";
@@ -134,16 +153,9 @@ public class ObjectComparator : IComparator<object?>
             return;
         }
 
-        // Max depth guard
+        // Max depth guard -- silently stop recursion without reporting a difference
         if (depth > options.MaxRecursionDepth)
         {
-            if (differences.Count < options.MaxDifferencesReported)
-            {
-                differences.Add(
-                    $"Property '{path}': max recursion depth ({options.MaxRecursionDepth}) reached, comparison skipped"
-                );
-            }
-
             return;
         }
 
@@ -163,18 +175,29 @@ public class ObjectComparator : IComparator<object?>
             }
 
             var propName = prop.Name;
-
-            // Check if a property is excluded (by simple name or full path)
-            if (options.ExcludedProperties.Contains(propName))
-            {
-                continue;
-            }
-
             var childPath = string.IsNullOrEmpty(path) ? propName : $"{path}.{propName}";
 
-            if (options.ExcludedProperties.Contains(childPath))
+            // When IncludedProperties is set, ONLY compare those properties
+            if (options.IncludedProperties.Count > 0)
             {
-                continue;
+                if (!options.IncludedProperties.Contains(propName)
+                    && !options.IncludedProperties.Contains(childPath))
+                {
+                    continue;
+                }
+            }
+            else
+            {
+                // Check if a property is excluded (by simple name or full path)
+                if (options.ExcludedProperties.Contains(propName))
+                {
+                    continue;
+                }
+
+                if (options.ExcludedProperties.Contains(childPath))
+                {
+                    continue;
+                }
             }
 
             object? actualVal;
@@ -189,10 +212,15 @@ public class ObjectComparator : IComparator<object?>
                 continue;
             }
 
-            // If expected is a different type, try to get the same property
+            // If expected is a different type, try to get the same property (with member mapping support)
             var expectedType = expected.GetType();
+            var mappedName = options.MemberMappings is not null
+                && options.MemberMappings.TryGetValue(propName, out var mapped)
+                ? mapped
+                : propName;
+
             var expectedProp = expectedType.GetProperty(
-                propName,
+                mappedName,
                 BindingFlags.Public | BindingFlags.Instance
             );
 
@@ -254,6 +282,26 @@ public class ObjectComparator : IComparator<object?>
             return;
         }
 
+        if (options.IgnoreCollectionOrder)
+        {
+            CompareCollectionsUnordered(actualList, expectedList, path, depth, options, visited, differences);
+        }
+        else
+        {
+            CompareCollectionsOrdered(actualList, expectedList, path, depth, options, visited, differences);
+        }
+    }
+
+    private static void CompareCollectionsOrdered(
+        List<object?> actualList,
+        List<object?> expectedList,
+        string path,
+        int depth,
+        ComparisonOptions options,
+        HashSet<object> visited,
+        List<string> differences
+    )
+    {
         var count = Math.Min(actualList.Count, expectedList.Count);
 
         for (var i = 0; i < count; i++)
@@ -273,6 +321,62 @@ public class ObjectComparator : IComparator<object?>
                 visited,
                 differences
             );
+        }
+    }
+
+    private static void CompareCollectionsUnordered(
+        List<object?> actualList,
+        List<object?> expectedList,
+        string path,
+        int depth,
+        ComparisonOptions options,
+        HashSet<object> visited,
+        List<string> differences
+    )
+    {
+        var remaining = new List<object?>(actualList);
+
+        for (var i = 0; i < expectedList.Count; i++)
+        {
+            if (differences.Count >= options.MaxDifferencesReported)
+            {
+                return;
+            }
+
+            var expectedItem = expectedList[i];
+            var matchIndex = -1;
+
+            for (var j = 0; j < remaining.Count; j++)
+            {
+                var testDifferences = new List<string>();
+                var testVisited = new HashSet<object>(ReferenceEqualityComparer.Instance);
+                CompareRecursive(
+                    remaining[j],
+                    expectedItem,
+                    string.Empty,
+                    depth + 1,
+                    options,
+                    testVisited,
+                    testDifferences
+                );
+
+                if (testDifferences.Count == 0)
+                {
+                    matchIndex = j;
+                    break;
+                }
+            }
+
+            if (matchIndex < 0)
+            {
+                var label = string.IsNullOrEmpty(path) ? "<root>" : $"Collection at '{path}'";
+                differences.Add(
+                    $"{label}: expected element '{FormatValue(expectedItem)}' was not found (ignoring order)"
+                );
+                return;
+            }
+
+            remaining.RemoveAt(matchIndex);
         }
     }
 
@@ -305,4 +409,42 @@ public class ObjectComparator : IComparator<object?>
     }
 
     private static string FormatValue(object? value) => value?.ToString() ?? "<null>";
+
+    private static bool TryCompareWithTolerance(
+        object actual,
+        object expected,
+        IReadOnlyDictionary<Type, object> tolerances
+    )
+    {
+        var actualType = actual.GetType();
+        var underlyingType = Nullable.GetUnderlyingType(actualType) ?? actualType;
+
+        if (!tolerances.TryGetValue(underlyingType, out var tolerance))
+        {
+            return false; // no tolerance configured for this type, fall through to Equals
+        }
+
+        if (underlyingType == typeof(decimal) && actual is decimal actualDecimal && expected is decimal expectedDecimal)
+        {
+            return Math.Abs(actualDecimal - expectedDecimal) <= (decimal)tolerance;
+        }
+
+        if (underlyingType == typeof(double) && actual is double actualDouble && expected is double expectedDouble)
+        {
+            return Math.Abs(actualDouble - expectedDouble) <= (double)tolerance;
+        }
+
+        if (underlyingType == typeof(float) && actual is float actualFloat && expected is float expectedFloat)
+        {
+            return Math.Abs(actualFloat - expectedFloat) <= (float)tolerance;
+        }
+
+        if (underlyingType == typeof(DateTime) && actual is DateTime actualDt && expected is DateTime expectedDt
+            && tolerance is TimeSpan ts)
+        {
+            return Math.Abs((actualDt - expectedDt).Ticks) <= ts.Ticks;
+        }
+
+        return false; // unsupported tolerance type, fall through to Equals
+    }
 }

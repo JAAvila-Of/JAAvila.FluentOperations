@@ -6,7 +6,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the nullable decimal value equals the expected value.
 /// </summary>
 internal class NullableDecimalBeValidator(PrincipalChain<decimal?> chain, decimal? expected)
-    : IValidator
+    : IValidator, IRuleDescriptor
 {
     public static NullableDecimalBeValidator New(
         PrincipalChain<decimal?> chain,
@@ -15,6 +15,11 @@ internal class NullableDecimalBeValidator(PrincipalChain<decimal?> chain, decima
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableDecimal.Be";
+    string IRuleDescriptor.OperationName => "Be";
+    Type IRuleDescriptor.SubjectType => typeof(decimal?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expected };
 
     public bool Validate()
     {

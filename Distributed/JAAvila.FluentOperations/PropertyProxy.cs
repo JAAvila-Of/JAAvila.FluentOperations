@@ -37,8 +37,8 @@ internal class PropertyProxy<TProp, TManager>(
 {
     public TManager Test()
     {
-        // Inicia la captura por propiedad antes de devolver el manager
-        // El escenario se toma del contexto de RuleCaptureContext que fue seteado en el Blueprint/For
+        // Start the property capture before returning the manager
+        // The scenario is taken from the RuleCaptureContext context that was set in the Blueprint/For
         ExecutionEngine<ObjectOperationsManager, object?>.BeginPropertyCapture(
             captureList,
             propertyName,
@@ -48,6 +48,11 @@ internal class PropertyProxy<TProp, TManager>(
         if (managerFactory != null)
         {
             return managerFactory(propertyName);
+        }
+
+        if (typeof(TManager) == typeof(ActionStatsOperationsManager))
+        {
+            return (TManager)(object)new ActionStatsOperationsManager(null, propertyName);
         }
 
         if (typeof(TManager) == typeof(StringOperationsManager))
@@ -115,6 +120,76 @@ internal class PropertyProxy<TProp, TManager>(
             return (TManager)(object)new FloatOperationsManager(default, propertyName);
         }
 
+        if (typeof(TManager) == typeof(NullableByteOperationsManager))
+        {
+            return (TManager)(object)new NullableByteOperationsManager(null, propertyName);
+        }
+
+        if (typeof(TManager) == typeof(ByteOperationsManager))
+        {
+            return (TManager)(object)new ByteOperationsManager(default, propertyName);
+        }
+
+        if (typeof(TManager) == typeof(NullableSByteOperationsManager))
+        {
+            return (TManager)(object)new NullableSByteOperationsManager(null, propertyName);
+        }
+
+        if (typeof(TManager) == typeof(SByteOperationsManager))
+        {
+            return (TManager)(object)new SByteOperationsManager(default, propertyName);
+        }
+
+        if (typeof(TManager) == typeof(NullableUIntOperationsManager))
+        {
+            return (TManager)(object)new NullableUIntOperationsManager(null, propertyName);
+        }
+
+        if (typeof(TManager) == typeof(UIntOperationsManager))
+        {
+            return (TManager)(object)new UIntOperationsManager(default, propertyName);
+        }
+
+        if (typeof(TManager) == typeof(NullableULongOperationsManager))
+        {
+            return (TManager)(object)new NullableULongOperationsManager(null, propertyName);
+        }
+
+        if (typeof(TManager) == typeof(ULongOperationsManager))
+        {
+            return (TManager)(object)new ULongOperationsManager(default, propertyName);
+        }
+
+        if (typeof(TManager) == typeof(NullableUShortOperationsManager))
+        {
+            return (TManager)(object)new NullableUShortOperationsManager(null, propertyName);
+        }
+
+        if (typeof(TManager) == typeof(UShortOperationsManager))
+        {
+            return (TManager)(object)new UShortOperationsManager(default, propertyName);
+        }
+
+        if (typeof(TManager) == typeof(NullableShortOperationsManager))
+        {
+            return (TManager)(object)new NullableShortOperationsManager(null, propertyName);
+        }
+
+        if (typeof(TManager) == typeof(ShortOperationsManager))
+        {
+            return (TManager)(object)new ShortOperationsManager(default, propertyName);
+        }
+
+        if (typeof(TManager) == typeof(NullableCharOperationsManager))
+        {
+            return (TManager)(object)new NullableCharOperationsManager(null, propertyName);
+        }
+
+        if (typeof(TManager) == typeof(CharOperationsManager))
+        {
+            return (TManager)(object)new CharOperationsManager(default, propertyName);
+        }
+
         if (typeof(TManager) == typeof(DateTimeOperationsManager))
         {
             return (TManager)(object)new DateTimeOperationsManager(default, propertyName);
@@ -179,6 +254,47 @@ internal class PropertyProxy<TProp, TManager>(
         {
             return (TManager)
                 (object)new NullableDateTimeOffsetOperationsManager(null, propertyName);
+        }
+
+        // Generic manager support (Collection, Array, Dictionary, Enum)
+        if (typeof(TManager).IsGenericType)
+        {
+            var genericDef = typeof(TManager).GetGenericTypeDefinition();
+
+            if (genericDef == typeof(CollectionOperationsManager<>))
+            {
+                var itemType = typeof(TManager).GetGenericArguments()[0];
+                var listType = typeof(List<>).MakeGenericType(itemType);
+                var emptyList = Activator.CreateInstance(listType)!;
+                return (TManager)Activator.CreateInstance(typeof(TManager), emptyList, propertyName)!;
+            }
+
+            if (genericDef == typeof(ArrayOperationsManager<>))
+            {
+                var itemType = typeof(TManager).GetGenericArguments()[0];
+                var emptyArray = Array.CreateInstance(itemType, 0);
+                return (TManager)Activator.CreateInstance(typeof(TManager), emptyArray, propertyName)!;
+            }
+
+            if (genericDef == typeof(DictionaryOperationsManager<,>))
+            {
+                var typeArgs = typeof(TManager).GetGenericArguments();
+                var dictType = typeof(Dictionary<,>).MakeGenericType(typeArgs);
+                var emptyDict = Activator.CreateInstance(dictType)!;
+                return (TManager)Activator.CreateInstance(typeof(TManager), emptyDict, propertyName)!;
+            }
+
+            if (genericDef == typeof(EnumOperationsManager<>))
+            {
+                var enumType = typeof(TManager).GetGenericArguments()[0];
+                var defaultVal = Activator.CreateInstance(enumType)!;
+                return (TManager)Activator.CreateInstance(typeof(TManager), defaultVal, propertyName)!;
+            }
+
+            if (genericDef == typeof(NullableEnumOperationsManager<>))
+            {
+                return (TManager)Activator.CreateInstance(typeof(TManager), (object?)null, propertyName)!;
+            }
         }
 
         return (TManager)(object)new ObjectOperationsManager(null, propertyName);

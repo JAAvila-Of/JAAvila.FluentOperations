@@ -5,12 +5,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the datetime value falls on a weekday (Monday through Friday).
 /// </summary>
-internal class DateTimeBeWeekdayValidator(PrincipalChain<DateTime> chain) : IValidator
+internal class DateTimeBeWeekdayValidator(PrincipalChain<DateTime> chain) : IValidator, IRuleDescriptor
 {
     public static DateTimeBeWeekdayValidator New(PrincipalChain<DateTime> chain) => new(chain);
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "DateTime.BeWeekday";
+    string IRuleDescriptor.OperationName => "BeWeekday";
+    Type IRuleDescriptor.SubjectType => typeof(DateTime);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {
