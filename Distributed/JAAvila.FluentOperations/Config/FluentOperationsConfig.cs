@@ -95,6 +95,11 @@ public static class FluentOperationsConfig
     /// </summary>
     public static TestFrameworkConfig GetTestFrameworkConfig() => GlobalConfig.GetTestFrameworkConfig();
 
+    /// <summary>
+    /// Returns the current effective TelemetryConfig, or <c>null</c> when telemetry is disabled.
+    /// </summary>
+    internal static TelemetryConfig? GetTelemetryConfig() => GlobalConfig.GetTelemetryConfig();
+
 }
 
 /// <summary>
@@ -133,6 +138,11 @@ public class ConfigBuilder
     /// </summary>
     public LocalizationConfigBuilder Localization { get; } = new();
 
+    /// <summary>
+    /// Configuration options for validation telemetry emitted via <c>System.Diagnostics.Metrics</c>.
+    /// </summary>
+    public TelemetryConfigBuilder Telemetry { get; } = new();
+
     internal static ConfigBuilder FromExisting(GlobalConfig existing)
     {
         var builder = new ConfigBuilder();
@@ -168,6 +178,15 @@ public class ConfigBuilder
             builder.Localization.Provider = lc.Provider;
             builder.Localization.Culture = lc.Culture;
             builder.Localization.EnableCache = lc.EnableCache;
+        }
+
+        var tc = existing.GetTelemetryConfigInternal();
+        if (tc is not null)
+        {
+            builder.Telemetry.Enabled = tc.Enabled;
+            builder.Telemetry.TrackRuleExecutionTime = tc.TrackRuleExecutionTime;
+            builder.Telemetry.TrackFailureRates = tc.TrackFailureRates;
+            builder.Telemetry.TrackBlueprintExecutionTime = tc.TrackBlueprintExecutionTime;
         }
 
         return builder;
@@ -220,6 +239,19 @@ public class ConfigBuilder
             Provider = Localization.Provider,
             Culture = Localization.Culture,
             EnableCache = Localization.EnableCache
+        };
+    }
+
+    internal TelemetryConfig? BuildTelemetryConfig()
+    {
+        if (!Telemetry.Enabled) return null;
+
+        return new TelemetryConfig
+        {
+            Enabled = true,
+            TrackRuleExecutionTime = Telemetry.TrackRuleExecutionTime,
+            TrackFailureRates = Telemetry.TrackFailureRates,
+            TrackBlueprintExecutionTime = Telemetry.TrackBlueprintExecutionTime
         };
     }
 }

@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the short value is even.
 /// </summary>
-internal class ShortBeEvenValidator(PrincipalChain<short> chain) : IValidator
+internal class ShortBeEvenValidator(PrincipalChain<short> chain) : IValidator, IRuleDescriptor
 {
     public static ShortBeEvenValidator New(PrincipalChain<short> chain) =>
         new(chain);
@@ -13,6 +13,10 @@ internal class ShortBeEvenValidator(PrincipalChain<short> chain) : IValidator
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Short.BeEven";
+    string IRuleDescriptor.OperationName => "BeEven";
+    Type IRuleDescriptor.SubjectType => typeof(short);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the sbyte value is not one of the specified disallowed values.
 /// </summary>
-internal class SByteNotBeOneOfValidator(PrincipalChain<sbyte> chain, params sbyte[] expected) : IValidator
+internal class SByteNotBeOneOfValidator(PrincipalChain<sbyte> chain, params sbyte[] expected) : IValidator, IRuleDescriptor
 {
     public static SByteNotBeOneOfValidator New(PrincipalChain<sbyte> chain, params sbyte[] expected) =>
         new(chain, expected);
@@ -13,6 +13,10 @@ internal class SByteNotBeOneOfValidator(PrincipalChain<sbyte> chain, params sbyt
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "SByte.NotBeOneOf";
+    string IRuleDescriptor.OperationName => "NotBeOneOf";
+    Type IRuleDescriptor.SubjectType => typeof(sbyte);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["values"] = expected };
 
     public bool Validate()
     {

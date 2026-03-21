@@ -9,7 +9,7 @@ internal class NullableDoubleBeInRangeValidator(
     PrincipalChain<double?> chain,
     double min,
     double max
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static NullableDoubleBeInRangeValidator New(
         PrincipalChain<double?> chain,
@@ -20,6 +20,10 @@ internal class NullableDoubleBeInRangeValidator(
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "NullableDouble.BeInRange";
+    string IRuleDescriptor.OperationName => "BeInRange";
+    Type IRuleDescriptor.SubjectType => typeof(double?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["min"] = min, ["max"] = max };
 
     public bool Validate()
     {

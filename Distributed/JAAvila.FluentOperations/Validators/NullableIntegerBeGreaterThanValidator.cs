@@ -6,7 +6,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the nullable integer value is greater than the expected value.
 /// </summary>
 internal class NullableIntegerBeGreaterThanValidator(PrincipalChain<int?> chain, int comparison)
-    : IValidator
+    : IValidator, IRuleDescriptor
 {
     public static NullableIntegerBeGreaterThanValidator New(
         PrincipalChain<int?> chain,
@@ -16,6 +16,10 @@ internal class NullableIntegerBeGreaterThanValidator(PrincipalChain<int?> chain,
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "NullableInteger.BeGreaterThan";
+    string IRuleDescriptor.OperationName => "BeGreaterThan";
+    Type IRuleDescriptor.SubjectType => typeof(int?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = comparison };
 
     public bool Validate()
     {

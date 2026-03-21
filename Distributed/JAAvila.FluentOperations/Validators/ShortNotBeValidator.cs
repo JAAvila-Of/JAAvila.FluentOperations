@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the short value does not equal the expected value.
 /// </summary>
-internal class ShortNotBeValidator(PrincipalChain<short> chain, short expected) : IValidator
+internal class ShortNotBeValidator(PrincipalChain<short> chain, short expected) : IValidator, IRuleDescriptor
 {
     public static ShortNotBeValidator New(PrincipalChain<short> chain, short expected) =>
         new(chain, expected);
@@ -13,6 +13,10 @@ internal class ShortNotBeValidator(PrincipalChain<short> chain, short expected) 
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Short.NotBe";
+    string IRuleDescriptor.OperationName => "NotBe";
+    Type IRuleDescriptor.SubjectType => typeof(short);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expected };
 
     public bool Validate()
     {

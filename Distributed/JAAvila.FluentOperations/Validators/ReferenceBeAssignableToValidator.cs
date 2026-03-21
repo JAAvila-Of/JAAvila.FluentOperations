@@ -9,7 +9,7 @@ namespace JAAvila.FluentOperations.Validators;
 internal class ReferenceBeAssignableToValidator(
     PrincipalChain<object?> chain,
     Type expected
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static ReferenceBeAssignableToValidator New(
         PrincipalChain<object?> chain,
@@ -19,6 +19,10 @@ internal class ReferenceBeAssignableToValidator(
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Reference.BeAssignableTo";
+    string IRuleDescriptor.OperationName => "BeAssignableTo";
+    Type IRuleDescriptor.SubjectType => typeof(object);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["type"] = expected.FullName ?? expected.Name };
 
     public bool Validate()
     {

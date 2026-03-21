@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the action completed without throwing an exception.
 /// </summary>
-internal class ActionStatsSucceedValidator(PrincipalChain<Model.ActionStats?> chain) : IValidator
+internal class ActionStatsSucceedValidator(PrincipalChain<Model.ActionStats?> chain) : IValidator, IRuleDescriptor
 {
     public static ActionStatsSucceedValidator New(PrincipalChain<Model.ActionStats?> chain) =>
         new(chain);
@@ -13,6 +13,10 @@ internal class ActionStatsSucceedValidator(PrincipalChain<Model.ActionStats?> ch
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "ActionStats.Succeed";
+    string IRuleDescriptor.OperationName => "Succeed";
+    Type IRuleDescriptor.SubjectType => typeof(Model.ActionStats);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     /// <summary>
     /// Returns the exception info string for use in the failure message template.

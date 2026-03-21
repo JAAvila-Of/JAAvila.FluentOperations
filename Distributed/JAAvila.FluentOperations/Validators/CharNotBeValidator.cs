@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the char value does not equal the expected value.
 /// </summary>
-internal class CharNotBeValidator(PrincipalChain<char> chain, char expected) : IValidator
+internal class CharNotBeValidator(PrincipalChain<char> chain, char expected) : IValidator, IRuleDescriptor
 {
     public static CharNotBeValidator New(PrincipalChain<char> chain, char expected) =>
         new(chain, expected);
@@ -13,6 +13,10 @@ internal class CharNotBeValidator(PrincipalChain<char> chain, char expected) : I
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Char.NotBe";
+    string IRuleDescriptor.OperationName => "NotBe";
+    Type IRuleDescriptor.SubjectType => typeof(char);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expected };
 
     public bool Validate()
     {

@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the integer value does not equal the expected value.
 /// </summary>
-internal class IntegerNotBeValidator(PrincipalChain<int> chain, int expected) : IValidator
+internal class IntegerNotBeValidator(PrincipalChain<int> chain, int expected) : IValidator, IRuleDescriptor
 {
     public static IntegerNotBeValidator New(PrincipalChain<int> chain, int expected) =>
         new(chain, expected);
@@ -13,6 +13,10 @@ internal class IntegerNotBeValidator(PrincipalChain<int> chain, int expected) : 
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Integer.NotBe";
+    string IRuleDescriptor.OperationName => "NotBe";
+    Type IRuleDescriptor.SubjectType => typeof(int);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expected };
 
     public bool Validate()
     {

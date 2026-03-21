@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the URI is a relative URI.
 /// </summary>
-internal class UriBeRelativeValidator(PrincipalChain<Uri?> chain) : IValidator
+internal class UriBeRelativeValidator(PrincipalChain<Uri?> chain) : IValidator, IRuleDescriptor
 {
     public static UriBeRelativeValidator New(PrincipalChain<Uri?> chain) =>
         new(chain);
@@ -13,6 +13,10 @@ internal class UriBeRelativeValidator(PrincipalChain<Uri?> chain) : IValidator
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Uri.BeRelative";
+    string IRuleDescriptor.OperationName => "BeRelative";
+    Type IRuleDescriptor.SubjectType => typeof(Uri);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

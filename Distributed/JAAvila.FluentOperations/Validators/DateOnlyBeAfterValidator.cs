@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the dateonly value is after the expected value.
 /// </summary>
-internal class DateOnlyBeAfterValidator(PrincipalChain<DateOnly> chain, DateOnly expected) : IValidator
+internal class DateOnlyBeAfterValidator(PrincipalChain<DateOnly> chain, DateOnly expected) : IValidator, IRuleDescriptor
 {
     public static DateOnlyBeAfterValidator New(PrincipalChain<DateOnly> chain, DateOnly expected) =>
         new(chain, expected);
@@ -13,6 +13,10 @@ internal class DateOnlyBeAfterValidator(PrincipalChain<DateOnly> chain, DateOnly
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "DateOnly.BeAfter";
+    string IRuleDescriptor.OperationName => "BeAfter";
+    Type IRuleDescriptor.SubjectType => typeof(DateOnly);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expected };
 
     public bool Validate()
     {

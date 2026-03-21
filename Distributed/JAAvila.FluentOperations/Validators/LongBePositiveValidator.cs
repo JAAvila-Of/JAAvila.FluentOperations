@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the long value is strictly positive.
 /// </summary>
-internal class LongBePositiveValidator(PrincipalChain<long> chain) : IValidator
+internal class LongBePositiveValidator(PrincipalChain<long> chain) : IValidator, IRuleDescriptor
 {
     public static LongBePositiveValidator New(PrincipalChain<long> chain) =>
         new(chain);
@@ -13,6 +13,10 @@ internal class LongBePositiveValidator(PrincipalChain<long> chain) : IValidator
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Long.BePositive";
+    string IRuleDescriptor.OperationName => "BePositive";
+    Type IRuleDescriptor.SubjectType => typeof(long);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

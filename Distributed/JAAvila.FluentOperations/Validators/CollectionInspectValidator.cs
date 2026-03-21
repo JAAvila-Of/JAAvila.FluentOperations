@@ -13,7 +13,7 @@ namespace JAAvila.FluentOperations.Validators;
 internal class CollectionInspectValidator<T>(
     PrincipalChain<IEnumerable<T>> chain,
     Action<T, int> inspector
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static CollectionInspectValidator<T> New(
         PrincipalChain<IEnumerable<T>> chain,
@@ -23,6 +23,10 @@ internal class CollectionInspectValidator<T>(
     public string Expected { get; } = string.Empty;
     public string ResultValidation { get; set; }
     public string MessageKey => "Collection.Inspect";
+    string IRuleDescriptor.OperationName => "Inspect";
+    Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = inspector };
 
     public bool Validate()
     {

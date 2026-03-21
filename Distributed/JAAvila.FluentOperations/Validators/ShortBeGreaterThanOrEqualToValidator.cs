@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the short value is greater than or equal to the expected value.
 /// </summary>
-internal class ShortBeGreaterThanOrEqualToValidator(PrincipalChain<short> chain, short expected) : IValidator
+internal class ShortBeGreaterThanOrEqualToValidator(PrincipalChain<short> chain, short expected) : IValidator, IRuleDescriptor
 {
     public static ShortBeGreaterThanOrEqualToValidator New(PrincipalChain<short> chain, short expected) =>
         new(chain, expected);
@@ -13,6 +13,10 @@ internal class ShortBeGreaterThanOrEqualToValidator(PrincipalChain<short> chain,
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Short.BeGreaterThanOrEqualTo";
+    string IRuleDescriptor.OperationName => "BeGreaterThanOrEqualTo";
+    Type IRuleDescriptor.SubjectType => typeof(short);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expected };
 
     public bool Validate()
     {

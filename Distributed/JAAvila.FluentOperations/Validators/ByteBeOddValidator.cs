@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the byte value is odd.
 /// </summary>
-internal class ByteBeOddValidator(PrincipalChain<byte> chain) : IValidator
+internal class ByteBeOddValidator(PrincipalChain<byte> chain) : IValidator, IRuleDescriptor
 {
     public static ByteBeOddValidator New(PrincipalChain<byte> chain) =>
         new(chain);
@@ -13,6 +13,10 @@ internal class ByteBeOddValidator(PrincipalChain<byte> chain) : IValidator
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Byte.BeOdd";
+    string IRuleDescriptor.OperationName => "BeOdd";
+    Type IRuleDescriptor.SubjectType => typeof(byte);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

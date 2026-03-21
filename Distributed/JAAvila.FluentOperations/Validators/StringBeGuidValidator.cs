@@ -5,13 +5,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the string value is a valid GUID.
 /// </summary>
-internal class StringBeGuidValidator(PrincipalChain<string?> chain) : IValidator
+internal class StringBeGuidValidator(PrincipalChain<string?> chain) : IValidator, IRuleDescriptor
 {
     public static StringBeGuidValidator New(PrincipalChain<string?> chain) => new(chain);
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "String.BeGuid";
+    string IRuleDescriptor.OperationName => "BeGuid";
+    Type IRuleDescriptor.SubjectType => typeof(string);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

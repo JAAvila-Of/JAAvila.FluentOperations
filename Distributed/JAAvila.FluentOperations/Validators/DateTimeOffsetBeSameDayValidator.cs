@@ -8,7 +8,7 @@ namespace JAAvila.FluentOperations.Validators;
 internal class DateTimeOffsetBeSameDayValidator(
     PrincipalChain<DateTimeOffset> chain,
     DateTimeOffset expected
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static DateTimeOffsetBeSameDayValidator New(
         PrincipalChain<DateTimeOffset> chain,
@@ -18,6 +18,10 @@ internal class DateTimeOffsetBeSameDayValidator(
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "DateTimeOffset.BeSameDay";
+    string IRuleDescriptor.OperationName => "BeSameDay";
+    Type IRuleDescriptor.SubjectType => typeof(DateTimeOffset);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expected };
 
     public bool Validate()
     {

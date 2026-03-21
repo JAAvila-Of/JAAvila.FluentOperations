@@ -6,7 +6,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the nullable double value is less than the expected value.
 /// </summary>
 internal class NullableDoubleBeLessThanValidator(PrincipalChain<double?> chain, double comparison)
-    : IValidator
+    : IValidator, IRuleDescriptor
 {
     public static NullableDoubleBeLessThanValidator New(
         PrincipalChain<double?> chain,
@@ -16,6 +16,10 @@ internal class NullableDoubleBeLessThanValidator(PrincipalChain<double?> chain, 
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "NullableDouble.BeLessThan";
+    string IRuleDescriptor.OperationName => "BeLessThan";
+    Type IRuleDescriptor.SubjectType => typeof(double?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = comparison };
 
     public bool Validate()
     {

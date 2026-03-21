@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable uint value equals the expected value.
 /// </summary>
-internal class NullableUIntBeValidator(PrincipalChain<uint?> chain, uint? expected) : IValidator
+internal class NullableUIntBeValidator(PrincipalChain<uint?> chain, uint? expected) : IValidator, IRuleDescriptor
 {
     public static NullableUIntBeValidator New(PrincipalChain<uint?> chain, uint? expected) =>
         new(chain, expected);
@@ -13,6 +13,10 @@ internal class NullableUIntBeValidator(PrincipalChain<uint?> chain, uint? expect
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "NullableUInt.Be";
+    string IRuleDescriptor.OperationName => "Be";
+    Type IRuleDescriptor.SubjectType => typeof(uint?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expected };
 
     public bool Validate()
     {

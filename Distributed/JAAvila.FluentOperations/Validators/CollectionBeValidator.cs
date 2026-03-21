@@ -6,7 +6,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the collection reference equals the expected reference (reference equality).
 /// </summary>
 internal class CollectionBeValidator<T>(PrincipalChain<IEnumerable<T>> chain, IEnumerable<T> expected)
-    : IValidator
+    : IValidator, IRuleDescriptor
 {
     public static CollectionBeValidator<T> New(
         PrincipalChain<IEnumerable<T>> chain,
@@ -16,6 +16,10 @@ internal class CollectionBeValidator<T>(PrincipalChain<IEnumerable<T>> chain, IE
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Collection.Be";
+    string IRuleDescriptor.OperationName => "Be";
+    Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["values"] = expected };
 
     public bool Validate()
     {

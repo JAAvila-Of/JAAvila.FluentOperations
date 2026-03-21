@@ -9,7 +9,7 @@ internal class NullableDateTimeNotBeCloseToValidator(
     PrincipalChain<DateTime?> chain,
     DateTime expected,
     TimeSpan tolerance
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static NullableDateTimeNotBeCloseToValidator New(
         PrincipalChain<DateTime?> chain,
@@ -20,6 +20,10 @@ internal class NullableDateTimeNotBeCloseToValidator(
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "NullableDateTime.NotBeCloseTo";
+    string IRuleDescriptor.OperationName => "NotBeCloseTo";
+    Type IRuleDescriptor.SubjectType => typeof(DateTime?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expected, ["value"] = tolerance };
 
     public bool Validate()
     {

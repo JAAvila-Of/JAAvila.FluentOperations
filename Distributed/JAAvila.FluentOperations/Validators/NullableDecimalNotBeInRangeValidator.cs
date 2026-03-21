@@ -9,7 +9,7 @@ internal class NullableDecimalNotBeInRangeValidator(
     PrincipalChain<decimal?> chain,
     decimal min,
     decimal max
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static NullableDecimalNotBeInRangeValidator New(
         PrincipalChain<decimal?> chain,
@@ -20,6 +20,10 @@ internal class NullableDecimalNotBeInRangeValidator(
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "NullableDecimal.NotBeInRange";
+    string IRuleDescriptor.OperationName => "NotBeInRange";
+    Type IRuleDescriptor.SubjectType => typeof(decimal?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["min"] = min, ["max"] = max };
 
     public bool Validate()
     {

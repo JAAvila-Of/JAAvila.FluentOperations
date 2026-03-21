@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the uri URI has the expected query string.
 /// </summary>
-internal class UriHaveQueryValidator(PrincipalChain<Uri?> chain) : IValidator
+internal class UriHaveQueryValidator(PrincipalChain<Uri?> chain) : IValidator, IRuleDescriptor
 {
     public static UriHaveQueryValidator New(PrincipalChain<Uri?> chain) =>
         new(chain);
@@ -13,6 +13,10 @@ internal class UriHaveQueryValidator(PrincipalChain<Uri?> chain) : IValidator
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Uri.HaveQuery";
+    string IRuleDescriptor.OperationName => "HaveQuery";
+    Type IRuleDescriptor.SubjectType => typeof(Uri);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

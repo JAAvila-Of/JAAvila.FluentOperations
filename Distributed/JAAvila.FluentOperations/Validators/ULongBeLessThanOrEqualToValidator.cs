@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the ulong value is less than or equal to the expected value.
 /// </summary>
-internal class ULongBeLessThanOrEqualToValidator(PrincipalChain<ulong> chain, ulong expected) : IValidator
+internal class ULongBeLessThanOrEqualToValidator(PrincipalChain<ulong> chain, ulong expected) : IValidator, IRuleDescriptor
 {
     public static ULongBeLessThanOrEqualToValidator New(PrincipalChain<ulong> chain, ulong expected) =>
         new(chain, expected);
@@ -13,6 +13,10 @@ internal class ULongBeLessThanOrEqualToValidator(PrincipalChain<ulong> chain, ul
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "ULong.BeLessThanOrEqualTo";
+    string IRuleDescriptor.OperationName => "BeLessThanOrEqualTo";
+    Type IRuleDescriptor.SubjectType => typeof(ulong);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expected };
 
     public bool Validate()
     {

@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable ushort does not have a value (is null).
 /// </summary>
-internal class NullableUShortNotHaveValueValidator(PrincipalChain<ushort?> chain) : IValidator
+internal class NullableUShortNotHaveValueValidator(PrincipalChain<ushort?> chain) : IValidator, IRuleDescriptor
 {
     public static NullableUShortNotHaveValueValidator New(PrincipalChain<ushort?> chain) =>
         new(chain);
@@ -13,6 +13,10 @@ internal class NullableUShortNotHaveValueValidator(PrincipalChain<ushort?> chain
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "NullableUShort.NotHaveValue";
+    string IRuleDescriptor.OperationName => "NotHaveValue";
+    Type IRuleDescriptor.SubjectType => typeof(ushort?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

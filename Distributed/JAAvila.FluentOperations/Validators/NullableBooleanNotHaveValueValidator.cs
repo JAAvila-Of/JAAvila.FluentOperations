@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable boolean does not have a value (is null).
 /// </summary>
-internal class NullableBooleanNotHaveValueValidator(PrincipalChain<bool?> chain) : IValidator
+internal class NullableBooleanNotHaveValueValidator(PrincipalChain<bool?> chain) : IValidator, IRuleDescriptor
 {
     public static NullableBooleanNotHaveValueValidator New(PrincipalChain<bool?> chain) =>
         new(chain);
@@ -13,6 +13,10 @@ internal class NullableBooleanNotHaveValueValidator(PrincipalChain<bool?> chain)
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "NullableBoolean.NotHaveValue";
+    string IRuleDescriptor.OperationName => "NotHaveValue";
+    Type IRuleDescriptor.SubjectType => typeof(bool?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

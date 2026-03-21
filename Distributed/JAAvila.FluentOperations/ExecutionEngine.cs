@@ -1,6 +1,9 @@
+using System.Diagnostics;
+using JAAvila.FluentOperations.Config;
 using JAAvila.FluentOperations.Contract;
 using JAAvila.FluentOperations.Handler;
 using JAAvila.FluentOperations.Model;
+using JAAvila.FluentOperations.Telemetry;
 
 namespace JAAvila.FluentOperations;
 
@@ -11,7 +14,7 @@ namespace JAAvila.FluentOperations;
 /// </summary>
 /// <typeparam name="T">The type of the manager implementing ITestManager.</typeparam>
 /// <typeparam name="TS">The type for the principal chain's associated data.</typeparam>
-internal class ExecutionEngine<T, TS>(T manager) : IQualityRule
+internal class ExecutionEngine<T, TS>(T manager) : IQualityRule, IRuleDescriptor
     where T : ITestManager<T, TS>
 {
     private IValidator? _operation;
@@ -24,6 +27,21 @@ internal class ExecutionEngine<T, TS>(T manager) : IQualityRule
     private string? _customMessage;
 
     private readonly Type? _activeScenarioInChain = RuleCaptureContext.CurrentScenario;
+
+    private static readonly IReadOnlyDictionary<string, object> EmptyParams =
+        new Dictionary<string, object>();
+
+    /// <summary>Exposes the attached validator for introspection (e.g. IRuleDescriptor).</summary>
+    internal IValidator? Operation => _operation;
+
+    string IRuleDescriptor.OperationName =>
+        _operation is IRuleDescriptor rd ? rd.OperationName : (_operation?.MessageKey ?? "Unknown");
+
+    Type IRuleDescriptor.SubjectType =>
+        _operation is IRuleDescriptor rd ? rd.SubjectType : typeof(TS);
+
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        _operation is IRuleDescriptor rd ? rd.Parameters : EmptyParams;
 
     public static bool IsLazyMode { get; set; }
 
@@ -161,6 +179,10 @@ internal class ExecutionEngine<T, TS>(T manager) : IQualityRule
             return;
         }
 
+        var telemetryConfig = GlobalConfig.GetTelemetryConfig();
+        var sw = (telemetryConfig is { Enabled: true, TrackRuleExecutionTime: true })
+            ? Stopwatch.StartNew() : null;
+
         var fail = EnsureFailConditions();
 
         if (fail)
@@ -170,11 +192,30 @@ internal class ExecutionEngine<T, TS>(T manager) : IQualityRule
             {
                 ExceptionHandler.Handle(_customMessage ?? _template);
             }
+
+            if (telemetryConfig is { Enabled: true })
+            {
+                sw?.Stop();
+                FluentOperationsMeter.RecordEagerRuleExecution(
+                    false,
+                    _severity.ToString(),
+                    sw?.Elapsed.TotalMilliseconds ?? 0);
+            }
+
             // Warning and Info are silently ignored in eager mode for FailIf conditions
             return;
         }
 
         var result = BaseOperations.SafeExecute(() => _operation!.Validate());
+
+        if (telemetryConfig is { Enabled: true })
+        {
+            sw?.Stop();
+            FluentOperationsMeter.RecordEagerRuleExecution(
+                result,
+                _severity.ToString(),
+                sw?.Elapsed.TotalMilliseconds ?? 0);
+        }
 
         if (!result)
         {
@@ -266,15 +307,38 @@ internal class ExecutionEngine<T, TS>(T manager) : IQualityRule
             return;
         }
 
+        var telemetryConfig = GlobalConfig.GetTelemetryConfig();
+        var sw = (telemetryConfig is { Enabled: true, TrackRuleExecutionTime: true })
+            ? Stopwatch.StartNew() : null;
+
         var fail = EnsureFailConditions();
 
         if (fail)
         {
             ExceptionHandler.Handle(_template);
+
+            if (telemetryConfig is { Enabled: true })
+            {
+                sw?.Stop();
+                FluentOperationsMeter.RecordEagerRuleExecution(
+                    false,
+                    _severity.ToString(),
+                    sw?.Elapsed.TotalMilliseconds ?? 0);
+            }
+
             return;
         }
 
         var result = await BaseOperations.SafeExecuteAsync(() => _operation!.ValidateAsync());
+
+        if (telemetryConfig is { Enabled: true })
+        {
+            sw?.Stop();
+            FluentOperationsMeter.RecordEagerRuleExecution(
+                result,
+                _severity.ToString(),
+                sw?.Elapsed.TotalMilliseconds ?? 0);
+        }
 
         if (!result)
         {

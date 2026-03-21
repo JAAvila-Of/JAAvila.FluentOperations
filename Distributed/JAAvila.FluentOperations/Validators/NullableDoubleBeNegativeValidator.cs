@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable double value is strictly negative.
 /// </summary>
-internal class NullableDoubleBeNegativeValidator(PrincipalChain<double?> chain) : IValidator
+internal class NullableDoubleBeNegativeValidator(PrincipalChain<double?> chain) : IValidator, IRuleDescriptor
 {
     public static NullableDoubleBeNegativeValidator New(PrincipalChain<double?> chain) =>
         new(chain);
@@ -13,6 +13,10 @@ internal class NullableDoubleBeNegativeValidator(PrincipalChain<double?> chain) 
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "NullableDouble.BeNegative";
+    string IRuleDescriptor.OperationName => "BeNegative";
+    Type IRuleDescriptor.SubjectType => typeof(double?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

@@ -10,7 +10,7 @@ internal class CollectionContainWithOccurrenceValidator<T>(
     PrincipalChain<IEnumerable<T>> chain,
     T item,
     OccurrenceConstraint constraint
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static CollectionContainWithOccurrenceValidator<T> New(
         PrincipalChain<IEnumerable<T>> chain,
@@ -21,6 +21,10 @@ internal class CollectionContainWithOccurrenceValidator<T>(
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Collection.Contain";
+    string IRuleDescriptor.OperationName => "Contain";
+    Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = item };
 
     public bool Validate()
     {

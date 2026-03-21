@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the enum value does not have the expected flag set.
 /// </summary>
-internal class EnumNotHaveFlagValidator<T>(PrincipalChain<T> chain, T flag) : IValidator
+internal class EnumNotHaveFlagValidator<T>(PrincipalChain<T> chain, T flag) : IValidator, IRuleDescriptor
     where T : Enum
 {
     public static EnumNotHaveFlagValidator<T> New(PrincipalChain<T> chain, T flag) =>
@@ -14,6 +14,10 @@ internal class EnumNotHaveFlagValidator<T>(PrincipalChain<T> chain, T flag) : IV
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Enum.NotHaveFlag";
+    string IRuleDescriptor.OperationName => "NotHaveFlag";
+    Type IRuleDescriptor.SubjectType => typeof(T);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = flag };
 
     public bool Validate()
     {

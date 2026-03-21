@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the string contains no whitespace characters.
 /// </summary>
-internal class StringContainNoWhitespaceValidator(PrincipalChain<string?> chain) : IValidator
+internal class StringContainNoWhitespaceValidator(PrincipalChain<string?> chain) : IValidator, IRuleDescriptor
 {
     public static StringContainNoWhitespaceValidator New(PrincipalChain<string?> chain) =>
         new(chain);
@@ -13,6 +13,10 @@ internal class StringContainNoWhitespaceValidator(PrincipalChain<string?> chain)
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "String.ContainNoWhitespace";
+    string IRuleDescriptor.OperationName => "ContainNoWhitespace";
+    Type IRuleDescriptor.SubjectType => typeof(string);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

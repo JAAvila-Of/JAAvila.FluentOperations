@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable datetime does not have a value (is null).
 /// </summary>
-internal class NullableDateTimeNotHaveValueValidator(PrincipalChain<DateTime?> chain) : IValidator
+internal class NullableDateTimeNotHaveValueValidator(PrincipalChain<DateTime?> chain) : IValidator, IRuleDescriptor
 {
     public static NullableDateTimeNotHaveValueValidator New(PrincipalChain<DateTime?> chain) =>
         new(chain);
@@ -13,6 +13,10 @@ internal class NullableDateTimeNotHaveValueValidator(PrincipalChain<DateTime?> c
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "NullableDateTime.NotHaveValue";
+    string IRuleDescriptor.OperationName => "NotHaveValue";
+    Type IRuleDescriptor.SubjectType => typeof(DateTime?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

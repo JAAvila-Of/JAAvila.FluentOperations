@@ -8,7 +8,7 @@ namespace JAAvila.FluentOperations.Validators;
 internal class CollectionContainAllValidator<T>(
     PrincipalChain<IEnumerable<T>> chain,
     params T[] expected
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static CollectionContainAllValidator<T> New(
         PrincipalChain<IEnumerable<T>> chain,
@@ -18,6 +18,10 @@ internal class CollectionContainAllValidator<T>(
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Collection.ContainAll";
+    string IRuleDescriptor.OperationName => "ContainAll";
+    Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["values"] = expected };
 
     public bool Validate()
     {
