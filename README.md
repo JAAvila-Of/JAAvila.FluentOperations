@@ -487,9 +487,11 @@ FluentOperationsConfig.Configure(c =>
 
 ## Documentation
 
-- [API Reference](./docs/API.md) - Complete API documentation
-- [Integration Guide](./docs/INTEGRATION.md) - ASP.NET Core, MediatR, Minimal API, gRPC, and more
-- [Localization Guide](./docs/LOCALIZATION.md) - Configuring localized validation messages
+- [API Reference](./docs/API.md) — Complete API documentation
+- [Integration Guide](./docs/INTEGRATION.md) — ASP.NET Core, MediatR, Minimal API, gRPC, and more
+- [Localization Guide](./docs/LOCALIZATION.md) — Configuring localized validation messages
+- [Contributing](./CONTRIBUTING.md) — How to contribute, code of ethics, CLA
+- [Trademark Policy](./TRADEMARK.md) — Naming guidelines for forks and derivative works
 
 ## Project Stats
 
@@ -501,8 +503,10 @@ FluentOperationsConfig.Configure(c =>
 
 ## License
 
-This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the Apache License 2.0 — see the [LICENSE](LICENSE) file for details.
+
+The names "JAAvila.FluentOperations", "FluentOperations", and "Quality Blueprint" are trademarks of Jose Angel Avila. See the [NOTICE](NOTICE) file and [TRADEMARK.md](TRADEMARK.md) for attribution requirements and naming restrictions for derivative works.
 
 ## Author
 
-Built by JAAvila
+Created and maintained by **JAAvila (Jose Angel Avila)**
