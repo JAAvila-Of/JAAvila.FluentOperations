@@ -5,13 +5,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable uint value is odd.
 /// </summary>
-internal class NullableUIntBeOddValidator(PrincipalChain<uint?> chain) : IValidator
+internal class NullableUIntBeOddValidator(PrincipalChain<uint?> chain) : IValidator, IRuleDescriptor
 {
     public static NullableUIntBeOddValidator New(PrincipalChain<uint?> chain) => new(chain);
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "NullableUInt.BeOdd";
+    string IRuleDescriptor.OperationName => "BeOdd";
+    Type IRuleDescriptor.SubjectType => typeof(uint?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

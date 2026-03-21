@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable enum value has the expected flag set.
 /// </summary>
-internal class NullableEnumHaveFlagValidator<T>(PrincipalChain<T?> chain, T flag) : IValidator
+internal class NullableEnumHaveFlagValidator<T>(PrincipalChain<T?> chain, T flag) : IValidator, IRuleDescriptor
     where T : struct, Enum
 {
     public static NullableEnumHaveFlagValidator<T> New(PrincipalChain<T?> chain, T flag) =>
@@ -14,6 +14,10 @@ internal class NullableEnumHaveFlagValidator<T>(PrincipalChain<T?> chain, T flag
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "NullableEnum.HaveFlag";
+    string IRuleDescriptor.OperationName => "HaveFlag";
+    Type IRuleDescriptor.SubjectType => typeof(T?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = flag };
 
     public bool Validate()
     {

@@ -8,7 +8,7 @@ namespace JAAvila.FluentOperations.Validators;
 internal class DateTimeOffsetHaveOffsetValidator(
     PrincipalChain<DateTimeOffset> chain,
     TimeSpan expectedOffset
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static DateTimeOffsetHaveOffsetValidator New(
         PrincipalChain<DateTimeOffset> chain,
@@ -18,6 +18,10 @@ internal class DateTimeOffsetHaveOffsetValidator(
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "DateTimeOffset.HaveOffset";
+    string IRuleDescriptor.OperationName => "HaveOffset";
+    Type IRuleDescriptor.SubjectType => typeof(DateTimeOffset);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expectedOffset };
 
     public bool Validate()
     {

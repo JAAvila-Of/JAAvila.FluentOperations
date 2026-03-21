@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the sbyte value is less than or equal to the expected value.
 /// </summary>
-internal class SByteBeLessThanOrEqualToValidator(PrincipalChain<sbyte> chain, sbyte expected) : IValidator
+internal class SByteBeLessThanOrEqualToValidator(PrincipalChain<sbyte> chain, sbyte expected) : IValidator, IRuleDescriptor
 {
     public static SByteBeLessThanOrEqualToValidator New(PrincipalChain<sbyte> chain, sbyte expected) =>
         new(chain, expected);
@@ -13,6 +13,10 @@ internal class SByteBeLessThanOrEqualToValidator(PrincipalChain<sbyte> chain, sb
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "SByte.BeLessThanOrEqualTo";
+    string IRuleDescriptor.OperationName => "BeLessThanOrEqualTo";
+    Type IRuleDescriptor.SubjectType => typeof(sbyte);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expected };
 
     public bool Validate()
     {

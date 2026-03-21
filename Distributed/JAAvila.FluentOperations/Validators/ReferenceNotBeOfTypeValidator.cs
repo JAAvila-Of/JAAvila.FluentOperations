@@ -8,7 +8,7 @@ namespace JAAvila.FluentOperations.Validators;
 internal class ReferenceNotBeOfTypeValidator<TSubject>(
     PrincipalChain<TSubject> chain,
     Type expected
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static ReferenceNotBeOfTypeValidator<TSubject> New(
         PrincipalChain<TSubject> chain,
@@ -18,6 +18,10 @@ internal class ReferenceNotBeOfTypeValidator<TSubject>(
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Reference.NotBeOfType";
+    string IRuleDescriptor.OperationName => "NotBeOfType";
+    Type IRuleDescriptor.SubjectType => typeof(TSubject);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["type"] = expected.FullName ?? expected.Name };
 
     public bool Validate()
     {

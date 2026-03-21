@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable enum value is not one of the specified disallowed values.
 /// </summary>
-internal class NullableEnumNotBeOneOfValidator<T>(PrincipalChain<T?> chain, params T[] expected) : IValidator
+internal class NullableEnumNotBeOneOfValidator<T>(PrincipalChain<T?> chain, params T[] expected) : IValidator, IRuleDescriptor
     where T : struct, Enum
 {
     public static NullableEnumNotBeOneOfValidator<T> New(PrincipalChain<T?> chain, params T[] expected) =>
@@ -14,6 +14,10 @@ internal class NullableEnumNotBeOneOfValidator<T>(PrincipalChain<T?> chain, para
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "NullableEnum.NotBeOneOf";
+    string IRuleDescriptor.OperationName => "NotBeOneOf";
+    Type IRuleDescriptor.SubjectType => typeof(T?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["values"] = expected };
 
     public bool Validate()
     {

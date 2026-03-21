@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the integer value is less than or equal to the expected value.
 /// </summary>
-internal class IntegerBeLessThanOrEqualToValidator(PrincipalChain<int> chain, int expected) : IValidator
+internal class IntegerBeLessThanOrEqualToValidator(PrincipalChain<int> chain, int expected) : IValidator, IRuleDescriptor
 {
     public static IntegerBeLessThanOrEqualToValidator New(PrincipalChain<int> chain, int expected) =>
         new(chain, expected);
@@ -13,6 +13,11 @@ internal class IntegerBeLessThanOrEqualToValidator(PrincipalChain<int> chain, in
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Integer.BeLessThanOrEqualTo";
+
+    string IRuleDescriptor.OperationName => "BeLessThanOrEqualTo";
+    Type IRuleDescriptor.SubjectType => typeof(int);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expected };
 
     public bool Validate()
     {

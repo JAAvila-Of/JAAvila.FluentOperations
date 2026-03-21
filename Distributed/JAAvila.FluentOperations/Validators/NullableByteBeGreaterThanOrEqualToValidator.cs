@@ -8,7 +8,7 @@ namespace JAAvila.FluentOperations.Validators;
 internal class NullableByteBeGreaterThanOrEqualToValidator(
     PrincipalChain<byte?> chain,
     byte comparison
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static NullableByteBeGreaterThanOrEqualToValidator New(
         PrincipalChain<byte?> chain,
@@ -18,6 +18,10 @@ internal class NullableByteBeGreaterThanOrEqualToValidator(
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "NullableByte.BeGreaterThanOrEqualTo";
+    string IRuleDescriptor.OperationName => "BeGreaterThanOrEqualTo";
+    Type IRuleDescriptor.SubjectType => typeof(byte?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = comparison };
 
     public bool Validate()
     {

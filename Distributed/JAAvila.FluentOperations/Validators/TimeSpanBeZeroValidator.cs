@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the timespan value is zero.
 /// </summary>
-internal class TimeSpanBeZeroValidator(PrincipalChain<TimeSpan> chain) : IValidator
+internal class TimeSpanBeZeroValidator(PrincipalChain<TimeSpan> chain) : IValidator, IRuleDescriptor
 {
     public static TimeSpanBeZeroValidator New(PrincipalChain<TimeSpan> chain) =>
         new(chain);
@@ -13,6 +13,10 @@ internal class TimeSpanBeZeroValidator(PrincipalChain<TimeSpan> chain) : IValida
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "TimeSpan.BeZero";
+    string IRuleDescriptor.OperationName => "BeZero";
+    Type IRuleDescriptor.SubjectType => typeof(TimeSpan);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

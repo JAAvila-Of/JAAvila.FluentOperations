@@ -6,7 +6,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the nullable byte value is less than the expected value.
 /// </summary>
 internal class NullableByteBeLessThanValidator(PrincipalChain<byte?> chain, byte comparison)
-    : IValidator
+    : IValidator, IRuleDescriptor
 {
     public static NullableByteBeLessThanValidator New(
         PrincipalChain<byte?> chain,
@@ -16,6 +16,10 @@ internal class NullableByteBeLessThanValidator(PrincipalChain<byte?> chain, byte
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "NullableByte.BeLessThan";
+    string IRuleDescriptor.OperationName => "BeLessThan";
+    Type IRuleDescriptor.SubjectType => typeof(byte?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = comparison };
 
     public bool Validate()
     {

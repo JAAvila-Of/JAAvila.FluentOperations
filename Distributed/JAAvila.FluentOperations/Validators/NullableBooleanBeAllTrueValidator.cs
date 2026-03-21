@@ -6,7 +6,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the nullable boolean value and all provided values are true.
 /// </summary>
 internal class NullableBooleanBeAllTrueValidator(PrincipalChain<bool?> chain, bool?[] booleans)
-    : IValidator
+    : IValidator, IRuleDescriptor
 {
     public static NullableBooleanBeAllTrueValidator New(
         PrincipalChain<bool?> chain,
@@ -16,6 +16,10 @@ internal class NullableBooleanBeAllTrueValidator(PrincipalChain<bool?> chain, bo
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "NullableBoolean.BeAllTrue";
+    string IRuleDescriptor.OperationName => "BeAllTrue";
+    Type IRuleDescriptor.SubjectType => typeof(bool?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["values"] = booleans };
 
     public bool Validate()
     {

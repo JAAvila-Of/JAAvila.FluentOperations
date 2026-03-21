@@ -6,7 +6,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the nullable ulong value is greater than the expected value.
 /// </summary>
 internal class NullableULongBeGreaterThanValidator(PrincipalChain<ulong?> chain, ulong comparison)
-    : IValidator
+    : IValidator, IRuleDescriptor
 {
     public static NullableULongBeGreaterThanValidator New(
         PrincipalChain<ulong?> chain,
@@ -16,6 +16,10 @@ internal class NullableULongBeGreaterThanValidator(PrincipalChain<ulong?> chain,
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "NullableULong.BeGreaterThan";
+    string IRuleDescriptor.OperationName => "BeGreaterThan";
+    Type IRuleDescriptor.SubjectType => typeof(ulong?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = comparison };
 
     public bool Validate()
     {

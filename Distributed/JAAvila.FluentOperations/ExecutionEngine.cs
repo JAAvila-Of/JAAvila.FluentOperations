@@ -11,7 +11,7 @@ namespace JAAvila.FluentOperations;
 /// </summary>
 /// <typeparam name="T">The type of the manager implementing ITestManager.</typeparam>
 /// <typeparam name="TS">The type for the principal chain's associated data.</typeparam>
-internal class ExecutionEngine<T, TS>(T manager) : IQualityRule
+internal class ExecutionEngine<T, TS>(T manager) : IQualityRule, IRuleDescriptor
     where T : ITestManager<T, TS>
 {
     private IValidator? _operation;
@@ -24,6 +24,21 @@ internal class ExecutionEngine<T, TS>(T manager) : IQualityRule
     private string? _customMessage;
 
     private readonly Type? _activeScenarioInChain = RuleCaptureContext.CurrentScenario;
+
+    private static readonly IReadOnlyDictionary<string, object> EmptyParams =
+        new Dictionary<string, object>();
+
+    /// <summary>Exposes the attached validator for introspection (e.g. IRuleDescriptor).</summary>
+    internal IValidator? Operation => _operation;
+
+    string IRuleDescriptor.OperationName =>
+        _operation is IRuleDescriptor rd ? rd.OperationName : (_operation?.MessageKey ?? "Unknown");
+
+    Type IRuleDescriptor.SubjectType =>
+        _operation is IRuleDescriptor rd ? rd.SubjectType : typeof(TS);
+
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        _operation is IRuleDescriptor rd ? rd.Parameters : EmptyParams;
 
     public static bool IsLazyMode { get; set; }
 

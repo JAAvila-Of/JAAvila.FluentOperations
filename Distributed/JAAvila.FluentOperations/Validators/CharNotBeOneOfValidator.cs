@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the char value is not one of the specified disallowed values.
 /// </summary>
-internal class CharNotBeOneOfValidator(PrincipalChain<char> chain, params char[] expected) : IValidator
+internal class CharNotBeOneOfValidator(PrincipalChain<char> chain, params char[] expected) : IValidator, IRuleDescriptor
 {
     public static CharNotBeOneOfValidator New(PrincipalChain<char> chain, params char[] expected) =>
         new(chain, expected);
@@ -13,6 +13,10 @@ internal class CharNotBeOneOfValidator(PrincipalChain<char> chain, params char[]
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Char.NotBeOneOf";
+    string IRuleDescriptor.OperationName => "NotBeOneOf";
+    Type IRuleDescriptor.SubjectType => typeof(char);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["values"] = expected };
 
     public bool Validate()
     {

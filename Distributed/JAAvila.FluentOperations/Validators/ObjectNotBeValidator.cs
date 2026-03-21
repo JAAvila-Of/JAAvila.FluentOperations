@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the object value does not equal the expected value using <see cref="object.Equals(object?, object?)"/>.
 /// </summary>
-internal class ObjectNotBeValidator(PrincipalChain<object?> chain, object? expected) : IValidator
+internal class ObjectNotBeValidator(PrincipalChain<object?> chain, object? expected) : IValidator, IRuleDescriptor
 {
     public static ObjectNotBeValidator New(PrincipalChain<object?> chain, object? expected) =>
         new(chain, expected);
@@ -13,6 +13,10 @@ internal class ObjectNotBeValidator(PrincipalChain<object?> chain, object? expec
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Object.NotBe";
+    string IRuleDescriptor.OperationName => "NotBe";
+    Type IRuleDescriptor.SubjectType => typeof(object);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expected };
 
     public bool Validate()
     {

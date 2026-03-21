@@ -8,7 +8,7 @@ namespace JAAvila.FluentOperations.Validators;
 internal class DictionaryBeValidator<TKey, TValue>(
     PrincipalChain<IDictionary<TKey, TValue>> chain,
     IDictionary<TKey, TValue> expected
-) : IValidator
+) : IValidator, IRuleDescriptor
     where TKey : notnull
 {
     public static DictionaryBeValidator<TKey, TValue> New(
@@ -19,6 +19,10 @@ internal class DictionaryBeValidator<TKey, TValue>(
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Dictionary.Be";
+    string IRuleDescriptor.OperationName => "Be";
+    Type IRuleDescriptor.SubjectType => typeof(IDictionary<,>);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the string is empty.
 /// </summary>
-internal class StringBeEmptyValidator(PrincipalChain<string?> chain) : IValidator
+internal class StringBeEmptyValidator(PrincipalChain<string?> chain) : IValidator, IRuleDescriptor
 {
     public static StringBeEmptyValidator New(PrincipalChain<string?> chain) => new(chain);
 
@@ -15,6 +15,10 @@ internal class StringBeEmptyValidator(PrincipalChain<string?> chain) : IValidato
     /// <inheritdoc />
     public string ResultValidation { get; set; }
     public string MessageKey => "String.BeEmpty";
+    string IRuleDescriptor.OperationName => "BeEmpty";
+    Type IRuleDescriptor.SubjectType => typeof(string);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     /// <inheritdoc />
     public bool Validate()

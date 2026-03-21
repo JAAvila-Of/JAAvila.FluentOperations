@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the ushort value is strictly positive (greater than zero).
 /// </summary>
-internal class UShortBePositiveValidator(PrincipalChain<ushort> chain) : IValidator
+internal class UShortBePositiveValidator(PrincipalChain<ushort> chain) : IValidator, IRuleDescriptor
 {
     public static UShortBePositiveValidator New(PrincipalChain<ushort> chain) =>
         new(chain);
@@ -13,6 +13,10 @@ internal class UShortBePositiveValidator(PrincipalChain<ushort> chain) : IValida
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "UShort.BePositive";
+    string IRuleDescriptor.OperationName => "BePositive";
+    Type IRuleDescriptor.SubjectType => typeof(ushort);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

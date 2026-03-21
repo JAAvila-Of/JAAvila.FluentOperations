@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the long value is evenly divisible by the specified divisor.
 /// </summary>
-internal class LongBeDivisibleByValidator(PrincipalChain<long> chain, long divisor) : IValidator
+internal class LongBeDivisibleByValidator(PrincipalChain<long> chain, long divisor) : IValidator, IRuleDescriptor
 {
     public static LongBeDivisibleByValidator New(PrincipalChain<long> chain, long divisor) =>
         new(chain, divisor);
@@ -13,6 +13,10 @@ internal class LongBeDivisibleByValidator(PrincipalChain<long> chain, long divis
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Long.BeDivisibleBy";
+    string IRuleDescriptor.OperationName => "BeDivisibleBy";
+    Type IRuleDescriptor.SubjectType => typeof(long);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = divisor };
 
     public bool Validate()
     {

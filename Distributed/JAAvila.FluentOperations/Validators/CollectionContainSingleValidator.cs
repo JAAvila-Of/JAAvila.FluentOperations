@@ -6,7 +6,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the collection contains exactly one element.
 /// </summary>
 internal class CollectionContainSingleValidator<T>(PrincipalChain<IEnumerable<T>> chain)
-    : IValidator
+    : IValidator, IRuleDescriptor
 {
     public static CollectionContainSingleValidator<T> New(PrincipalChain<IEnumerable<T>> chain) =>
         new(chain);
@@ -14,6 +14,10 @@ internal class CollectionContainSingleValidator<T>(PrincipalChain<IEnumerable<T>
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Collection.ContainSingle";
+    string IRuleDescriptor.OperationName => "ContainSingle";
+    Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

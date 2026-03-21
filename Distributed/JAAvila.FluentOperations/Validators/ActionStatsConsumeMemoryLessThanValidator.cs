@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the memory delta is less than the specified number of bytes.
 /// </summary>
-internal class ActionStatsConsumeMemoryLessThanValidator(PrincipalChain<Model.ActionStats?> chain, long bytes) : IValidator
+internal class ActionStatsConsumeMemoryLessThanValidator(PrincipalChain<Model.ActionStats?> chain, long bytes) : IValidator, IRuleDescriptor
 {
     public static ActionStatsConsumeMemoryLessThanValidator New(PrincipalChain<Model.ActionStats?> chain, long bytes) =>
         new(chain, bytes);
@@ -13,6 +13,10 @@ internal class ActionStatsConsumeMemoryLessThanValidator(PrincipalChain<Model.Ac
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "ActionStats.ConsumeMemoryLessThan";
+    string IRuleDescriptor.OperationName => "ConsumeMemoryLessThan";
+    Type IRuleDescriptor.SubjectType => typeof(Model.ActionStats);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = bytes };
 
     public bool Validate()
     {

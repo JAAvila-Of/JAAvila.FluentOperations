@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the datetime value falls on the same day as the expected value.
 /// </summary>
-internal class DateTimeBeSameDayValidator(PrincipalChain<DateTime> chain, DateTime expected) : IValidator
+internal class DateTimeBeSameDayValidator(PrincipalChain<DateTime> chain, DateTime expected) : IValidator, IRuleDescriptor
 {
     public static DateTimeBeSameDayValidator New(PrincipalChain<DateTime> chain, DateTime expected) =>
         new(chain, expected);
@@ -13,6 +13,10 @@ internal class DateTimeBeSameDayValidator(PrincipalChain<DateTime> chain, DateTi
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "DateTime.BeSameDay";
+    string IRuleDescriptor.OperationName => "BeSameDay";
+    Type IRuleDescriptor.SubjectType => typeof(DateTime);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expected };
 
     public bool Validate()
     {

@@ -7,7 +7,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the nullable char value is not one of the specified disallowed values.
 /// </summary>
 internal class NullableCharNotBeOneOfValidator(PrincipalChain<char?> chain, char[] values)
-    : IValidator
+    : IValidator, IRuleDescriptor
 {
     public static NullableCharNotBeOneOfValidator New(
         PrincipalChain<char?> chain,
@@ -17,6 +17,10 @@ internal class NullableCharNotBeOneOfValidator(PrincipalChain<char?> chain, char
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "NullableChar.NotBeOneOf";
+    string IRuleDescriptor.OperationName => "NotBeOneOf";
+    Type IRuleDescriptor.SubjectType => typeof(char?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["values"] = values };
 
     public bool Validate()
     {

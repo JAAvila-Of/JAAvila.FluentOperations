@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the short value is evenly divisible by the specified divisor.
 /// </summary>
-internal class ShortBeDivisibleByValidator(PrincipalChain<short> chain, short divisor) : IValidator
+internal class ShortBeDivisibleByValidator(PrincipalChain<short> chain, short divisor) : IValidator, IRuleDescriptor
 {
     public static ShortBeDivisibleByValidator New(PrincipalChain<short> chain, short divisor) =>
         new(chain, divisor);
@@ -13,6 +13,10 @@ internal class ShortBeDivisibleByValidator(PrincipalChain<short> chain, short di
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Short.BeDivisibleBy";
+    string IRuleDescriptor.OperationName => "BeDivisibleBy";
+    Type IRuleDescriptor.SubjectType => typeof(short);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = divisor };
 
     public bool Validate()
     {

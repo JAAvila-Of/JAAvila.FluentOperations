@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that at least one element in the collection satisfies the specified predicate.
 /// </summary>
-internal class CollectionAnySatisfyValidator<T>(PrincipalChain<IEnumerable<T>> chain, Func<T, bool> predicate) : IValidator
+internal class CollectionAnySatisfyValidator<T>(PrincipalChain<IEnumerable<T>> chain, Func<T, bool> predicate) : IValidator, IRuleDescriptor
 {
     public static CollectionAnySatisfyValidator<T> New(PrincipalChain<IEnumerable<T>> chain, Func<T, bool> predicate) =>
         new(chain, predicate);
@@ -13,6 +13,10 @@ internal class CollectionAnySatisfyValidator<T>(PrincipalChain<IEnumerable<T>> c
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Collection.AnySatisfy";
+    string IRuleDescriptor.OperationName => "AnySatisfy";
+    Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

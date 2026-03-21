@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the timeonly value does not equal the expected value.
 /// </summary>
-internal class TimeOnlyNotBeValidator(PrincipalChain<TimeOnly> chain, TimeOnly expected) : IValidator
+internal class TimeOnlyNotBeValidator(PrincipalChain<TimeOnly> chain, TimeOnly expected) : IValidator, IRuleDescriptor
 {
     public static TimeOnlyNotBeValidator New(PrincipalChain<TimeOnly> chain, TimeOnly expected) =>
         new(chain, expected);
@@ -13,6 +13,10 @@ internal class TimeOnlyNotBeValidator(PrincipalChain<TimeOnly> chain, TimeOnly e
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "TimeOnly.NotBe";
+    string IRuleDescriptor.OperationName => "NotBe";
+    Type IRuleDescriptor.SubjectType => typeof(TimeOnly);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expected };
 
     public bool Validate()
     {

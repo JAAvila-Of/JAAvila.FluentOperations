@@ -9,7 +9,7 @@ internal class StringBeOneOfValidator(
     PrincipalChain<string?> chain,
     string?[] expected,
     StringComparison? comparison
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static StringBeOneOfValidator New(
         PrincipalChain<string?> chain,
@@ -20,6 +20,11 @@ internal class StringBeOneOfValidator(
     public string Expected { get; } = string.Join(", ", expected.Select(e => e is null ? "<null>" : $"\"{e}\""));
     public string ResultValidation { get; set; }
     public string MessageKey => "String.BeOneOf";
+
+    string IRuleDescriptor.OperationName => "BeOneOf";
+    Type IRuleDescriptor.SubjectType => typeof(string);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["values"] = expected };
 
     public bool Validate()
     {

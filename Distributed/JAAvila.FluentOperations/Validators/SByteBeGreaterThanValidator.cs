@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the sbyte value is greater than the expected value.
 /// </summary>
-internal class SByteBeGreaterThanValidator(PrincipalChain<sbyte> chain, sbyte expected) : IValidator
+internal class SByteBeGreaterThanValidator(PrincipalChain<sbyte> chain, sbyte expected) : IValidator, IRuleDescriptor
 {
     public static SByteBeGreaterThanValidator New(PrincipalChain<sbyte> chain, sbyte expected) =>
         new(chain, expected);
@@ -13,6 +13,10 @@ internal class SByteBeGreaterThanValidator(PrincipalChain<sbyte> chain, sbyte ex
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "SByte.BeGreaterThan";
+    string IRuleDescriptor.OperationName => "BeGreaterThan";
+    Type IRuleDescriptor.SubjectType => typeof(sbyte);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expected };
 
     public bool Validate()
     {

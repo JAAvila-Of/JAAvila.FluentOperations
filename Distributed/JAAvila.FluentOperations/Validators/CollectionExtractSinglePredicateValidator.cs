@@ -8,7 +8,7 @@ namespace JAAvila.FluentOperations.Validators;
 internal class CollectionExtractSinglePredicateValidator<T>(
     PrincipalChain<IEnumerable<T>> chain,
     Func<T, bool> predicate
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static CollectionExtractSinglePredicateValidator<T> New(
         PrincipalChain<IEnumerable<T>> chain,
@@ -18,6 +18,10 @@ internal class CollectionExtractSinglePredicateValidator<T>(
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Collection.ExtractSinglePredicate";
+    string IRuleDescriptor.OperationName => "ExtractSinglePredicate";
+    Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     /// <summary>
     /// The extracted element after successful validation.

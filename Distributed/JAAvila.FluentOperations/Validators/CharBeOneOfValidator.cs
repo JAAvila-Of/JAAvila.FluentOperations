@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the char value is one of the specified allowed values.
 /// </summary>
-internal class CharBeOneOfValidator(PrincipalChain<char> chain, params char[] expected) : IValidator
+internal class CharBeOneOfValidator(PrincipalChain<char> chain, params char[] expected) : IValidator, IRuleDescriptor
 {
     public static CharBeOneOfValidator New(PrincipalChain<char> chain, params char[] expected) =>
         new(chain, expected);
@@ -13,6 +13,10 @@ internal class CharBeOneOfValidator(PrincipalChain<char> chain, params char[] ex
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Char.BeOneOf";
+    string IRuleDescriptor.OperationName => "BeOneOf";
+    Type IRuleDescriptor.SubjectType => typeof(char);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["values"] = expected };
 
     public bool Validate()
     {

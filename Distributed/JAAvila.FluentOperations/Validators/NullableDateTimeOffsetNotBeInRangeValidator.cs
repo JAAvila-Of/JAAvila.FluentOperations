@@ -9,7 +9,7 @@ internal class NullableDateTimeOffsetNotBeInRangeValidator(
     PrincipalChain<DateTimeOffset?> chain,
     DateTimeOffset min,
     DateTimeOffset max
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static NullableDateTimeOffsetNotBeInRangeValidator New(
         PrincipalChain<DateTimeOffset?> chain,
@@ -20,6 +20,10 @@ internal class NullableDateTimeOffsetNotBeInRangeValidator(
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "NullableDateTimeOffset.NotBeInRange";
+    string IRuleDescriptor.OperationName => "NotBeInRange";
+    Type IRuleDescriptor.SubjectType => typeof(DateTimeOffset?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = min, ["value"] = max };
 
     public bool Validate()
     {

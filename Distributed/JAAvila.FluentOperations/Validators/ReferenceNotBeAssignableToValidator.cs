@@ -8,7 +8,7 @@ namespace JAAvila.FluentOperations.Validators;
 internal class ReferenceNotBeAssignableToValidator(
     PrincipalChain<object?> chain,
     Type expected
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static ReferenceNotBeAssignableToValidator New(
         PrincipalChain<object?> chain,
@@ -18,6 +18,10 @@ internal class ReferenceNotBeAssignableToValidator(
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Reference.NotBeAssignableTo";
+    string IRuleDescriptor.OperationName => "NotBeAssignableTo";
+    Type IRuleDescriptor.SubjectType => typeof(object);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["type"] = expected.FullName ?? expected.Name };
 
     public bool Validate()
     {

@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the byte value is one of the specified allowed values.
 /// </summary>
-internal class ByteBeOneOfValidator(PrincipalChain<byte> chain, params byte[] expected) : IValidator
+internal class ByteBeOneOfValidator(PrincipalChain<byte> chain, params byte[] expected) : IValidator, IRuleDescriptor
 {
     public static ByteBeOneOfValidator New(PrincipalChain<byte> chain, params byte[] expected) =>
         new(chain, expected);
@@ -13,6 +13,10 @@ internal class ByteBeOneOfValidator(PrincipalChain<byte> chain, params byte[] ex
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Byte.BeOneOf";
+    string IRuleDescriptor.OperationName => "BeOneOf";
+    Type IRuleDescriptor.SubjectType => typeof(byte);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["values"] = expected };
 
     public bool Validate()
     {

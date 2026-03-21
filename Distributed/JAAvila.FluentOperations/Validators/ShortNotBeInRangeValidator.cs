@@ -6,7 +6,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the short value is outside the specified inclusive range.
 /// </summary>
 internal class ShortNotBeInRangeValidator(PrincipalChain<short> chain, short min, short max)
-    : IValidator
+    : IValidator, IRuleDescriptor
 {
     public static ShortNotBeInRangeValidator New(PrincipalChain<short> chain, short min, short max) =>
         new(chain, min, max);
@@ -14,6 +14,10 @@ internal class ShortNotBeInRangeValidator(PrincipalChain<short> chain, short min
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Short.NotBeInRange";
+    string IRuleDescriptor.OperationName => "NotBeInRange";
+    Type IRuleDescriptor.SubjectType => typeof(short);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["min"] = min, ["max"] = max };
 
     public bool Validate()
     {

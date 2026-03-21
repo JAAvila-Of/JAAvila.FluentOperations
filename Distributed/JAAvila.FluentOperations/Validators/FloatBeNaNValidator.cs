@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the float value is NaN.
 /// </summary>
-internal class FloatBeNaNValidator(PrincipalChain<float> chain) : IValidator
+internal class FloatBeNaNValidator(PrincipalChain<float> chain) : IValidator, IRuleDescriptor
 {
     public static FloatBeNaNValidator New(PrincipalChain<float> chain) =>
         new(chain);
@@ -13,6 +13,10 @@ internal class FloatBeNaNValidator(PrincipalChain<float> chain) : IValidator
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Float.BeNaN";
+    string IRuleDescriptor.OperationName => "BeNaN";
+    Type IRuleDescriptor.SubjectType => typeof(float);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {
