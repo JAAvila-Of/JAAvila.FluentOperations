@@ -1,6 +1,8 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using JAAvila.FluentOperations.Common;
+using JAAvila.FluentOperations.Config;
+using JAAvila.FluentOperations.Formatters;
 using JAAvila.FluentOperations.Model;
 
 // ReSharper disable once RedundantUsingDirective
@@ -176,6 +178,19 @@ internal class TemplateHandler
                     Template.New(severity.ToString())
                 )
             );
+        }
+        return this;
+    }
+
+    public TemplateHandler WithStringDiff(string? expected, string? actual)
+    {
+        var config = GlobalConfig.GetStringConfig();
+        if (!config.EnableStringDiff) return this;
+
+        var diff = StringDiffFormatter.FormatDiff(expected, actual, config.StringDiffContextChars, config.StringDiffMaxLength);
+        if (diff is not null)
+        {
+            _templates.Add(new KeyValuePair<string, Template>(TemplatePart.Diff, Template.New(diff)));
         }
         return this;
     }
