@@ -5,13 +5,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the string contains only numeric characters.
 /// </summary>
-internal class StringBeNumericValidator(PrincipalChain<string?> chain) : IValidator
+internal class StringBeNumericValidator(PrincipalChain<string?> chain) : IValidator, IRuleDescriptor
 {
     public static StringBeNumericValidator New(PrincipalChain<string?> chain) => new(chain);
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "String.BeNumeric";
+    string IRuleDescriptor.OperationName => "BeNumeric";
+    Type IRuleDescriptor.SubjectType => typeof(string);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

@@ -8,7 +8,7 @@ namespace JAAvila.FluentOperations.Validators;
 internal class NullableUShortBeLessThanOrEqualToValidator(
     PrincipalChain<ushort?> chain,
     ushort comparison
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static NullableUShortBeLessThanOrEqualToValidator New(
         PrincipalChain<ushort?> chain,
@@ -18,6 +18,10 @@ internal class NullableUShortBeLessThanOrEqualToValidator(
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "NullableUShort.BeLessThanOrEqualTo";
+    string IRuleDescriptor.OperationName => "BeLessThanOrEqualTo";
+    Type IRuleDescriptor.SubjectType => typeof(ushort?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = comparison };
 
     public bool Validate()
     {

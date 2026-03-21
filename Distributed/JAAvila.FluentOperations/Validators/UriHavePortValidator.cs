@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the uri URI has the expected port.
 /// </summary>
-internal class UriHavePortValidator(PrincipalChain<Uri?> chain, int port) : IValidator
+internal class UriHavePortValidator(PrincipalChain<Uri?> chain, int port) : IValidator, IRuleDescriptor
 {
     public static UriHavePortValidator New(PrincipalChain<Uri?> chain, int port) =>
         new(chain, port);
@@ -13,6 +13,10 @@ internal class UriHavePortValidator(PrincipalChain<Uri?> chain, int port) : IVal
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Uri.HavePort";
+    string IRuleDescriptor.OperationName => "HavePort";
+    Type IRuleDescriptor.SubjectType => typeof(Uri);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = port };
 
     public bool Validate()
     {

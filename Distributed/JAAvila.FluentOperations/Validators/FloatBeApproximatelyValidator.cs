@@ -9,7 +9,7 @@ internal class FloatBeApproximatelyValidator(
     PrincipalChain<float> chain,
     float expected,
     float tolerance
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static FloatBeApproximatelyValidator New(
         PrincipalChain<float> chain,
@@ -20,6 +20,10 @@ internal class FloatBeApproximatelyValidator(
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Float.BeApproximately";
+    string IRuleDescriptor.OperationName => "BeApproximately";
+    Type IRuleDescriptor.SubjectType => typeof(float);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expected, ["value"] = tolerance };
 
     public bool Validate()
     {

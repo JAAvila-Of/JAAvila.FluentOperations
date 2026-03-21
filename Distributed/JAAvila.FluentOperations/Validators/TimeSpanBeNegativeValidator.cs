@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the timespan value is strictly negative.
 /// </summary>
-internal class TimeSpanBeNegativeValidator(PrincipalChain<TimeSpan> chain) : IValidator
+internal class TimeSpanBeNegativeValidator(PrincipalChain<TimeSpan> chain) : IValidator, IRuleDescriptor
 {
     public static TimeSpanBeNegativeValidator New(PrincipalChain<TimeSpan> chain) =>
         new(chain);
@@ -13,6 +13,10 @@ internal class TimeSpanBeNegativeValidator(PrincipalChain<TimeSpan> chain) : IVa
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "TimeSpan.BeNegative";
+    string IRuleDescriptor.OperationName => "BeNegative";
+    Type IRuleDescriptor.SubjectType => typeof(TimeSpan);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

@@ -6,7 +6,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the float value has the expected number of decimal places.
 /// </summary>
 internal class FloatHavePrecisionValidator(PrincipalChain<float> chain, int expectedDecimals)
-    : IValidator
+    : IValidator, IRuleDescriptor
 {
     public static FloatHavePrecisionValidator New(
         PrincipalChain<float> chain,
@@ -16,6 +16,10 @@ internal class FloatHavePrecisionValidator(PrincipalChain<float> chain, int expe
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Float.HavePrecision";
+    string IRuleDescriptor.OperationName => "HavePrecision";
+    Type IRuleDescriptor.SubjectType => typeof(float);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expectedDecimals };
 
     public bool Validate()
     {

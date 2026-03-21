@@ -6,7 +6,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the string matches the expected regular expression.
 /// </summary>
-internal class StringMatchValidator(string pattern, PrincipalChain<string?> chain) : IValidator
+internal class StringMatchValidator(string pattern, PrincipalChain<string?> chain) : IValidator, IRuleDescriptor
 {
     public static StringMatchValidator New(string pattern, PrincipalChain<string?> chain) =>
         new(pattern, chain);
@@ -14,6 +14,11 @@ internal class StringMatchValidator(string pattern, PrincipalChain<string?> chai
     public string Expected => $"Match pattern \"{pattern}\"";
     public string ResultValidation { get; set; }
     public string MessageKey => "String.Match";
+
+    string IRuleDescriptor.OperationName => "Match";
+    Type IRuleDescriptor.SubjectType => typeof(string);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["pattern"] = pattern };
 
     public bool Validate()
     {

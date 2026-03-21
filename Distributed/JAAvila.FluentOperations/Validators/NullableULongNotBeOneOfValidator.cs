@@ -7,7 +7,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the nullable ulong value is not one of the specified disallowed values.
 /// </summary>
 internal class NullableULongNotBeOneOfValidator(PrincipalChain<ulong?> chain, ulong[] values)
-    : IValidator
+    : IValidator, IRuleDescriptor
 {
     public static NullableULongNotBeOneOfValidator New(
         PrincipalChain<ulong?> chain,
@@ -17,6 +17,10 @@ internal class NullableULongNotBeOneOfValidator(PrincipalChain<ulong?> chain, ul
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "NullableULong.NotBeOneOf";
+    string IRuleDescriptor.OperationName => "NotBeOneOf";
+    Type IRuleDescriptor.SubjectType => typeof(ulong?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["values"] = values };
 
     public bool Validate()
     {

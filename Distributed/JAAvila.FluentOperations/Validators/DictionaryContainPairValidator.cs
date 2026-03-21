@@ -9,7 +9,7 @@ internal class DictionaryContainPairValidator<TKey, TValue>(
     PrincipalChain<IDictionary<TKey, TValue>> chain,
     TKey key,
     TValue value
-) : IValidator
+) : IValidator, IRuleDescriptor
     where TKey : notnull
 {
     public static DictionaryContainPairValidator<TKey, TValue> New(
@@ -21,6 +21,10 @@ internal class DictionaryContainPairValidator<TKey, TValue>(
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Dictionary.ContainPair";
+    string IRuleDescriptor.OperationName => "ContainPair";
+    Type IRuleDescriptor.SubjectType => typeof(IDictionary<,>);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = key, ["value"] = value };
 
     public bool Validate()
     {

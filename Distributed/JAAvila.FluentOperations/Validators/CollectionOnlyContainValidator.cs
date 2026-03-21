@@ -10,7 +10,7 @@ namespace JAAvila.FluentOperations.Validators;
 internal class CollectionOnlyContainValidator<T>(
     PrincipalChain<IEnumerable<T>> chain,
     Func<T, bool> predicate
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static CollectionOnlyContainValidator<T> New(
         PrincipalChain<IEnumerable<T>> chain,
@@ -20,6 +20,10 @@ internal class CollectionOnlyContainValidator<T>(
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Collection.OnlyContain";
+    string IRuleDescriptor.OperationName => "OnlyContain";
+    Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

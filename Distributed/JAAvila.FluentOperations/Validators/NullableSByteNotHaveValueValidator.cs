@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable sbyte does not have a value (is null).
 /// </summary>
-internal class NullableSByteNotHaveValueValidator(PrincipalChain<sbyte?> chain) : IValidator
+internal class NullableSByteNotHaveValueValidator(PrincipalChain<sbyte?> chain) : IValidator, IRuleDescriptor
 {
     public static NullableSByteNotHaveValueValidator New(PrincipalChain<sbyte?> chain) =>
         new(chain);
@@ -13,6 +13,10 @@ internal class NullableSByteNotHaveValueValidator(PrincipalChain<sbyte?> chain) 
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "NullableSByte.NotHaveValue";
+    string IRuleDescriptor.OperationName => "NotHaveValue";
+    Type IRuleDescriptor.SubjectType => typeof(sbyte?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

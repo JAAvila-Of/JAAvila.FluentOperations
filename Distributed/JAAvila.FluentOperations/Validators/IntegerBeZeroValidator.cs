@@ -5,13 +5,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the integer value is zero.
 /// </summary>
-internal class IntegerBeZeroValidator(PrincipalChain<int> chain) : IValidator
+internal class IntegerBeZeroValidator(PrincipalChain<int> chain) : IValidator, IRuleDescriptor
 {
     public static IntegerBeZeroValidator New(PrincipalChain<int> chain) => new(chain);
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Integer.BeZero";
+    string IRuleDescriptor.OperationName => "BeZero";
+    Type IRuleDescriptor.SubjectType => typeof(int);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

@@ -8,7 +8,7 @@ namespace JAAvila.FluentOperations.Validators;
 internal class DateTimeOffsetHaveYearValidator(
     PrincipalChain<DateTimeOffset> chain,
     int expectedYear
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static DateTimeOffsetHaveYearValidator New(
         PrincipalChain<DateTimeOffset> chain,
@@ -18,6 +18,10 @@ internal class DateTimeOffsetHaveYearValidator(
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "DateTimeOffset.HaveYear";
+    string IRuleDescriptor.OperationName => "HaveYear";
+    Type IRuleDescriptor.SubjectType => typeof(DateTimeOffset);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expectedYear };
 
     public bool Validate()
     {

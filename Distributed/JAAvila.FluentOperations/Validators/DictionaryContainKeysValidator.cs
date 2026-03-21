@@ -9,7 +9,7 @@ namespace JAAvila.FluentOperations.Validators;
 internal class DictionaryContainKeysValidator<TKey, TValue>(
     PrincipalChain<IDictionary<TKey, TValue>> chain,
     TKey[] keys
-) : IValidator where TKey : notnull
+) : IValidator, IRuleDescriptor where TKey : notnull
 {
     public static DictionaryContainKeysValidator<TKey, TValue> New(
         PrincipalChain<IDictionary<TKey, TValue>> chain,
@@ -19,6 +19,10 @@ internal class DictionaryContainKeysValidator<TKey, TValue>(
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Dictionary.ContainKeys";
+    string IRuleDescriptor.OperationName => "ContainKeys";
+    Type IRuleDescriptor.SubjectType => typeof(IDictionary<,>);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["values"] = keys };
 
     /// <summary>
     /// The keys that were not found in the dictionary. Available after <see cref="Validate"/> returns false.

@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the ulong value is even.
 /// </summary>
-internal class ULongBeEvenValidator(PrincipalChain<ulong> chain) : IValidator
+internal class ULongBeEvenValidator(PrincipalChain<ulong> chain) : IValidator, IRuleDescriptor
 {
     public static ULongBeEvenValidator New(PrincipalChain<ulong> chain) =>
         new(chain);
@@ -13,6 +13,10 @@ internal class ULongBeEvenValidator(PrincipalChain<ulong> chain) : IValidator
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "ULong.BeEven";
+    string IRuleDescriptor.OperationName => "BeEven";
+    Type IRuleDescriptor.SubjectType => typeof(ulong);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

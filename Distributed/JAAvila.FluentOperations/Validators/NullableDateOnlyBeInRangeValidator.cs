@@ -9,7 +9,7 @@ internal class NullableDateOnlyBeInRangeValidator(
     PrincipalChain<DateOnly?> chain,
     DateOnly min,
     DateOnly max
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static NullableDateOnlyBeInRangeValidator New(
         PrincipalChain<DateOnly?> chain,
@@ -20,6 +20,10 @@ internal class NullableDateOnlyBeInRangeValidator(
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "NullableDateOnly.BeInRange";
+    string IRuleDescriptor.OperationName => "BeInRange";
+    Type IRuleDescriptor.SubjectType => typeof(DateOnly?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["min"] = min, ["max"] = max };
 
     public bool Validate()
     {

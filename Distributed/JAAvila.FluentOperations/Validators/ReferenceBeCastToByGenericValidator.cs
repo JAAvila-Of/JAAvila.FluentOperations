@@ -6,7 +6,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the value can be cast to the specified generic type.
 /// </summary>
 internal class ReferenceBeCastToByGenericValidator<TSubject, TType>(PrincipalChain<TSubject> chain)
-    : IValidator
+    : IValidator, IRuleDescriptor
 {
     public static ReferenceBeCastToByGenericValidator<TSubject, TType> New(
         PrincipalChain<TSubject> chain
@@ -15,6 +15,10 @@ internal class ReferenceBeCastToByGenericValidator<TSubject, TType>(PrincipalCha
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Reference.BeCastToByGeneric";
+    string IRuleDescriptor.OperationName => "BeCastToByGeneric";
+    Type IRuleDescriptor.SubjectType => typeof(TSubject);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

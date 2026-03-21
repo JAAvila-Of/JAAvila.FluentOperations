@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable dateonly does not have a value (is null).
 /// </summary>
-internal class NullableDateOnlyNotHaveValueValidator(PrincipalChain<DateOnly?> chain) : IValidator
+internal class NullableDateOnlyNotHaveValueValidator(PrincipalChain<DateOnly?> chain) : IValidator, IRuleDescriptor
 {
     public static NullableDateOnlyNotHaveValueValidator New(PrincipalChain<DateOnly?> chain) =>
         new(chain);
@@ -13,6 +13,10 @@ internal class NullableDateOnlyNotHaveValueValidator(PrincipalChain<DateOnly?> c
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "NullableDateOnly.NotHaveValue";
+    string IRuleDescriptor.OperationName => "NotHaveValue";
+    Type IRuleDescriptor.SubjectType => typeof(DateOnly?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

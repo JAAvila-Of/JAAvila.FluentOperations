@@ -6,7 +6,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the collection contains duplicate elements.
 /// </summary>
 internal class CollectionContainDuplicatesValidator<T>(PrincipalChain<IEnumerable<T>> chain)
-    : IValidator
+    : IValidator, IRuleDescriptor
 {
     public static CollectionContainDuplicatesValidator<T> New(
         PrincipalChain<IEnumerable<T>> chain
@@ -15,6 +15,10 @@ internal class CollectionContainDuplicatesValidator<T>(PrincipalChain<IEnumerabl
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Collection.ContainDuplicates";
+    string IRuleDescriptor.OperationName => "ContainDuplicates";
+    Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

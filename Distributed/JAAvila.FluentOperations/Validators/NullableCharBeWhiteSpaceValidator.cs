@@ -5,13 +5,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable char value is a white-space character.
 /// </summary>
-internal class NullableCharBeWhiteSpaceValidator(PrincipalChain<char?> chain) : IValidator
+internal class NullableCharBeWhiteSpaceValidator(PrincipalChain<char?> chain) : IValidator, IRuleDescriptor
 {
     public static NullableCharBeWhiteSpaceValidator New(PrincipalChain<char?> chain) => new(chain);
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "NullableChar.BeWhiteSpace";
+    string IRuleDescriptor.OperationName => "BeWhiteSpace";
+    Type IRuleDescriptor.SubjectType => typeof(char?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

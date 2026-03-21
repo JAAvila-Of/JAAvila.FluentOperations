@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the collection contains exactly one element matching the specified predicate.
 /// </summary>
-internal class CollectionContainSinglePredicateValidator<T>(PrincipalChain<IEnumerable<T>> chain, Func<T, bool> predicate) : IValidator
+internal class CollectionContainSinglePredicateValidator<T>(PrincipalChain<IEnumerable<T>> chain, Func<T, bool> predicate) : IValidator, IRuleDescriptor
 {
     public static CollectionContainSinglePredicateValidator<T> New(PrincipalChain<IEnumerable<T>> chain, Func<T, bool> predicate) =>
         new(chain, predicate);
@@ -13,6 +13,10 @@ internal class CollectionContainSinglePredicateValidator<T>(PrincipalChain<IEnum
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Collection.ContainSinglePredicate";
+    string IRuleDescriptor.OperationName => "ContainSinglePredicate";
+    Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

@@ -9,7 +9,7 @@ internal class TimeSpanNotBeInRangeValidator(
     PrincipalChain<TimeSpan> chain,
     TimeSpan min,
     TimeSpan max
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static TimeSpanNotBeInRangeValidator New(
         PrincipalChain<TimeSpan> chain,
@@ -20,6 +20,10 @@ internal class TimeSpanNotBeInRangeValidator(
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "TimeSpan.NotBeInRange";
+    string IRuleDescriptor.OperationName => "NotBeInRange";
+    Type IRuleDescriptor.SubjectType => typeof(TimeSpan);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = min, ["value"] = max };
 
     public bool Validate()
     {

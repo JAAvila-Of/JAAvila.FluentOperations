@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable enum does not have a value (is null).
 /// </summary>
-internal class NullableEnumNotHaveValueValidator<T>(PrincipalChain<T?> chain) : IValidator
+internal class NullableEnumNotHaveValueValidator<T>(PrincipalChain<T?> chain) : IValidator, IRuleDescriptor
     where T : struct, Enum
 {
     public static NullableEnumNotHaveValueValidator<T> New(PrincipalChain<T?> chain) =>
@@ -14,6 +14,10 @@ internal class NullableEnumNotHaveValueValidator<T>(PrincipalChain<T?> chain) : 
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "NullableEnum.NotHaveValue";
+    string IRuleDescriptor.OperationName => "NotHaveValue";
+    Type IRuleDescriptor.SubjectType => typeof(T?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the collection does not contain any element matching the specified predicate.
 /// </summary>
-internal class CollectionNotContainPredicateValidator<T>(PrincipalChain<IEnumerable<T>> chain, Func<T, bool> predicate) : IValidator
+internal class CollectionNotContainPredicateValidator<T>(PrincipalChain<IEnumerable<T>> chain, Func<T, bool> predicate) : IValidator, IRuleDescriptor
 {
     public static CollectionNotContainPredicateValidator<T> New(PrincipalChain<IEnumerable<T>> chain, Func<T, bool> predicate) =>
         new(chain, predicate);
@@ -13,6 +13,10 @@ internal class CollectionNotContainPredicateValidator<T>(PrincipalChain<IEnumera
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Collection.NotContainPredicate";
+    string IRuleDescriptor.OperationName => "NotContainPredicate";
+    Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

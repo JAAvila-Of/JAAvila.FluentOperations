@@ -5,13 +5,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable byte value is strictly positive.
 /// </summary>
-internal class NullableByteBePositiveValidator(PrincipalChain<byte?> chain) : IValidator
+internal class NullableByteBePositiveValidator(PrincipalChain<byte?> chain) : IValidator, IRuleDescriptor
 {
     public static NullableByteBePositiveValidator New(PrincipalChain<byte?> chain) => new(chain);
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "NullableByte.BePositive";
+    string IRuleDescriptor.OperationName => "BePositive";
+    Type IRuleDescriptor.SubjectType => typeof(byte?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

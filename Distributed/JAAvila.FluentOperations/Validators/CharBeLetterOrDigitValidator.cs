@@ -5,13 +5,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the char value is a letter or digit.
 /// </summary>
-internal class CharBeLetterOrDigitValidator(PrincipalChain<char> chain) : IValidator
+internal class CharBeLetterOrDigitValidator(PrincipalChain<char> chain) : IValidator, IRuleDescriptor
 {
     public static CharBeLetterOrDigitValidator New(PrincipalChain<char> chain) => new(chain);
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Char.BeLetterOrDigit";
+    string IRuleDescriptor.OperationName => "BeLetterOrDigit";
+    Type IRuleDescriptor.SubjectType => typeof(char);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

@@ -6,7 +6,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the collection ends with the expected substring.
 /// </summary>
 internal class CollectionEndWithValidator<T>(PrincipalChain<IEnumerable<T>> chain, T item)
-    : IValidator
+    : IValidator, IRuleDescriptor
 {
     public static CollectionEndWithValidator<T> New(PrincipalChain<IEnumerable<T>> chain, T item) =>
         new(chain, item);
@@ -14,6 +14,10 @@ internal class CollectionEndWithValidator<T>(PrincipalChain<IEnumerable<T>> chai
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Collection.EndWith";
+    string IRuleDescriptor.OperationName => "EndWith";
+    Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = item };
 
     public bool Validate()
     {

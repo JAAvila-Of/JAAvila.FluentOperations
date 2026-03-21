@@ -9,7 +9,7 @@ internal class StringStartWithValidator(
     string prefix,
     PrincipalChain<string?> chain,
     StringComparison comparison = StringComparison.Ordinal
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static StringStartWithValidator New(string prefix, PrincipalChain<string?> chain) =>
         new(prefix, chain);
@@ -23,6 +23,10 @@ internal class StringStartWithValidator(
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "String.StartWith";
+    string IRuleDescriptor.OperationName => "StartWith";
+    Type IRuleDescriptor.SubjectType => typeof(string);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = prefix, ["comparison"] = StringComparison.Ordinal.ToString() };
 
     public bool Validate()
     {

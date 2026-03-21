@@ -9,7 +9,7 @@ internal class DateOnlyNotBeInRangeValidator(
     PrincipalChain<DateOnly> chain,
     DateOnly min,
     DateOnly max
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static DateOnlyNotBeInRangeValidator New(
         PrincipalChain<DateOnly> chain,
@@ -20,6 +20,10 @@ internal class DateOnlyNotBeInRangeValidator(
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "DateOnly.NotBeInRange";
+    string IRuleDescriptor.OperationName => "NotBeInRange";
+    Type IRuleDescriptor.SubjectType => typeof(DateOnly);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["min"] = min, ["max"] = max };
 
     public bool Validate()
     {

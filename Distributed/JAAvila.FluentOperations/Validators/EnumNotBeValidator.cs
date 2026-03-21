@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the enum value does not equal the expected value.
 /// </summary>
-internal class EnumNotBeValidator<T>(PrincipalChain<T> chain, T expected) : IValidator
+internal class EnumNotBeValidator<T>(PrincipalChain<T> chain, T expected) : IValidator, IRuleDescriptor
     where T : Enum
 {
     public static EnumNotBeValidator<T> New(PrincipalChain<T> chain, T expected) =>
@@ -14,6 +14,10 @@ internal class EnumNotBeValidator<T>(PrincipalChain<T> chain, T expected) : IVal
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Enum.NotBe";
+    string IRuleDescriptor.OperationName => "NotBe";
+    Type IRuleDescriptor.SubjectType => typeof(T);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expected };
 
     public bool Validate()
     {

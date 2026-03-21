@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the double value is zero.
 /// </summary>
-internal class DoubleBeZeroValidator(PrincipalChain<double> chain) : IValidator
+internal class DoubleBeZeroValidator(PrincipalChain<double> chain) : IValidator, IRuleDescriptor
 {
     public static DoubleBeZeroValidator New(PrincipalChain<double> chain) =>
         new(chain);
@@ -13,6 +13,10 @@ internal class DoubleBeZeroValidator(PrincipalChain<double> chain) : IValidator
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Double.BeZero";
+    string IRuleDescriptor.OperationName => "BeZero";
+    Type IRuleDescriptor.SubjectType => typeof(double);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

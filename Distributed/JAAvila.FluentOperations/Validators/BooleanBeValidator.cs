@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the boolean value equals the expected value.
 /// </summary>
-internal class BooleanBeValidator(PrincipalChain<bool> chain, bool? expectedValue) : IValidator
+internal class BooleanBeValidator(PrincipalChain<bool> chain, bool? expectedValue) : IValidator, IRuleDescriptor
 {
     public static BooleanBeValidator New(PrincipalChain<bool> chain, bool? expectedValue) =>
         new(chain, expectedValue);
@@ -13,6 +13,10 @@ internal class BooleanBeValidator(PrincipalChain<bool> chain, bool? expectedValu
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Boolean.Be";
+    string IRuleDescriptor.OperationName => "Be";
+    Type IRuleDescriptor.SubjectType => typeof(bool);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expectedValue };
 
     public bool Validate()
     {

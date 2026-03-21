@@ -8,7 +8,7 @@ namespace JAAvila.FluentOperations.Validators;
 internal class DictionaryContainValueValidator<TKey, TValue>(
     PrincipalChain<IDictionary<TKey, TValue>> chain,
     TValue value
-) : IValidator where TKey : notnull
+) : IValidator, IRuleDescriptor where TKey : notnull
 {
     public static DictionaryContainValueValidator<TKey, TValue> New(
         PrincipalChain<IDictionary<TKey, TValue>> chain,
@@ -18,6 +18,10 @@ internal class DictionaryContainValueValidator<TKey, TValue>(
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Dictionary.ContainValue";
+    string IRuleDescriptor.OperationName => "ContainValue";
+    Type IRuleDescriptor.SubjectType => typeof(IDictionary<,>);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = value };
 
     public bool Validate()
     {

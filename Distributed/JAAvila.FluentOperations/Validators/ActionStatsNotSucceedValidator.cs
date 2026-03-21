@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the action threw an exception (did not succeed).
 /// </summary>
-internal class ActionStatsNotSucceedValidator(PrincipalChain<Model.ActionStats?> chain) : IValidator
+internal class ActionStatsNotSucceedValidator(PrincipalChain<Model.ActionStats?> chain) : IValidator, IRuleDescriptor
 {
     public static ActionStatsNotSucceedValidator New(PrincipalChain<Model.ActionStats?> chain) =>
         new(chain);
@@ -13,6 +13,10 @@ internal class ActionStatsNotSucceedValidator(PrincipalChain<Model.ActionStats?>
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "ActionStats.NotSucceed";
+    string IRuleDescriptor.OperationName => "NotSucceed";
+    Type IRuleDescriptor.SubjectType => typeof(Model.ActionStats);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

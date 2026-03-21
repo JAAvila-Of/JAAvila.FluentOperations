@@ -9,7 +9,7 @@ internal class DecimalBeApproximatelyValidator(
     PrincipalChain<decimal> chain,
     decimal expected,
     decimal tolerance
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static DecimalBeApproximatelyValidator New(
         PrincipalChain<decimal> chain,
@@ -20,6 +20,10 @@ internal class DecimalBeApproximatelyValidator(
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Decimal.BeApproximately";
+    string IRuleDescriptor.OperationName => "BeApproximately";
+    Type IRuleDescriptor.SubjectType => typeof(decimal);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expected, ["value"] = tolerance };
 
     public bool Validate()
     {

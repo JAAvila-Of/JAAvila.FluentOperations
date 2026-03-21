@@ -8,7 +8,7 @@ namespace JAAvila.FluentOperations.Validators;
 internal class ReferenceEvaluateCustomValidator<TSubject>(
     PrincipalChain<TSubject> chain,
     ICustomValidator<TSubject> customValidator
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static ReferenceEvaluateCustomValidator<TSubject> New(
         PrincipalChain<TSubject> chain,
@@ -18,6 +18,10 @@ internal class ReferenceEvaluateCustomValidator<TSubject>(
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Custom.Evaluate";
+    string IRuleDescriptor.OperationName => "Evaluate";
+    Type IRuleDescriptor.SubjectType => typeof(TSubject);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

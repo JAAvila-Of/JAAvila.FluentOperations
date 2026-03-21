@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the reference value is null.
 /// </summary>
-internal class ReferenceBeNullValidator<TSubject>(PrincipalChain<TSubject> chain) : IValidator
+internal class ReferenceBeNullValidator<TSubject>(PrincipalChain<TSubject> chain) : IValidator, IRuleDescriptor
 {
     public static ReferenceBeNullValidator<TSubject> New(PrincipalChain<TSubject> chain) =>
         new(chain);
@@ -13,6 +13,10 @@ internal class ReferenceBeNullValidator<TSubject>(PrincipalChain<TSubject> chain
     public string Expected => "Be Null <null>";
     public string ResultValidation { get; set; }
     public string MessageKey => "Reference.BeNull";
+    string IRuleDescriptor.OperationName => "BeNull";
+    Type IRuleDescriptor.SubjectType => typeof(TSubject);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

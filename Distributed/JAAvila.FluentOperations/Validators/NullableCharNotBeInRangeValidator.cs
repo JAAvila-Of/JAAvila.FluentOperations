@@ -6,7 +6,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the nullable char value is outside the specified inclusive range.
 /// </summary>
 internal class NullableCharNotBeInRangeValidator(PrincipalChain<char?> chain, char min, char max)
-    : IValidator
+    : IValidator, IRuleDescriptor
 {
     public static NullableCharNotBeInRangeValidator New(
         PrincipalChain<char?> chain,
@@ -17,6 +17,10 @@ internal class NullableCharNotBeInRangeValidator(PrincipalChain<char?> chain, ch
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "NullableChar.NotBeInRange";
+    string IRuleDescriptor.OperationName => "NotBeInRange";
+    Type IRuleDescriptor.SubjectType => typeof(char?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["min"] = min, ["max"] = max };
 
     public bool Validate()
     {

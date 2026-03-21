@@ -5,13 +5,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable sbyte value is strictly positive.
 /// </summary>
-internal class NullableSByteBePositiveValidator(PrincipalChain<sbyte?> chain) : IValidator
+internal class NullableSByteBePositiveValidator(PrincipalChain<sbyte?> chain) : IValidator, IRuleDescriptor
 {
     public static NullableSByteBePositiveValidator New(PrincipalChain<sbyte?> chain) => new(chain);
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "NullableSByte.BePositive";
+    string IRuleDescriptor.OperationName => "BePositive";
+    Type IRuleDescriptor.SubjectType => typeof(sbyte?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

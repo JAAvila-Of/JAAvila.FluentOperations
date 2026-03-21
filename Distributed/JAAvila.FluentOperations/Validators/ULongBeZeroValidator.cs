@@ -5,13 +5,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the ulong value is zero.
 /// </summary>
-internal class ULongBeZeroValidator(PrincipalChain<ulong> chain) : IValidator
+internal class ULongBeZeroValidator(PrincipalChain<ulong> chain) : IValidator, IRuleDescriptor
 {
     public static ULongBeZeroValidator New(PrincipalChain<ulong> chain) => new(chain);
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "ULong.BeZero";
+    string IRuleDescriptor.OperationName => "BeZero";
+    Type IRuleDescriptor.SubjectType => typeof(ulong);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

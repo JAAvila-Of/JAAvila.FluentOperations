@@ -7,7 +7,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the nullable long value is not one of the specified disallowed values.
 /// </summary>
 internal class NullableLongNotBeOneOfValidator(PrincipalChain<long?> chain, long[] values)
-    : IValidator
+    : IValidator, IRuleDescriptor
 {
     public static NullableLongNotBeOneOfValidator New(PrincipalChain<long?> chain, long[] values) =>
         new(chain, values);
@@ -15,6 +15,10 @@ internal class NullableLongNotBeOneOfValidator(PrincipalChain<long?> chain, long
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "NullableLong.NotBeOneOf";
+    string IRuleDescriptor.OperationName => "NotBeOneOf";
+    Type IRuleDescriptor.SubjectType => typeof(long?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["values"] = values };
 
     public bool Validate()
     {

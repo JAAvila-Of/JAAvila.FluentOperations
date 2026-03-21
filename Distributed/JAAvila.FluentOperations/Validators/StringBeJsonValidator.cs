@@ -6,13 +6,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the string is valid JSON.
 /// </summary>
-internal class StringBeJsonValidator(PrincipalChain<string?> chain) : IValidator
+internal class StringBeJsonValidator(PrincipalChain<string?> chain) : IValidator, IRuleDescriptor
 {
     public static StringBeJsonValidator New(PrincipalChain<string?> chain) => new(chain);
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "String.BeJson";
+    string IRuleDescriptor.OperationName => "BeJson";
+    Type IRuleDescriptor.SubjectType => typeof(string);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {
