@@ -1,0 +1,48 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <PackageIcon>icon.png</PackageIcon>
+    <Authors>JAAvila</Authors>
+    <Description>DataAnnotations bridge for JAAvila.FluentOperations Quality Blueprints. Automatically generates Blueprint validation rules from System.ComponentModel.DataAnnotations attributes.</Description>
+    <PackageId>JAAvila.FluentOperations.DataAnnotations</PackageId>
+    <PackageTags>FluentOperations;DataAnnotations;Validation;Blueprint</PackageTags>
+    <PackageProjectUrl>https://github.com/JAAvila-Of/JAAvila.FluentOperations</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/JAAvila-Of/JAAvila.FluentOperations</RepositoryUrl>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Copyright>Copyright (C) $([System.DateTime]::Now.Year) JAAvila</Copyright>
+    <MinVerTagPrefix>annotations-</MinVerTagPrefix>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+    <PackageReference Include="MinVer" Version="6.0.0" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\JAAvila.FluentOperations\JAAvila.FluentOperations.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="../../icon.png" Pack="true" Visible="false" PackagePath="" />
+    <None Include="README.md" Pack="true" PackagePath=""/>
+  </ItemGroup>
+
+  <Target Name="SetAssemblyVersion" AfterTargets="MinVer">
+    <PropertyGroup>
+      <AssemblyVersion>$(MinVerMajor).$(MinVerMinor).$(MinVerPatch)</AssemblyVersion>
+    </PropertyGroup>
+  </Target>
+
+</Project>
