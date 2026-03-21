@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable enum value is a defined member of the enumeration.
 /// </summary>
-internal class NullableEnumBeDefinedValidator<T>(PrincipalChain<T?> chain) : IValidator
+internal class NullableEnumBeDefinedValidator<T>(PrincipalChain<T?> chain) : IValidator, IRuleDescriptor
     where T : struct, Enum
 {
     public static NullableEnumBeDefinedValidator<T> New(PrincipalChain<T?> chain) => new(chain);
@@ -13,6 +13,10 @@ internal class NullableEnumBeDefinedValidator<T>(PrincipalChain<T?> chain) : IVa
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "NullableEnum.BeDefined";
+    string IRuleDescriptor.OperationName => "BeDefined";
+    Type IRuleDescriptor.SubjectType => typeof(T?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

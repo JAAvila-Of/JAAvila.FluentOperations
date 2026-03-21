@@ -6,7 +6,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the string length is strictly greater than the expected value.
 /// </summary>
 internal class StringHaveLengthGreaterThanValidator(PrincipalChain<string?> chain, int expected)
-    : IValidator
+    : IValidator, IRuleDescriptor
 {
     public static StringHaveLengthGreaterThanValidator New(PrincipalChain<string?> chain, int expected) =>
         new(chain, expected);
@@ -14,6 +14,10 @@ internal class StringHaveLengthGreaterThanValidator(PrincipalChain<string?> chai
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "String.HaveLengthGreaterThan";
+    string IRuleDescriptor.OperationName => "HaveLengthGreaterThan";
+    Type IRuleDescriptor.SubjectType => typeof(string);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expected };
 
     public bool Validate()
     {

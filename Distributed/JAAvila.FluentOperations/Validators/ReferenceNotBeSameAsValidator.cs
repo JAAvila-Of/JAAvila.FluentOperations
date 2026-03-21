@@ -8,7 +8,7 @@ namespace JAAvila.FluentOperations.Validators;
 internal class ReferenceNotBeSameAsValidator<TSubject>(
     PrincipalChain<TSubject> chain,
     TSubject expected
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static ReferenceNotBeSameAsValidator<TSubject> New(
         PrincipalChain<TSubject> chain,
@@ -18,6 +18,10 @@ internal class ReferenceNotBeSameAsValidator<TSubject>(
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Reference.NotBeSameAs";
+    string IRuleDescriptor.OperationName => "NotBeSameAs";
+    Type IRuleDescriptor.SubjectType => typeof(TSubject);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expected };
 
     public bool Validate()
     {

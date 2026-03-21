@@ -6,7 +6,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the nullable uint value is evenly divisible by the specified divisor.
 /// </summary>
 internal class NullableUIntBeDivisibleByValidator(PrincipalChain<uint?> chain, uint divisor)
-    : IValidator
+    : IValidator, IRuleDescriptor
 {
     public static NullableUIntBeDivisibleByValidator New(
         PrincipalChain<uint?> chain,
@@ -16,6 +16,10 @@ internal class NullableUIntBeDivisibleByValidator(PrincipalChain<uint?> chain, u
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "NullableUInt.BeDivisibleBy";
+    string IRuleDescriptor.OperationName => "BeDivisibleBy";
+    Type IRuleDescriptor.SubjectType => typeof(uint?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = divisor };
 
     public bool Validate()
     {

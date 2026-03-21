@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the integer value is not one of the specified disallowed values.
 /// </summary>
-internal class IntegerNotBeOneOfValidator(PrincipalChain<int> chain, params int[] expected) : IValidator
+internal class IntegerNotBeOneOfValidator(PrincipalChain<int> chain, params int[] expected) : IValidator, IRuleDescriptor
 {
     public static IntegerNotBeOneOfValidator New(PrincipalChain<int> chain, params int[] expected) =>
         new(chain, expected);
@@ -13,6 +13,10 @@ internal class IntegerNotBeOneOfValidator(PrincipalChain<int> chain, params int[
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Integer.NotBeOneOf";
+    string IRuleDescriptor.OperationName => "NotBeOneOf";
+    Type IRuleDescriptor.SubjectType => typeof(int);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["values"] = expected };
 
     public bool Validate()
     {

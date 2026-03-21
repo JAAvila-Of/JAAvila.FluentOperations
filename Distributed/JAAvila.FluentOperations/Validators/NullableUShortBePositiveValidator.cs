@@ -5,13 +5,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable ushort value is strictly positive.
 /// </summary>
-internal class NullableUShortBePositiveValidator(PrincipalChain<ushort?> chain) : IValidator
+internal class NullableUShortBePositiveValidator(PrincipalChain<ushort?> chain) : IValidator, IRuleDescriptor
 {
     public static NullableUShortBePositiveValidator New(PrincipalChain<ushort?> chain) => new(chain);
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "NullableUShort.BePositive";
+    string IRuleDescriptor.OperationName => "BePositive";
+    Type IRuleDescriptor.SubjectType => typeof(ushort?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

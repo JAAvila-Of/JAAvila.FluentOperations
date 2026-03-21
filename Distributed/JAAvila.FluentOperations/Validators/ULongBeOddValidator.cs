@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the ulong value is odd.
 /// </summary>
-internal class ULongBeOddValidator(PrincipalChain<ulong> chain) : IValidator
+internal class ULongBeOddValidator(PrincipalChain<ulong> chain) : IValidator, IRuleDescriptor
 {
     public static ULongBeOddValidator New(PrincipalChain<ulong> chain) =>
         new(chain);
@@ -13,6 +13,10 @@ internal class ULongBeOddValidator(PrincipalChain<ulong> chain) : IValidator
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "ULong.BeOdd";
+    string IRuleDescriptor.OperationName => "BeOdd";
+    Type IRuleDescriptor.SubjectType => typeof(ulong);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

@@ -6,7 +6,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the integer value is outside the specified inclusive range.
 /// </summary>
 internal class IntegerNotBeInRangeValidator(PrincipalChain<int> chain, int min, int max)
-    : IValidator
+    : IValidator, IRuleDescriptor
 {
     public static IntegerNotBeInRangeValidator New(PrincipalChain<int> chain, int min, int max) =>
         new(chain, min, max);
@@ -14,6 +14,10 @@ internal class IntegerNotBeInRangeValidator(PrincipalChain<int> chain, int min, 
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Integer.NotBeInRange";
+    string IRuleDescriptor.OperationName => "NotBeInRange";
+    Type IRuleDescriptor.SubjectType => typeof(int);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["min"] = min, ["max"] = max };
 
     public bool Validate()
     {

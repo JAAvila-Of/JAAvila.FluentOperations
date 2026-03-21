@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the char value equals the expected value.
 /// </summary>
-internal class CharBeValidator(PrincipalChain<char> chain, char expected) : IValidator
+internal class CharBeValidator(PrincipalChain<char> chain, char expected) : IValidator, IRuleDescriptor
 {
     public static CharBeValidator New(PrincipalChain<char> chain, char expected) =>
         new(chain, expected);
@@ -13,6 +13,10 @@ internal class CharBeValidator(PrincipalChain<char> chain, char expected) : IVal
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Char.Be";
+    string IRuleDescriptor.OperationName => "Be";
+    Type IRuleDescriptor.SubjectType => typeof(char);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expected };
 
     public bool Validate()
     {

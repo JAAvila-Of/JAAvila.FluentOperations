@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable short does not have a value (is null).
 /// </summary>
-internal class NullableShortNotHaveValueValidator(PrincipalChain<short?> chain) : IValidator
+internal class NullableShortNotHaveValueValidator(PrincipalChain<short?> chain) : IValidator, IRuleDescriptor
 {
     public static NullableShortNotHaveValueValidator New(PrincipalChain<short?> chain) =>
         new(chain);
@@ -13,6 +13,10 @@ internal class NullableShortNotHaveValueValidator(PrincipalChain<short?> chain) 
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "NullableShort.NotHaveValue";
+    string IRuleDescriptor.OperationName => "NotHaveValue";
+    Type IRuleDescriptor.SubjectType => typeof(short?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

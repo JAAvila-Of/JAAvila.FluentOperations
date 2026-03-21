@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the decimal value is zero.
 /// </summary>
-internal class DecimalBeZeroValidator(PrincipalChain<decimal> chain) : IValidator
+internal class DecimalBeZeroValidator(PrincipalChain<decimal> chain) : IValidator, IRuleDescriptor
 {
     public static DecimalBeZeroValidator New(PrincipalChain<decimal> chain) =>
         new(chain);
@@ -13,6 +13,10 @@ internal class DecimalBeZeroValidator(PrincipalChain<decimal> chain) : IValidato
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Decimal.BeZero";
+    string IRuleDescriptor.OperationName => "BeZero";
+    Type IRuleDescriptor.SubjectType => typeof(decimal);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

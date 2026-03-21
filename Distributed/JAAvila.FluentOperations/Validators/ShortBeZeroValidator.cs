@@ -5,13 +5,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the short value is zero.
 /// </summary>
-internal class ShortBeZeroValidator(PrincipalChain<short> chain) : IValidator
+internal class ShortBeZeroValidator(PrincipalChain<short> chain) : IValidator, IRuleDescriptor
 {
     public static ShortBeZeroValidator New(PrincipalChain<short> chain) => new(chain);
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Short.BeZero";
+    string IRuleDescriptor.OperationName => "BeZero";
+    Type IRuleDescriptor.SubjectType => typeof(short);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

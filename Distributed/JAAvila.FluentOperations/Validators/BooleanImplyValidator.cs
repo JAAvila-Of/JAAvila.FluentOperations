@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates the logical implication between the boolean value and the consequent.
 /// </summary>
-internal class BooleanImplyValidator(PrincipalChain<bool> chain, bool consequent) : IValidator
+internal class BooleanImplyValidator(PrincipalChain<bool> chain, bool consequent) : IValidator, IRuleDescriptor
 {
     public static BooleanImplyValidator New(PrincipalChain<bool> chain, bool consequent) =>
         new(chain, consequent);
@@ -13,6 +13,10 @@ internal class BooleanImplyValidator(PrincipalChain<bool> chain, bool consequent
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Boolean.Imply";
+    string IRuleDescriptor.OperationName => "Imply";
+    Type IRuleDescriptor.SubjectType => typeof(bool);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = consequent };
 
     public bool Validate()
     {

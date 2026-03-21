@@ -1,9 +1,12 @@
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using JAAvila.FluentOperations.Common;
+using JAAvila.FluentOperations.Config;
 using JAAvila.FluentOperations.Contract;
 using JAAvila.FluentOperations.Manager;
 using JAAvila.FluentOperations.Model;
+using JAAvila.FluentOperations.Telemetry;
 
 // ReSharper disable once RedundantUsingDirective (kept for clarity with System.DateTime/TimeSpan overloads)
 
@@ -259,6 +262,10 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
     /// <returns>A <see cref="QualityReport"/> containing validation results and any failures.</returns>
     public async Task<QualityReport> CheckAsync(T instance, Type? activeScenario)
     {
+        var telemetryConfig = GlobalConfig.GetTelemetryConfig();
+        var telemetryEnabled = telemetryConfig is { Enabled: true };
+        var sw = FluentOperationsMeter.StartTimingIfEnabled(telemetryEnabled && telemetryConfig!.TrackBlueprintExecutionTime);
+
         ResetConditionGroups();
         _instance = instance;
         var report = new QualityReport();
@@ -464,6 +471,18 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
             }
         }
 
+        if (telemetryEnabled)
+        {
+            sw?.Stop();
+            FluentOperationsMeter.RecordBlueprintCheck(
+                GetType().Name,
+                typeof(T).Name,
+                report.IsValid,
+                report.RulesEvaluated,
+                report.Errors.Count,
+                sw?.Elapsed.TotalMilliseconds ?? 0);
+        }
+
         return report;
     }
 
@@ -500,6 +519,10 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
     /// <returns>A <see cref="QualityReport"/> containing validation results and any failures.</returns>
     public QualityReport Check(T instance, Type? activeScenario)
     {
+        var telemetryConfig = GlobalConfig.GetTelemetryConfig();
+        var telemetryEnabled = telemetryConfig is { Enabled: true };
+        var sw = FluentOperationsMeter.StartTimingIfEnabled(telemetryEnabled && telemetryConfig!.TrackBlueprintExecutionTime);
+
         ResetConditionGroups();
         _instance = instance;
         var report = new QualityReport();
@@ -676,6 +699,18 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
                 report.Failures.AddRange(failures);
                 report.RulesEvaluated++;
             }
+        }
+
+        if (telemetryEnabled)
+        {
+            sw?.Stop();
+            FluentOperationsMeter.RecordBlueprintCheck(
+                GetType().Name,
+                typeof(T).Name,
+                report.IsValid,
+                report.RulesEvaluated,
+                report.Errors.Count,
+                sw?.Elapsed.TotalMilliseconds ?? 0);
         }
 
         return report;

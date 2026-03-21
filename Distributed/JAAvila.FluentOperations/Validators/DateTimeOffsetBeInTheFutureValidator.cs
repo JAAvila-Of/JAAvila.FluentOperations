@@ -6,7 +6,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the datetimeoffset value is in the future.
 /// </summary>
 internal class DateTimeOffsetBeInTheFutureValidator(PrincipalChain<DateTimeOffset> chain)
-    : IValidator
+    : IValidator, IRuleDescriptor
 {
     public static DateTimeOffsetBeInTheFutureValidator New(PrincipalChain<DateTimeOffset> chain) =>
         new(chain);
@@ -14,6 +14,10 @@ internal class DateTimeOffsetBeInTheFutureValidator(PrincipalChain<DateTimeOffse
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "DateTimeOffset.BeInTheFuture";
+    string IRuleDescriptor.OperationName => "BeInTheFuture";
+    Type IRuleDescriptor.SubjectType => typeof(DateTimeOffset);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

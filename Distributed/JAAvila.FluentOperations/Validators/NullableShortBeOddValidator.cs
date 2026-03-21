@@ -5,13 +5,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable short value is odd.
 /// </summary>
-internal class NullableShortBeOddValidator(PrincipalChain<short?> chain) : IValidator
+internal class NullableShortBeOddValidator(PrincipalChain<short?> chain) : IValidator, IRuleDescriptor
 {
     public static NullableShortBeOddValidator New(PrincipalChain<short?> chain) => new(chain);
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "NullableShort.BeOdd";
+    string IRuleDescriptor.OperationName => "BeOdd";
+    Type IRuleDescriptor.SubjectType => typeof(short?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

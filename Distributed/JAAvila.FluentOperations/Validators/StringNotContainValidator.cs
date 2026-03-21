@@ -9,7 +9,7 @@ internal class StringNotContainValidator(
     string expected,
     PrincipalChain<string?> chain,
     StringComparison comparison = StringComparison.Ordinal
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static StringNotContainValidator New(string expected, PrincipalChain<string?> chain) =>
         new(expected, chain);
@@ -23,6 +23,10 @@ internal class StringNotContainValidator(
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "String.NotContain";
+    string IRuleDescriptor.OperationName => "NotContain";
+    Type IRuleDescriptor.SubjectType => typeof(string);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expected, ["comparison"] = StringComparison.Ordinal.ToString() };
 
     public bool Validate()
     {

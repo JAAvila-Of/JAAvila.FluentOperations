@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the integer value is one of the specified allowed values.
 /// </summary>
-internal class IntegerBeOneOfValidator(PrincipalChain<int> chain, params int[] expected) : IValidator
+internal class IntegerBeOneOfValidator(PrincipalChain<int> chain, params int[] expected) : IValidator, IRuleDescriptor
 {
     public static IntegerBeOneOfValidator New(PrincipalChain<int> chain, params int[] expected) =>
         new(chain, expected);
@@ -13,6 +13,11 @@ internal class IntegerBeOneOfValidator(PrincipalChain<int> chain, params int[] e
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Integer.BeOneOf";
+
+    string IRuleDescriptor.OperationName => "BeOneOf";
+    Type IRuleDescriptor.SubjectType => typeof(int);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["values"] = expected };
 
     public bool Validate()
     {

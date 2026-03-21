@@ -7,7 +7,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// </summary>
 internal class CollectionHaveMinCountValidator<T>(
     PrincipalChain<IEnumerable<T>> chain,
-    int min) : IValidator
+    int min) : IValidator, IRuleDescriptor
 {
     public static CollectionHaveMinCountValidator<T> New(
         PrincipalChain<IEnumerable<T>> chain,
@@ -16,6 +16,10 @@ internal class CollectionHaveMinCountValidator<T>(
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Collection.HaveMinCount";
+    string IRuleDescriptor.OperationName => "HaveMinCount";
+    Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["min"] = min };
 
     public bool Validate()
     {

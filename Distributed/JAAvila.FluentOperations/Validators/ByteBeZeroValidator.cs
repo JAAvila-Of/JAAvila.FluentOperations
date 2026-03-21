@@ -5,13 +5,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the byte value is zero.
 /// </summary>
-internal class ByteBeZeroValidator(PrincipalChain<byte> chain) : IValidator
+internal class ByteBeZeroValidator(PrincipalChain<byte> chain) : IValidator, IRuleDescriptor
 {
     public static ByteBeZeroValidator New(PrincipalChain<byte> chain) => new(chain);
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Byte.BeZero";
+    string IRuleDescriptor.OperationName => "BeZero";
+    Type IRuleDescriptor.SubjectType => typeof(byte);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

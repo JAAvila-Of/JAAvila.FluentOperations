@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the char value is less than or equal to the expected value.
 /// </summary>
-internal class CharBeLessThanOrEqualToValidator(PrincipalChain<char> chain, char expected) : IValidator
+internal class CharBeLessThanOrEqualToValidator(PrincipalChain<char> chain, char expected) : IValidator, IRuleDescriptor
 {
     public static CharBeLessThanOrEqualToValidator New(PrincipalChain<char> chain, char expected) =>
         new(chain, expected);
@@ -13,6 +13,10 @@ internal class CharBeLessThanOrEqualToValidator(PrincipalChain<char> chain, char
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Char.BeLessThanOrEqualTo";
+    string IRuleDescriptor.OperationName => "BeLessThanOrEqualTo";
+    Type IRuleDescriptor.SubjectType => typeof(char);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expected };
 
     public bool Validate()
     {

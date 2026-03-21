@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the string value is not null.
 /// </summary>
-internal class StringNotBeNullValidator(PrincipalChain<string?> chain) : IValidator
+internal class StringNotBeNullValidator(PrincipalChain<string?> chain) : IValidator, IRuleDescriptor
 {
     public static StringNotBeNullValidator New(PrincipalChain<string?> chain) => new(chain);
 
@@ -15,6 +15,11 @@ internal class StringNotBeNullValidator(PrincipalChain<string?> chain) : IValida
     /// <inheritdoc />
     public string ResultValidation { get; set; }
     public string MessageKey => "String.NotBeNull";
+
+    string IRuleDescriptor.OperationName => "NotBeNull";
+    Type IRuleDescriptor.SubjectType => typeof(string);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     /// <inheritdoc />
     public bool Validate()

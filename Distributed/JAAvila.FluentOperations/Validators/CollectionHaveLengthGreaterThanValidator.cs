@@ -8,7 +8,7 @@ namespace JAAvila.FluentOperations.Validators;
 internal class CollectionHaveLengthGreaterThanValidator<T>(
     PrincipalChain<IEnumerable<T>> chain,
     int expected
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static CollectionHaveLengthGreaterThanValidator<T> New(
         PrincipalChain<IEnumerable<T>> chain,
@@ -18,6 +18,10 @@ internal class CollectionHaveLengthGreaterThanValidator<T>(
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Collection.HaveLengthGreaterThan";
+    string IRuleDescriptor.OperationName => "HaveLengthGreaterThan";
+    Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expected };
 
     public bool Validate()
     {

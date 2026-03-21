@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the sbyte value is even.
 /// </summary>
-internal class SByteBeEvenValidator(PrincipalChain<sbyte> chain) : IValidator
+internal class SByteBeEvenValidator(PrincipalChain<sbyte> chain) : IValidator, IRuleDescriptor
 {
     public static SByteBeEvenValidator New(PrincipalChain<sbyte> chain) =>
         new(chain);
@@ -13,6 +13,10 @@ internal class SByteBeEvenValidator(PrincipalChain<sbyte> chain) : IValidator
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "SByte.BeEven";
+    string IRuleDescriptor.OperationName => "BeEven";
+    Type IRuleDescriptor.SubjectType => typeof(sbyte);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

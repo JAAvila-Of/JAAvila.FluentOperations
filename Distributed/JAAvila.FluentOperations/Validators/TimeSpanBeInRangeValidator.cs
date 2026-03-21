@@ -9,7 +9,7 @@ internal class TimeSpanBeInRangeValidator(
     PrincipalChain<TimeSpan> chain,
     TimeSpan min,
     TimeSpan max
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static TimeSpanBeInRangeValidator New(
         PrincipalChain<TimeSpan> chain,
@@ -20,6 +20,10 @@ internal class TimeSpanBeInRangeValidator(
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "TimeSpan.BeInRange";
+    string IRuleDescriptor.OperationName => "BeInRange";
+    Type IRuleDescriptor.SubjectType => typeof(TimeSpan);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = min, ["value"] = max };
 
     public bool Validate()
     {

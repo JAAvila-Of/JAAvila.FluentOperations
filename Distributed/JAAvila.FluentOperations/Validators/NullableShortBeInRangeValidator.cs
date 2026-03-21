@@ -6,7 +6,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the nullable short value is within the specified inclusive range.
 /// </summary>
 internal class NullableShortBeInRangeValidator(PrincipalChain<short?> chain, short min, short max)
-    : IValidator
+    : IValidator, IRuleDescriptor
 {
     public static NullableShortBeInRangeValidator New(
         PrincipalChain<short?> chain,
@@ -17,6 +17,10 @@ internal class NullableShortBeInRangeValidator(PrincipalChain<short?> chain, sho
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "NullableShort.BeInRange";
+    string IRuleDescriptor.OperationName => "BeInRange";
+    Type IRuleDescriptor.SubjectType => typeof(short?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["min"] = min, ["max"] = max };
 
     public bool Validate()
     {

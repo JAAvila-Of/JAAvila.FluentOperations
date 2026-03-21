@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable timespan does not have a value (is null).
 /// </summary>
-internal class NullableTimeSpanNotHaveValueValidator(PrincipalChain<TimeSpan?> chain) : IValidator
+internal class NullableTimeSpanNotHaveValueValidator(PrincipalChain<TimeSpan?> chain) : IValidator, IRuleDescriptor
 {
     public static NullableTimeSpanNotHaveValueValidator New(PrincipalChain<TimeSpan?> chain) =>
         new(chain);
@@ -13,6 +13,10 @@ internal class NullableTimeSpanNotHaveValueValidator(PrincipalChain<TimeSpan?> c
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "NullableTimeSpan.NotHaveValue";
+    string IRuleDescriptor.OperationName => "NotHaveValue";
+    Type IRuleDescriptor.SubjectType => typeof(TimeSpan?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

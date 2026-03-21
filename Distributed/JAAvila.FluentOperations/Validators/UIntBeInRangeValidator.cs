@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the uint value is within the specified inclusive range.
 /// </summary>
-internal class UIntBeInRangeValidator(PrincipalChain<uint> chain, uint min, uint max) : IValidator
+internal class UIntBeInRangeValidator(PrincipalChain<uint> chain, uint min, uint max) : IValidator, IRuleDescriptor
 {
     public static UIntBeInRangeValidator New(PrincipalChain<uint> chain, uint min, uint max) =>
         new(chain, min, max);
@@ -13,6 +13,10 @@ internal class UIntBeInRangeValidator(PrincipalChain<uint> chain, uint min, uint
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "UInt.BeInRange";
+    string IRuleDescriptor.OperationName => "BeInRange";
+    Type IRuleDescriptor.SubjectType => typeof(uint);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["min"] = min, ["max"] = max };
 
     public bool Validate()
     {

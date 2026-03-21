@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the datetime value is on or after the expected value.
 /// </summary>
-internal class DateTimeBeOnOrAfterValidator(PrincipalChain<DateTime> chain, DateTime expected) : IValidator
+internal class DateTimeBeOnOrAfterValidator(PrincipalChain<DateTime> chain, DateTime expected) : IValidator, IRuleDescriptor
 {
     public static DateTimeBeOnOrAfterValidator New(PrincipalChain<DateTime> chain, DateTime expected) =>
         new(chain, expected);
@@ -13,6 +13,10 @@ internal class DateTimeBeOnOrAfterValidator(PrincipalChain<DateTime> chain, Date
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "DateTime.BeOnOrAfter";
+    string IRuleDescriptor.OperationName => "BeOnOrAfter";
+    Type IRuleDescriptor.SubjectType => typeof(DateTime);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expected };
 
     public bool Validate()
     {

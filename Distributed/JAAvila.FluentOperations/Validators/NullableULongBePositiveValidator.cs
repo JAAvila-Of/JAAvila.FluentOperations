@@ -5,13 +5,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable ulong value is strictly positive.
 /// </summary>
-internal class NullableULongBePositiveValidator(PrincipalChain<ulong?> chain) : IValidator
+internal class NullableULongBePositiveValidator(PrincipalChain<ulong?> chain) : IValidator, IRuleDescriptor
 {
     public static NullableULongBePositiveValidator New(PrincipalChain<ulong?> chain) => new(chain);
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "NullableULong.BePositive";
+    string IRuleDescriptor.OperationName => "BePositive";
+    Type IRuleDescriptor.SubjectType => typeof(ulong?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

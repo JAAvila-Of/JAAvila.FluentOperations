@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the long value is odd.
 /// </summary>
-internal class LongBeOddValidator(PrincipalChain<long> chain) : IValidator
+internal class LongBeOddValidator(PrincipalChain<long> chain) : IValidator, IRuleDescriptor
 {
     public static LongBeOddValidator New(PrincipalChain<long> chain) =>
         new(chain);
@@ -13,6 +13,10 @@ internal class LongBeOddValidator(PrincipalChain<long> chain) : IValidator
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Long.BeOdd";
+    string IRuleDescriptor.OperationName => "BeOdd";
+    Type IRuleDescriptor.SubjectType => typeof(long);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

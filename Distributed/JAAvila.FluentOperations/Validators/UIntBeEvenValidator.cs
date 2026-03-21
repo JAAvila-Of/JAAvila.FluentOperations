@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the uint value is even.
 /// </summary>
-internal class UIntBeEvenValidator(PrincipalChain<uint> chain) : IValidator
+internal class UIntBeEvenValidator(PrincipalChain<uint> chain) : IValidator, IRuleDescriptor
 {
     public static UIntBeEvenValidator New(PrincipalChain<uint> chain) =>
         new(chain);
@@ -13,6 +13,10 @@ internal class UIntBeEvenValidator(PrincipalChain<uint> chain) : IValidator
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "UInt.BeEven";
+    string IRuleDescriptor.OperationName => "BeEven";
+    Type IRuleDescriptor.SubjectType => typeof(uint);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

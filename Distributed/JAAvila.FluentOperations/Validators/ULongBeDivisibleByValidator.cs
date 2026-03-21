@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the ulong value is evenly divisible by the specified divisor.
 /// </summary>
-internal class ULongBeDivisibleByValidator(PrincipalChain<ulong> chain, ulong divisor) : IValidator
+internal class ULongBeDivisibleByValidator(PrincipalChain<ulong> chain, ulong divisor) : IValidator, IRuleDescriptor
 {
     public static ULongBeDivisibleByValidator New(PrincipalChain<ulong> chain, ulong divisor) =>
         new(chain, divisor);
@@ -13,6 +13,10 @@ internal class ULongBeDivisibleByValidator(PrincipalChain<ulong> chain, ulong di
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "ULong.BeDivisibleBy";
+    string IRuleDescriptor.OperationName => "BeDivisibleBy";
+    Type IRuleDescriptor.SubjectType => typeof(ulong);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = divisor };
 
     public bool Validate()
     {

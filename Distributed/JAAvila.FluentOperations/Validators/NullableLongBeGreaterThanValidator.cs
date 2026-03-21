@@ -6,7 +6,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the nullable long value is greater than the expected value.
 /// </summary>
 internal class NullableLongBeGreaterThanValidator(PrincipalChain<long?> chain, long comparison)
-    : IValidator
+    : IValidator, IRuleDescriptor
 {
     public static NullableLongBeGreaterThanValidator New(
         PrincipalChain<long?> chain,
@@ -16,6 +16,10 @@ internal class NullableLongBeGreaterThanValidator(PrincipalChain<long?> chain, l
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "NullableLong.BeGreaterThan";
+    string IRuleDescriptor.OperationName => "BeGreaterThan";
+    Type IRuleDescriptor.SubjectType => typeof(long?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = comparison };
 
     public bool Validate()
     {

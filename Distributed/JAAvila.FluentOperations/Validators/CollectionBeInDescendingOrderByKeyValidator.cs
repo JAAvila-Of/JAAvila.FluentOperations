@@ -9,7 +9,7 @@ namespace JAAvila.FluentOperations.Validators;
 internal class CollectionBeInDescendingOrderByKeyValidator<T, TKey>(
     PrincipalChain<IEnumerable<T>> chain,
     Func<T, TKey> keySelector
-) : IValidator
+) : IValidator, IRuleDescriptor
     where TKey : IComparable<TKey>
 {
     public static CollectionBeInDescendingOrderByKeyValidator<T, TKey> New(
@@ -20,6 +20,10 @@ internal class CollectionBeInDescendingOrderByKeyValidator<T, TKey>(
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Collection.BeInDescendingOrderByKey";
+    string IRuleDescriptor.OperationName => "BeInDescendingOrderByKey";
+    Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

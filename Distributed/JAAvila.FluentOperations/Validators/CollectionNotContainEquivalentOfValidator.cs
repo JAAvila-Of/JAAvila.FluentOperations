@@ -15,7 +15,7 @@ internal class CollectionNotContainEquivalentOfValidator<T, TExpected>(
     PrincipalChain<IEnumerable<T>> chain,
     TExpected expected,
     ComparisonOptions options
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static CollectionNotContainEquivalentOfValidator<T, TExpected> New(
         PrincipalChain<IEnumerable<T>> chain,
@@ -26,6 +26,10 @@ internal class CollectionNotContainEquivalentOfValidator<T, TExpected>(
     public string Expected { get; } = string.Empty;
     public string ResultValidation { get; set; }
     public string MessageKey => "Collection.NotContainEquivalentOf";
+    string IRuleDescriptor.OperationName => "NotContainEquivalentOf";
+    Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expected };
 
     public bool Validate()
     {

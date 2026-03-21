@@ -6,7 +6,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the nullable datetimeoffset does not have a value (is null).
 /// </summary>
 internal class NullableDateTimeOffsetNotHaveValueValidator(PrincipalChain<DateTimeOffset?> chain)
-    : IValidator
+    : IValidator, IRuleDescriptor
 {
     public static NullableDateTimeOffsetNotHaveValueValidator New(
         PrincipalChain<DateTimeOffset?> chain
@@ -15,6 +15,10 @@ internal class NullableDateTimeOffsetNotHaveValueValidator(PrincipalChain<DateTi
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "NullableDateTimeOffset.NotHaveValue";
+    string IRuleDescriptor.OperationName => "NotHaveValue";
+    Type IRuleDescriptor.SubjectType => typeof(DateTimeOffset?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

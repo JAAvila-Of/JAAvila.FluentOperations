@@ -10,7 +10,7 @@ internal class NullableDecimalBeApproximatelyValidator(
     PrincipalChain<decimal?> chain,
     decimal expected,
     decimal tolerance
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static NullableDecimalBeApproximatelyValidator New(
         PrincipalChain<decimal?> chain,
@@ -21,6 +21,10 @@ internal class NullableDecimalBeApproximatelyValidator(
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "NullableDecimal.BeApproximately";
+    string IRuleDescriptor.OperationName => "BeApproximately";
+    Type IRuleDescriptor.SubjectType => typeof(decimal?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expected, ["value"] = tolerance };
 
     public bool Validate()
     {

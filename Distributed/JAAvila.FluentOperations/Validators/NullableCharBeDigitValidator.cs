@@ -5,13 +5,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable char value is a digit character.
 /// </summary>
-internal class NullableCharBeDigitValidator(PrincipalChain<char?> chain) : IValidator
+internal class NullableCharBeDigitValidator(PrincipalChain<char?> chain) : IValidator, IRuleDescriptor
 {
     public static NullableCharBeDigitValidator New(PrincipalChain<char?> chain) => new(chain);
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "NullableChar.BeDigit";
+    string IRuleDescriptor.OperationName => "BeDigit";
+    Type IRuleDescriptor.SubjectType => typeof(char?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

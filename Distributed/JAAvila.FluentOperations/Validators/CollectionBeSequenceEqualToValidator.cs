@@ -9,7 +9,7 @@ namespace JAAvila.FluentOperations.Validators;
 internal class CollectionBeSequenceEqualToValidator<T>(
     PrincipalChain<IEnumerable<T>> chain,
     IEnumerable<T> expected
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static CollectionBeSequenceEqualToValidator<T> New(
         PrincipalChain<IEnumerable<T>> chain,
@@ -19,6 +19,10 @@ internal class CollectionBeSequenceEqualToValidator<T>(
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Collection.BeSequenceEqualTo";
+    string IRuleDescriptor.OperationName => "BeSequenceEqualTo";
+    Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["values"] = expected };
 
     public bool Validate()
     {

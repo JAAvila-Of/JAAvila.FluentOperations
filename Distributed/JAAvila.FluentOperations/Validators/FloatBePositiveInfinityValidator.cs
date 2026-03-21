@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the float value is positive infinity.
 /// </summary>
-internal class FloatBePositiveInfinityValidator(PrincipalChain<float> chain) : IValidator
+internal class FloatBePositiveInfinityValidator(PrincipalChain<float> chain) : IValidator, IRuleDescriptor
 {
     public static FloatBePositiveInfinityValidator New(PrincipalChain<float> chain) =>
         new(chain);
@@ -13,6 +13,10 @@ internal class FloatBePositiveInfinityValidator(PrincipalChain<float> chain) : I
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "Float.BePositiveInfinity";
+    string IRuleDescriptor.OperationName => "BePositiveInfinity";
+    Type IRuleDescriptor.SubjectType => typeof(float);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

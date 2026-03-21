@@ -7,7 +7,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the nullable integer value is one of the specified allowed values.
 /// </summary>
 internal class NullableIntegerBeOneOfValidator(PrincipalChain<int?> chain, int[] values)
-    : IValidator
+    : IValidator, IRuleDescriptor
 {
     public static NullableIntegerBeOneOfValidator New(PrincipalChain<int?> chain, int[] values) =>
         new(chain, values);
@@ -15,6 +15,10 @@ internal class NullableIntegerBeOneOfValidator(PrincipalChain<int?> chain, int[]
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "NullableInteger.BeOneOf";
+    string IRuleDescriptor.OperationName => "BeOneOf";
+    Type IRuleDescriptor.SubjectType => typeof(int?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["values"] = values };
 
     public bool Validate()
     {

@@ -5,13 +5,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable integer value is strictly positive.
 /// </summary>
-internal class NullableIntegerBePositiveValidator(PrincipalChain<int?> chain) : IValidator
+internal class NullableIntegerBePositiveValidator(PrincipalChain<int?> chain) : IValidator, IRuleDescriptor
 {
     public static NullableIntegerBePositiveValidator New(PrincipalChain<int?> chain) => new(chain);
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
     public string MessageKey => "NullableInteger.BePositive";
+    string IRuleDescriptor.OperationName => "BePositive";
+    Type IRuleDescriptor.SubjectType => typeof(int?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {
