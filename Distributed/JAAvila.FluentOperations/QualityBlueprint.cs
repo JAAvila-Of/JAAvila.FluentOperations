@@ -34,7 +34,7 @@ namespace JAAvila.FluentOperations;
 /// if (!report.IsValid) { /* handle failures */ }
 /// </code>
 /// </example>
-public abstract partial class QualityBlueprint<T>
+public abstract partial class QualityBlueprint<T> : IBlueprintValidator
     where T : notnull
 {
     private record RuleDefinition(
@@ -770,6 +770,24 @@ public abstract partial class QualityBlueprint<T>
         var failures = errors.Select(f => $"  {f}");
         return $"Blueprint validation failed with {errors.Count} error(s):\n"
             + string.Join("\n", failures);
+    }
+
+    bool IBlueprintValidator.CanValidate(Type modelType)
+    {
+        ArgumentNullException.ThrowIfNull(modelType);
+        return typeof(T).IsAssignableFrom(modelType);
+    }
+
+    QualityReport IBlueprintValidator.Validate(object instance)
+    {
+        ArgumentNullException.ThrowIfNull(instance);
+        return Check((T)instance);
+    }
+
+    async Task<QualityReport> IBlueprintValidator.ValidateAsync(object instance)
+    {
+        ArgumentNullException.ThrowIfNull(instance);
+        return await CheckAsync((T)instance);
     }
 
     private static string GetPropertyName<TTarget>(Expression<Func<T, TTarget>> expression)
