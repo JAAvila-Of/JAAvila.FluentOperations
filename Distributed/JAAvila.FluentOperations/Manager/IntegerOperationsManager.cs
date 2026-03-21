@@ -54,7 +54,7 @@ public class IntegerOperationsManager : ITestManager<IntegerOperationsManager, i
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -85,7 +85,7 @@ public class IntegerOperationsManager : ITestManager<IntegerOperationsManager, i
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation, BaseFormatter.Format(expected))
+                        .WithResult(operation.MessageKey, operation.ResultValidation, BaseFormatter.Format(expected))
                         .WithReason(reason?.ToString())
             )
             .Execute();
@@ -113,7 +113,7 @@ public class IntegerOperationsManager : ITestManager<IntegerOperationsManager, i
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -143,7 +143,7 @@ public class IntegerOperationsManager : ITestManager<IntegerOperationsManager, i
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -173,7 +173,7 @@ public class IntegerOperationsManager : ITestManager<IntegerOperationsManager, i
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -204,7 +204,7 @@ public class IntegerOperationsManager : ITestManager<IntegerOperationsManager, i
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -236,7 +236,7 @@ public class IntegerOperationsManager : ITestManager<IntegerOperationsManager, i
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -268,7 +268,7 @@ public class IntegerOperationsManager : ITestManager<IntegerOperationsManager, i
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -300,7 +300,7 @@ public class IntegerOperationsManager : ITestManager<IntegerOperationsManager, i
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -341,7 +341,7 @@ public class IntegerOperationsManager : ITestManager<IntegerOperationsManager, i
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(min),
                             BaseFormatter.Format(max),
                             BaseFormatter.Format(PrincipalChain.GetValue())
@@ -387,7 +387,7 @@ public class IntegerOperationsManager : ITestManager<IntegerOperationsManager, i
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(min),
                             BaseFormatter.Format(max),
                             BaseFormatter.Format(PrincipalChain.GetValue())
@@ -437,7 +437,7 @@ public class IntegerOperationsManager : ITestManager<IntegerOperationsManager, i
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             string.Join(", ", expected.Select(e => BaseFormatter.Format(e))),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -481,7 +481,7 @@ public class IntegerOperationsManager : ITestManager<IntegerOperationsManager, i
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             string.Join(", ", expected.Select(e => BaseFormatter.Format(e))),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -525,7 +525,7 @@ public class IntegerOperationsManager : ITestManager<IntegerOperationsManager, i
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(divisor),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -565,7 +565,7 @@ public class IntegerOperationsManager : ITestManager<IntegerOperationsManager, i
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -595,7 +595,7 @@ public class IntegerOperationsManager : ITestManager<IntegerOperationsManager, i
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -603,5 +603,93 @@ public class IntegerOperationsManager : ITestManager<IntegerOperationsManager, i
             .Execute();
 
         return this;
+    }
+
+    /// <summary>
+    /// Asserts that the runtime type of the value is exactly <typeparamref name="TType"/>.
+    /// </summary>
+    public IntegerOperationsManager BeOfType<TType>(Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Common.BeOfType))
+            return this;
+        ValidateBeOfTypeOperation(reason, typeof(TType));
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the runtime type of the value is exactly <paramref name="expected"/>.
+    /// </summary>
+    public IntegerOperationsManager BeOfType(Type expected, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Common.BeOfType))
+            return this;
+        ValidateBeOfTypeOperation(reason, expected);
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the runtime type of the value is not <typeparamref name="TType"/>.
+    /// </summary>
+    public IntegerOperationsManager NotBeOfType<TType>(Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Common.NotBeOfType))
+            return this;
+        ValidateNotBeOfTypeOperation(reason, typeof(TType));
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the runtime type of the value is not <paramref name="expected"/>.
+    /// </summary>
+    public IntegerOperationsManager NotBeOfType(Type expected, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Common.NotBeOfType))
+            return this;
+        ValidateNotBeOfTypeOperation(reason, expected);
+        return this;
+    }
+
+    private void ValidateBeOfTypeOperation(Reason? reason, Type? type)
+    {
+        ExecutionEngine<IntegerOperationsManager, int>
+            .New(this)
+            .WithOperation(ReferenceBeOfTypeValidator<int>.New(PrincipalChain, type!))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                _ =>
+                    (
+                        type is null,
+                        Fail.New($"The {nameof(BeOfType)} operation failed because the expected type was <null>.")
+                    )
+            )
+            .Execute();
+    }
+
+    private void ValidateNotBeOfTypeOperation(Reason? reason, Type? type)
+    {
+        ExecutionEngine<IntegerOperationsManager, int>
+            .New(this)
+            .WithOperation(ReferenceNotBeOfTypeValidator<int>.New(PrincipalChain, type!))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                _ =>
+                    (
+                        type is null,
+                        Fail.New($"The {nameof(NotBeOfType)} operation failed because the expected type was <null>.")
+                    )
+            )
+            .Execute();
     }
 }

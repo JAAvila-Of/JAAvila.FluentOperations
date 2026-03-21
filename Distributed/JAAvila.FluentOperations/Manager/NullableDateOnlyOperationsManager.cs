@@ -1,6 +1,7 @@
-using JAAvila.FluentOperations.Common;
+﻿using JAAvila.FluentOperations.Common;
 using JAAvila.FluentOperations.Config;
 using JAAvila.FluentOperations.Contract;
+using JAAvila.FluentOperations.Formatters;
 using JAAvila.FluentOperations.Model;
 using JAAvila.FluentOperations.Utils;
 using JAAvila.FluentOperations.Validators;
@@ -49,7 +50,7 @@ public class NullableDateOnlyOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .Execute();
@@ -76,11 +77,275 @@ public class NullableDateOnlyOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .Execute();
 
         return this;
+    }
+
+    /// <summary>
+    /// Asserts that the value is equal to <paramref name="expected"/>.
+    /// </summary>
+    /// <param name="expected">The expected value to compare against.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public NullableDateOnlyOperationsManager Be(DateOnly? expected, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.DateOnly.Be))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableDateOnlyOperationsManager, DateOnly?>
+            .New(this)
+            .WithOperation(NullableDateOnlyBeValidator.New(PrincipalChain, expected))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.MessageKey, operation.ResultValidation,
+                            BaseFormatter.Format(PrincipalChain.GetValue()),
+                            BaseFormatter.Format(expected)
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the value is not equal to <paramref name="expected"/>.
+    /// </summary>
+    /// <param name="expected">The value that should not match.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public NullableDateOnlyOperationsManager NotBe(DateOnly? expected, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.DateOnly.NotBe))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableDateOnlyOperationsManager, DateOnly?>
+            .New(this)
+            .WithOperation(NullableDateOnlyNotBeValidator.New(PrincipalChain, expected))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.MessageKey, operation.ResultValidation, BaseFormatter.Format(expected))
+                        .WithReason(reason?.ToString())
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the value falls within the inclusive range [<paramref name="min"/>, <paramref name="max"/>].
+    /// </summary>
+    /// <param name="min">The lower bound of the range (inclusive).</param>
+    /// <param name="max">The upper bound of the range (inclusive).</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// Throws immediately if the value is <c>null</c> (null guard).
+    /// Also throws immediately if <paramref name="min"/> is greater than <paramref name="max"/> (inverted range guard).
+    /// </remarks>
+    public NullableDateOnlyOperationsManager BeInRange(DateOnly min, DateOnly max, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.DateOnly.BeInRange))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableDateOnlyOperationsManager, DateOnly?>
+            .New(this)
+            .WithOperation(NullableDateOnlyBeInRangeValidator.New(PrincipalChain, min, max))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(BeInRange)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        min > max,
+                        Fail.New(
+                            $"The {nameof(BeInRange)} operation failed because min ({min}) is greater than max ({max})."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the value does not fall within the inclusive range [<paramref name="min"/>, <paramref name="max"/>].
+    /// </summary>
+    /// <param name="min">The lower bound of the range (inclusive).</param>
+    /// <param name="max">The upper bound of the range (inclusive).</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// Throws immediately if the value is <c>null</c> (null guard).
+    /// Also throws immediately if <paramref name="min"/> is greater than <paramref name="max"/> (inverted range guard).
+    /// </remarks>
+    public NullableDateOnlyOperationsManager NotBeInRange(DateOnly min, DateOnly max, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.DateOnly.NotBeInRange))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableDateOnlyOperationsManager, DateOnly?>
+            .New(this)
+            .WithOperation(NullableDateOnlyNotBeInRangeValidator.New(PrincipalChain, min, max))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(NotBeInRange)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        min > max,
+                        Fail.New(
+                            $"The {nameof(NotBeInRange)} operation failed because min ({min}) is greater than max ({max})."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the runtime type of the value is exactly <typeparamref name="TType"/>.
+    /// </summary>
+    public NullableDateOnlyOperationsManager BeOfType<TType>(Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Common.BeOfType))
+            return this;
+        ValidateBeOfTypeOperation(reason, typeof(TType));
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the runtime type of the value is exactly <paramref name="expected"/>.
+    /// </summary>
+    public NullableDateOnlyOperationsManager BeOfType(Type expected, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Common.BeOfType))
+            return this;
+        ValidateBeOfTypeOperation(reason, expected);
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the runtime type of the value is not <typeparamref name="TType"/>.
+    /// </summary>
+    public NullableDateOnlyOperationsManager NotBeOfType<TType>(Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Common.NotBeOfType))
+            return this;
+        ValidateNotBeOfTypeOperation(reason, typeof(TType));
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the runtime type of the value is not <paramref name="expected"/>.
+    /// </summary>
+    public NullableDateOnlyOperationsManager NotBeOfType(Type expected, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Common.NotBeOfType))
+            return this;
+        ValidateNotBeOfTypeOperation(reason, expected);
+        return this;
+    }
+
+    private void ValidateBeOfTypeOperation(Reason? reason, Type? type)
+    {
+        ExecutionEngine<NullableDateOnlyOperationsManager, DateOnly?>
+            .New(this)
+            .WithOperation(ReferenceBeOfTypeValidator<DateOnly?>.New(PrincipalChain, type!))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                _ =>
+                    (
+                        type is null,
+                        Fail.New($"The {nameof(BeOfType)} operation failed because the expected type was <null>.")
+                    )
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New($"The {nameof(BeOfType)} operation failed because the value was <null>.")
+                    )
+            )
+            .Execute();
+    }
+
+    private void ValidateNotBeOfTypeOperation(Reason? reason, Type? type)
+    {
+        ExecutionEngine<NullableDateOnlyOperationsManager, DateOnly?>
+            .New(this)
+            .WithOperation(ReferenceNotBeOfTypeValidator<DateOnly?>.New(PrincipalChain, type!))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                _ =>
+                    (
+                        type is null,
+                        Fail.New($"The {nameof(NotBeOfType)} operation failed because the expected type was <null>.")
+                    )
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New($"The {nameof(NotBeOfType)} operation failed because the value was <null>.")
+                    )
+            )
+            .Execute();
     }
 }

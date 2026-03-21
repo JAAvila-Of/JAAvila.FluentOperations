@@ -5,13 +5,18 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the timeonly value has the expected second.
 /// </summary>
-internal class TimeOnlyHaveSecondValidator(PrincipalChain<TimeOnly> chain, int second) : IValidator
+internal class TimeOnlyHaveSecondValidator(PrincipalChain<TimeOnly> chain, int second) : IValidator, IRuleDescriptor
 {
     public static TimeOnlyHaveSecondValidator New(PrincipalChain<TimeOnly> chain, int second) =>
         new(chain, second);
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "TimeOnly.HaveSecond";
+    string IRuleDescriptor.OperationName => "HaveSecond";
+    Type IRuleDescriptor.SubjectType => typeof(TimeOnly);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = second };
 
     public bool Validate()
     {

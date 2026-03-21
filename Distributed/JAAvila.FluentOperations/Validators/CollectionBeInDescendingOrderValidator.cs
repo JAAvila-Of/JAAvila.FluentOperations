@@ -6,7 +6,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the elements in the collection are in descending order.
 /// </summary>
 internal class CollectionBeInDescendingOrderValidator<T>(PrincipalChain<IEnumerable<T>> chain)
-    : IValidator
+    : IValidator, IRuleDescriptor
 {
     public static CollectionBeInDescendingOrderValidator<T> New(
         PrincipalChain<IEnumerable<T>> chain
@@ -14,6 +14,11 @@ internal class CollectionBeInDescendingOrderValidator<T>(PrincipalChain<IEnumera
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Collection.BeInDescendingOrder";
+    string IRuleDescriptor.OperationName => "BeInDescendingOrder";
+    Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

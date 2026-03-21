@@ -9,7 +9,7 @@ internal class StringContainAnyValidator(
     PrincipalChain<string?> chain,
     string[] substrings,
     StringComparison? comparison
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static StringContainAnyValidator New(
         PrincipalChain<string?> chain,
@@ -18,7 +18,12 @@ internal class StringContainAnyValidator(
     ) => new(chain, substrings, comparison);
 
     public string Expected => string.Join(", ", substrings);
-    public string ResultValidation { get; set; } = string.Empty;
+    public string ResultValidation { get; set; }
+    public string MessageKey => "String.ContainAny";
+    string IRuleDescriptor.OperationName => "ContainAny";
+    Type IRuleDescriptor.SubjectType => typeof(string);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["values"] = substrings, ["comparison"] = comparison.ToString() };
 
     public bool Validate()
     {

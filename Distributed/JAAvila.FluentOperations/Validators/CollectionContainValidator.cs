@@ -5,13 +5,18 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the collection contains the expected element.
 /// </summary>
-internal class CollectionContainValidator<T>(PrincipalChain<IEnumerable<T>> chain, T item) : IValidator
+internal class CollectionContainValidator<T>(PrincipalChain<IEnumerable<T>> chain, T item) : IValidator, IRuleDescriptor
 {
     public static CollectionContainValidator<T> New(PrincipalChain<IEnumerable<T>> chain, T item) =>
         new(chain, item);
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Collection.Contain";
+    string IRuleDescriptor.OperationName => "Contain";
+    Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = item };
 
     public bool Validate()
     {

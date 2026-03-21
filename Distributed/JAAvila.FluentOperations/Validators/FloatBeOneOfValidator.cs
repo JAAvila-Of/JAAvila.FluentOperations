@@ -5,13 +5,18 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the float value is one of the specified allowed values.
 /// </summary>
-internal class FloatBeOneOfValidator(PrincipalChain<float> chain, params float[] expected) : IValidator
+internal class FloatBeOneOfValidator(PrincipalChain<float> chain, params float[] expected) : IValidator, IRuleDescriptor
 {
     public static FloatBeOneOfValidator New(PrincipalChain<float> chain, params float[] expected) =>
         new(chain, expected);
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Float.BeOneOf";
+    string IRuleDescriptor.OperationName => "BeOneOf";
+    Type IRuleDescriptor.SubjectType => typeof(float);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["values"] = expected };
 
     public bool Validate()
     {

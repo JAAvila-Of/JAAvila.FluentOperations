@@ -6,17 +6,22 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the nullable float value does not equal the expected value.
 /// </summary>
 internal class NullableFloatNotBeValidator(PrincipalChain<float?> chain, float? expected)
-    : IValidator
+    : IValidator, IRuleDescriptor
 {
     public static NullableFloatNotBeValidator New(PrincipalChain<float?> chain, float? expected) =>
         new(chain, expected);
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableFloat.NotBe";
+    string IRuleDescriptor.OperationName => "NotBe";
+    Type IRuleDescriptor.SubjectType => typeof(float?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expected };
 
     public bool Validate()
     {
-        if (chain.GetValue() != expected)
+        if (!Nullable.Equals(chain.GetValue(), expected))
         {
             return true;
         }

@@ -5,13 +5,18 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the decimal value has the expected number of decimal places.
 /// </summary>
-internal class DecimalHavePrecisionValidator(PrincipalChain<decimal> chain, int expectedDecimals) : IValidator
+internal class DecimalHavePrecisionValidator(PrincipalChain<decimal> chain, int expectedDecimals) : IValidator, IRuleDescriptor
 {
     public static DecimalHavePrecisionValidator New(PrincipalChain<decimal> chain, int expectedDecimals) =>
         new(chain, expectedDecimals);
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Decimal.HavePrecision";
+    string IRuleDescriptor.OperationName => "HavePrecision";
+    Type IRuleDescriptor.SubjectType => typeof(decimal);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expectedDecimals };
 
     public bool Validate()
     {

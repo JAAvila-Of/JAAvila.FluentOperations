@@ -9,7 +9,7 @@ namespace JAAvila.FluentOperations.Validators;
 internal class CollectionBeEquivalentToValidator<T>(
     PrincipalChain<IEnumerable<T>> chain,
     IEnumerable<T> expected
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static CollectionBeEquivalentToValidator<T> New(
         PrincipalChain<IEnumerable<T>> chain,
@@ -17,7 +17,12 @@ internal class CollectionBeEquivalentToValidator<T>(
     ) => new(chain, expected);
 
     public string Expected { get; } = string.Empty;
-    public string ResultValidation { get; set; } = string.Empty;
+    public string ResultValidation { get; set; }
+    public string MessageKey => "Collection.BeEquivalentTo";
+    string IRuleDescriptor.OperationName => "BeEquivalentTo";
+    Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["values"] = expected };
 
     public bool Validate()
     {

@@ -7,12 +7,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the string is valid XML.
 /// </summary>
-internal class StringBeXmlValidator(PrincipalChain<string?> chain) : IValidator
+internal class StringBeXmlValidator(PrincipalChain<string?> chain) : IValidator, IRuleDescriptor
 {
     public static StringBeXmlValidator New(PrincipalChain<string?> chain) => new(chain);
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "String.BeXml";
+    string IRuleDescriptor.OperationName => "BeXml";
+    Type IRuleDescriptor.SubjectType => typeof(string);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

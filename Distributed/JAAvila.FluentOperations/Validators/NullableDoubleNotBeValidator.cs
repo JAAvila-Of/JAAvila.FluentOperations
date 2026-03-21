@@ -6,7 +6,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the nullable double value does not equal the expected value.
 /// </summary>
 internal class NullableDoubleNotBeValidator(PrincipalChain<double?> chain, double? expected)
-    : IValidator
+    : IValidator, IRuleDescriptor
 {
     public static NullableDoubleNotBeValidator New(
         PrincipalChain<double?> chain,
@@ -15,12 +15,17 @@ internal class NullableDoubleNotBeValidator(PrincipalChain<double?> chain, doubl
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableDouble.NotBe";
+    string IRuleDescriptor.OperationName => "NotBe";
+    Type IRuleDescriptor.SubjectType => typeof(double?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expected };
 
     public bool Validate()
     {
         var value = chain.GetValue();
 
-        if (value != expected)
+        if (!Nullable.Equals(value, expected))
         {
             return true;
         }

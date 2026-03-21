@@ -8,7 +8,7 @@ namespace JAAvila.FluentOperations.Validators;
 internal class CollectionSatisfyRespectivelyValidator<T>(
     PrincipalChain<IEnumerable<T>> chain,
     Func<T, bool>[] predicates
-) : IValidator
+) : IValidator, IRuleDescriptor
 {
     public static CollectionSatisfyRespectivelyValidator<T> New(
         PrincipalChain<IEnumerable<T>> chain,
@@ -17,6 +17,11 @@ internal class CollectionSatisfyRespectivelyValidator<T>(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Collection.SatisfyRespectively";
+    string IRuleDescriptor.OperationName => "SatisfyRespectively";
+    Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

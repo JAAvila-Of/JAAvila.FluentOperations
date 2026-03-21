@@ -5,13 +5,18 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the decimal value is less than or equal to the expected value.
 /// </summary>
-internal class DecimalBeLessThanOrEqualToValidator(PrincipalChain<decimal> chain, decimal expected) : IValidator
+internal class DecimalBeLessThanOrEqualToValidator(PrincipalChain<decimal> chain, decimal expected) : IValidator, IRuleDescriptor
 {
     public static DecimalBeLessThanOrEqualToValidator New(PrincipalChain<decimal> chain, decimal expected) =>
         new(chain, expected);
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Decimal.BeLessThanOrEqualTo";
+    string IRuleDescriptor.OperationName => "BeLessThanOrEqualTo";
+    Type IRuleDescriptor.SubjectType => typeof(decimal);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expected };
 
     public bool Validate()
     {

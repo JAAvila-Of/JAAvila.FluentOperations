@@ -7,7 +7,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// </summary>
 internal class CollectionHaveMaxCountValidator<T>(
     PrincipalChain<IEnumerable<T>> chain,
-    int max) : IValidator
+    int max) : IValidator, IRuleDescriptor
 {
     public static CollectionHaveMaxCountValidator<T> New(
         PrincipalChain<IEnumerable<T>> chain,
@@ -15,6 +15,11 @@ internal class CollectionHaveMaxCountValidator<T>(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Collection.HaveMaxCount";
+    string IRuleDescriptor.OperationName => "HaveMaxCount";
+    Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["max"] = max };
 
     public bool Validate()
     {

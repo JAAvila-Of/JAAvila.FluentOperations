@@ -7,7 +7,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the collection is not null or empty.
 /// </summary>
 internal class CollectionNotBeNullOrEmptyValidator<T>(PrincipalChain<IEnumerable<T>> chain)
-    : IValidator
+    : IValidator, IRuleDescriptor
 {
     public static CollectionNotBeNullOrEmptyValidator<T> New(
         PrincipalChain<IEnumerable<T>> chain
@@ -15,6 +15,11 @@ internal class CollectionNotBeNullOrEmptyValidator<T>(PrincipalChain<IEnumerable
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Collection.NotBeNullOrEmpty";
+    string IRuleDescriptor.OperationName => "NotBeNullOrEmpty";
+    Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object>();
 
     public bool Validate()
     {

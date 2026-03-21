@@ -1,3 +1,4 @@
+using JAAvila.FluentOperations.Contract;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -43,6 +44,7 @@ public static class MediatRExtensions
     /// Adds a blueprint behavior where the blueprint validates a base model type
     /// and the request is a derived type. Registers the generic behavior that
     /// walks the type hierarchy to find the matching blueprint.
+    /// Also registers the blueprint as <see cref="IBlueprintValidator"/> for AOT-safe resolution.
     /// </summary>
     /// <typeparam name="TRequest">The request type (derived from TModel)</typeparam>
     /// <typeparam name="TResponse">The response type</typeparam>
@@ -57,6 +59,7 @@ public static class MediatRExtensions
         where TBlueprint : QualityBlueprint<TModel>
     {
         services.AddSingleton<QualityBlueprint<TModel>, TBlueprint>();
+        services.AddSingleton<IBlueprintValidator>(sp => (IBlueprintValidator)sp.GetRequiredService<QualityBlueprint<TModel>>());
         services.AddTransient<IPipelineBehavior<TRequest, TResponse>, MediatRBlueprintBehavior<TRequest, TResponse>>();
         return services;
     }

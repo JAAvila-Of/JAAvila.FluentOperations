@@ -6,7 +6,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the nullable float value is greater than the expected value.
 /// </summary>
 internal class NullableFloatBeGreaterThanValidator(PrincipalChain<float?> chain, float comparison)
-    : IValidator
+    : IValidator, IRuleDescriptor
 {
     public static NullableFloatBeGreaterThanValidator New(
         PrincipalChain<float?> chain,
@@ -15,6 +15,11 @@ internal class NullableFloatBeGreaterThanValidator(PrincipalChain<float?> chain,
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableFloat.BeGreaterThan";
+    string IRuleDescriptor.OperationName => "BeGreaterThan";
+    Type IRuleDescriptor.SubjectType => typeof(float?);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = comparison };
 
     public bool Validate()
     {

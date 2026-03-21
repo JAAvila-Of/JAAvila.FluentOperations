@@ -5,13 +5,18 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the collection has common elements with the specified collection.
 /// </summary>
-internal class CollectionIntersectWithValidator<T>(PrincipalChain<IEnumerable<T>> chain, IEnumerable<T> other) : IValidator
+internal class CollectionIntersectWithValidator<T>(PrincipalChain<IEnumerable<T>> chain, IEnumerable<T> other) : IValidator, IRuleDescriptor
 {
     public static CollectionIntersectWithValidator<T> New(PrincipalChain<IEnumerable<T>> chain, IEnumerable<T> other) =>
         new(chain, other);
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Collection.IntersectWith";
+    string IRuleDescriptor.OperationName => "IntersectWith";
+    Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["values"] = other };
 
     public bool Validate()
     {

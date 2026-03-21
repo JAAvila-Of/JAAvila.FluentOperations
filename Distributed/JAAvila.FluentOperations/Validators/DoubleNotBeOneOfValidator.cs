@@ -5,13 +5,18 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the double value is not one of the specified disallowed values.
 /// </summary>
-internal class DoubleNotBeOneOfValidator(PrincipalChain<double> chain, params double[] expected) : IValidator
+internal class DoubleNotBeOneOfValidator(PrincipalChain<double> chain, params double[] expected) : IValidator, IRuleDescriptor
 {
     public static DoubleNotBeOneOfValidator New(PrincipalChain<double> chain, params double[] expected) =>
         new(chain, expected);
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Double.NotBeOneOf";
+    string IRuleDescriptor.OperationName => "NotBeOneOf";
+    Type IRuleDescriptor.SubjectType => typeof(double);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["values"] = expected };
 
     public bool Validate()
     {

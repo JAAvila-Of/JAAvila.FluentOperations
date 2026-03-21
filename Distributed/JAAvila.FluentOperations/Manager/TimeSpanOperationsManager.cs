@@ -1,4 +1,4 @@
-using JAAvila.FluentOperations.Common;
+﻿using JAAvila.FluentOperations.Common;
 using JAAvila.FluentOperations.Config;
 using JAAvila.FluentOperations.Contract;
 using JAAvila.FluentOperations.Formatters;
@@ -54,7 +54,7 @@ public class TimeSpanOperationsManager : ITestManager<TimeSpanOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -86,7 +86,7 @@ public class TimeSpanOperationsManager : ITestManager<TimeSpanOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -117,7 +117,7 @@ public class TimeSpanOperationsManager : ITestManager<TimeSpanOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -147,7 +147,7 @@ public class TimeSpanOperationsManager : ITestManager<TimeSpanOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -177,7 +177,7 @@ public class TimeSpanOperationsManager : ITestManager<TimeSpanOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -208,7 +208,7 @@ public class TimeSpanOperationsManager : ITestManager<TimeSpanOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -240,7 +240,7 @@ public class TimeSpanOperationsManager : ITestManager<TimeSpanOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -276,7 +276,7 @@ public class TimeSpanOperationsManager : ITestManager<TimeSpanOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(min),
                             BaseFormatter.Format(max),
                             BaseFormatter.Format(PrincipalChain.GetValue())
@@ -289,6 +289,52 @@ public class TimeSpanOperationsManager : ITestManager<TimeSpanOperationsManager,
                         min > max,
                         Fail.New(
                             $"The {nameof(BeInRange)} operation failed because the range is inverted: min ({min}) > max ({max})."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the value does not fall within the inclusive range [<paramref name="min"/>, <paramref name="max"/>].
+    /// </summary>
+    /// <param name="min">The lower bound of the range (inclusive).</param>
+    /// <param name="max">The upper bound of the range (inclusive).</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// Throws immediately if <paramref name="min"/> is greater than <paramref name="max"/> (inverted range guard).
+    /// </remarks>
+    public TimeSpanOperationsManager NotBeInRange(TimeSpan min, TimeSpan max, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.TimeSpan.NotBeInRange))
+        {
+            return this;
+        }
+
+        ExecutionEngine<TimeSpanOperationsManager, TimeSpan>
+            .New(this)
+            .WithOperation(TimeSpanNotBeInRangeValidator.New(PrincipalChain, min, max))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.MessageKey, operation.ResultValidation,
+                            BaseFormatter.Format(min),
+                            BaseFormatter.Format(max),
+                            BaseFormatter.Format(PrincipalChain.GetValue())
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                _ =>
+                    (
+                        min > max,
+                        Fail.New(
+                            $"The {nameof(NotBeInRange)} operation failed because the range is inverted: min ({min}) > max ({max})."
                         )
                     )
             )
@@ -318,7 +364,7 @@ public class TimeSpanOperationsManager : ITestManager<TimeSpanOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(days),
                             BaseFormatter.Format(PrincipalChain.GetValue().Days)
                         )
@@ -350,7 +396,7 @@ public class TimeSpanOperationsManager : ITestManager<TimeSpanOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(hours),
                             BaseFormatter.Format(PrincipalChain.GetValue().Hours)
                         )
@@ -382,7 +428,7 @@ public class TimeSpanOperationsManager : ITestManager<TimeSpanOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(minutes),
                             BaseFormatter.Format(PrincipalChain.GetValue().Minutes)
                         )
@@ -414,7 +460,7 @@ public class TimeSpanOperationsManager : ITestManager<TimeSpanOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(seconds),
                             BaseFormatter.Format(PrincipalChain.GetValue().Seconds)
                         )
@@ -423,5 +469,93 @@ public class TimeSpanOperationsManager : ITestManager<TimeSpanOperationsManager,
             .Execute();
 
         return this;
+    }
+
+    /// <summary>
+    /// Asserts that the runtime type of the value is exactly <typeparamref name="TType"/>.
+    /// </summary>
+    public TimeSpanOperationsManager BeOfType<TType>(Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Common.BeOfType))
+            return this;
+        ValidateBeOfTypeOperation(reason, typeof(TType));
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the runtime type of the value is exactly <paramref name="expected"/>.
+    /// </summary>
+    public TimeSpanOperationsManager BeOfType(Type expected, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Common.BeOfType))
+            return this;
+        ValidateBeOfTypeOperation(reason, expected);
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the runtime type of the value is not <typeparamref name="TType"/>.
+    /// </summary>
+    public TimeSpanOperationsManager NotBeOfType<TType>(Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Common.NotBeOfType))
+            return this;
+        ValidateNotBeOfTypeOperation(reason, typeof(TType));
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the runtime type of the value is not <paramref name="expected"/>.
+    /// </summary>
+    public TimeSpanOperationsManager NotBeOfType(Type expected, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Common.NotBeOfType))
+            return this;
+        ValidateNotBeOfTypeOperation(reason, expected);
+        return this;
+    }
+
+    private void ValidateBeOfTypeOperation(Reason? reason, Type? type)
+    {
+        ExecutionEngine<TimeSpanOperationsManager, TimeSpan>
+            .New(this)
+            .WithOperation(ReferenceBeOfTypeValidator<TimeSpan>.New(PrincipalChain, type!))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                _ =>
+                    (
+                        type is null,
+                        Fail.New($"The {nameof(BeOfType)} operation failed because the expected type was <null>.")
+                    )
+            )
+            .Execute();
+    }
+
+    private void ValidateNotBeOfTypeOperation(Reason? reason, Type? type)
+    {
+        ExecutionEngine<TimeSpanOperationsManager, TimeSpan>
+            .New(this)
+            .WithOperation(ReferenceNotBeOfTypeValidator<TimeSpan>.New(PrincipalChain, type!))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                _ =>
+                    (
+                        type is null,
+                        Fail.New($"The {nameof(NotBeOfType)} operation failed because the expected type was <null>.")
+                    )
+            )
+            .Execute();
     }
 }

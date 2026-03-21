@@ -5,13 +5,18 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the timeonly value is before the expected value.
 /// </summary>
-internal class TimeOnlyBeBeforeValidator(PrincipalChain<TimeOnly> chain, TimeOnly expected) : IValidator
+internal class TimeOnlyBeBeforeValidator(PrincipalChain<TimeOnly> chain, TimeOnly expected) : IValidator, IRuleDescriptor
 {
     public static TimeOnlyBeBeforeValidator New(PrincipalChain<TimeOnly> chain, TimeOnly expected) =>
         new(chain, expected);
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "TimeOnly.BeBefore";
+    string IRuleDescriptor.OperationName => "BeBefore";
+    Type IRuleDescriptor.SubjectType => typeof(TimeOnly);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expected };
 
     public bool Validate()
     {

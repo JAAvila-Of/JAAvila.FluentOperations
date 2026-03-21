@@ -5,13 +5,18 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the long value is less than the expected value.
 /// </summary>
-internal class LongBeLessThanValidator(PrincipalChain<long> chain, long expected) : IValidator
+internal class LongBeLessThanValidator(PrincipalChain<long> chain, long expected) : IValidator, IRuleDescriptor
 {
     public static LongBeLessThanValidator New(PrincipalChain<long> chain, long expected) =>
         new(chain, expected);
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Long.BeLessThan";
+    string IRuleDescriptor.OperationName => "BeLessThan";
+    Type IRuleDescriptor.SubjectType => typeof(long);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expected };
 
     public bool Validate()
     {

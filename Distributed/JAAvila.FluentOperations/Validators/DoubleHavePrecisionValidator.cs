@@ -6,7 +6,7 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the double value has the expected number of decimal places.
 /// </summary>
 internal class DoubleHavePrecisionValidator(PrincipalChain<double> chain, int expectedDecimals)
-    : IValidator
+    : IValidator, IRuleDescriptor
 {
     public static DoubleHavePrecisionValidator New(
         PrincipalChain<double> chain,
@@ -15,6 +15,11 @@ internal class DoubleHavePrecisionValidator(PrincipalChain<double> chain, int ex
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Double.HavePrecision";
+    string IRuleDescriptor.OperationName => "HavePrecision";
+    Type IRuleDescriptor.SubjectType => typeof(double);
+    IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
+        new Dictionary<string, object> { ["value"] = expectedDecimals };
 
     public bool Validate()
     {
