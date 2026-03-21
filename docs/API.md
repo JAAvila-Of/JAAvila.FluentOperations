@@ -48,6 +48,10 @@ Complete API documentation for JAAvila.FluentOperations.
   - [ForEachWhere](#foreachwhere)
 - [AssertionScope](#assertionscope)
 - [FluentOperationsConfig](#fluentoperationsconfig)
+- [Blueprint Introspection](#blueprint-introspection)
+- [JSON Schema Generation](#json-schema-generation)
+- [Snapshot Validation](#snapshot-validation)
+- [Validation Telemetry](#validation-telemetry)
 ---
 
 ## Test Extensions
@@ -1127,6 +1131,15 @@ public QualityReport Check(T instance, Type? activeScenario)
 // Asynchronous validation
 public Task<QualityReport> CheckAsync(T instance)
 public Task<QualityReport> CheckAsync(T instance, Type? activeScenario)
+
+// Assertion bridge — throw on failure (integrates with AssertionScope)
+public void Assert(T instance)
+public void Assert(T instance, Type? activeScenario)
+public Task AssertAsync(T instance)
+public Task AssertAsync(T instance, Type? activeScenario)
+
+// Introspection
+public IReadOnlyList<BlueprintRuleInfo> GetRuleDescriptors()
 ```
 
 ---
@@ -1149,6 +1162,12 @@ Methods:
 - `FailuresByProperty(string)` - Failures for specific property
 - `FailuresBySeverity(Severity)` - Failures at specific severity
 - `ToString()` - Formatted summary
+
+Extension methods (in `QualityReportExtensions`):
+- `ToErrorDictionary()` - Returns `IDictionary<string, string[]>` keyed by property name (Error failures only)
+
+Extension methods (in `QualityReportAspNetExtensions`, requires `AspNetCore` package):
+- `ToProblemDetails()` - Returns `ValidationProblemDetails` (RFC 7807) from Error failures
 
 ---
 
@@ -1393,6 +1412,124 @@ using (FluentOperationsConfig.Scope(options =>
     // Config applies only within this scope
 }
 ```
+
+---
+
+---
+
+## Blueprint Introspection
+
+`GetRuleDescriptors()` returns a read-only list of `BlueprintRuleInfo` records describing every rule registered in the blueprint (including rules inside `ForEach` definitions; `ForNested` delegates to the child blueprint's own call).
+
+```csharp
+var blueprint = new UserBlueprint();
+IReadOnlyList<BlueprintRuleInfo> rules = blueprint.GetRuleDescriptors();
+
+foreach (var rule in rules)
+    Console.WriteLine($"{rule.PropertyName}: {rule.OperationName} ({rule.Severity})");
+```
+
+### BlueprintRuleInfo
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `PropertyName` | `string` | Property name (collection rules use `"Items[]"` suffix) |
+| `OperationName` | `string` | Operation name, e.g. `"NotBeNull"`, `"BeEmail"` |
+| `PropertyType` | `Type` | CLR type of the subject |
+| `Parameters` | `IReadOnlyDictionary<string, object>` | Captured rule parameters |
+| `Severity` | `Severity` | Severity from `RuleConfig` (defaults to `Error`) |
+| `ErrorCode` | `string?` | Error code from `RuleConfig` |
+| `Scenario` | `Type?` | Scenario marker interface if rule is inside a `Scenario<T>()` block |
+
+The `IRuleDescriptor` interface (implemented by validators) is the source of `OperationName`, `SubjectType`, and `Parameters`. The introspection API is used internally by `BlueprintSchemaFilter` (OpenAPI package) and `JsonSchemaGenerator`.
+
+---
+
+## JSON Schema Generation
+
+Extension methods on `QualityBlueprint<T>` (no additional package required):
+
+```csharp
+// Returns JsonDocument — caller must dispose
+JsonDocument schema = blueprint.ToJsonSchema();
+
+// Returns indented JSON string
+string schemaJson = blueprint.ToJsonSchemaString();
+
+// With options
+string schemaJson = blueprint.ToJsonSchemaString(new JsonSchemaOptions
+{
+    Draft = JsonSchemaDraft.Draft07,
+    WriteIndented = true
+});
+```
+
+The generated schema is derived from the blueprint's rule descriptors. Only rule-expressible constraints are emitted (e.g., `minLength`, `maxLength`, `pattern`, `format`, `minimum`, `maximum`). Properties not covered by any rule are still included in the schema based on CLR reflection.
+
+---
+
+## Snapshot Validation
+
+Extension methods on `QualityReport` for regression testing:
+
+```csharp
+// First run — create the baseline snapshot file
+report.UpdateSnapshot("MyBlueprint_Scenario1");
+
+// Subsequent runs — assert the report matches the stored snapshot
+report.ShouldMatchSnapshot("MyBlueprint_Scenario1");
+
+// With options
+report.ShouldMatchSnapshot("MyBlueprint_Scenario1", new SnapshotOptions
+{
+    SnapshotDirectory = "__snapshots__", // relative to the calling test file (default)
+    UpdateMode = SnapshotUpdateMode.Manual // Manual | CreateOnly | AutoUpdate
+});
+```
+
+Snapshot files are stored as JSON in `__snapshots__/` (default) relative to the calling source file, using `[CallerFilePath]` for automatic path resolution.
+
+### SnapshotUpdateMode
+
+| Mode | Behavior when snapshot exists | Behavior when snapshot missing |
+|------|-------------------------------|-------------------------------|
+| `Manual` (default) | Compares and throws on mismatch | Throws with instructions to call `UpdateSnapshot()` |
+| `CreateOnly` | Compares and throws on mismatch | Creates snapshot file and passes |
+| `AutoUpdate` | Always overwrites and passes | Creates snapshot file and passes |
+
+---
+
+## Validation Telemetry
+
+Emit metrics via `System.Diagnostics.Metrics` (compatible with OpenTelemetry, `dotnet-counters`, and any `MeterListener`). Zero external dependencies.
+
+### Configuration
+
+```csharp
+FluentOperationsConfig.Configure(c =>
+{
+    c.Telemetry.Enabled = true;
+    c.Telemetry.TrackBlueprintExecutionTime = true; // fo.blueprint.duration histogram
+    c.Telemetry.TrackRuleExecutionTime = true;      // fo.rule.duration histogram
+    c.Telemetry.TrackFailureRates = true;           // fo.rules.failed counter
+});
+```
+
+### Instruments
+
+Meter name: `JAAvila.FluentOperations`
+
+| Instrument | Kind | Unit | Description |
+|------------|------|------|-------------|
+| `fo.rules.evaluated` | Counter | — | Total rules evaluated |
+| `fo.rules.failed` | Counter | — | Total rules that failed |
+| `fo.rule.duration` | Histogram | ms | Duration of individual eager rule execution |
+| `fo.blueprint.duration` | Histogram | ms | Duration of a full `Check()` / `CheckAsync()` call |
+
+### Dimensions
+
+Blueprint check metrics are tagged with: `blueprint` (type name), `model` (type name), `is_valid`.
+Eager rule metrics are tagged with: `passed`, `severity`.
 
 ---
 
