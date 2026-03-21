@@ -1,4 +1,5 @@
 using System.Reflection;
+using JAAvila.FluentOperations.Contract;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace JAAvila.FluentOperations.Integration;
@@ -11,6 +12,8 @@ public static class FluentOperationsDIExtensions
     /// <summary>
     /// Registers a Quality Blueprint for dependency injection.
     /// Blueprints are registered as singletons since they're stateless and reusable.
+    /// Also registers the blueprint as <see cref="IBlueprintValidator"/> when applicable,
+    /// enabling AOT-safe resolution by <c>BlueprintValidationFilter</c> and <c>MediatRBlueprintBehavior</c>.
     /// </summary>
     /// <typeparam name="TBlueprint">The blueprint type to register</typeparam>
     /// <param name="services">The service collection</param>
@@ -18,11 +21,15 @@ public static class FluentOperationsDIExtensions
     public static IServiceCollection AddBlueprint<TBlueprint>(this IServiceCollection services)
         where TBlueprint : class
     {
-        return services.AddSingleton<TBlueprint>();
+        services.AddSingleton<TBlueprint>();
+        if (typeof(IBlueprintValidator).IsAssignableFrom(typeof(TBlueprint)))
+            services.AddSingleton<IBlueprintValidator>(sp => (IBlueprintValidator)sp.GetRequiredService<TBlueprint>());
+        return services;
     }
 
     /// <summary>
     /// Registers multiple blueprints at once.
+    /// Also registers each blueprint as <see cref="IBlueprintValidator"/> when applicable.
     /// </summary>
     /// <param name="services">The service collection</param>
     /// <param name="blueprintTypes">Array of blueprint types to register</param>
@@ -35,6 +42,8 @@ public static class FluentOperationsDIExtensions
         foreach (var type in blueprintTypes)
         {
             services.AddSingleton(type);
+            if (typeof(IBlueprintValidator).IsAssignableFrom(type))
+                services.AddSingleton(typeof(IBlueprintValidator), sp => (IBlueprintValidator)sp.GetRequiredService(type));
         }
 
         return services;
@@ -45,6 +54,7 @@ public static class FluentOperationsDIExtensions
     /// <see cref="QualityBlueprint{T}"/> and registers them as singletons.
     /// Each blueprint is registered both as its concrete type and as its
     /// <c>QualityBlueprint&lt;TModel&gt;</c> base type, enabling resolution by either type.
+    /// Also registers each blueprint as <see cref="IBlueprintValidator"/> for AOT-safe filter resolution.
     /// </summary>
     /// <param name="services">The service collection.</param>
     /// <param name="assembly">The assembly to scan for blueprint implementations.</param>
@@ -64,8 +74,7 @@ public static class FluentOperationsDIExtensions
     /// </para>
     /// <para>
     /// The dual registration (concrete + base generic) ensures compatibility with
-    /// <c>BlueprintValidationFilter</c> (ASP.NET Core) and <c>MediatRBlueprintBehavior</c>,
-    /// which resolve blueprints via <c>typeof(QualityBlueprint&lt;&gt;).MakeGenericType(modelType)</c>.
+    /// <c>BlueprintValidationFilter</c> (ASP.NET Core) and <c>MediatRBlueprintBehavior</c>.
     /// </para>
     /// </remarks>
     /// <example>
@@ -88,6 +97,7 @@ public static class FluentOperationsDIExtensions
     /// then registers them as singletons.
     /// Each blueprint is registered both as its concrete type and as its
     /// <c>QualityBlueprint&lt;TModel&gt;</c> base type, enabling resolution by either type.
+    /// Also registers each blueprint as <see cref="IBlueprintValidator"/> for AOT-safe filter resolution.
     /// </summary>
     /// <param name="services">The service collection.</param>
     /// <param name="assembly">The assembly to scan for blueprint implementations.</param>
@@ -145,13 +155,15 @@ public static class FluentOperationsDIExtensions
             services.AddSingleton(type);
 
             // Register as QualityBlueprint<TModel> for generic resolution
-            // (used by BlueprintValidationFilter and MediatRBlueprintBehavior)
             var baseType = GetBlueprintBaseType(type);
 
             if (baseType is not null)
             {
                 services.AddSingleton(baseType, sp => sp.GetRequiredService(type));
             }
+
+            // Register as IBlueprintValidator for AOT-safe filter/behavior resolution
+            services.AddSingleton(typeof(IBlueprintValidator), sp => (IBlueprintValidator)sp.GetRequiredService(type));
         }
 
         return services;

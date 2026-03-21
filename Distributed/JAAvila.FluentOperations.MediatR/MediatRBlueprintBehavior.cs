@@ -1,3 +1,4 @@
+using JAAvila.FluentOperations.Contract;
 using JAAvila.FluentOperations.Exceptions;
 using JAAvila.FluentOperations.Model;
 using MediatR;
@@ -6,20 +7,25 @@ namespace JAAvila.FluentOperations.Integration;
 
 /// <summary>
 /// MediatR pipeline behavior that automatically validates requests using Quality Blueprints.
-/// Walks up the type hierarchy to find blueprints registered for base types,
-/// enabling scenarios where a Blueprint&lt;BaseModel&gt; validates a derived request type.
+/// Finds the first registered <see cref="IBlueprintValidator"/> that can validate
+/// <typeparamref name="TRequest"/> and runs it before the handler is invoked.
 /// </summary>
+/// <remarks>
+/// This behavior is AOT-safe: it depends on <see cref="IBlueprintValidator"/> via DI
+/// and never uses <c>MakeGenericType</c> or <c>GetMethod</c> at runtime.
+/// Register blueprints with the DI helpers (e.g. <c>AddBlueprint&lt;T&gt;</c>) so that
+/// <see cref="IEnumerable{IBlueprintValidator}"/> is populated.
+/// </remarks>
 /// <typeparam name="TRequest">The request type</typeparam>
 /// <typeparam name="TResponse">The response type</typeparam>
 public class MediatRBlueprintBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : notnull
 {
-    private readonly IServiceProvider _serviceProvider;
+    private readonly IEnumerable<IBlueprintValidator> _validators;
 
-    public MediatRBlueprintBehavior(IServiceProvider serviceProvider)
+    public MediatRBlueprintBehavior(IEnumerable<IBlueprintValidator> validators)
     {
-        _serviceProvider =
-            serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+        _validators = validators ?? throw new ArgumentNullException(nameof(validators));
     }
 
     public async Task<TResponse> Handle(
@@ -28,36 +34,14 @@ public class MediatRBlueprintBehavior<TRequest, TResponse> : IPipelineBehavior<T
         CancellationToken cancellationToken
     )
     {
-        object? blueprint = null;
-        Type? resolvedType = null;
-        var currentType = typeof(TRequest);
+        var validator = FindValidator(typeof(TRequest));
 
-        while (currentType != null && blueprint == null)
-        {
-            var blueprintType = typeof(QualityBlueprint<>).MakeGenericType(currentType);
-            blueprint = _serviceProvider.GetService(blueprintType);
-
-            if (blueprint != null)
-            {
-                resolvedType = currentType;
-            }
-
-            currentType = currentType.BaseType;
-        }
-
-        if (blueprint == null || resolvedType == null)
+        if (validator == null)
         {
             return await next();
         }
 
-        var checkMethod = blueprint.GetType().GetMethod("CheckAsync", [resolvedType]);
-
-        if (checkMethod == null)
-        {
-            return await next();
-        }
-
-        var report = await (Task<QualityReport>)checkMethod.Invoke(blueprint, [request])!;
+        var report = await validator.ValidateAsync(request);
 
         if (!report.IsValid)
         {
@@ -68,6 +52,19 @@ public class MediatRBlueprintBehavior<TRequest, TResponse> : IPipelineBehavior<T
         }
 
         return await next();
+    }
+
+    private IBlueprintValidator? FindValidator(Type requestType)
+    {
+        foreach (var validator in _validators)
+        {
+            if (validator.CanValidate(requestType))
+            {
+                return validator;
+            }
+        }
+
+        return null;
     }
 }
 
