@@ -12,6 +12,7 @@ internal class NullableTimeOnlyBeValidator(PrincipalChain<TimeOnly?> chain, Time
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableTimeOnly.Be";
 
     public bool Validate()
     {

@@ -14,6 +14,7 @@ internal class ReferenceBeCastToByGenericValidator<TSubject, TType>(PrincipalCha
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Reference.BeCastToByGeneric";
 
     public bool Validate()
     {

@@ -12,6 +12,7 @@ internal class DateOnlyHaveYearValidator(PrincipalChain<DateOnly> chain, int exp
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "DateOnly.HaveYear";
 
     public bool Validate()
     {

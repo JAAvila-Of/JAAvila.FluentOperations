@@ -12,6 +12,7 @@ internal class ActionStatsHaveElapsedTimeBetweenValidator(PrincipalChain<Model.A
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "ActionStats.HaveElapsedTimeBetween";
 
     public bool Validate()
     {

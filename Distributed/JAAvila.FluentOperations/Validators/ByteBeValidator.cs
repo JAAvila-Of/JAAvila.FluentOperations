@@ -12,6 +12,7 @@ internal class ByteBeValidator(PrincipalChain<byte> chain, byte expected) : IVal
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Byte.Be";
 
     public bool Validate()
     {

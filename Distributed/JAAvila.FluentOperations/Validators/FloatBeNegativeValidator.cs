@@ -12,6 +12,7 @@ internal class FloatBeNegativeValidator(PrincipalChain<float> chain) : IValidato
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Float.BeNegative";
 
     public bool Validate()
     {

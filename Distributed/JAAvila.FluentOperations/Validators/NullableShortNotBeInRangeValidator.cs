@@ -16,6 +16,7 @@ internal class NullableShortNotBeInRangeValidator(PrincipalChain<short?> chain, 
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableShort.NotBeInRange";
 
     public bool Validate()
     {

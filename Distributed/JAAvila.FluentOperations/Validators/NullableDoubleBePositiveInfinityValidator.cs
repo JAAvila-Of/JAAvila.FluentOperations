@@ -13,6 +13,7 @@ internal class NullableDoubleBePositiveInfinityValidator(PrincipalChain<double?>
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableDouble.BePositiveInfinity";
 
     public bool Validate()
     {

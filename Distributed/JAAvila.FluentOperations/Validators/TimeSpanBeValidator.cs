@@ -12,6 +12,7 @@ internal class TimeSpanBeValidator(PrincipalChain<TimeSpan> chain, TimeSpan expe
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "TimeSpan.Be";
 
     public bool Validate()
     {

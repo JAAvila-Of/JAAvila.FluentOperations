@@ -11,6 +11,7 @@ internal class NullableUShortBePositiveValidator(PrincipalChain<ushort?> chain) 
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableUShort.BePositive";
 
     public bool Validate()
     {

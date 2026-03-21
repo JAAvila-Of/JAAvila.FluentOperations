@@ -12,6 +12,7 @@ internal class DecimalHavePrecisionValidator(PrincipalChain<decimal> chain, int 
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Decimal.HavePrecision";
 
     public bool Validate()
     {

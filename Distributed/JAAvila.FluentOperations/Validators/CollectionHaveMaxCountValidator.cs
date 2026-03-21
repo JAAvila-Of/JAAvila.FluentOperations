@@ -15,6 +15,7 @@ internal class CollectionHaveMaxCountValidator<T>(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Collection.HaveMaxCount";
 
     public bool Validate()
     {

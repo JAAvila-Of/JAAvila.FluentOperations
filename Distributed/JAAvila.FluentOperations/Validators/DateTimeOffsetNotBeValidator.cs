@@ -12,6 +12,7 @@ internal class DateTimeOffsetNotBeValidator(PrincipalChain<DateTimeOffset> chain
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "DateTimeOffset.NotBe";
 
     public bool Validate()
     {

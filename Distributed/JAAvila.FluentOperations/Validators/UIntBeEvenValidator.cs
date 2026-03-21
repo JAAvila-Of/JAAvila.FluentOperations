@@ -12,6 +12,7 @@ internal class UIntBeEvenValidator(PrincipalChain<uint> chain) : IValidator
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "UInt.BeEven";
 
     public bool Validate()
     {

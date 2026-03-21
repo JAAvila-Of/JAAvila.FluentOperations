@@ -12,6 +12,7 @@ internal class StringBeEmailValidator(PrincipalChain<string?> chain) : IValidato
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "String.BeEmail";
 
     public bool Validate()
     {

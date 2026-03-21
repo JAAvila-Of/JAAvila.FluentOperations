@@ -19,6 +19,7 @@ internal class CollectionOnlyContainValidator<T>(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Collection.OnlyContain";
 
     public bool Validate()
     {

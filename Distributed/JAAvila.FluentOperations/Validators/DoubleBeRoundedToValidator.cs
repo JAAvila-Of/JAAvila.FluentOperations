@@ -12,6 +12,7 @@ internal class DoubleBeRoundedToValidator(PrincipalChain<double> chain, int deci
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Double.BeRoundedTo";
 
     public bool Validate()
     {

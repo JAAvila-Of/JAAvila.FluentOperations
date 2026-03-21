@@ -16,6 +16,7 @@ internal class NullableDoubleBeDivisibleByValidator(PrincipalChain<double?> chai
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableDouble.BeDivisibleBy";
 
     public bool Validate()
     {

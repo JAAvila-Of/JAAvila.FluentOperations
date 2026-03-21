@@ -13,6 +13,7 @@ internal class ULongNotBeInRangeValidator(PrincipalChain<ulong> chain, ulong min
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "ULong.NotBeInRange";
 
     public bool Validate()
     {

@@ -17,6 +17,7 @@ internal class ReferenceNotBeOfTypeValidator<TSubject>(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Reference.NotBeOfType";
 
     public bool Validate()
     {

@@ -15,6 +15,7 @@ internal class NullableBooleanBeAllTrueValidator(PrincipalChain<bool?> chain, bo
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableBoolean.BeAllTrue";
 
     public bool Validate()
     {

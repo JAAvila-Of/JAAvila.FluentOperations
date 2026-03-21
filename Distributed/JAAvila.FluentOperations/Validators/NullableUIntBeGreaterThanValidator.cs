@@ -15,6 +15,7 @@ internal class NullableUIntBeGreaterThanValidator(PrincipalChain<uint?> chain, u
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableUInt.BeGreaterThan";
 
     public bool Validate()
     {

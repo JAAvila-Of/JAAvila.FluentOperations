@@ -12,6 +12,7 @@ internal class NullableDateTimeHaveValueValidator(PrincipalChain<DateTime?> chai
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableDateTime.HaveValue";
 
     public bool Validate()
     {

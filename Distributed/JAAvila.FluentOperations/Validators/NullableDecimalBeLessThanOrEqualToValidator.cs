@@ -17,6 +17,7 @@ internal class NullableDecimalBeLessThanOrEqualToValidator(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableDecimal.BeLessThanOrEqualTo";
 
     public bool Validate()
     {

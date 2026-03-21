@@ -12,6 +12,7 @@ internal class StringNotEndWithValidator(string suffix, PrincipalChain<string?> 
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "String.NotEndWith";
 
     public bool Validate()
     {

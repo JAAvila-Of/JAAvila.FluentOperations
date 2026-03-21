@@ -12,6 +12,7 @@ internal class DateTimeBeOnOrBeforeValidator(PrincipalChain<DateTime> chain, Dat
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "DateTime.BeOnOrBefore";
 
     public bool Validate()
     {

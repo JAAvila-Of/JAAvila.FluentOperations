@@ -21,6 +21,7 @@ internal class StringContainWithOccurrenceValidator(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "String.Contain";
 
     public bool Validate()
     {

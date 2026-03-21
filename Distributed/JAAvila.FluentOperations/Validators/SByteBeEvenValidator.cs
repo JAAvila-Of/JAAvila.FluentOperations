@@ -12,6 +12,7 @@ internal class SByteBeEvenValidator(PrincipalChain<sbyte> chain) : IValidator
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "SByte.BeEven";
 
     public bool Validate()
     {

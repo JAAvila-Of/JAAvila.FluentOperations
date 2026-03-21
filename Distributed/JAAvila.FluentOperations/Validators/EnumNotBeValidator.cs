@@ -13,6 +13,7 @@ internal class EnumNotBeValidator<T>(PrincipalChain<T> chain, T expected) : IVal
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Enum.NotBe";
 
     public bool Validate()
     {

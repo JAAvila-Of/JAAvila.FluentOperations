@@ -17,7 +17,8 @@ internal class CollectionBeEquivalentToValidator<T>(
     ) => new(chain, expected);
 
     public string Expected { get; } = string.Empty;
-    public string ResultValidation { get; set; } = string.Empty;
+    public string ResultValidation { get; set; }
+    public string MessageKey => "Collection.BeEquivalentTo";
 
     public bool Validate()
     {

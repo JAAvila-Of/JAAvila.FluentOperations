@@ -19,6 +19,7 @@ internal class NullableDoubleNotBeInRangeValidator(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableDouble.NotBeInRange";
 
     public bool Validate()
     {

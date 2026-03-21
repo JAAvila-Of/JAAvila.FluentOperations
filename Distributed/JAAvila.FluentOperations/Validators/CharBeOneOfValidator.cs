@@ -12,6 +12,7 @@ internal class CharBeOneOfValidator(PrincipalChain<char> chain, params char[] ex
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Char.BeOneOf";
 
     public bool Validate()
     {

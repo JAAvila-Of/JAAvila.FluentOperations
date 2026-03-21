@@ -19,7 +19,8 @@ internal class StringBeNullValidator(PrincipalChain<string?> chain) : IValidator
     public string Expected => "Be Null - <null>";
 
     /// <inheritdoc />
-    public string ResultValidation { get; set; } = string.Empty;
+    public string ResultValidation { get; set; }
+    public string MessageKey => "String.BeNull";
 
     /// <inheritdoc />
     public bool Validate()

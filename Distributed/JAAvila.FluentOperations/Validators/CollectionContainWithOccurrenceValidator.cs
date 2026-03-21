@@ -20,6 +20,7 @@ internal class CollectionContainWithOccurrenceValidator<T>(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Collection.Contain";
 
     public bool Validate()
     {

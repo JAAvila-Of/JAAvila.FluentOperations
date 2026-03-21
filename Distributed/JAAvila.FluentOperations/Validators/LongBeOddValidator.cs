@@ -12,6 +12,7 @@ internal class LongBeOddValidator(PrincipalChain<long> chain) : IValidator
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Long.BeOdd";
 
     public bool Validate()
     {

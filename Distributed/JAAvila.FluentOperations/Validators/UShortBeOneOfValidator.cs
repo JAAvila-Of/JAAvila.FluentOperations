@@ -12,6 +12,7 @@ internal class UShortBeOneOfValidator(PrincipalChain<ushort> chain, params ushor
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "UShort.BeOneOf";
 
     public bool Validate()
     {

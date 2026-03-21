@@ -17,6 +17,7 @@ internal class ReferenceNotBeAssignableToValidator(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Reference.NotBeAssignableTo";
 
     public bool Validate()
     {

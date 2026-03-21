@@ -15,6 +15,7 @@ internal class CollectionHaveCountValidator<T>(PrincipalChain<IEnumerable<T>> ch
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Collection.HaveCount";
 
     public bool Validate()
     {

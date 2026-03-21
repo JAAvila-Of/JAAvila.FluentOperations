@@ -14,6 +14,7 @@ internal class CollectionBeInAscendingOrderValidator<T>(PrincipalChain<IEnumerab
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Collection.BeInAscendingOrder";
 
     public bool Validate()
     {

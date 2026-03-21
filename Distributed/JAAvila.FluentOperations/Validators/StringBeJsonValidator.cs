@@ -12,6 +12,7 @@ internal class StringBeJsonValidator(PrincipalChain<string?> chain) : IValidator
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "String.BeJson";
 
     public bool Validate()
     {

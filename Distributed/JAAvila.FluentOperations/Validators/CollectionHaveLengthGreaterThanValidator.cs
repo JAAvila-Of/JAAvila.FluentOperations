@@ -17,6 +17,7 @@ internal class CollectionHaveLengthGreaterThanValidator<T>(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Collection.HaveLengthGreaterThan";
 
     public bool Validate()
     {

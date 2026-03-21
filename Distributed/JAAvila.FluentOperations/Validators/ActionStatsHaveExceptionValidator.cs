@@ -12,6 +12,7 @@ internal class ActionStatsHaveExceptionValidator(PrincipalChain<Model.ActionStat
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "ActionStats.HaveException";
 
     /// <summary>
     /// Indicates whether the failure was due to no exception being captured (true)

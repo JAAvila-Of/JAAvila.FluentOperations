@@ -15,6 +15,7 @@ internal class NullableDoubleBeLessThanValidator(PrincipalChain<double?> chain, 
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableDouble.BeLessThan";
 
     public bool Validate()
     {

@@ -11,6 +11,7 @@ internal class CharBeControlValidator(PrincipalChain<char> chain) : IValidator
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Char.BeControl";
 
     public bool Validate()
     {

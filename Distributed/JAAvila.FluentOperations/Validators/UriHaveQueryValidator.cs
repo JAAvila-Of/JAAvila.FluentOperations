@@ -12,6 +12,7 @@ internal class UriHaveQueryValidator(PrincipalChain<Uri?> chain) : IValidator
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Uri.HaveQuery";
 
     public bool Validate()
     {

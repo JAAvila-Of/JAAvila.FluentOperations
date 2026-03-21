@@ -12,6 +12,7 @@ internal class CollectionContainPredicateValidator<T>(PrincipalChain<IEnumerable
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Collection.ContainPredicate";
 
     public bool Validate()
     {

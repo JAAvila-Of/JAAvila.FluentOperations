@@ -13,6 +13,7 @@ internal class NullableEnumNotHaveValueValidator<T>(PrincipalChain<T?> chain) : 
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableEnum.NotHaveValue";
 
     public bool Validate()
     {

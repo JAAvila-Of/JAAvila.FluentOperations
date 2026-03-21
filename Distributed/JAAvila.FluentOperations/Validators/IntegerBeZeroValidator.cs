@@ -11,6 +11,7 @@ internal class IntegerBeZeroValidator(PrincipalChain<int> chain) : IValidator
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Integer.BeZero";
 
     public bool Validate()
     {

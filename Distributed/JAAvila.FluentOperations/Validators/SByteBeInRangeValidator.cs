@@ -12,6 +12,7 @@ internal class SByteBeInRangeValidator(PrincipalChain<sbyte> chain, sbyte min, s
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "SByte.BeInRange";
 
     public bool Validate()
     {

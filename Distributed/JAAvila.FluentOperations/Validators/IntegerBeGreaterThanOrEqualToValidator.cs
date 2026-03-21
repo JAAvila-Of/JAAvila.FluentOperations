@@ -12,6 +12,7 @@ internal class IntegerBeGreaterThanOrEqualToValidator(PrincipalChain<int> chain,
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Integer.BeGreaterThanOrEqualTo";
 
     public bool Validate()
     {

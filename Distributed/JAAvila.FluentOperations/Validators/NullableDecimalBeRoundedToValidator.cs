@@ -16,6 +16,7 @@ internal class NullableDecimalBeRoundedToValidator(PrincipalChain<decimal?> chai
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableDecimal.BeRoundedTo";
 
     public bool Validate()
     {

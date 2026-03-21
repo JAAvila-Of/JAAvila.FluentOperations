@@ -18,7 +18,8 @@ internal class StringContainAllValidator(
     ) => new(chain, substrings, comparison);
 
     public string Expected => string.Join(", ", substrings);
-    public string ResultValidation { get; set; } = string.Empty;
+    public string ResultValidation { get; set; }
+    public string MessageKey => "String.ContainAll";
 
     public bool Validate()
     {

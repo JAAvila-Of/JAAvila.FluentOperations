@@ -12,6 +12,7 @@ internal class NullableFloatNotBeNaNValidator(PrincipalChain<float?> chain) : IV
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableFloat.NotBeNaN";
 
     public bool Validate()
     {

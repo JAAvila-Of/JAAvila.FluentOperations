@@ -12,6 +12,7 @@ internal class StringNotBeUpperCasedValidator(PrincipalChain<string?> chain) : I
 
     public string Expected => "Not uppercase text.";
     public string ResultValidation { get; set; }
+    public string MessageKey => "String.NotBeUpperCased";
 
     public bool Validate()
     {

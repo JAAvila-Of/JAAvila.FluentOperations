@@ -13,6 +13,7 @@ internal class DoubleBeDivisibleByValidator(PrincipalChain<double> chain, double
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Double.BeDivisibleBy";
 
     public bool Validate()
     {

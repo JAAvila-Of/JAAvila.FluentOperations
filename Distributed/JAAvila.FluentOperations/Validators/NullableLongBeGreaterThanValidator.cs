@@ -15,6 +15,7 @@ internal class NullableLongBeGreaterThanValidator(PrincipalChain<long?> chain, l
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableLong.BeGreaterThan";
 
     public bool Validate()
     {

@@ -16,6 +16,7 @@ internal class ReferenceBeCastToValidator<TSubject>(PrincipalChain<TSubject> cha
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Reference.BeCastTo";
 
     public bool Validate()
     {

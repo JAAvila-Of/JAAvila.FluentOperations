@@ -12,6 +12,7 @@ internal class BooleanBeAllTrueValidator(PrincipalChain<bool> chain, bool?[] boo
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Boolean.BeAllTrue";
 
     public bool Validate()
     {

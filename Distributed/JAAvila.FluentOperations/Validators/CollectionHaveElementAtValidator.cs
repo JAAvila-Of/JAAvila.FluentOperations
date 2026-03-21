@@ -19,6 +19,7 @@ internal class CollectionHaveElementAtValidator<T>(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Collection.HaveElementAt";
 
     public bool Validate()
     {

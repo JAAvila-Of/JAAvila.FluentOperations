@@ -12,6 +12,7 @@ internal class TimeSpanBeNegativeValidator(PrincipalChain<TimeSpan> chain) : IVa
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "TimeSpan.BeNegative";
 
     public bool Validate()
     {

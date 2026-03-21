@@ -15,6 +15,7 @@ internal class NullableCharBeGreaterThanOrEqualToValidator(PrincipalChain<char?>
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableChar.BeGreaterThanOrEqualTo";
 
     public bool Validate()
     {

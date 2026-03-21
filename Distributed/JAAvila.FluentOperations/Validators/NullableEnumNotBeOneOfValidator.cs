@@ -13,6 +13,7 @@ internal class NullableEnumNotBeOneOfValidator<T>(PrincipalChain<T?> chain, para
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableEnum.NotBeOneOf";
 
     public bool Validate()
     {

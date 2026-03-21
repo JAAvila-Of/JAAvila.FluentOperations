@@ -12,6 +12,7 @@ internal class DateTimeOffsetBeInThePastValidator(PrincipalChain<DateTimeOffset>
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "DateTimeOffset.BeInThePast";
 
     public bool Validate()
     {

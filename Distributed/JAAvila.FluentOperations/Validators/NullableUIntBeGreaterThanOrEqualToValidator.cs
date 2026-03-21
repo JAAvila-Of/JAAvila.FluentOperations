@@ -17,6 +17,7 @@ internal class NullableUIntBeGreaterThanOrEqualToValidator(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableUInt.BeGreaterThanOrEqualTo";
 
     public bool Validate()
     {

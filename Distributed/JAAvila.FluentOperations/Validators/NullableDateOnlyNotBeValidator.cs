@@ -12,6 +12,7 @@ internal class NullableDateOnlyNotBeValidator(PrincipalChain<DateOnly?> chain, D
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableDateOnly.NotBe";
 
     public bool Validate()
     {

@@ -18,6 +18,7 @@ internal class DictionaryContainKeysValidator<TKey, TValue>(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Dictionary.ContainKeys";
 
     /// <summary>
     /// The keys that were not found in the dictionary. Available after <see cref="Validate"/> returns false.

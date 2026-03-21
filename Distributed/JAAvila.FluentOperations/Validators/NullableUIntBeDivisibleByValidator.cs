@@ -15,6 +15,7 @@ internal class NullableUIntBeDivisibleByValidator(PrincipalChain<uint?> chain, u
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableUInt.BeDivisibleBy";
 
     public bool Validate()
     {

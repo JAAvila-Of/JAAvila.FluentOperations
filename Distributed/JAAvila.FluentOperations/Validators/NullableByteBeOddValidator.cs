@@ -11,6 +11,7 @@ internal class NullableByteBeOddValidator(PrincipalChain<byte?> chain) : IValida
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableByte.BeOdd";
 
     public bool Validate()
     {

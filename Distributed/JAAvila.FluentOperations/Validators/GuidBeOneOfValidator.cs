@@ -12,6 +12,7 @@ internal class GuidBeOneOfValidator(PrincipalChain<Guid> chain, params Guid[] ex
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Guid.BeOneOf";
 
     public bool Validate()
     {

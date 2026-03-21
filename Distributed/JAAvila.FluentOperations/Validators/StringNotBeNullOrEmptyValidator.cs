@@ -11,7 +11,8 @@ internal class StringNotBeNullOrEmptyValidator(PrincipalChain<string?> chain) : 
         new(chain);
 
     public string Expected => "Not be null or empty";
-    public string ResultValidation { get; set; } = string.Empty;
+    public string ResultValidation { get; set; }
+    public string MessageKey => "String.NotBeNullOrEmpty";
 
     public bool Validate()
     {

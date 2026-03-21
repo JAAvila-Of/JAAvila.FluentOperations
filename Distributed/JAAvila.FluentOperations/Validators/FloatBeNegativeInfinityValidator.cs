@@ -12,6 +12,7 @@ internal class FloatBeNegativeInfinityValidator(PrincipalChain<float> chain) : I
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Float.BeNegativeInfinity";
 
     public bool Validate()
     {

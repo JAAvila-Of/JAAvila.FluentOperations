@@ -12,6 +12,7 @@ internal class FloatBeLessThanValidator(PrincipalChain<float> chain, float expec
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Float.BeLessThan";
 
     public bool Validate()
     {

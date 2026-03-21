@@ -13,7 +13,8 @@ internal class StringMatchAnyRegexValidator(Regex[] patterns, PrincipalChain<str
         new(patterns, chain);
 
     public string Expected => "Match at least one of the provided patterns";
-    public string ResultValidation { get; set; } = string.Empty;
+    public string ResultValidation { get; set; }
+    public string MessageKey => "String.MatchAnyRegex";
 
     public bool Validate()
     {

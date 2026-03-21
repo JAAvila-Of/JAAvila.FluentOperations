@@ -13,6 +13,7 @@ internal class StringBeIPv4Validator(PrincipalChain<string?> chain) : IValidator
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "String.BeIPv4";
 
     public bool Validate()
     {

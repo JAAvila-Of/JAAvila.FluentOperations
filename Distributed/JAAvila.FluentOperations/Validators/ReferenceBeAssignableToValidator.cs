@@ -18,6 +18,7 @@ internal class ReferenceBeAssignableToValidator(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Reference.BeAssignableTo";
 
     public bool Validate()
     {

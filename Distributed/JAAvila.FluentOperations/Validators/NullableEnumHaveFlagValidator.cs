@@ -13,6 +13,7 @@ internal class NullableEnumHaveFlagValidator<T>(PrincipalChain<T?> chain, T flag
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableEnum.HaveFlag";
 
     public bool Validate()
     {

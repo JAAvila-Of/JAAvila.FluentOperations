@@ -18,6 +18,7 @@ internal class CollectionContainInOrderValidator<T>(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Collection.ContainInOrder";
 
     public bool Validate()
     {

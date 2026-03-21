@@ -22,6 +22,7 @@ internal class StringEndWithValidator(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "String.EndWith";
 
     public bool Validate()
     {

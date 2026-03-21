@@ -17,6 +17,7 @@ internal class DateTimeOffsetHaveOffsetValidator(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "DateTimeOffset.HaveOffset";
 
     public bool Validate()
     {

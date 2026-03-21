@@ -19,6 +19,7 @@ internal class TimeSpanNotBeInRangeValidator(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "TimeSpan.NotBeInRange";
 
     public bool Validate()
     {

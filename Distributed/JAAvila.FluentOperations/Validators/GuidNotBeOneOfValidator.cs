@@ -12,6 +12,7 @@ internal class GuidNotBeOneOfValidator(PrincipalChain<Guid> chain, params Guid[]
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Guid.NotBeOneOf";
 
     public bool Validate()
     {

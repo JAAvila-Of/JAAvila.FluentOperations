@@ -18,6 +18,7 @@ internal class DictionaryNotBeValidator<TKey, TValue>(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Dictionary.NotBe";
 
     public bool Validate()
     {

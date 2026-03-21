@@ -12,6 +12,7 @@ internal class UriNotBeValidator(PrincipalChain<Uri?> chain, Uri expected) : IVa
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Uri.NotBe";
 
     public bool Validate()
     {

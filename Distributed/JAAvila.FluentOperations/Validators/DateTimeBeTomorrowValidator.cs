@@ -12,6 +12,7 @@ internal class DateTimeBeTomorrowValidator(PrincipalChain<DateTime> chain) : IVa
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "DateTime.BeTomorrow";
 
     public bool Validate()
     {

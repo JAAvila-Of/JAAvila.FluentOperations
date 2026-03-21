@@ -12,6 +12,7 @@ internal class DoubleBeGreaterThanValidator(PrincipalChain<double> chain, double
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Double.BeGreaterThan";
 
     public bool Validate()
     {

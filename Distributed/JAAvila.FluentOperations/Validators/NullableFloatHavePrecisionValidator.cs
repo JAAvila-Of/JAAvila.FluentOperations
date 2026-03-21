@@ -18,6 +18,7 @@ internal class NullableFloatHavePrecisionValidator(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableFloat.HavePrecision";
 
     public bool Validate()
     {

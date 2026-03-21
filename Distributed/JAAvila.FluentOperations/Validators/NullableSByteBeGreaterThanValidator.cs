@@ -15,6 +15,7 @@ internal class NullableSByteBeGreaterThanValidator(PrincipalChain<sbyte?> chain,
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableSByte.BeGreaterThan";
 
     public bool Validate()
     {

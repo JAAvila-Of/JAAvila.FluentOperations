@@ -16,6 +16,7 @@ internal class NullableUIntNotBeInRangeValidator(PrincipalChain<uint?> chain, ui
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableUInt.NotBeInRange";
 
     public bool Validate()
     {

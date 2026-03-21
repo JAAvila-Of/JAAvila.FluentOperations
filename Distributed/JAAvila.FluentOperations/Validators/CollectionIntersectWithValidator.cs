@@ -12,6 +12,7 @@ internal class CollectionIntersectWithValidator<T>(PrincipalChain<IEnumerable<T>
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Collection.IntersectWith";
 
     public bool Validate()
     {

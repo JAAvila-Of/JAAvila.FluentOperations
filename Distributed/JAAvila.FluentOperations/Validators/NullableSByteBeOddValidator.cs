@@ -11,6 +11,7 @@ internal class NullableSByteBeOddValidator(PrincipalChain<sbyte?> chain) : IVali
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableSByte.BeOdd";
 
     public bool Validate()
     {

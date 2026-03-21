@@ -16,6 +16,7 @@ internal class NullableIntegerNotBeOneOfValidator(PrincipalChain<int?> chain, in
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableInteger.NotBeOneOf";
 
     public bool Validate()
     {

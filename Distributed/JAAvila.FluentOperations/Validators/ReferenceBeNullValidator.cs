@@ -12,6 +12,7 @@ internal class ReferenceBeNullValidator<TSubject>(PrincipalChain<TSubject> chain
 
     public string Expected => "Be Null <null>";
     public string ResultValidation { get; set; }
+    public string MessageKey => "Reference.BeNull";
 
     public bool Validate()
     {

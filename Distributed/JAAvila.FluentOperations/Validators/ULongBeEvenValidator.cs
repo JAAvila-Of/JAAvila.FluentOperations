@@ -12,6 +12,7 @@ internal class ULongBeEvenValidator(PrincipalChain<ulong> chain) : IValidator
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "ULong.BeEven";
 
     public bool Validate()
     {

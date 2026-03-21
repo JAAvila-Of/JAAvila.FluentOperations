@@ -13,6 +13,7 @@ internal class CollectionExtractSingleValidator<T>(PrincipalChain<IEnumerable<T>
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Collection.ExtractSingle";
 
     /// <summary>
     /// The extracted element after successful validation.

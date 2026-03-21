@@ -12,6 +12,7 @@ internal class FloatBeRoundedToValidator(PrincipalChain<float> chain, int decima
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Float.BeRoundedTo";
 
     public bool Validate()
     {

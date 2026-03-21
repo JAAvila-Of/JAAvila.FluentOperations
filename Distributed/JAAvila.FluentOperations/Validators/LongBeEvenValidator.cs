@@ -12,6 +12,7 @@ internal class LongBeEvenValidator(PrincipalChain<long> chain) : IValidator
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Long.BeEven";
 
     public bool Validate()
     {

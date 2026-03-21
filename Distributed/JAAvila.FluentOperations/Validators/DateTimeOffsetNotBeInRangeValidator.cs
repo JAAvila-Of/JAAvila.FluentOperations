@@ -19,6 +19,7 @@ internal class DateTimeOffsetNotBeInRangeValidator(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "DateTimeOffset.NotBeInRange";
 
     public bool Validate()
     {

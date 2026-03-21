@@ -11,6 +11,7 @@ internal class StringBeAlphabeticValidator(PrincipalChain<string?> chain) : IVal
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "String.BeAlphabetic";
 
     public bool Validate()
     {

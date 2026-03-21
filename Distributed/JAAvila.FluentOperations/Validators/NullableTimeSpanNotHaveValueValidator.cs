@@ -12,6 +12,7 @@ internal class NullableTimeSpanNotHaveValueValidator(PrincipalChain<TimeSpan?> c
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableTimeSpan.NotHaveValue";
 
     public bool Validate()
     {

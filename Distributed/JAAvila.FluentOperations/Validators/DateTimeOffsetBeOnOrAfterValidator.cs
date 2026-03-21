@@ -12,6 +12,7 @@ internal class DateTimeOffsetBeOnOrAfterValidator(PrincipalChain<DateTimeOffset>
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "DateTimeOffset.BeOnOrAfter";
 
     public bool Validate()
     {

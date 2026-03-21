@@ -13,6 +13,7 @@ internal class NullableEnumBeValidator<T>(PrincipalChain<T?> chain, T? expected)
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableEnum.Be";
 
     public bool Validate()
     {

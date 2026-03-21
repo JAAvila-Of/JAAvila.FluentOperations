@@ -12,6 +12,7 @@ internal class ULongNotBeValidator(PrincipalChain<ulong> chain, ulong expected) 
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "ULong.NotBe";
 
     public bool Validate()
     {

@@ -12,6 +12,7 @@ internal class ULongBeLessThanOrEqualToValidator(PrincipalChain<ulong> chain, ul
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "ULong.BeLessThanOrEqualTo";
 
     public bool Validate()
     {

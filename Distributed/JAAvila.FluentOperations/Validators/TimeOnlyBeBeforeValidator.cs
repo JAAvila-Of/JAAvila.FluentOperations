@@ -12,6 +12,7 @@ internal class TimeOnlyBeBeforeValidator(PrincipalChain<TimeOnly> chain, TimeOnl
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "TimeOnly.BeBefore";
 
     public bool Validate()
     {

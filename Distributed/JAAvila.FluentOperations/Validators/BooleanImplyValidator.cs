@@ -12,6 +12,7 @@ internal class BooleanImplyValidator(PrincipalChain<bool> chain, bool consequent
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Boolean.Imply";
 
     public bool Validate()
     {

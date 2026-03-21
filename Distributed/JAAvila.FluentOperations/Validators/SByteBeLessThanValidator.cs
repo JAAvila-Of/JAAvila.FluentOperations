@@ -12,6 +12,7 @@ internal class SByteBeLessThanValidator(PrincipalChain<sbyte> chain, sbyte expec
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "SByte.BeLessThan";
 
     public bool Validate()
     {

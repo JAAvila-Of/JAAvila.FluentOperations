@@ -18,6 +18,7 @@ internal class ReferenceEvaluateExpressionValidator<TSubject>(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Reference.EvaluateExpression";
 
     public bool Validate()
     {

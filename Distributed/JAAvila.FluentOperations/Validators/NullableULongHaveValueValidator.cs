@@ -11,6 +11,7 @@ internal class NullableULongHaveValueValidator(PrincipalChain<ulong?> chain) : I
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableULong.HaveValue";
 
     public bool Validate()
     {

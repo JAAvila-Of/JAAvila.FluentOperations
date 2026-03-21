@@ -11,6 +11,7 @@ internal class SByteBeZeroValidator(PrincipalChain<sbyte> chain) : IValidator
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "SByte.BeZero";
 
     public bool Validate()
     {

@@ -17,6 +17,7 @@ internal class DictionaryNotContainKeyValidator<TKey, TValue>(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Dictionary.NotContainKey";
 
     public bool Validate()
     {

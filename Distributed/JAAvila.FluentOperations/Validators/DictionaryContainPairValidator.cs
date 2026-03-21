@@ -20,6 +20,7 @@ internal class DictionaryContainPairValidator<TKey, TValue>(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Dictionary.ContainPair";
 
     public bool Validate()
     {

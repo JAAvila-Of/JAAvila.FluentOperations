@@ -12,6 +12,7 @@ internal class CollectionContainSinglePredicateValidator<T>(PrincipalChain<IEnum
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Collection.ContainSinglePredicate";
 
     public bool Validate()
     {

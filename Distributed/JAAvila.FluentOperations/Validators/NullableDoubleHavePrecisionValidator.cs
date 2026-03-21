@@ -18,6 +18,7 @@ internal class NullableDoubleHavePrecisionValidator(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableDouble.HavePrecision";
 
     public bool Validate()
     {

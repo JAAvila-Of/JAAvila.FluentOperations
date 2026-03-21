@@ -55,7 +55,7 @@ public class GuidOperationsManager : ITestManager<GuidOperationsManager, Guid>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -86,7 +86,7 @@ public class GuidOperationsManager : ITestManager<GuidOperationsManager, Guid>
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation, BaseFormatter.Format(expected))
+                        .WithResult(operation.MessageKey, operation.ResultValidation, BaseFormatter.Format(expected))
                         .WithReason(reason?.ToString())
             )
             .Execute();
@@ -114,7 +114,7 @@ public class GuidOperationsManager : ITestManager<GuidOperationsManager, Guid>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -143,7 +143,7 @@ public class GuidOperationsManager : ITestManager<GuidOperationsManager, Guid>
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .Execute();
@@ -185,7 +185,7 @@ public class GuidOperationsManager : ITestManager<GuidOperationsManager, Guid>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             string.Join(", ", expected.Select(g => BaseFormatter.Format(g))),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -239,7 +239,7 @@ public class GuidOperationsManager : ITestManager<GuidOperationsManager, Guid>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             string.Join(", ", expected.Select(g => BaseFormatter.Format(g)))
                         )
                         .WithReason(reason?.ToString())
@@ -311,7 +311,7 @@ public class GuidOperationsManager : ITestManager<GuidOperationsManager, Guid>
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -333,7 +333,7 @@ public class GuidOperationsManager : ITestManager<GuidOperationsManager, Guid>
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(

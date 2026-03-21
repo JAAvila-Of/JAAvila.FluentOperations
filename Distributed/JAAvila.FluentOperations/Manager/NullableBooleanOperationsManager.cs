@@ -50,7 +50,7 @@ public class NullableBooleanOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .Execute();
@@ -77,7 +77,7 @@ public class NullableBooleanOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .Execute();
@@ -106,7 +106,7 @@ public class NullableBooleanOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BooleanFormatter.Format(PrincipalChain.GetValue()),
                             BooleanFormatter.Format(expected)
                         )
@@ -137,7 +137,7 @@ public class NullableBooleanOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation, BooleanFormatter.Format(expected))
+                        .WithResult(operation.MessageKey, operation.ResultValidation, BooleanFormatter.Format(expected))
                         .WithReason(reason?.ToString())
             )
             .Execute();
@@ -207,7 +207,7 @@ public class NullableBooleanOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
             )
             .FailIf(
                 manager =>
@@ -263,7 +263,7 @@ public class NullableBooleanOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
             )
             .FailIf(
                 manager =>
@@ -350,7 +350,7 @@ public class NullableBooleanOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -379,7 +379,7 @@ public class NullableBooleanOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(

@@ -12,6 +12,7 @@ internal class NullableBooleanNotHaveValueValidator(PrincipalChain<bool?> chain)
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableBoolean.NotHaveValue";
 
     public bool Validate()
     {

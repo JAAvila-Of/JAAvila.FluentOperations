@@ -11,6 +11,7 @@ internal class NullableUIntHaveValueValidator(PrincipalChain<uint?> chain) : IVa
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableUInt.HaveValue";
 
     public bool Validate()
     {

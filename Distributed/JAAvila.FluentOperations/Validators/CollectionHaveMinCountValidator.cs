@@ -15,6 +15,7 @@ internal class CollectionHaveMinCountValidator<T>(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Collection.HaveMinCount";
 
     public bool Validate()
     {

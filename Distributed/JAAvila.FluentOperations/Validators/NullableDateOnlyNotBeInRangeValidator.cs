@@ -19,6 +19,7 @@ internal class NullableDateOnlyNotBeInRangeValidator(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableDateOnly.NotBeInRange";
 
     public bool Validate()
     {

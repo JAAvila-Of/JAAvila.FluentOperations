@@ -22,6 +22,7 @@ internal class StringNotContainValidator(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "String.NotContain";
 
     public bool Validate()
     {

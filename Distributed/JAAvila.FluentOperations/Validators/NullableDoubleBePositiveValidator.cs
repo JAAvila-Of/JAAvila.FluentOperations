@@ -12,6 +12,7 @@ internal class NullableDoubleBePositiveValidator(PrincipalChain<double?> chain) 
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableDouble.BePositive";
 
     public bool Validate()
     {

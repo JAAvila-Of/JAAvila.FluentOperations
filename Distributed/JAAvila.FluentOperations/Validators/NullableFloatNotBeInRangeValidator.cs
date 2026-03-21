@@ -19,6 +19,7 @@ internal class NullableFloatNotBeInRangeValidator(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableFloat.NotBeInRange";
 
     public bool Validate()
     {

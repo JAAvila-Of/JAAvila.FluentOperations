@@ -12,6 +12,7 @@ internal class NullableDoubleNotHaveValueValidator(PrincipalChain<double?> chain
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableDouble.NotHaveValue";
 
     public bool Validate()
     {

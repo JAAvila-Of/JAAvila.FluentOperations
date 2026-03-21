@@ -17,6 +17,7 @@ internal class DateTimeOffsetBeSameDayValidator(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "DateTimeOffset.BeSameDay";
 
     public bool Validate()
     {

@@ -12,6 +12,7 @@ internal class TimeSpanHaveMinutesValidator(PrincipalChain<TimeSpan> chain, int 
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "TimeSpan.HaveMinutes";
 
     public bool Validate()
     {

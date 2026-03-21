@@ -12,6 +12,7 @@ internal class DoubleBePositiveValidator(PrincipalChain<double> chain) : IValida
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Double.BePositive";
 
     public bool Validate()
     {

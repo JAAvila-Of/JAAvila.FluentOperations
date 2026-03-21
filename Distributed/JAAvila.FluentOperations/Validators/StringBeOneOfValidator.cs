@@ -18,7 +18,8 @@ internal class StringBeOneOfValidator(
     ) => new(chain, expected, comparison);
 
     public string Expected { get; } = string.Join(", ", expected.Select(e => e is null ? "<null>" : $"\"{e}\""));
-    public string ResultValidation { get; set; } = string.Empty;
+    public string ResultValidation { get; set; }
+    public string MessageKey => "String.BeOneOf";
 
     public bool Validate()
     {

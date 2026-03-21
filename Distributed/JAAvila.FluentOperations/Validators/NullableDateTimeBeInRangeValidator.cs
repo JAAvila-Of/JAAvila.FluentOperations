@@ -19,6 +19,7 @@ internal class NullableDateTimeBeInRangeValidator(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableDateTime.BeInRange";
 
     public bool Validate()
     {

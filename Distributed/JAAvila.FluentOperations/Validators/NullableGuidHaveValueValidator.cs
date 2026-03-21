@@ -12,6 +12,7 @@ internal class NullableGuidHaveValueValidator(PrincipalChain<Guid?> chain) : IVa
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableGuid.HaveValue";
 
     public bool Validate()
     {

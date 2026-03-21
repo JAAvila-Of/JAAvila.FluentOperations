@@ -16,6 +16,7 @@ internal class NullableFloatBeRoundedToValidator(PrincipalChain<float?> chain, i
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableFloat.BeRoundedTo";
 
     public bool Validate()
     {

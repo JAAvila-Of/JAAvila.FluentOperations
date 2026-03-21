@@ -13,6 +13,7 @@ internal class NullableDoubleBeValidator(PrincipalChain<double?> chain, double? 
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableDouble.Be";
 
     public bool Validate()
     {

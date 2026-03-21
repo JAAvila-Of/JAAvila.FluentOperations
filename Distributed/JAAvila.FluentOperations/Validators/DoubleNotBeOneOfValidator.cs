@@ -12,6 +12,7 @@ internal class DoubleNotBeOneOfValidator(PrincipalChain<double> chain, params do
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Double.NotBeOneOf";
 
     public bool Validate()
     {

@@ -27,6 +27,7 @@ internal class GlobalConfig
     private DateTimeConfig DateTime { get; init; } = new();
     private FormattingConfig Formatting { get; init; } = new();
     private TestFrameworkConfig TestFramework { get; init; } = new();
+    private LocalizationConfig? Localization { get; init; }
 
     private static GlobalConfig Default => new()
     {
@@ -111,6 +112,7 @@ internal class GlobalConfig
     public static DateTimeConfig GetDateTimeConfig() => GetInstance().DateTime;
     public static FormattingConfig GetFormattingConfig() => GetInstance().Formatting;
     public static TestFrameworkConfig GetTestFrameworkConfig() => GetInstance().TestFramework;
+    public static LocalizationConfig? GetLocalizationConfig() => GetInstance().Localization;
 
     // --- Internal accessors for ConfigBuilder.FromExisting() ---
 
@@ -119,6 +121,7 @@ internal class GlobalConfig
     internal DateTimeConfig GetDateTimeConfigInternal() => DateTime;
     internal FormattingConfig GetFormattingConfigInternal() => Formatting;
     internal TestFrameworkConfig GetTestFrameworkConfigInternal() => TestFramework;
+    internal LocalizationConfig? GetLocalizationConfigInternal() => Localization;
 
     // --- Scope management (used by FluentOperationsConfig) ---
 
@@ -138,7 +141,8 @@ internal class GlobalConfig
             Numeric = builder.BuildNumericConfig(),
             DateTime = builder.BuildDateTimeConfig(),
             Formatting = builder.BuildFormattingConfig(),
-            TestFramework = newTestFrameworkConfig
+            TestFramework = newTestFrameworkConfig,
+            Localization = builder.BuildLocalizationConfig()
         };
 
         if (previousFramework != newTestFrameworkConfig.Framework)

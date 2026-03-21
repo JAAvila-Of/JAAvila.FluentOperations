@@ -54,7 +54,7 @@ public class FloatOperationsManager : ITestManager<FloatOperationsManager, float
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -85,7 +85,7 @@ public class FloatOperationsManager : ITestManager<FloatOperationsManager, float
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation, expected.ToString())
+                        .WithResult(operation.MessageKey, operation.ResultValidation, expected.ToString())
                         .WithReason(reason?.ToString())
             )
             .Execute();
@@ -113,7 +113,7 @@ public class FloatOperationsManager : ITestManager<FloatOperationsManager, float
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -153,7 +153,7 @@ public class FloatOperationsManager : ITestManager<FloatOperationsManager, float
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -193,7 +193,7 @@ public class FloatOperationsManager : ITestManager<FloatOperationsManager, float
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -234,7 +234,7 @@ public class FloatOperationsManager : ITestManager<FloatOperationsManager, float
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -276,7 +276,7 @@ public class FloatOperationsManager : ITestManager<FloatOperationsManager, float
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -318,7 +318,7 @@ public class FloatOperationsManager : ITestManager<FloatOperationsManager, float
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -360,7 +360,7 @@ public class FloatOperationsManager : ITestManager<FloatOperationsManager, float
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -406,7 +406,7 @@ public class FloatOperationsManager : ITestManager<FloatOperationsManager, float
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(min),
                             BaseFormatter.Format(max),
                             BaseFormatter.Format(PrincipalChain.GetValue())
@@ -462,7 +462,7 @@ public class FloatOperationsManager : ITestManager<FloatOperationsManager, float
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(min),
                             BaseFormatter.Format(max),
                             BaseFormatter.Format(PrincipalChain.GetValue())
@@ -527,7 +527,7 @@ public class FloatOperationsManager : ITestManager<FloatOperationsManager, float
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             string.Join(", ", expected.Select(e => BaseFormatter.Format(e))),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -581,7 +581,7 @@ public class FloatOperationsManager : ITestManager<FloatOperationsManager, float
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             string.Join(", ", expected.Select(e => BaseFormatter.Format(e))),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -625,7 +625,7 @@ public class FloatOperationsManager : ITestManager<FloatOperationsManager, float
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(divisor),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -679,7 +679,7 @@ public class FloatOperationsManager : ITestManager<FloatOperationsManager, float
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(expectedDecimals),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -733,7 +733,7 @@ public class FloatOperationsManager : ITestManager<FloatOperationsManager, float
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(decimals),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -792,7 +792,7 @@ public class FloatOperationsManager : ITestManager<FloatOperationsManager, float
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(tolerance),
                             BaseFormatter.Format(PrincipalChain.GetValue())
@@ -843,7 +843,7 @@ public class FloatOperationsManager : ITestManager<FloatOperationsManager, float
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -872,7 +872,7 @@ public class FloatOperationsManager : ITestManager<FloatOperationsManager, float
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .Execute();
@@ -900,7 +900,7 @@ public class FloatOperationsManager : ITestManager<FloatOperationsManager, float
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -930,7 +930,7 @@ public class FloatOperationsManager : ITestManager<FloatOperationsManager, float
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -960,7 +960,7 @@ public class FloatOperationsManager : ITestManager<FloatOperationsManager, float
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -1023,7 +1023,7 @@ public class FloatOperationsManager : ITestManager<FloatOperationsManager, float
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
@@ -1045,7 +1045,7 @@ public class FloatOperationsManager : ITestManager<FloatOperationsManager, float
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(

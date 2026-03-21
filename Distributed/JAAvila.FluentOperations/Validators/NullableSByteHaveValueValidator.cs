@@ -11,6 +11,7 @@ internal class NullableSByteHaveValueValidator(PrincipalChain<sbyte?> chain) : I
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableSByte.HaveValue";
 
     public bool Validate()
     {

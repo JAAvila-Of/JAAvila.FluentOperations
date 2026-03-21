@@ -127,6 +127,37 @@ internal class TemplateHandler
     }
 
     /// <summary>
+    /// Appends the result/failure description to the message, preferring a localized message when available.
+    /// Falls back to <paramref name="resultValidation"/> when no provider is configured or the key is not found.
+    /// </summary>
+    /// <param name="messageKey">The stable key used to look up the localized message (e.g., "String.BeEmail").</param>
+    /// <param name="resultValidation">The default (English) composite-format failure message.</param>
+    /// <param name="arguments">Optional format arguments applied to whichever message string is used.</param>
+    /// <returns>The current handler instance for fluent chaining.</returns>
+    public TemplateHandler WithResult(
+        string messageKey,
+        [StringSyntax("CompositeFormat")] string? resultValidation,
+        params object[] arguments
+    )
+    {
+        var localizationConfig = GlobalConfig.GetLocalizationConfig();
+        var localizedMessage = localizationConfig?.ResolveMessage(messageKey);
+        var finalMessage = localizedMessage ?? resultValidation;
+
+        if (finalMessage is not null)
+        {
+            _templates.Add(
+                new KeyValuePair<string, Template>(
+                    TemplatePart.Result,
+                    Template.New(finalMessage, arguments)
+                )
+            );
+        }
+
+        return this;
+    }
+
+    /// <summary>
     /// Appends the rule/operation name to the message (e.g., the enum string value of the operation).
     /// </summary>
     /// <param name="rule">A composite-format string identifying the rule that failed.</param>

@@ -12,6 +12,7 @@ internal class CollectionContainValidator<T>(PrincipalChain<IEnumerable<T>> chai
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Collection.Contain";
 
     public bool Validate()
     {

@@ -12,6 +12,7 @@ internal class ArrayHaveLengthLessThanValidator<T>(PrincipalChain<IEnumerable<T>
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Array.HaveLengthLessThan";
 
     public bool Validate()
     {

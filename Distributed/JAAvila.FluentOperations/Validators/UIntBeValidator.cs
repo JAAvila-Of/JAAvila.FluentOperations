@@ -12,6 +12,7 @@ internal class UIntBeValidator(PrincipalChain<uint> chain, uint expected) : IVal
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "UInt.Be";
 
     public bool Validate()
     {

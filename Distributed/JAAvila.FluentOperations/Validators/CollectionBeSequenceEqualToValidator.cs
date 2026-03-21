@@ -18,6 +18,7 @@ internal class CollectionBeSequenceEqualToValidator<T>(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Collection.BeSequenceEqualTo";
 
     public bool Validate()
     {

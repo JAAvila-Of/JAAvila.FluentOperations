@@ -12,6 +12,7 @@ internal class IntegerNotBeValidator(PrincipalChain<int> chain, int expected) : 
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Integer.NotBe";
 
     public bool Validate()
     {

@@ -12,6 +12,7 @@ internal class NullableShortNotBeValidator(PrincipalChain<short?> chain, short? 
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "NullableShort.NotBe";
 
     public bool Validate()
     {

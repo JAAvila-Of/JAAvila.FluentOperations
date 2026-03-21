@@ -19,6 +19,7 @@ internal class TimeSpanBeInRangeValidator(
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "TimeSpan.BeInRange";
 
     public bool Validate()
     {

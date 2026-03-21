@@ -12,6 +12,7 @@ internal class DecimalNotBeValidator(PrincipalChain<decimal> chain, decimal expe
 
     public string Expected { get; }
     public string ResultValidation { get; set; }
+    public string MessageKey => "Decimal.NotBe";
 
     public bool Validate()
     {

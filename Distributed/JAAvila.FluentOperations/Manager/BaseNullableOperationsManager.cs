@@ -42,7 +42,7 @@ public class BaseNullableOperationsManager<TManager, TSubject>
                     template
                         .WithSubject(Manager.PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.ResultValidation,
+                            operation.MessageKey, operation.ResultValidation,
                             BaseFormatter.Format(Manager.PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -71,7 +71,7 @@ public class BaseNullableOperationsManager<TManager, TSubject>
                 (template, operation) =>
                     template
                         .WithSubject(Manager.PrincipalChain.GetSubject())
-                        .WithResult(operation.ResultValidation)
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .Execute();
