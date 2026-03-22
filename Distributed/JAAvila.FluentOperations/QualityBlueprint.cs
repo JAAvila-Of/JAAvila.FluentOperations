@@ -87,7 +87,6 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
 
     private readonly List<IQualityRule> _capturedDuringDefinition = [];
     private readonly List<object> _conditionGroups = []; // ConditionGroup<T> instances for reset
-    private T? _instance;
     private Type? _currentScenario;
 
     /// <summary>
@@ -267,7 +266,6 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
         var sw = FluentOperationsMeter.StartTimingIfEnabled(telemetryEnabled && telemetryConfig!.TrackBlueprintExecutionTime);
 
         ResetConditionGroups();
-        _instance = instance;
         var report = new QualityReport();
 
 
@@ -524,7 +522,6 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
         var sw = FluentOperationsMeter.StartTimingIfEnabled(telemetryEnabled && telemetryConfig!.TrackBlueprintExecutionTime);
 
         ResetConditionGroups();
-        _instance = instance;
         var report = new QualityReport();
 
         using (

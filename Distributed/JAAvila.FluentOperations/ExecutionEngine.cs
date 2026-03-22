@@ -280,10 +280,10 @@ internal class ExecutionEngine<T, TS>(T manager) : IQualityRule, IRuleDescriptor
         switch (value)
         {
             case TS typedValue:
-                manager.PrincipalChain.SetValue(typedValue);
+                manager.PrincipalChain.ReInitialize(typedValue);
                 break;
             case null when !typeof(TS).IsValueType:
-                manager.PrincipalChain.SetValue(default!);
+                manager.PrincipalChain.ReInitialize(default!);
                 break;
         }
     }
