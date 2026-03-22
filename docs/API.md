@@ -1080,8 +1080,17 @@ protected void Scenario<TInterface>(Action action)
 // Nested object validation
 protected void ForNested<TChild>(Expression<Func<T, TChild?>> expr, QualityBlueprint<TChild> blueprint)
 
-// Per-item collection validation
+// Per-item collection validation (captured-rules variants)
+protected IPropertyProxy<TManager> ForEach<TItem, TManager>(Expression<Func<T, IEnumerable<TItem>?>> expr)
+protected IPropertyProxy<TManager> ForEach<TItem, TManager>(Expression<Func<T, IEnumerable<TItem>?>> expr, RuleConfig config)
+protected IPropertyProxy<StringOperationsManager> ForEach(Expression<Func<T, IEnumerable<string?>?>> expr)
+protected IPropertyProxy<StringOperationsManager> ForEach(Expression<Func<T, IEnumerable<string?>?>> expr, RuleConfig config)
+protected IPropertyProxy<IntegerOperationsManager> ForEach(Expression<Func<T, IEnumerable<int>?>> expr)
+protected IPropertyProxy<IntegerOperationsManager> ForEach(Expression<Func<T, IEnumerable<int>?>> expr, RuleConfig config)
+
+// Per-item collection validation (sub-blueprint variants)
 protected void ForEach<TItem>(Expression<Func<T, IEnumerable<TItem>?>> expr, QualityBlueprint<TItem> blueprint)
+protected void ForEach<TItem>(Expression<Func<T, IEnumerable<TItem>?>> expr, QualityBlueprint<TItem> blueprint, RuleConfig config)
 
 // Compose blueprints
 protected void Include(QualityBlueprint<T> other)
@@ -1119,9 +1128,19 @@ protected IPropertyProxy<TTargetManager> ForTransform<TProp, TTarget, TTargetMan
 // Conditional validation
 protected void When(Func<T, bool> condition, Action then, Action? otherwise = null)
 
-// Filtered collection validation
+// Filtered collection validation (captured-rules variants)
+protected IPropertyProxy<TManager> ForEachWhere<TItem, TManager>(Expression<Func<T, IEnumerable<TItem>?>> expr, Func<TItem, bool> predicate)
+protected IPropertyProxy<TManager> ForEachWhere<TItem, TManager>(Expression<Func<T, IEnumerable<TItem>?>> expr, Func<TItem, bool> predicate, RuleConfig config)
+protected IPropertyProxy<StringOperationsManager> ForEachWhere(Expression<Func<T, IEnumerable<string?>?>> expr, Func<string?, bool> predicate)
+protected IPropertyProxy<StringOperationsManager> ForEachWhere(Expression<Func<T, IEnumerable<string?>?>> expr, Func<string?, bool> predicate, RuleConfig config)
+protected IPropertyProxy<IntegerOperationsManager> ForEachWhere(Expression<Func<T, IEnumerable<int>?>> expr, Func<int, bool> predicate)
+protected IPropertyProxy<IntegerOperationsManager> ForEachWhere(Expression<Func<T, IEnumerable<int>?>> expr, Func<int, bool> predicate, RuleConfig config)
+
+// Filtered collection validation (sub-blueprint variants)
 protected void ForEachWhere<TItem>(Expression<Func<T, IEnumerable<TItem>?>> expr,
     Func<TItem, bool> predicate, QualityBlueprint<TItem> blueprint)
+protected void ForEachWhere<TItem>(Expression<Func<T, IEnumerable<TItem>?>> expr,
+    Func<TItem, bool> predicate, QualityBlueprint<TItem> blueprint, RuleConfig config)
 ```
 
 #### Public Methods
@@ -1232,13 +1251,31 @@ Failures are reported as `"Address.Street"`, `"Address.City"`, etc.
 
 ### ForEach
 
-Validate each item in a collection:
+Validate each item in a collection using captured rules or a sub-blueprint:
 
 ```csharp
+// Captured-rules variant — chain .Test() after ForEach
+using (Define())
+{
+    ForEach(x => x.Tags).Test().NotBeNull().HaveMinLength(3);
+
+    // Per-ForEach RuleConfig — overrides blueprint-level CascadeMode for this collection
+    ForEach(x => x.Tags, new RuleConfig { CascadeMode = CascadeMode.StopOnFirstFailure })
+        .Test().NotBeNull().NotBeEmpty();
+
+    // Severity and ErrorCode also apply to each captured item's failures
+    ForEach(x => x.Tags, new RuleConfig { Severity = Severity.Warning, ErrorCode = "TAGS_001" })
+        .Test().NotBeNull();
+}
+
+// Sub-blueprint variant
 ForEach(x => x.Items, new OrderItemBlueprint());
+ForEach(x => x.Items, new OrderItemBlueprint(), new RuleConfig { CascadeMode = CascadeMode.StopOnFirstFailure });
 ```
 
 Failures are reported as `"Items[0].Name"`, `"Items[1].Price"`, etc.
+
+`RuleConfig` on captured-rules ForEach overloads applies to each item evaluation: `CascadeMode` controls per-item cascade (stops after first failure within the same item), while `Severity`, `ErrorCode`, and `CustomMessage` are applied to every failure produced by that collection's rules.
 
 ---
 
@@ -1394,13 +1431,28 @@ When(
 
 ### ForEachWhere
 
-Validate a filtered subset of a collection:
+Validate a filtered subset of a collection using captured rules or a sub-blueprint:
 
 ```csharp
-ForEachWhere(x => x.Items,
-    item => item.IsActive,
-    new ActiveItemBlueprint());
+// Captured-rules variant
+using (Define())
+{
+    ForEachWhere(x => x.Tags, tag => tag != null)
+        .Test().NotBeEmpty().HaveMinLength(3);
+
+    // With per-ForEachWhere RuleConfig
+    ForEachWhere(x => x.Tags, tag => tag != null,
+        new RuleConfig { CascadeMode = CascadeMode.StopOnFirstFailure })
+        .Test().NotBeEmpty().HaveMinLength(3);
+}
+
+// Sub-blueprint variant
+ForEachWhere(x => x.Items, item => item.IsActive, new ActiveItemBlueprint());
+ForEachWhere(x => x.Items, item => item.IsActive, new ActiveItemBlueprint(),
+    new RuleConfig { CascadeMode = CascadeMode.StopOnFirstFailure });
 ```
+
+Items that do not satisfy the predicate are skipped. The original collection index is preserved in failure property names (e.g., `"Tags[2]"` even if items at index 0 and 1 were filtered out).
 
 ---
 

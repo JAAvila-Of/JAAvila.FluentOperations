@@ -249,6 +249,8 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
 
         var registeredScenarios = _ruleDefinitions
             .Select(d => d.Scenario)
+            .Concat(_forEachDefinitions.Select(d => d.Scenario))
+            .Concat(_nestedDefinitions.Select(d => d.Scenario))
             .Where(s => s != null)
             .Distinct();
 
@@ -552,6 +554,8 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
 
         var registeredScenarios = _ruleDefinitions
             .Select(d => d.Scenario)
+            .Concat(_forEachDefinitions.Select(d => d.Scenario))
+            .Concat(_nestedDefinitions.Select(d => d.Scenario))
             .Where(s => s != null)
             .Distinct();
 
