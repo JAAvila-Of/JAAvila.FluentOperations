@@ -40,6 +40,7 @@ Complete API documentation for JAAvila.FluentOperations.
   - [ForEach](#foreach)
   - [Include](#include)
   - [CascadeMode](#cascademode)
+  - [CascadeSeverityMode](#cascadeseveritymode)
   - [ForCompare](#forcompare)
   - [ForAsync](#forasync)
   - [ForCustom](#forcustom)
@@ -1194,6 +1195,7 @@ public record RuleConfig
     public ErrorCode? ErrorCode { get; init; }
     public string? CustomMessage { get; init; }
     public CascadeMode? CascadeMode { get; init; }
+    public CascadeSeverityMode? CascadeSeverityMode { get; init; }
 }
 ```
 
@@ -1261,6 +1263,41 @@ CascadeMode = CascadeMode.StopOnFirstFailure; // Blueprint-level
 For(x => x.Email, new RuleConfig { CascadeMode = CascadeMode.StopOnFirstFailure })
     .Test().NotBeNull().BeEmail();
 ```
+
+By default, `StopOnFirstFailure` only stops on Error-severity failures. Warning and Info failures do not stop cascade. See [CascadeSeverityMode](#cascadeseveritymode) to change this behavior.
+
+---
+
+### CascadeSeverityMode
+
+Controls which severity levels can trigger cascade stop when `CascadeMode.StopOnFirstFailure` is active.
+
+| Value | Behavior |
+|-------|----------|
+| `ErrorOnly` | Only Error failures trigger cascade stop (default). Warning and Info failures are recorded but do not stop subsequent rules. |
+| `AllFailures` | Any failure (Error, Warning, Info) triggers cascade stop. Matches the behavior of library versions before this feature was added. |
+| `SameOrLowerSeverity` | A failure stops subsequent rules of equal or lower severity. Error (0) stops all; Warning (1) stops Warning and Info; Info (2) stops only Info. Higher-severity rules always execute. |
+
+```csharp
+// Blueprint-level (applies to all properties unless overridden)
+CascadeSeverityMode = CascadeSeverityMode.ErrorOnly; // default
+
+// Legacy behavior: any failure stops cascade
+CascadeSeverityMode = CascadeSeverityMode.AllFailures;
+
+// Graduated: Warning failure skips subsequent Warning/Info but not Error
+CascadeSeverityMode = CascadeSeverityMode.SameOrLowerSeverity;
+
+// Per-property override via RuleConfig
+For(x => x.Name, new RuleConfig
+{
+    CascadeMode = CascadeMode.StopOnFirstFailure,
+    CascadeSeverityMode = CascadeSeverityMode.AllFailures
+})
+.Test().NotBeNull().NotBeEmpty();
+```
+
+> **Migration note**: In versions prior to this feature, `StopOnFirstFailure` was severity-blind (equivalent to `AllFailures`). If your blueprint relies on Warning/Info failures stopping cascade, set `CascadeSeverityMode = CascadeSeverityMode.AllFailures` to restore the previous behavior.
 
 ---
 

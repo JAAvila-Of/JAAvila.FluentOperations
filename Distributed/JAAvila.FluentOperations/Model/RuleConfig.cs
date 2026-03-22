@@ -35,6 +35,13 @@ public record RuleConfig
     public CascadeMode? CascadeMode { get; init; }
 
     /// <summary>
+    /// Controls which failure severities trigger cascade stop for this property definition.
+    /// When null, the blueprint-level CascadeSeverityMode applies.
+    /// Defaults to null (inherit from blueprint).
+    /// </summary>
+    public CascadeSeverityMode? CascadeSeverityMode { get; init; }
+
+    /// <summary>
     /// Creates a RuleConfig with the specified severity.
     /// </summary>
     public static RuleConfig WithSeverity(Severity severity) => new() { Severity = severity };
