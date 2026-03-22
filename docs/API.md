@@ -615,6 +615,7 @@ Manager: `TimeSpanOperationsManager` / `NullableTimeSpanOperationsManager`
 | `HaveHours(int)` | Specific hours component |
 | `HaveMinutes(int)` | Specific minutes component |
 | `HaveSeconds(int)` | Specific seconds component |
+| `HaveValue()` / `NotHaveValue()` | (nullable only) |
 
 ---
 
@@ -629,6 +630,7 @@ Same as DateTime plus:
 | `HaveOffset(TimeSpan)` | Specific UTC offset |
 | `BeCloseTo(DateTimeOffset, TimeSpan)` | Within tolerance |
 | `NotBeCloseTo(DateTimeOffset, TimeSpan)` | Not within tolerance of expected |
+| `HaveValue()` / `NotHaveValue()` | (nullable only) |
 
 ---
 

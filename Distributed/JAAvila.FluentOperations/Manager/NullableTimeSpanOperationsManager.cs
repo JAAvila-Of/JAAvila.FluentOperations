@@ -248,6 +248,340 @@ public class NullableTimeSpanOperationsManager
     }
 
     /// <summary>
+    /// Asserts that the value represents a positive duration (greater than <see cref="TimeSpan.Zero"/>).
+    /// </summary>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public NullableTimeSpanOperationsManager BePositive(Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.TimeSpan.BePositive))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableTimeSpanOperationsManager, TimeSpan?>
+            .New(this)
+            .WithOperation(NullableTimeSpanBePositiveValidator.New(PrincipalChain))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.MessageKey, operation.ResultValidation,
+                            BaseFormatter.Format(PrincipalChain.GetValue())
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(BePositive)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the value represents a negative duration (less than <see cref="TimeSpan.Zero"/>).
+    /// </summary>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public NullableTimeSpanOperationsManager BeNegative(Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.TimeSpan.BeNegative))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableTimeSpanOperationsManager, TimeSpan?>
+            .New(this)
+            .WithOperation(NullableTimeSpanBeNegativeValidator.New(PrincipalChain))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.MessageKey, operation.ResultValidation,
+                            BaseFormatter.Format(PrincipalChain.GetValue())
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(BeNegative)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the value is equal to <see cref="TimeSpan.Zero"/>.
+    /// </summary>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public NullableTimeSpanOperationsManager BeZero(Reason? reason = null)
+    {
+        return Be(TimeSpan.Zero, reason);
+    }
+
+    /// <summary>
+    /// Asserts that the value is strictly greater than <paramref name="expected"/>.
+    /// </summary>
+    /// <param name="expected">The value to compare against.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public NullableTimeSpanOperationsManager BeGreaterThan(TimeSpan expected, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.TimeSpan.BeGreaterThan))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableTimeSpanOperationsManager, TimeSpan?>
+            .New(this)
+            .WithOperation(NullableTimeSpanBeGreaterThanValidator.New(PrincipalChain, expected))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.MessageKey, operation.ResultValidation,
+                            BaseFormatter.Format(expected),
+                            BaseFormatter.Format(PrincipalChain.GetValue())
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(BeGreaterThan)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the value is strictly less than <paramref name="expected"/>.
+    /// </summary>
+    /// <param name="expected">The value to compare against.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public NullableTimeSpanOperationsManager BeLessThan(TimeSpan expected, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.TimeSpan.BeLessThan))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableTimeSpanOperationsManager, TimeSpan?>
+            .New(this)
+            .WithOperation(NullableTimeSpanBeLessThanValidator.New(PrincipalChain, expected))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.MessageKey, operation.ResultValidation,
+                            BaseFormatter.Format(expected),
+                            BaseFormatter.Format(PrincipalChain.GetValue())
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(BeLessThan)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the whole-day component of the value equals <paramref name="days"/>.
+    /// </summary>
+    /// <param name="days">The expected number of whole days.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public NullableTimeSpanOperationsManager HaveDays(int days, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.TimeSpan.HaveDays))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableTimeSpanOperationsManager, TimeSpan?>
+            .New(this)
+            .WithOperation(NullableTimeSpanHaveDaysValidator.New(PrincipalChain, days))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.MessageKey, operation.ResultValidation,
+                            BaseFormatter.Format(days),
+                            BaseFormatter.Format(PrincipalChain.GetValue()!.Value.Days)
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(HaveDays)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the hours component of the value equals <paramref name="hours"/>.
+    /// </summary>
+    /// <param name="hours">The expected hours component (0–23).</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public NullableTimeSpanOperationsManager HaveHours(int hours, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.TimeSpan.HaveHours))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableTimeSpanOperationsManager, TimeSpan?>
+            .New(this)
+            .WithOperation(NullableTimeSpanHaveHoursValidator.New(PrincipalChain, hours))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.MessageKey, operation.ResultValidation,
+                            BaseFormatter.Format(hours),
+                            BaseFormatter.Format(PrincipalChain.GetValue()!.Value.Hours)
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(HaveHours)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the minutes component of the value equals <paramref name="minutes"/>.
+    /// </summary>
+    /// <param name="minutes">The expected minutes component (0–59).</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public NullableTimeSpanOperationsManager HaveMinutes(int minutes, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.TimeSpan.HaveMinutes))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableTimeSpanOperationsManager, TimeSpan?>
+            .New(this)
+            .WithOperation(NullableTimeSpanHaveMinutesValidator.New(PrincipalChain, minutes))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.MessageKey, operation.ResultValidation,
+                            BaseFormatter.Format(minutes),
+                            BaseFormatter.Format(PrincipalChain.GetValue()!.Value.Minutes)
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(HaveMinutes)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the seconds component of the value equals <paramref name="seconds"/>.
+    /// </summary>
+    /// <param name="seconds">The expected seconds component (0–59).</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public NullableTimeSpanOperationsManager HaveSeconds(int seconds, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.TimeSpan.HaveSeconds))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableTimeSpanOperationsManager, TimeSpan?>
+            .New(this)
+            .WithOperation(NullableTimeSpanHaveSecondsValidator.New(PrincipalChain, seconds))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.MessageKey, operation.ResultValidation,
+                            BaseFormatter.Format(seconds),
+                            BaseFormatter.Format(PrincipalChain.GetValue()!.Value.Seconds)
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(HaveSeconds)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
     /// Asserts that the runtime type of the value is exactly <typeparamref name="TType"/>.
     /// </summary>
     public NullableTimeSpanOperationsManager BeOfType<TType>(Reason? reason = null)
