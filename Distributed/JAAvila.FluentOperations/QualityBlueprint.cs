@@ -100,6 +100,13 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
     protected CascadeMode CascadeMode { get; set; } = CascadeMode.Continue;
 
     /// <summary>
+    /// Controls which severity levels can trigger cascade stop for the entire blueprint.
+    /// Defaults to <see cref="Common.CascadeSeverityMode.ErrorOnly"/> -- only Error-severity
+    /// failures stop cascade, ensuring Warning/Info failures never hide Error rules.
+    /// </summary>
+    protected CascadeSeverityMode CascadeSeverityMode { get; set; } = CascadeSeverityMode.ErrorOnly;
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="QualityBlueprint{T}"/> class.
     /// </summary>
     protected QualityBlueprint() { }
@@ -293,13 +300,25 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
 
                 // Determine effective cascade mode for this definition
                 var effectiveCascade = def.Config?.CascadeMode ?? CascadeMode;
-                var stopped = false;
+                var effectiveSeverityMode = def.Config?.CascadeSeverityMode ?? CascadeSeverityMode;
+                Severity? stoppedAtSeverity = null;
 
                 foreach (var rule in def.Rules)
                 {
-                    if (stopped)
+                    if (stoppedAtSeverity.HasValue)
                     {
-                        break;
+                        if (effectiveSeverityMode == CascadeSeverityMode.SameOrLowerSeverity)
+                        {
+                            // In graduated mode, skip rules at equal or lower severity than the trigger
+                            // but allow higher-severity rules to still execute
+                            if (rule.GetSeverity() >= stoppedAtSeverity.Value)
+                                continue;
+                        }
+                        else
+                        {
+                            // ErrorOnly or AllFailures: hard stop on all subsequent rules
+                            break;
+                        }
                     }
 
                     var innerRule = rule is CapturedRule cr ? cr.Inner : rule;
@@ -343,7 +362,20 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
 
                     if (effectiveCascade == CascadeMode.StopOnFirstFailure)
                     {
-                        stopped = true;
+                        var failedSeverity = rule.GetSeverity();
+                        var shouldStop = effectiveSeverityMode switch
+                        {
+                            CascadeSeverityMode.ErrorOnly => failedSeverity == Severity.Error,
+                            CascadeSeverityMode.AllFailures => true,
+                            CascadeSeverityMode.SameOrLowerSeverity => true,
+                            _ => failedSeverity == Severity.Error
+                        };
+
+                        if (shouldStop)
+                        {
+                            if (!stoppedAtSeverity.HasValue || failedSeverity < stoppedAtSeverity.Value)
+                                stoppedAtSeverity = failedSeverity;
+                        }
                     }
                 }
             }
@@ -367,6 +399,7 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
                 }
 
                 var effectiveCascade = def.Config?.CascadeMode ?? CascadeMode;
+                var effectiveSeverityMode = def.Config?.CascadeSeverityMode ?? CascadeSeverityMode;
                 var index = 0;
 
                 foreach (var item in collection)
@@ -391,13 +424,21 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
                     {
                         // Captured-rules variant: apply each rule to the item
                         report.RulesEvaluated++;
-                        var stopped = false;
+                        Severity? stoppedAtSeverity = null;
 
                         foreach (var rule in def.Rules)
                         {
-                            if (stopped)
+                            if (stoppedAtSeverity.HasValue)
                             {
-                                break;
+                                if (effectiveSeverityMode == CascadeSeverityMode.SameOrLowerSeverity)
+                                {
+                                    if (rule.GetSeverity() >= stoppedAtSeverity.Value)
+                                        continue;
+                                }
+                                else
+                                {
+                                    break;
+                                }
                             }
 
                             rule.SetValue(item);
@@ -433,7 +474,20 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
 
                             if (effectiveCascade == CascadeMode.StopOnFirstFailure)
                             {
-                                stopped = true;
+                                var failedSeverity = rule.GetSeverity();
+                                var shouldStop = effectiveSeverityMode switch
+                                {
+                                    CascadeSeverityMode.ErrorOnly => failedSeverity == Severity.Error,
+                                    CascadeSeverityMode.AllFailures => true,
+                                    CascadeSeverityMode.SameOrLowerSeverity => true,
+                                    _ => failedSeverity == Severity.Error
+                                };
+
+                                if (shouldStop)
+                                {
+                                    if (!stoppedAtSeverity.HasValue || failedSeverity < stoppedAtSeverity.Value)
+                                        stoppedAtSeverity = failedSeverity;
+                                }
                             }
                         }
                     }
@@ -548,13 +602,25 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
 
                 // Determine effective cascade mode for this definition
                 var effectiveCascade = def.Config?.CascadeMode ?? CascadeMode;
-                var stopped = false;
+                var effectiveSeverityMode = def.Config?.CascadeSeverityMode ?? CascadeSeverityMode;
+                Severity? stoppedAtSeverity = null;
 
                 foreach (var rule in def.Rules)
                 {
-                    if (stopped)
+                    if (stoppedAtSeverity.HasValue)
                     {
-                        break;
+                        if (effectiveSeverityMode == CascadeSeverityMode.SameOrLowerSeverity)
+                        {
+                            // In graduated mode, skip rules at equal or lower severity than the trigger
+                            // but allow higher-severity rules to still execute
+                            if (rule.GetSeverity() >= stoppedAtSeverity.Value)
+                                continue;
+                        }
+                        else
+                        {
+                            // ErrorOnly or AllFailures: hard stop on all subsequent rules
+                            break;
+                        }
                     }
 
                     var innerRule = rule is CapturedRule cr ? cr.Inner : rule;
@@ -587,7 +653,20 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
 
                     if (effectiveCascade == CascadeMode.StopOnFirstFailure)
                     {
-                        stopped = true;
+                        var failedSeverity = rule.GetSeverity();
+                        var shouldStop = effectiveSeverityMode switch
+                        {
+                            CascadeSeverityMode.ErrorOnly => failedSeverity == Severity.Error,
+                            CascadeSeverityMode.AllFailures => true,
+                            CascadeSeverityMode.SameOrLowerSeverity => true,
+                            _ => failedSeverity == Severity.Error
+                        };
+
+                        if (shouldStop)
+                        {
+                            if (!stoppedAtSeverity.HasValue || failedSeverity < stoppedAtSeverity.Value)
+                                stoppedAtSeverity = failedSeverity;
+                        }
                     }
                 }
             }
@@ -611,6 +690,7 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
                 }
 
                 var effectiveCascade = def.Config?.CascadeMode ?? CascadeMode;
+                var effectiveSeverityMode = def.Config?.CascadeSeverityMode ?? CascadeSeverityMode;
                 var index = 0;
 
                 foreach (var item in collection)
@@ -635,13 +715,21 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
                     {
                         // Captured-rules variant: apply each rule to the item
                         report.RulesEvaluated++;
-                        var stopped = false;
+                        Severity? stoppedAtSeverity = null;
 
                         foreach (var rule in def.Rules)
                         {
-                            if (stopped)
+                            if (stoppedAtSeverity.HasValue)
                             {
-                                break;
+                                if (effectiveSeverityMode == CascadeSeverityMode.SameOrLowerSeverity)
+                                {
+                                    if (rule.GetSeverity() >= stoppedAtSeverity.Value)
+                                        continue;
+                                }
+                                else
+                                {
+                                    break;
+                                }
                             }
 
                             rule.SetValue(item);
@@ -665,7 +753,20 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
 
                             if (effectiveCascade == CascadeMode.StopOnFirstFailure)
                             {
-                                stopped = true;
+                                var failedSeverity = rule.GetSeverity();
+                                var shouldStop = effectiveSeverityMode switch
+                                {
+                                    CascadeSeverityMode.ErrorOnly => failedSeverity == Severity.Error,
+                                    CascadeSeverityMode.AllFailures => true,
+                                    CascadeSeverityMode.SameOrLowerSeverity => true,
+                                    _ => failedSeverity == Severity.Error
+                                };
+
+                                if (shouldStop)
+                                {
+                                    if (!stoppedAtSeverity.HasValue || failedSeverity < stoppedAtSeverity.Value)
+                                        stoppedAtSeverity = failedSeverity;
+                                }
                             }
                         }
                     }
