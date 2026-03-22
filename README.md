@@ -205,8 +205,12 @@ using (Define())
     // Nested object validation
     ForNested(x => x.Address, new AddressBlueprint());
 
-    // Per-item collection validation
+    // Per-item collection validation (sub-blueprint)
     ForEach(x => x.Items, new OrderItemBlueprint());
+
+    // Per-item collection validation (captured-rules with optional RuleConfig)
+    ForEach(x => x.Tags, new RuleConfig { CascadeMode = CascadeMode.StopOnFirstFailure })
+        .Test().NotBeNull().HaveMinLength(3);
 
     // Compose blueprints
     Include(new BaseEntityBlueprint());
