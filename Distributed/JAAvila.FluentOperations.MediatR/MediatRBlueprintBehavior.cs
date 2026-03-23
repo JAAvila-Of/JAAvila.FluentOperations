@@ -69,12 +69,28 @@ public class MediatRBlueprintBehavior<TRequest, TResponse> : IPipelineBehavior<T
 }
 
 /// <summary>
-/// Strongly typed MediatR pipeline behavior for requests with specific blueprints.
-/// Use when TRequest matches TBlueprint's model type exactly.
+/// Strongly typed MediatR pipeline behavior for requests whose blueprint validates
+/// the request type directly (<c>TBlueprint : QualityBlueprint&lt;TRequest&gt;</c>).
+/// Use when the blueprint's model type is <strong>exactly</strong> <typeparamref name="TRequest"/>.
 /// </summary>
-/// <typeparam name="TRequest">The request type</typeparam>
+/// <remarks>
+/// <para>
+/// If your blueprint validates a base model and the request inherits from it, use
+/// <see cref="MediatRBlueprintBehavior{TRequest, TResponse}"/> registered via
+/// <see cref="MediatRExtensions.AddBlueprintBehavior{TRequest, TResponse, TModel, TBlueprint}"/>
+/// or <see cref="MediatRExtensions.AddBlueprintValidation"/> instead.
+/// </para>
+/// <para>
+/// Example — wrong (compile error): <c>QualityBlueprint&lt;User&gt;</c> cannot be used here if
+/// <c>TRequest</c> is <c>CreateUserCommand</c>, because the constraint
+/// <c>TBlueprint : QualityBlueprint&lt;TRequest&gt;</c> is not satisfied.<br/>
+/// Example — correct: use the 4-generic overload
+/// <c>AddBlueprintBehavior&lt;CreateUserCommand, string, User, UserBlueprint&gt;</c>.
+/// </para>
+/// </remarks>
+/// <typeparam name="TRequest">The request type (must match the blueprint's model type exactly)</typeparam>
 /// <typeparam name="TResponse">The response type</typeparam>
-/// <typeparam name="TBlueprint">The blueprint type</typeparam>
+/// <typeparam name="TBlueprint">The blueprint type (must inherit <c>QualityBlueprint&lt;TRequest&gt;</c>)</typeparam>
 public class MediatRBlueprintBehavior<TRequest, TResponse, TBlueprint>
     : IPipelineBehavior<TRequest, TResponse>
     where TRequest : notnull
