@@ -389,7 +389,7 @@ FluentOperationsConfig.Configure(c =>
 | Instrument | Kind | Description |
 |------------|------|-------------|
 | `fo.rules.evaluated` | Counter | Total rules evaluated |
-| `fo.rules.failed` | Counter | Total rules that failed |
+| `fo.rules.failed` | Counter | Total rules that failed (requires `TrackFailureRates = true`) |
 | `fo.rule.duration` | Histogram (ms) | Duration of individual eager rule execution |
 | `fo.blueprint.duration` | Histogram (ms) | Duration of a full `Check()` / `CheckAsync()` call |
 
