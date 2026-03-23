@@ -187,12 +187,6 @@ internal class ExecutionEngine<T, TS>(T manager) : IQualityRule, IRuleDescriptor
 
         if (fail)
         {
-            // In eager mode, only Error severity throws
-            if (_severity == Severity.Error)
-            {
-                ExceptionHandler.Handle(_customMessage ?? _template);
-            }
-
             if (telemetryConfig is { Enabled: true })
             {
                 sw?.Stop();
@@ -200,6 +194,12 @@ internal class ExecutionEngine<T, TS>(T manager) : IQualityRule, IRuleDescriptor
                     false,
                     _severity.ToString(),
                     sw?.Elapsed.TotalMilliseconds ?? 0);
+            }
+
+            // In eager mode, only Error severity throws
+            if (_severity == Severity.Error)
+            {
+                ExceptionHandler.Handle(_customMessage ?? _template);
             }
 
             // Warning and Info are silently ignored in eager mode for FailIf conditions
@@ -315,8 +315,6 @@ internal class ExecutionEngine<T, TS>(T manager) : IQualityRule, IRuleDescriptor
 
         if (fail)
         {
-            ExceptionHandler.Handle(_template);
-
             if (telemetryConfig is { Enabled: true })
             {
                 sw?.Stop();
@@ -326,6 +324,13 @@ internal class ExecutionEngine<T, TS>(T manager) : IQualityRule, IRuleDescriptor
                     sw?.Elapsed.TotalMilliseconds ?? 0);
             }
 
+            // In eager mode, only Error severity throws
+            if (_severity == Severity.Error)
+            {
+                ExceptionHandler.Handle(_customMessage ?? _template);
+            }
+
+            // Warning and Info are silently ignored in eager mode for FailIf conditions
             return;
         }
 
