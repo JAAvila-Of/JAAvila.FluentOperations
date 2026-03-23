@@ -1606,6 +1606,20 @@ FluentOperationsConfig.Configure(c =>
 });
 ```
 
+### Flag-to-Instrument Mapping
+
+Each `Track*` flag gates one optional instrument. `Enabled` is the master switch — all other flags are only meaningful when `Enabled = true`.
+
+| Flag | Controls | Instrument |
+|------|----------|------------|
+| `Enabled` | Master switch | All instruments |
+| `TrackRuleExecutionTime` | Per-rule timing | `fo.rule.duration` |
+| `TrackFailureRates` | Failure counting | `fo.rules.failed` |
+| `TrackBlueprintExecutionTime` | Blueprint timing | `fo.blueprint.duration` |
+
+`fo.rules.evaluated` is always emitted when `Enabled = true`, regardless of other flags.
+When `TrackFailureRates = false` (the default), `fo.rules.failed` is not emitted even if rules fail.
+
 ### Instruments
 
 Meter name: `JAAvila.FluentOperations`
@@ -1613,7 +1627,7 @@ Meter name: `JAAvila.FluentOperations`
 | Instrument | Kind | Unit | Description |
 |------------|------|------|-------------|
 | `fo.rules.evaluated` | Counter | — | Total rules evaluated |
-| `fo.rules.failed` | Counter | — | Total rules that failed |
+| `fo.rules.failed` | Counter | — | Total rules that failed (requires `TrackFailureRates = true`) |
 | `fo.rule.duration` | Histogram | ms | Duration of individual eager rule execution |
 | `fo.blueprint.duration` | Histogram | ms | Duration of a full `Check()` / `CheckAsync()` call |
 
