@@ -22,10 +22,14 @@ public class MediatRBlueprintBehavior<TRequest, TResponse> : IPipelineBehavior<T
     where TRequest : notnull
 {
     private readonly IEnumerable<IBlueprintValidator> _validators;
+    private readonly IReadOnlyList<IAsyncBlueprintInterceptor> _interceptors;
 
-    public MediatRBlueprintBehavior(IEnumerable<IBlueprintValidator> validators)
+    public MediatRBlueprintBehavior(
+        IEnumerable<IBlueprintValidator> validators,
+        IEnumerable<IAsyncBlueprintInterceptor>? interceptors = null)
     {
         _validators = validators ?? throw new ArgumentNullException(nameof(validators));
+        _interceptors = interceptors?.ToList() ?? (IReadOnlyList<IAsyncBlueprintInterceptor>)Array.Empty<IAsyncBlueprintInterceptor>();
     }
 
     public async Task<TResponse> Handle(
@@ -41,7 +45,18 @@ public class MediatRBlueprintBehavior<TRequest, TResponse> : IPipelineBehavior<T
             return await next();
         }
 
-        var report = await validator.ValidateAsync(request);
+        QualityReport report;
+
+        if (_interceptors.Count == 0)
+        {
+            report = await validator.ValidateAsync(request);
+        }
+        else
+        {
+            var ctx = new BlueprintInterceptionContext(request, typeof(TRequest), validator, "MediatR");
+            report = await BlueprintInterceptorPipeline.ExecuteAsync(
+                _interceptors, ctx, async instance => await validator.ValidateAsync(instance));
+        }
 
         if (!report.IsValid)
         {
@@ -97,10 +112,14 @@ public class MediatRBlueprintBehavior<TRequest, TResponse, TBlueprint>
     where TBlueprint : QualityBlueprint<TRequest>
 {
     private readonly TBlueprint _blueprint;
+    private readonly IReadOnlyList<IAsyncBlueprintInterceptor> _interceptors;
 
-    public MediatRBlueprintBehavior(TBlueprint blueprint)
+    public MediatRBlueprintBehavior(
+        TBlueprint blueprint,
+        IEnumerable<IAsyncBlueprintInterceptor>? interceptors = null)
     {
         _blueprint = blueprint ?? throw new ArgumentNullException(nameof(blueprint));
+        _interceptors = interceptors?.ToList() ?? (IReadOnlyList<IAsyncBlueprintInterceptor>)Array.Empty<IAsyncBlueprintInterceptor>();
     }
 
     public async Task<TResponse> Handle(
@@ -109,7 +128,19 @@ public class MediatRBlueprintBehavior<TRequest, TResponse, TBlueprint>
         CancellationToken cancellationToken
     )
     {
-        var report = await _blueprint.CheckAsync(request);
+        QualityReport report;
+
+        if (_interceptors.Count == 0)
+        {
+            report = await _blueprint.CheckAsync(request);
+        }
+        else
+        {
+            var validator = (IBlueprintValidator)_blueprint;
+            var ctx = new BlueprintInterceptionContext(request, typeof(TRequest), validator, "MediatR");
+            report = await BlueprintInterceptorPipeline.ExecuteAsync(
+                _interceptors, ctx, async instance => await _blueprint.CheckAsync((TRequest)instance));
+        }
 
         if (!report.IsValid)
         {
