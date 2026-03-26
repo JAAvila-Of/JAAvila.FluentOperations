@@ -242,6 +242,7 @@ public static class MessageKeys
         public const string BeRoundedTo = "Decimal.BeRoundedTo";
         public const string BeZero = "Decimal.BeZero";
         public const string HavePrecision = "Decimal.HavePrecision";
+        public const string HaveScaledPrecision = "Decimal.HaveScaledPrecision";
         public const string NotBe = "Decimal.NotBe";
         public const string NotBeInRange = "Decimal.NotBeInRange";
         public const string NotBeOneOf = "Decimal.NotBeOneOf";
@@ -284,6 +285,7 @@ public static class MessageKeys
         public const string BeRoundedTo = "Double.BeRoundedTo";
         public const string BeZero = "Double.BeZero";
         public const string HavePrecision = "Double.HavePrecision";
+        public const string HaveScaledPrecision = "Double.HaveScaledPrecision";
         public const string NotBe = "Double.NotBe";
         public const string NotBeInRange = "Double.NotBeInRange";
         public const string NotBeNaN = "Double.NotBeNaN";
@@ -323,6 +325,7 @@ public static class MessageKeys
         public const string BeRoundedTo = "Float.BeRoundedTo";
         public const string BeZero = "Float.BeZero";
         public const string HavePrecision = "Float.HavePrecision";
+        public const string HaveScaledPrecision = "Float.HaveScaledPrecision";
         public const string NotBe = "Float.NotBe";
         public const string NotBeInRange = "Float.NotBeInRange";
         public const string NotBeNaN = "Float.NotBeNaN";
@@ -534,6 +537,7 @@ public static class MessageKeys
         public const string BeRoundedTo = "NullableDecimal.BeRoundedTo";
         public const string BeZero = "NullableDecimal.BeZero";
         public const string HavePrecision = "NullableDecimal.HavePrecision";
+        public const string HaveScaledPrecision = "NullableDecimal.HaveScaledPrecision";
         public const string HaveValue = "NullableDecimal.HaveValue";
         public const string NotBe = "NullableDecimal.NotBe";
         public const string NotBeInRange = "NullableDecimal.NotBeInRange";
@@ -562,6 +566,7 @@ public static class MessageKeys
         public const string BeRoundedTo = "NullableDouble.BeRoundedTo";
         public const string BeZero = "NullableDouble.BeZero";
         public const string HavePrecision = "NullableDouble.HavePrecision";
+        public const string HaveScaledPrecision = "NullableDouble.HaveScaledPrecision";
         public const string HaveValue = "NullableDouble.HaveValue";
         public const string NotBe = "NullableDouble.NotBe";
         public const string NotBeInRange = "NullableDouble.NotBeInRange";
@@ -605,6 +610,7 @@ public static class MessageKeys
         public const string BeRoundedTo = "NullableFloat.BeRoundedTo";
         public const string BeZero = "NullableFloat.BeZero";
         public const string HavePrecision = "NullableFloat.HavePrecision";
+        public const string HaveScaledPrecision = "NullableFloat.HaveScaledPrecision";
         public const string HaveValue = "NullableFloat.HaveValue";
         public const string NotBe = "NullableFloat.NotBe";
         public const string NotBeInRange = "NullableFloat.NotBeInRange";
