@@ -834,6 +834,92 @@ public class NullableFloatOperationsManager
     }
 
     /// <summary>
+    /// Asserts that the value has at most <paramref name="expectedDecimals"/> decimal places
+    /// and at most <paramref name="maxTotalDigits"/> total significant digits.
+    /// </summary>
+    /// <param name="expectedDecimals">The maximum number of decimal places allowed.</param>
+    /// <param name="maxTotalDigits">The maximum number of total significant digits allowed.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// Throws immediately if the value is <c>null</c> (null guard — use <c>NotBeNull</c> first to cover that scenario).
+    /// </remarks>
+    public NullableFloatOperationsManager HaveScaledPrecision(
+        int expectedDecimals,
+        int maxTotalDigits,
+        Reason? reason = null
+    )
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Float.HaveScaledPrecision))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableFloatOperationsManager, float?>
+            .New(this)
+            .WithOperation(
+                NullableFloatHaveScaledPrecisionValidator.New(PrincipalChain, expectedDecimals, maxTotalDigits)
+            )
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(HaveScaledPrecision)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is not null
+                            && float.IsNaN(manager.PrincipalChain.GetValue()!.Value),
+                        Fail.New(
+                            $"The {nameof(HaveScaledPrecision)} operation failed because the value was NaN. "
+                            + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        expectedDecimals < 0,
+                        Fail.New(
+                            $"The {nameof(HaveScaledPrecision)} operation failed because the number of decimal places cannot be negative."
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        maxTotalDigits < 1,
+                        Fail.New(
+                            $"The {nameof(HaveScaledPrecision)} operation failed because the total number of digits must be at least 1."
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        expectedDecimals > maxTotalDigits,
+                        Fail.New(
+                            $"The {nameof(HaveScaledPrecision)} operation failed because the number of decimal places cannot exceed the total number of digits."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
     /// Asserts that the value is rounded to <paramref name="decimals"/> decimal places
     /// (i.e. has at most that many significant decimal digits).
     /// </summary>

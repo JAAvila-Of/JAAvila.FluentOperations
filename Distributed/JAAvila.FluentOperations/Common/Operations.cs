@@ -855,6 +855,9 @@ public struct Operations
         [EnumStringValue("haveprecision")]
         HavePrecision,
 
+        [EnumStringValue("havescaledprecision")]
+        HaveScaledPrecision,
+
         [EnumStringValue("beroundedto")]
         BeRoundedTo,
 
@@ -911,6 +914,9 @@ public struct Operations
 
         [EnumStringValue("haveprecision")]
         HavePrecision,
+
+        [EnumStringValue("havescaledprecision")]
+        HaveScaledPrecision,
 
         [EnumStringValue("beroundedto")]
         BeRoundedTo,
@@ -983,6 +989,9 @@ public struct Operations
 
         [EnumStringValue("haveprecision")]
         HavePrecision,
+
+        [EnumStringValue("havescaledprecision")]
+        HaveScaledPrecision,
 
         [EnumStringValue("beroundedto")]
         BeRoundedTo,
