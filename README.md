@@ -154,6 +154,37 @@ report.HasWarnings;  // Only Severity.Warning
 report.Errors;       // Filtered list
 ```
 
+### Dynamic Error Messages (MessageFactory)
+
+Use `MessageFactory` in `RuleConfig` to generate error messages with access to the root model instance:
+
+```csharp
+using (Define())
+{
+    For(x => x.Items, new RuleConfig
+    {
+        MessageFactory = model =>
+        {
+            var order = (Order)model;
+            return $"Order #{order.Id} for '{order.CustomerName}' exceeds the maximum of {order.MaxItems} items.";
+        }
+    }).Test().HaveLengthLessThanOrEqualTo(10);
+
+    For(x => x.Email, new RuleConfig
+    {
+        Severity = Severity.Warning,
+        ErrorCode = "EMAIL_FORMAT",
+        MessageFactory = model =>
+        {
+            var user = (User)model;
+            return $"Email format for user '{user.Name}' (role: {user.Role}) is non-standard.";
+        }
+    }).Test().BeEmail();
+}
+```
+
+`MessageFactory` receives the model as `object` — cast to your model type inside the lambda. It takes precedence over `CustomMessage` and the auto-generated template. It is only invoked during Blueprint `Check()`/`CheckAsync()` evaluation when the rule fails.
+
 ### Async Validation
 
 ```csharp
@@ -217,6 +248,38 @@ using (Define())
 }
 ```
 
+### CompositeBlueprint&lt;T&gt;
+
+Compose N independent blueprints at runtime and merge their results into a single `QualityReport`. Each blueprint runs independently — unlike `Include()` (static rule copy), composites keep blueprints fully decoupled.
+
+```csharp
+var composite = new CompositeBlueprint<User>(
+    new NameBlueprint(),
+    new EmailBlueprint(),
+    new AgeBlueprint());
+
+// Sequential
+QualityReport report = composite.Check(user);
+
+// Parallel (Task.WhenAll)
+QualityReport report = await composite.CheckAsync(user);
+
+Console.WriteLine(report.IsValid);         // false if any sub-blueprint has Error failures
+Console.WriteLine(report.RulesEvaluated);  // sum across all blueprints
+Console.WriteLine(report.Failures.Count);  // all failures from all blueprints
+```
+
+**DI registration** (with `JAAvila.FluentOperations.DependencyInjection`):
+
+```csharp
+// Only the composite is registered as IBlueprintValidator — NOT the individual blueprints.
+services.AddCompositeBlueprint<User>(
+    typeof(NameBlueprint),
+    typeof(EmailBlueprint));
+```
+
+---
+
 ### CascadeMode
 
 ```csharp
@@ -263,6 +326,35 @@ using (Define())
     ForCustom(x => x.CardNumber, new LuhnValidator());
 }
 ```
+
+### Reusable Rules
+
+Define domain rules as extension methods on concrete managers — they work in inline, blueprint, and `AssertionScope` modes without any library changes:
+
+```csharp
+public static StringOperationsManager MustBeValidIban(this StringOperationsManager m)
+    => m.NotBeNull().HaveLengthBetween(15, 34)
+        .Match(@"^[A-Z]{2}\d{2}[A-Z0-9]{4}\d{7}([A-Z0-9]?){0,16}$");
+
+public static DecimalOperationsManager MustBeValidAmount(this DecimalOperationsManager m)
+    => m.BePositive().BeInRange(0.01m, 999_999_999.99m).HaveMaxDecimalPlaces(2);
+
+// Inline
+iban.Test().MustBeValidIban();
+
+// Blueprint
+For(x => x.Iban).Test().MustBeValidIban();
+For(x => x.Amount).Test().MustBeValidAmount();
+
+// AssertionScope
+using (new AssertionScope())
+{
+    iban.Test().MustBeValidIban();
+    amount.Test().MustBeValidAmount();
+}
+```
+
+Rules with parameters, ForTransform, Scenarios, and RuleConfig all work transparently. See [Reusable Rule Builders Guide](./docs/REUSABLE_RULES.md) for the full guide.
 
 ### Blueprint Assertions (Test-to-Production Bridge)
 
@@ -492,6 +584,7 @@ FluentOperationsConfig.Configure(c =>
 ## Documentation
 
 - [API Reference](./docs/API.md) — Complete API documentation
+- [Reusable Rule Builders Guide](./docs/REUSABLE_RULES.md) — Domain rules via extension methods
 - [Integration Guide](./docs/INTEGRATION.md) — ASP.NET Core, MediatR, Minimal API, gRPC, and more
 - [Localization Guide](./docs/LOCALIZATION.md) — Configuring localized validation messages
 - [Contributing](./CONTRIBUTING.md) — How to contribute, code of ethics, CLA
