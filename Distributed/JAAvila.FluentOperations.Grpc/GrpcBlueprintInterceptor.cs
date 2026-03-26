@@ -1,6 +1,7 @@
 using Grpc.Core;
 using Grpc.Core.Interceptors;
 using JAAvila.FluentOperations.Contract;
+using JAAvila.FluentOperations.Model;
 
 namespace JAAvila.FluentOperations.Integration;
 
@@ -23,18 +24,22 @@ public class GrpcBlueprintInterceptor : Interceptor
 {
     private readonly IEnumerable<IBlueprintValidator> _validators;
     private readonly GrpcBlueprintOptions _options;
+    private readonly IReadOnlyList<IAsyncBlueprintInterceptor> _interceptors;
 
     /// <summary>
     /// Initializes a new instance of <see cref="GrpcBlueprintInterceptor"/>.
     /// </summary>
     /// <param name="validators">All registered blueprint validators.</param>
     /// <param name="options">Interceptor options. When <see langword="null"/>, defaults are used.</param>
+    /// <param name="interceptors">Blueprint interceptors to run before/after validation.</param>
     public GrpcBlueprintInterceptor(
         IEnumerable<IBlueprintValidator> validators,
-        GrpcBlueprintOptions? options = null)
+        GrpcBlueprintOptions? options = null,
+        IEnumerable<IAsyncBlueprintInterceptor>? interceptors = null)
     {
         _validators = validators ?? throw new ArgumentNullException(nameof(validators));
         _options = options ?? new GrpcBlueprintOptions();
+        _interceptors = interceptors?.ToList() ?? (IReadOnlyList<IAsyncBlueprintInterceptor>)Array.Empty<IAsyncBlueprintInterceptor>();
     }
 
     /// <inheritdoc/>
@@ -109,7 +114,18 @@ public class GrpcBlueprintInterceptor : Interceptor
             return;
         }
 
-        var report = await validator.ValidateAsync(request);
+        QualityReport report;
+
+        if (_interceptors.Count == 0)
+        {
+            report = await validator.ValidateAsync(request);
+        }
+        else
+        {
+            var ctx = new BlueprintInterceptionContext(request, typeof(T), validator, "Grpc");
+            report = await BlueprintInterceptorPipeline.ExecuteAsync(
+                _interceptors, ctx, async instance => await validator.ValidateAsync(instance));
+        }
 
         if (!report.IsValid)
         {

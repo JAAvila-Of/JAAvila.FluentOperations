@@ -14,7 +14,7 @@ namespace JAAvila.FluentOperations;
 /// </summary>
 /// <typeparam name="T">The type of the manager implementing ITestManager.</typeparam>
 /// <typeparam name="TS">The type for the principal chain's associated data.</typeparam>
-internal class ExecutionEngine<T, TS>(T manager) : IQualityRule, IRuleDescriptor
+internal class ExecutionEngine<T, TS>(T manager) : IQualityRule, IRuleDescriptor, IModelAwareRule
     where T : ITestManager<T, TS>
 {
     private IValidator? _operation;
@@ -54,8 +54,9 @@ internal class ExecutionEngine<T, TS>(T manager) : IQualityRule, IRuleDescriptor
     public static void BeginPropertyCapture(
         List<IQualityRule> rules,
         string propertyName,
-        Type? scenario = null
-    ) => RuleCaptureContext.BeginPropertyCapture(rules, propertyName, scenario);
+        Type? scenario = null,
+        string? ruleSet = null
+    ) => RuleCaptureContext.BeginPropertyCapture(rules, propertyName, scenario, ruleSet);
 
     public static void EndPropertyCapture() => RuleCaptureContext.EndPropertyCapture();
 
@@ -187,12 +188,6 @@ internal class ExecutionEngine<T, TS>(T manager) : IQualityRule, IRuleDescriptor
 
         if (fail)
         {
-            // In eager mode, only Error severity throws
-            if (_severity == Severity.Error)
-            {
-                ExceptionHandler.Handle(_customMessage ?? _template);
-            }
-
             if (telemetryConfig is { Enabled: true })
             {
                 sw?.Stop();
@@ -200,6 +195,12 @@ internal class ExecutionEngine<T, TS>(T manager) : IQualityRule, IRuleDescriptor
                     false,
                     _severity.ToString(),
                     sw?.Elapsed.TotalMilliseconds ?? 0);
+            }
+
+            // In eager mode, only Error severity throws
+            if (_severity == Severity.Error)
+            {
+                ExceptionHandler.Handle(_customMessage ?? _template);
             }
 
             // Warning and Info are silently ignored in eager mode for FailIf conditions
@@ -280,10 +281,10 @@ internal class ExecutionEngine<T, TS>(T manager) : IQualityRule, IRuleDescriptor
         switch (value)
         {
             case TS typedValue:
-                manager.PrincipalChain.SetValue(typedValue);
+                manager.PrincipalChain.ReInitialize(typedValue);
                 break;
             case null when !typeof(TS).IsValueType:
-                manager.PrincipalChain.SetValue(default!);
+                manager.PrincipalChain.ReInitialize(default!);
                 break;
         }
     }
@@ -293,6 +294,17 @@ internal class ExecutionEngine<T, TS>(T manager) : IQualityRule, IRuleDescriptor
     string? IQualityRule.GetErrorCode() => _errorCode;
 
     string? IQualityRule.GetCustomMessage() => _customMessage;
+
+    /// <summary>
+    /// Receives the root model instance from the Blueprint evaluation loop.
+    /// The model is not used by ExecutionEngine directly — MessageFactory resolution
+    /// is handled by the enclosing <see cref="CapturedRule"/> decorator.
+    /// </summary>
+    void IModelAwareRule.SetModelInstance(object model)
+    {
+        // No-op: ExecutionEngine does not use the root model.
+        // MessageFactory resolution occurs in CapturedRule.GetCustomMessage().
+    }
 
     /// <summary>
     /// Executes the validation asynchronously.
@@ -315,8 +327,6 @@ internal class ExecutionEngine<T, TS>(T manager) : IQualityRule, IRuleDescriptor
 
         if (fail)
         {
-            ExceptionHandler.Handle(_template);
-
             if (telemetryConfig is { Enabled: true })
             {
                 sw?.Stop();
@@ -326,6 +336,13 @@ internal class ExecutionEngine<T, TS>(T manager) : IQualityRule, IRuleDescriptor
                     sw?.Elapsed.TotalMilliseconds ?? 0);
             }
 
+            // In eager mode, only Error severity throws
+            if (_severity == Severity.Error)
+            {
+                ExceptionHandler.Handle(_customMessage ?? _template);
+            }
+
+            // Warning and Info are silently ignored in eager mode for FailIf conditions
             return;
         }
 
