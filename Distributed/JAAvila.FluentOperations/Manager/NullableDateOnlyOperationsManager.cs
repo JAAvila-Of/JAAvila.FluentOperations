@@ -248,6 +248,500 @@ public class NullableDateOnlyOperationsManager
     }
 
     /// <summary>
+    /// Asserts that the value is strictly after <paramref name="expected"/>.
+    /// </summary>
+    /// <param name="expected">The reference date to compare against.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>Throws immediately if the value is <c>null</c> (null guard).</remarks>
+    public NullableDateOnlyOperationsManager BeAfter(DateOnly expected, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.DateOnly.BeAfter))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableDateOnlyOperationsManager, DateOnly?>
+            .New(this)
+            .WithOperation(NullableDateOnlyBeAfterValidator.New(PrincipalChain, expected))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.MessageKey, operation.ResultValidation,
+                            BaseFormatter.Format(expected),
+                            BaseFormatter.Format(PrincipalChain.GetValue())
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(BeAfter)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the value is strictly before <paramref name="expected"/>.
+    /// </summary>
+    /// <param name="expected">The reference date to compare against.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>Throws immediately if the value is <c>null</c> (null guard).</remarks>
+    public NullableDateOnlyOperationsManager BeBefore(DateOnly expected, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.DateOnly.BeBefore))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableDateOnlyOperationsManager, DateOnly?>
+            .New(this)
+            .WithOperation(NullableDateOnlyBeBeforeValidator.New(PrincipalChain, expected))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.MessageKey, operation.ResultValidation,
+                            BaseFormatter.Format(expected),
+                            BaseFormatter.Format(PrincipalChain.GetValue())
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(BeBefore)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the value is on or after <paramref name="expected"/>.
+    /// </summary>
+    /// <param name="expected">The reference date to compare against.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>Throws immediately if the value is <c>null</c> (null guard).</remarks>
+    public NullableDateOnlyOperationsManager BeOnOrAfter(DateOnly expected, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.DateOnly.BeOnOrAfter))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableDateOnlyOperationsManager, DateOnly?>
+            .New(this)
+            .WithOperation(NullableDateOnlyBeOnOrAfterValidator.New(PrincipalChain, expected))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.MessageKey, operation.ResultValidation,
+                            BaseFormatter.Format(expected),
+                            BaseFormatter.Format(PrincipalChain.GetValue())
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(BeOnOrAfter)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the value is on or before <paramref name="expected"/>.
+    /// </summary>
+    /// <param name="expected">The reference date to compare against.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>Throws immediately if the value is <c>null</c> (null guard).</remarks>
+    public NullableDateOnlyOperationsManager BeOnOrBefore(DateOnly expected, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.DateOnly.BeOnOrBefore))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableDateOnlyOperationsManager, DateOnly?>
+            .New(this)
+            .WithOperation(NullableDateOnlyBeOnOrBeforeValidator.New(PrincipalChain, expected))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.MessageKey, operation.ResultValidation,
+                            BaseFormatter.Format(expected),
+                            BaseFormatter.Format(PrincipalChain.GetValue())
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(BeOnOrBefore)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the value represents today's date.
+    /// </summary>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>Throws immediately if the value is <c>null</c> (null guard).</remarks>
+    public NullableDateOnlyOperationsManager BeToday(Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.DateOnly.BeToday))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableDateOnlyOperationsManager, DateOnly?>
+            .New(this)
+            .WithOperation(NullableDateOnlyBeTodayValidator.New(PrincipalChain))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.MessageKey, operation.ResultValidation,
+                            BaseFormatter.Format(PrincipalChain.GetValue())
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(BeToday)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the value represents yesterday's date.
+    /// </summary>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>Throws immediately if the value is <c>null</c> (null guard).</remarks>
+    public NullableDateOnlyOperationsManager BeYesterday(Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.DateOnly.BeYesterday))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableDateOnlyOperationsManager, DateOnly?>
+            .New(this)
+            .WithOperation(NullableDateOnlyBeYesterdayValidator.New(PrincipalChain))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.MessageKey, operation.ResultValidation,
+                            BaseFormatter.Format(PrincipalChain.GetValue())
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(BeYesterday)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the value represents tomorrow's date.
+    /// </summary>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>Throws immediately if the value is <c>null</c> (null guard).</remarks>
+    public NullableDateOnlyOperationsManager BeTomorrow(Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.DateOnly.BeTomorrow))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableDateOnlyOperationsManager, DateOnly?>
+            .New(this)
+            .WithOperation(NullableDateOnlyBeTomorrowValidator.New(PrincipalChain))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.MessageKey, operation.ResultValidation,
+                            BaseFormatter.Format(PrincipalChain.GetValue())
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(BeTomorrow)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the value falls on a weekday (Monday through Friday).
+    /// </summary>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>Throws immediately if the value is <c>null</c> (null guard).</remarks>
+    public NullableDateOnlyOperationsManager BeWeekday(Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.DateOnly.BeWeekday))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableDateOnlyOperationsManager, DateOnly?>
+            .New(this)
+            .WithOperation(NullableDateOnlyBeWeekdayValidator.New(PrincipalChain))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.MessageKey, operation.ResultValidation,
+                            BaseFormatter.Format(PrincipalChain.GetValue())
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(BeWeekday)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the value falls on a weekend (Saturday or Sunday).
+    /// </summary>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>Throws immediately if the value is <c>null</c> (null guard).</remarks>
+    public NullableDateOnlyOperationsManager BeWeekend(Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.DateOnly.BeWeekend))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableDateOnlyOperationsManager, DateOnly?>
+            .New(this)
+            .WithOperation(NullableDateOnlyBeWeekendValidator.New(PrincipalChain))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.MessageKey, operation.ResultValidation,
+                            BaseFormatter.Format(PrincipalChain.GetValue())
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(BeWeekend)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the year component of the value equals <paramref name="expectedYear"/>.
+    /// </summary>
+    /// <param name="expectedYear">The expected year.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>Throws immediately if the value is <c>null</c> (null guard).</remarks>
+    public NullableDateOnlyOperationsManager HaveYear(int expectedYear, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.DateOnly.HaveYear))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableDateOnlyOperationsManager, DateOnly?>
+            .New(this)
+            .WithOperation(NullableDateOnlyHaveYearValidator.New(PrincipalChain, expectedYear))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.MessageKey, operation.ResultValidation,
+                            BaseFormatter.Format(expectedYear),
+                            BaseFormatter.Format(PrincipalChain.GetValue()!.Value.Year)
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(HaveYear)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the month component of the value equals <paramref name="expectedMonth"/>.
+    /// </summary>
+    /// <param name="expectedMonth">The expected month (1–12).</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>Throws immediately if the value is <c>null</c> (null guard).</remarks>
+    public NullableDateOnlyOperationsManager HaveMonth(int expectedMonth, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.DateOnly.HaveMonth))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableDateOnlyOperationsManager, DateOnly?>
+            .New(this)
+            .WithOperation(NullableDateOnlyHaveMonthValidator.New(PrincipalChain, expectedMonth))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.MessageKey, operation.ResultValidation,
+                            BaseFormatter.Format(expectedMonth),
+                            BaseFormatter.Format(PrincipalChain.GetValue()!.Value.Month)
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(HaveMonth)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the day component of the value equals <paramref name="expectedDay"/>.
+    /// </summary>
+    /// <param name="expectedDay">The expected day of the month (1–31).</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>Throws immediately if the value is <c>null</c> (null guard).</remarks>
+    public NullableDateOnlyOperationsManager HaveDay(int expectedDay, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.DateOnly.HaveDay))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableDateOnlyOperationsManager, DateOnly?>
+            .New(this)
+            .WithOperation(NullableDateOnlyHaveDayValidator.New(PrincipalChain, expectedDay))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.MessageKey, operation.ResultValidation,
+                            BaseFormatter.Format(expectedDay),
+                            BaseFormatter.Format(PrincipalChain.GetValue()!.Value.Day)
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(HaveDay)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
     /// Asserts that the runtime type of the value is exactly <typeparamref name="TType"/>.
     /// </summary>
     public NullableDateOnlyOperationsManager BeOfType<TType>(Reason? reason = null)

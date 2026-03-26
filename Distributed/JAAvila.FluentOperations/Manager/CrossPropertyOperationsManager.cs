@@ -16,6 +16,7 @@ public class CrossPropertyOperationsManager<TModel, TProp>
     private readonly List<IQualityRule> _captureList;
     private readonly Type? _scenario;
     private readonly RuleConfig? _config;
+    private readonly string? _ruleSet;
 
     /// <summary>
     /// Initializes a new instance for comparing a property against a reference property.
@@ -27,6 +28,7 @@ public class CrossPropertyOperationsManager<TModel, TProp>
     /// <param name="captureList">The list of rules to which the generated rule is appended.</param>
     /// <param name="scenario">The optional scenario type that scopes the rule.</param>
     /// <param name="config">An optional rule configuration (severity, error code, custom message).</param>
+    /// <param name="ruleSet">The optional rule set name that scopes the rule.</param>
     public CrossPropertyOperationsManager(
         string propertyName,
         string referencePropertyName,
@@ -34,7 +36,8 @@ public class CrossPropertyOperationsManager<TModel, TProp>
         Func<TModel, TProp> referenceExtractor,
         List<IQualityRule> captureList,
         Type? scenario,
-        RuleConfig? config = null)
+        RuleConfig? config = null,
+        string? ruleSet = null)
     {
         _propertyName = propertyName;
         _referencePropertyName = referencePropertyName;
@@ -43,6 +46,7 @@ public class CrossPropertyOperationsManager<TModel, TProp>
         _captureList = captureList;
         _scenario = scenario;
         _config = config;
+        _ruleSet = ruleSet;
     }
 
     /// <summary>
@@ -60,7 +64,7 @@ public class CrossPropertyOperationsManager<TModel, TProp>
             CrossPropertyComparison.Equal,
             _config,
             reason);
-        _captureList.Add(new CapturedRule(_propertyName, rule, _scenario, _config));
+        _captureList.Add(new CapturedRule(_propertyName, rule, _scenario, _config, _ruleSet));
         return this;
     }
 
@@ -79,7 +83,7 @@ public class CrossPropertyOperationsManager<TModel, TProp>
             CrossPropertyComparison.NotEqual,
             _config,
             reason);
-        _captureList.Add(new CapturedRule(_propertyName, rule, _scenario, _config));
+        _captureList.Add(new CapturedRule(_propertyName, rule, _scenario, _config, _ruleSet));
         return this;
     }
 
@@ -98,7 +102,7 @@ public class CrossPropertyOperationsManager<TModel, TProp>
             CrossPropertyComparison.GreaterThan,
             _config,
             reason);
-        _captureList.Add(new CapturedRule(_propertyName, rule, _scenario, _config));
+        _captureList.Add(new CapturedRule(_propertyName, rule, _scenario, _config, _ruleSet));
         return this;
     }
 
@@ -117,7 +121,7 @@ public class CrossPropertyOperationsManager<TModel, TProp>
             CrossPropertyComparison.LessThan,
             _config,
             reason);
-        _captureList.Add(new CapturedRule(_propertyName, rule, _scenario, _config));
+        _captureList.Add(new CapturedRule(_propertyName, rule, _scenario, _config, _ruleSet));
         return this;
     }
 
@@ -136,7 +140,7 @@ public class CrossPropertyOperationsManager<TModel, TProp>
             CrossPropertyComparison.GreaterThanOrEqual,
             _config,
             reason);
-        _captureList.Add(new CapturedRule(_propertyName, rule, _scenario, _config));
+        _captureList.Add(new CapturedRule(_propertyName, rule, _scenario, _config, _ruleSet));
         return this;
     }
 
@@ -155,7 +159,7 @@ public class CrossPropertyOperationsManager<TModel, TProp>
             CrossPropertyComparison.LessThanOrEqual,
             _config,
             reason);
-        _captureList.Add(new CapturedRule(_propertyName, rule, _scenario, _config));
+        _captureList.Add(new CapturedRule(_propertyName, rule, _scenario, _config, _ruleSet));
         return this;
     }
 }

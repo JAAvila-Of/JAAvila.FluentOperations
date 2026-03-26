@@ -13,17 +13,19 @@ internal class ConditionalRuleWrapper<TModel>(
     Func<TModel, bool> condition,
     bool isOtherwise = false,
     ConditionGroup<TModel>? conditionGroup = null
-) : IQualityRule, IConditionalRule
+) : IQualityRule, IConditionalRule, IModelAwareRule
 {
     private TModel? _modelInstance;
 
-    /// <summary>
-    /// Sets the model instance for evaluating the condition.
-    /// Must be called before Validate()/ValidateAsync().
-    /// </summary>
-    internal void SetModelInstance(TModel instance)
+    /// <inheritdoc />
+    public void SetModelInstance(object model)
     {
-        _modelInstance = instance;
+        if (model is TModel typed)
+            _modelInstance = typed;
+
+        // Propagate to inner rule if it also requires model access
+        if (inner is IModelAwareRule innerModelAware)
+            innerModelAware.SetModelInstance(model);
     }
 
     public bool ShouldExecute()

@@ -83,12 +83,46 @@ catch (BlueprintValidationException ex)
 }
 ```
 
+## Registration Approaches
+
+Three approaches are available. Choose based on how your blueprint relates to the request:
+
+### 1. Auto-discovery (recommended for most cases)
+
+```csharp
+services.AddSingleton<QualityBlueprint<CreateOrderCommand>, CreateOrderBlueprint>();
+services.AddBlueprintValidation();
+```
+
+Discovers matching blueprints at runtime. Works regardless of whether the blueprint models the request type directly or a base type.
+
+### 2. Direct request validation (3-generic)
+
+Use when your blueprint validates the request type directly (`TBlueprint : QualityBlueprint<TRequest>`):
+
+```csharp
+// Blueprint: public class CreateOrderBlueprint : QualityBlueprint<CreateOrderCommand>
+services.AddBlueprintBehavior<CreateOrderCommand, OrderResult, CreateOrderBlueprint>();
+```
+
+### 3. Base model validation (4-generic)
+
+Use when your blueprint validates a base model and the request inherits from it:
+
+```csharp
+// Blueprint: public class UserBlueprint : QualityBlueprint<User>
+// Request:   public class CreateUserCommand : User, IRequest<string>
+services.AddBlueprintBehavior<CreateUserCommand, string, User, UserBlueprint>();
+```
+
+> **Note:** Using the 3-generic overload with a base-model blueprint causes a **compile error** because `TBlueprint : QualityBlueprint<TRequest>` is not satisfied. Use the 4-generic overload or auto-discovery instead.
+
 ## API Reference
 
 | Method | Description |
 |---|---|
 | `AddBlueprintValidation()` | Registers the open-generic `MediatRBlueprintBehavior<,>` for all requests |
-| `AddBlueprintBehavior<TRequest, TResponse, TBlueprint>()` | Registers a strongly typed behavior for a specific request/blueprint pair |
+| `AddBlueprintBehavior<TRequest, TResponse, TBlueprint>()` | Registers a strongly typed behavior. Blueprint must validate the request type directly. |
 | `AddBlueprintBehavior<TRequest, TResponse, TModel, TBlueprint>()` | Registers a behavior where `TRequest` derives from `TModel` and the blueprint validates `TModel` |
 
 ## Features

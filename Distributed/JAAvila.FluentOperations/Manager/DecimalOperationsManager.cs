@@ -537,6 +537,79 @@ public class DecimalOperationsManager : ITestManager<DecimalOperationsManager, d
     }
 
     /// <summary>
+    /// Asserts that the value has at most <paramref name="expectedDecimals"/> decimal places
+    /// and at most <paramref name="maxTotalDigits"/> total significant digits.
+    /// </summary>
+    /// <param name="expectedDecimals">The maximum number of decimal places allowed.</param>
+    /// <param name="maxTotalDigits">The maximum number of total significant digits allowed.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// Throws immediately if <paramref name="expectedDecimals"/> is negative,
+    /// <paramref name="maxTotalDigits"/> is less than 1, or
+    /// <paramref name="expectedDecimals"/> exceeds <paramref name="maxTotalDigits"/>.
+    /// </remarks>
+    public DecimalOperationsManager HaveScaledPrecision(
+        int expectedDecimals,
+        int maxTotalDigits,
+        Reason? reason = null
+    )
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Decimal.HaveScaledPrecision))
+        {
+            return this;
+        }
+
+        ExecutionEngine<DecimalOperationsManager, decimal>
+            .New(this)
+            .WithOperation(
+                DecimalHaveScaledPrecisionValidator.New(PrincipalChain, expectedDecimals, maxTotalDigits)
+            )
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            expectedDecimals,
+                            maxTotalDigits
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                _ =>
+                    (
+                        expectedDecimals < 0,
+                        Fail.New(
+                            $"The {nameof(HaveScaledPrecision)} operation failed because the number of decimal places cannot be negative."
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        maxTotalDigits < 1,
+                        Fail.New(
+                            $"The {nameof(HaveScaledPrecision)} operation failed because the total number of digits must be at least 1."
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        expectedDecimals > maxTotalDigits,
+                        Fail.New(
+                            $"The {nameof(HaveScaledPrecision)} operation failed because the number of decimal places cannot exceed the total number of digits."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
     /// Asserts that the value is rounded to at most <paramref name="decimals"/> decimal places.
     /// </summary>
     /// <param name="decimals">The maximum number of decimal places allowed.</param>
