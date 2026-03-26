@@ -24,17 +24,20 @@ public abstract partial class QualityBlueprint<T>
         var valueExtractor = propertyExpression.Compile();
         _extractors[propertyName] = x => valueExtractor(x);
         var currentScenario = _currentScenario;
+        var currentRuleSet = _currentRuleSet;
         RuleCaptureContext.BeginPropertyCapture(
             _capturedDuringDefinition,
             propertyName,
-            currentScenario
+            currentScenario,
+            currentRuleSet
         );
         RuleCaptureContext.SetRuleConfig(null);
         return new PropertyProxy<IEnumerable<TItem>, CollectionOperationsManager<TItem>>(
             propertyName,
             _capturedDuringDefinition,
             () => currentScenario,
-            caller => new CollectionOperationsManager<TItem>([], caller)
+            caller => new CollectionOperationsManager<TItem>([], caller),
+            () => currentRuleSet
         );
     }
 
@@ -56,17 +59,20 @@ public abstract partial class QualityBlueprint<T>
         var valueExtractor = propertyExpression.Compile();
         _extractors[propertyName] = x => valueExtractor(x);
         var currentScenario = _currentScenario;
+        var currentRuleSet = _currentRuleSet;
         RuleCaptureContext.BeginPropertyCapture(
             _capturedDuringDefinition,
             propertyName,
-            currentScenario
+            currentScenario,
+            currentRuleSet
         );
         RuleCaptureContext.SetRuleConfig(config);
         return new PropertyProxy<IEnumerable<TItem>, CollectionOperationsManager<TItem>>(
             propertyName,
             _capturedDuringDefinition,
             () => currentScenario,
-            caller => new CollectionOperationsManager<TItem>([], caller)
+            caller => new CollectionOperationsManager<TItem>([], caller),
+            () => currentRuleSet
         );
     }
 
@@ -87,17 +93,20 @@ public abstract partial class QualityBlueprint<T>
         var valueExtractor = propertyExpression.Compile();
         _extractors[propertyName] = x => valueExtractor(x);
         var currentScenario = _currentScenario;
+        var currentRuleSet = _currentRuleSet;
         RuleCaptureContext.BeginPropertyCapture(
             _capturedDuringDefinition,
             propertyName,
-            currentScenario
+            currentScenario,
+            currentRuleSet
         );
         RuleCaptureContext.SetRuleConfig(null);
         return new PropertyProxy<TItem[], ArrayOperationsManager<TItem>>(
             propertyName,
             _capturedDuringDefinition,
             () => currentScenario,
-            caller => new ArrayOperationsManager<TItem>([], caller)
+            caller => new ArrayOperationsManager<TItem>([], caller),
+            () => currentRuleSet
         );
     }
 
@@ -119,17 +128,20 @@ public abstract partial class QualityBlueprint<T>
         var valueExtractor = propertyExpression.Compile();
         _extractors[propertyName] = x => valueExtractor(x);
         var currentScenario = _currentScenario;
+        var currentRuleSet = _currentRuleSet;
         RuleCaptureContext.BeginPropertyCapture(
             _capturedDuringDefinition,
             propertyName,
-            currentScenario
+            currentScenario,
+            currentRuleSet
         );
         RuleCaptureContext.SetRuleConfig(config);
         return new PropertyProxy<TItem[], ArrayOperationsManager<TItem>>(
             propertyName,
             _capturedDuringDefinition,
             () => currentScenario,
-            caller => new ArrayOperationsManager<TItem>([], caller)
+            caller => new ArrayOperationsManager<TItem>([], caller),
+            () => currentRuleSet
         );
     }
 
@@ -152,10 +164,12 @@ public abstract partial class QualityBlueprint<T>
         var valueExtractor = propertyExpression.Compile();
         _extractors[propertyName] = x => valueExtractor(x);
         var currentScenario = _currentScenario;
+        var currentRuleSet = _currentRuleSet;
         RuleCaptureContext.BeginPropertyCapture(
             _capturedDuringDefinition,
             propertyName,
-            currentScenario
+            currentScenario,
+            currentRuleSet
         );
         RuleCaptureContext.SetRuleConfig(null);
         return new PropertyProxy<
@@ -169,7 +183,8 @@ public abstract partial class QualityBlueprint<T>
                 new DictionaryOperationsManager<TKey, TValue>(
                     new Dictionary<TKey, TValue>(),
                     caller
-                )
+                ),
+            () => currentRuleSet
         );
     }
 
@@ -193,10 +208,12 @@ public abstract partial class QualityBlueprint<T>
         var valueExtractor = propertyExpression.Compile();
         _extractors[propertyName] = x => valueExtractor(x);
         var currentScenario = _currentScenario;
+        var currentRuleSet = _currentRuleSet;
         RuleCaptureContext.BeginPropertyCapture(
             _capturedDuringDefinition,
             propertyName,
-            currentScenario
+            currentScenario,
+            currentRuleSet
         );
         RuleCaptureContext.SetRuleConfig(config);
         return new PropertyProxy<
@@ -210,7 +227,8 @@ public abstract partial class QualityBlueprint<T>
                 new DictionaryOperationsManager<TKey, TValue>(
                     new Dictionary<TKey, TValue>(),
                     caller
-                )
+                ),
+            () => currentRuleSet
         );
     }
 
@@ -233,10 +251,12 @@ public abstract partial class QualityBlueprint<T>
         var valueExtractor = propertyExpression.Compile();
         _extractors[propertyName] = x => valueExtractor(x);
         var currentScenario = _currentScenario;
+        var currentRuleSet = _currentRuleSet;
         RuleCaptureContext.BeginPropertyCapture(
             _capturedDuringDefinition,
             propertyName,
-            currentScenario
+            currentScenario,
+            currentRuleSet
         );
         RuleCaptureContext.SetRuleConfig(null);
         return new PropertyProxy<
@@ -250,7 +270,8 @@ public abstract partial class QualityBlueprint<T>
                 new DictionaryOperationsManager<TKey, TValue>(
                     new Dictionary<TKey, TValue>(),
                     caller
-                )
+                ),
+            () => currentRuleSet
         );
     }
 
@@ -274,10 +295,12 @@ public abstract partial class QualityBlueprint<T>
         var valueExtractor = propertyExpression.Compile();
         _extractors[propertyName] = x => valueExtractor(x);
         var currentScenario = _currentScenario;
+        var currentRuleSet = _currentRuleSet;
         RuleCaptureContext.BeginPropertyCapture(
             _capturedDuringDefinition,
             propertyName,
-            currentScenario
+            currentScenario,
+            currentRuleSet
         );
         RuleCaptureContext.SetRuleConfig(config);
         return new PropertyProxy<
@@ -291,7 +314,8 @@ public abstract partial class QualityBlueprint<T>
                 new DictionaryOperationsManager<TKey, TValue>(
                     new Dictionary<TKey, TValue>(),
                     caller
-                )
+                ),
+            () => currentRuleSet
         );
     }
 

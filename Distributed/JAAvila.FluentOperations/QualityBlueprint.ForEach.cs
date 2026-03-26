@@ -30,18 +30,20 @@ public abstract partial class QualityBlueprint<T>
         _forEachConfigs[propertyName] = null;
 
         var currentScenario = _currentScenario;
-
+        var currentRuleSet = _currentRuleSet;
         RuleCaptureContext.BeginPropertyCapture(
             _capturedDuringDefinition,
             propertyName,
-            currentScenario
+            currentScenario,
+            currentRuleSet
         );
         RuleCaptureContext.SetRuleConfig(null);
 
         return new PropertyProxy<TItem, TManager>(
             propertyName,
             _capturedDuringDefinition,
-            () => currentScenario
+            () => currentScenario,
+            ruleSetProvider: () => currentRuleSet
         );
     }
 
@@ -78,18 +80,20 @@ public abstract partial class QualityBlueprint<T>
         _forEachConfigs[propertyName] = config;
 
         var currentScenario = _currentScenario;
-
+        var currentRuleSet = _currentRuleSet;
         RuleCaptureContext.BeginPropertyCapture(
             _capturedDuringDefinition,
             propertyName,
-            currentScenario
+            currentScenario,
+            currentRuleSet
         );
         RuleCaptureContext.SetRuleConfig(config);
 
         return new PropertyProxy<TItem, TManager>(
             propertyName,
             _capturedDuringDefinition,
-            () => currentScenario
+            () => currentScenario,
+            ruleSetProvider: () => currentRuleSet
         );
     }
 
@@ -123,7 +127,7 @@ public abstract partial class QualityBlueprint<T>
         var valueExtractor = propertyExpression.Compile();
 
         var currentScenario = _currentScenario;
-
+        var currentRuleSet = _currentRuleSet;
         // Wrap the generic blueprint into an object-typed sub-blueprint rule
         var typedRule = new TypedSubBlueprintRule<TItem>(subBlueprint);
 
@@ -134,7 +138,9 @@ public abstract partial class QualityBlueprint<T>
                 [],
                 typedRule,
                 currentScenario,
-                null
+                null,
+                null,
+                currentRuleSet
             )
         );
     }
@@ -153,7 +159,7 @@ public abstract partial class QualityBlueprint<T>
         var valueExtractor = propertyExpression.Compile();
 
         var currentScenario = _currentScenario;
-
+        var currentRuleSet = _currentRuleSet;
         var typedRule = new TypedSubBlueprintRule<TItem>(subBlueprint);
 
         _forEachDefinitions.Add(
@@ -163,7 +169,9 @@ public abstract partial class QualityBlueprint<T>
                 [],
                 typedRule,
                 currentScenario,
-                config
+                config,
+                null,
+                currentRuleSet
             )
         );
     }
@@ -191,18 +199,20 @@ public abstract partial class QualityBlueprint<T>
         _forEachFilters[propertyName] = item => item is TItem typed && predicate(typed);
 
         var currentScenario = _currentScenario;
-
+        var currentRuleSet = _currentRuleSet;
         RuleCaptureContext.BeginPropertyCapture(
             _capturedDuringDefinition,
             propertyName,
-            currentScenario
+            currentScenario,
+            currentRuleSet
         );
         RuleCaptureContext.SetRuleConfig(null);
 
         return new PropertyProxy<TItem, TManager>(
             propertyName,
             _capturedDuringDefinition,
-            () => currentScenario
+            () => currentScenario,
+            ruleSetProvider: () => currentRuleSet
         );
     }
 
@@ -237,6 +247,7 @@ public abstract partial class QualityBlueprint<T>
         var valueExtractor = propertyExpression.Compile();
 
         var currentScenario = _currentScenario;
+        var currentRuleSet = _currentRuleSet;
         var typedRule = new TypedSubBlueprintRule<TItem>(subBlueprint);
         Func<object, bool> filter = item => item is TItem typed && predicate(typed);
 
@@ -248,7 +259,8 @@ public abstract partial class QualityBlueprint<T>
                 typedRule,
                 currentScenario,
                 null,
-                filter
+                filter,
+                currentRuleSet
             )
         );
     }
@@ -272,18 +284,20 @@ public abstract partial class QualityBlueprint<T>
         _forEachFilters[propertyName] = item => item is TItem typed && predicate(typed);
 
         var currentScenario = _currentScenario;
-
+        var currentRuleSet = _currentRuleSet;
         RuleCaptureContext.BeginPropertyCapture(
             _capturedDuringDefinition,
             propertyName,
-            currentScenario
+            currentScenario,
+            currentRuleSet
         );
         RuleCaptureContext.SetRuleConfig(config);
 
         return new PropertyProxy<TItem, TManager>(
             propertyName,
             _capturedDuringDefinition,
-            () => currentScenario
+            () => currentScenario,
+            ruleSetProvider: () => currentRuleSet
         );
     }
 
@@ -321,6 +335,7 @@ public abstract partial class QualityBlueprint<T>
         var valueExtractor = propertyExpression.Compile();
 
         var currentScenario = _currentScenario;
+        var currentRuleSet = _currentRuleSet;
         var typedRule = new TypedSubBlueprintRule<TItem>(subBlueprint);
         Func<object, bool> filter = item => item is TItem typed && predicate(typed);
 
@@ -332,7 +347,8 @@ public abstract partial class QualityBlueprint<T>
                 typedRule,
                 currentScenario,
                 config,
-                filter
+                filter,
+                currentRuleSet
             )
         );
     }
