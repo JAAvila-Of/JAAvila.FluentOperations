@@ -32,4 +32,9 @@ public sealed record BlueprintRuleInfo
     /// The scenario interface type that activates this rule, or <c>null</c> for unconditional rules.
     /// </summary>
     public Type? Scenario { get; init; }
+
+    /// <summary>
+    /// The name of the rule set this rule belongs to, or <c>null</c> for unconditional (default) rules.
+    /// </summary>
+    public string? RuleSetName { get; init; }
 }

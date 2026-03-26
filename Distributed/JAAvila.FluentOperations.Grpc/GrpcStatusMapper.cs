@@ -31,10 +31,11 @@ public static class GrpcStatusMapper
         var metadata = new Metadata();
 
         // Add per-property metadata entries for each Error-level failure.
-        // gRPC metadata keys must be lowercase ASCII.
+        // gRPC metadata keys must be lowercase ASCII matching [a-z0-9_.-].
+        // Property names such as "(root)" contain invalid characters and must be sanitized.
         foreach (var kvp in errorDictionary)
         {
-            var key = $"validation-error-{kvp.Key.ToLowerInvariant()}";
+            var key = $"validation-error-{SanitizeMetadataKey(kvp.Key)}";
             foreach (var message in kvp.Value)
             {
                 metadata.Add(key, message);
@@ -50,5 +51,19 @@ public static class GrpcStatusMapper
         }
 
         return new RpcException(status, metadata);
+    }
+
+    /// <summary>
+    /// Sanitizes a property name for use as a gRPC metadata key.
+    /// gRPC metadata keys must match [a-z0-9_.-]. Characters outside this set are removed.
+    /// </summary>
+    private static string SanitizeMetadataKey(string propertyName)
+    {
+        return propertyName
+            .ToLowerInvariant()
+            .Replace("(", "")
+            .Replace(")", "")
+            .Replace("[", "_")
+            .Replace("]", "_");
     }
 }

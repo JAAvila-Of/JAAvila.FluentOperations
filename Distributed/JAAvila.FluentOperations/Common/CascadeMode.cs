@@ -11,8 +11,9 @@ public enum CascadeMode
     Continue,
 
     /// <summary>
-    /// Rule execution stops after the first failure for a property or collection item.
-    /// Subsequent rules in the same definition are skipped.
+    /// Rule execution stops after the first qualifying failure for a property or collection item.
+    /// Which failures qualify is controlled by <see cref="CascadeSeverityMode"/>:
+    /// by default, only Error-severity failures trigger the stop.
     /// </summary>
     StopOnFirstFailure
 }

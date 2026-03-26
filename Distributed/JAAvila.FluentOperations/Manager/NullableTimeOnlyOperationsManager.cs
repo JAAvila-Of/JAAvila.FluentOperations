@@ -248,6 +248,211 @@ public class NullableTimeOnlyOperationsManager
     }
 
     /// <summary>
+    /// Asserts that the value is strictly after <paramref name="expected"/>.
+    /// </summary>
+    /// <param name="expected">The reference time to compare against.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public NullableTimeOnlyOperationsManager BeAfter(TimeOnly expected, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.TimeOnly.BeAfter))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableTimeOnlyOperationsManager, TimeOnly?>
+            .New(this)
+            .WithOperation(NullableTimeOnlyBeAfterValidator.New(PrincipalChain, expected))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.MessageKey, operation.ResultValidation,
+                            BaseFormatter.Format(expected),
+                            BaseFormatter.Format(PrincipalChain.GetValue())
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(BeAfter)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the value is strictly before <paramref name="expected"/>.
+    /// </summary>
+    /// <param name="expected">The reference time to compare against.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public NullableTimeOnlyOperationsManager BeBefore(TimeOnly expected, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.TimeOnly.BeBefore))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableTimeOnlyOperationsManager, TimeOnly?>
+            .New(this)
+            .WithOperation(NullableTimeOnlyBeBeforeValidator.New(PrincipalChain, expected))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.MessageKey, operation.ResultValidation,
+                            BaseFormatter.Format(expected),
+                            BaseFormatter.Format(PrincipalChain.GetValue())
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(BeBefore)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the hour component of the value equals <paramref name="hour"/>.
+    /// </summary>
+    /// <param name="hour">The expected hour (0–23).</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public NullableTimeOnlyOperationsManager HaveHour(int hour, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.TimeOnly.HaveHour))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableTimeOnlyOperationsManager, TimeOnly?>
+            .New(this)
+            .WithOperation(NullableTimeOnlyHaveHourValidator.New(PrincipalChain, hour))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.MessageKey, operation.ResultValidation,
+                            BaseFormatter.Format(hour),
+                            BaseFormatter.Format(PrincipalChain.GetValue()!.Value.Hour)
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(HaveHour)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the minute component of the value equals <paramref name="minute"/>.
+    /// </summary>
+    /// <param name="minute">The expected minute (0–59).</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public NullableTimeOnlyOperationsManager HaveMinute(int minute, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.TimeOnly.HaveMinute))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableTimeOnlyOperationsManager, TimeOnly?>
+            .New(this)
+            .WithOperation(NullableTimeOnlyHaveMinuteValidator.New(PrincipalChain, minute))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.MessageKey, operation.ResultValidation,
+                            BaseFormatter.Format(minute),
+                            BaseFormatter.Format(PrincipalChain.GetValue()!.Value.Minute)
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(HaveMinute)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the second component of the value equals <paramref name="second"/>.
+    /// </summary>
+    /// <param name="second">The expected second (0–59).</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public NullableTimeOnlyOperationsManager HaveSecond(int second, Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.TimeOnly.HaveSecond))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableTimeOnlyOperationsManager, TimeOnly?>
+            .New(this)
+            .WithOperation(NullableTimeOnlyHaveSecondValidator.New(PrincipalChain, second))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.MessageKey, operation.ResultValidation,
+                            BaseFormatter.Format(second),
+                            BaseFormatter.Format(PrincipalChain.GetValue()!.Value.Second)
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(HaveSecond)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
     /// Asserts that the runtime type of the value is exactly <typeparamref name="TType"/>.
     /// </summary>
     public NullableTimeOnlyOperationsManager BeOfType<TType>(Reason? reason = null)

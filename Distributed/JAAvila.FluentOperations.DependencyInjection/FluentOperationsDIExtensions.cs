@@ -170,6 +170,163 @@ public static class FluentOperationsDIExtensions
     }
 
     /// <summary>
+    /// Registers a <see cref="CompositeBlueprint{T}"/> that composes the specified blueprint types.
+    /// Each blueprint type is registered as a singleton (by concrete type only) if not already registered.
+    /// The composite itself is registered as a singleton and as <see cref="IBlueprintValidator"/>,
+    /// making it discoverable by integration filters.
+    /// </summary>
+    /// <typeparam name="T">The model type validated by all composed blueprints.</typeparam>
+    /// <param name="services">The service collection.</param>
+    /// <param name="blueprintTypes">
+    /// The concrete blueprint types to compose. Each type must implement <see cref="IBlueprintValidator"/>.
+    /// Must contain at least one type.
+    /// </param>
+    /// <returns>The service collection for chaining.</returns>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown when <paramref name="services"/> or <paramref name="blueprintTypes"/> is <see langword="null"/>.
+    /// </exception>
+    /// <exception cref="ArgumentException">
+    /// Thrown when <paramref name="blueprintTypes"/> is empty.
+    /// </exception>
+    /// <remarks>
+    /// <para>
+    /// Individual blueprint types are registered only as their concrete type — NOT as
+    /// <see cref="IBlueprintValidator"/>. Only the composite is registered as
+    /// <see cref="IBlueprintValidator"/> so that integration filters find the composite
+    /// (and its merged report) rather than an individual blueprint for type <typeparamref name="T"/>.
+    /// </para>
+    /// <para>
+    /// Do NOT also call <see cref="AddBlueprint{TBlueprint}"/> for blueprints that are part of a
+    /// composite, as that would register them as <see cref="IBlueprintValidator"/> and cause
+    /// filters to find the individual blueprint before the composite.
+    /// </para>
+    /// </remarks>
+    public static IServiceCollection AddCompositeBlueprint<T>(
+        this IServiceCollection services,
+        params Type[] blueprintTypes)
+        where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(services);
+        ArgumentNullException.ThrowIfNull(blueprintTypes);
+
+        if (blueprintTypes.Length == 0)
+            throw new ArgumentException(
+                "At least one blueprint type is required.", nameof(blueprintTypes));
+
+        // Register each individual blueprint as its concrete type only (not as IBlueprintValidator).
+        foreach (var type in blueprintTypes)
+        {
+            if (!services.Any(sd => sd.ServiceType == type))
+            {
+                services.AddSingleton(type);
+            }
+        }
+
+        // Register the composite as its concrete type (Singleton).
+        services.AddSingleton(sp =>
+        {
+            var validators = blueprintTypes
+                .Select(t => (IBlueprintValidator)sp.GetRequiredService(t))
+                .ToList();
+            return new CompositeBlueprint<T>(validators);
+        });
+
+        // Register the composite as IBlueprintValidator for filter/behavior discovery.
+        services.AddSingleton<IBlueprintValidator>(sp =>
+            sp.GetRequiredService<CompositeBlueprint<T>>());
+
+        return services;
+    }
+
+    /// <summary>
+    /// Registers a <see cref="CompositeBlueprint{T}"/> using a factory delegate that receives
+    /// the <see cref="IServiceProvider"/> for custom blueprint resolution.
+    /// The composite is registered as a singleton and as <see cref="IBlueprintValidator"/>.
+    /// </summary>
+    /// <typeparam name="T">The model type validated by all composed blueprints.</typeparam>
+    /// <param name="services">The service collection.</param>
+    /// <param name="factory">
+    /// A factory that, given the <see cref="IServiceProvider"/>, returns the
+    /// <see cref="IBlueprintValidator"/> instances to compose. Must return at least one validator.
+    /// </param>
+    /// <returns>The service collection for chaining.</returns>
+    /// <exception cref="ArgumentNullException">
+    /// Thrown when <paramref name="services"/> or <paramref name="factory"/> is <see langword="null"/>.
+    /// </exception>
+    public static IServiceCollection AddCompositeBlueprint<T>(
+        this IServiceCollection services,
+        Func<IServiceProvider, IEnumerable<IBlueprintValidator>> factory)
+        where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(services);
+        ArgumentNullException.ThrowIfNull(factory);
+
+        // Register the composite as its concrete type (Singleton).
+        services.AddSingleton(sp => new CompositeBlueprint<T>(factory(sp)));
+
+        // Register the composite as IBlueprintValidator for filter/behavior discovery.
+        services.AddSingleton<IBlueprintValidator>(sp =>
+            sp.GetRequiredService<CompositeBlueprint<T>>());
+
+        return services;
+    }
+
+    /// <summary>
+    /// Registers a blueprint interceptor as a singleton.
+    /// If <typeparamref name="TInterceptor"/> implements both <see cref="IBlueprintInterceptor"/>
+    /// and <see cref="IAsyncBlueprintInterceptor"/>, it is registered under both interfaces.
+    /// If it implements only <see cref="IBlueprintInterceptor"/> (sync), a
+    /// <see cref="SyncToAsyncInterceptorAdapter"/> is automatically registered as
+    /// <see cref="IAsyncBlueprintInterceptor"/> so sync interceptors work in async filters.
+    /// Interceptors are invoked in registration order unless they implement
+    /// <see cref="IOrderedBlueprintInterceptor"/>.
+    /// </summary>
+    public static IServiceCollection AddBlueprintInterceptor<TInterceptor>(this IServiceCollection services)
+        where TInterceptor : class
+    {
+        var implementsSync = typeof(IBlueprintInterceptor).IsAssignableFrom(typeof(TInterceptor));
+        var implementsAsync = typeof(IAsyncBlueprintInterceptor).IsAssignableFrom(typeof(TInterceptor));
+
+        if (implementsSync)
+            services.AddSingleton(typeof(IBlueprintInterceptor), typeof(TInterceptor));
+
+        if (implementsAsync)
+            services.AddSingleton(typeof(IAsyncBlueprintInterceptor), typeof(TInterceptor));
+
+        // If only sync: auto-register an adapter so async filters can pick it up
+        if (implementsSync && !implementsAsync)
+        {
+            services.AddSingleton<IAsyncBlueprintInterceptor>(sp =>
+                new SyncToAsyncInterceptorAdapter(
+                    (IBlueprintInterceptor)sp.GetRequiredService(typeof(TInterceptor))));
+        }
+
+        return services;
+    }
+
+    /// <summary>
+    /// Registers a blueprint interceptor instance as a singleton.
+    /// If the instance also implements <see cref="IAsyncBlueprintInterceptor"/>, it is registered
+    /// under both interfaces. If it implements only <see cref="IBlueprintInterceptor"/> (sync),
+    /// a <see cref="SyncToAsyncInterceptorAdapter"/> is automatically registered.
+    /// </summary>
+    public static IServiceCollection AddBlueprintInterceptor(
+        this IServiceCollection services,
+        IBlueprintInterceptor interceptor)
+    {
+        ArgumentNullException.ThrowIfNull(interceptor);
+
+        services.AddSingleton(interceptor);
+
+        if (interceptor is IAsyncBlueprintInterceptor asyncInterceptor)
+            services.AddSingleton(asyncInterceptor);
+        else
+            services.AddSingleton<IAsyncBlueprintInterceptor>(new SyncToAsyncInterceptorAdapter(interceptor));
+
+        return services;
+    }
+
+    /// <summary>
     /// Determines whether the specified type inherits (directly or indirectly)
     /// from <see cref="QualityBlueprint{T}"/>.
     /// </summary>
