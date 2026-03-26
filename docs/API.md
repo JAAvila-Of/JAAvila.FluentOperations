@@ -30,6 +30,7 @@ Complete API documentation for JAAvila.FluentOperations.
   - [Custom Validator Operations](#custom-validator-operations)
   - [Action / Async Action](#action-validations)
   - [ActionStats (Execution Statistics)](#actionstats-execution-statistics)
+- [Reusable Rule Builders](#reusable-rule-builders)
 - [Quality Blueprints](#quality-blueprints)
   - [QualityBlueprint&lt;T&gt;](#qualityblueprintt)
   - [QualityReport](#qualityreport)
@@ -40,6 +41,7 @@ Complete API documentation for JAAvila.FluentOperations.
   - [ForEach](#foreach)
   - [Include](#include)
   - [CascadeMode](#cascademode)
+  - [CascadeSeverityMode](#cascadeseveritymode)
   - [ForCompare](#forcompare)
   - [ForAsync](#forasync)
   - [ForCustom](#forcustom)
@@ -504,6 +506,7 @@ All Integer operations plus:
 | Method | Description |
 |--------|-------------|
 | `HavePrecision(int)` | Exact decimal places |
+| `HaveScaledPrecision(int, int)` | At most N decimal places AND at most M total significant digits |
 | `BeRoundedTo(int)` | Rounded to N places |
 | `BeApproximately(decimal, decimal)` | Within tolerance of expected value |
 
@@ -615,6 +618,7 @@ Manager: `TimeSpanOperationsManager` / `NullableTimeSpanOperationsManager`
 | `HaveHours(int)` | Specific hours component |
 | `HaveMinutes(int)` | Specific minutes component |
 | `HaveSeconds(int)` | Specific seconds component |
+| `HaveValue()` / `NotHaveValue()` | (nullable only) |
 
 ---
 
@@ -629,6 +633,7 @@ Same as DateTime plus:
 | `HaveOffset(TimeSpan)` | Specific UTC offset |
 | `BeCloseTo(DateTimeOffset, TimeSpan)` | Within tolerance |
 | `NotBeCloseTo(DateTimeOffset, TimeSpan)` | Not within tolerance of expected |
+| `HaveValue()` / `NotHaveValue()` | (nullable only) |
 
 ---
 
@@ -1055,11 +1060,191 @@ Console.WriteLine($"Took {info.ElapsedMilliseconds}ms, Memory: {info.MemoryDelta
 
 ---
 
+## Reusable Rule Builders
+
+FluentOperations supports reusable validation rules via standard C# extension methods on operation managers. Since all managers are public concrete classes that return `this` (the concrete type), you can compose any validation chain into a domain-specific rule and reuse it everywhere — inline, in blueprints, and inside `AssertionScope` — without any library changes.
+
+### Defining a reusable rule
+
+Create a static class with extension methods targeting the concrete manager type:
+
+```csharp
+public static class BankingRules
+{
+    private static readonly Regex IbanPattern = new(
+        @"^[A-Z]{2}\d{2}[A-Z0-9]{4}\d{7}([A-Z0-9]?){0,16}$",
+        RegexOptions.Compiled);
+
+    public static StringOperationsManager MustBeValidIban(
+        this StringOperationsManager manager)
+        => manager
+            .NotBeNull()
+            .NotBeEmpty()
+            .HaveLengthBetween(15, 34)
+            .Match(IbanPattern);
+}
+```
+
+### Using in inline mode
+
+```csharp
+order.Iban.Test().MustBeValidIban();
+```
+
+### Using in Blueprints
+
+```csharp
+public class PaymentBlueprint : QualityBlueprint<PaymentRequest>
+{
+    public PaymentBlueprint()
+    {
+        using (Define())
+        {
+            For(x => x.Iban).Test().MustBeValidIban();
+            For(x => x.Amount).Test().MustBeValidAmount();
+            For(x => x.Phone).Test().MustBeValidPhone();
+
+            // Mix with native operations freely
+            For(x => x.Reference).Test()
+                .NotBeNull()
+                .HaveLengthBetween(8, 20);
+        }
+    }
+}
+```
+
+### Using with AssertionScope
+
+Extension methods work transparently inside `AssertionScope`. Failures accumulate the same way as native operations:
+
+```csharp
+using (var scope = new AssertionScope("Payment validation"))
+{
+    iban.Test().MustBeValidIban();
+    amount.Test().MustBeValidAmount();
+}
+// Throws once with all accumulated failures
+```
+
+### Using with Scenarios
+
+Extension methods are regular operations — `Scenario<T>` applies to them exactly as to native operations:
+
+```csharp
+using (Define())
+{
+    For(x => x.Amount).Test().MustBeValidAmount(); // Always applied
+
+    Scenario<IInternationalPayment>(() =>
+    {
+        For(x => x.Iban).Test().MustBeValidIban();
+        For(x => x.Phone).Test().MustBeValidPhone();
+    });
+}
+```
+
+### Using with RuleConfig
+
+`RuleConfig` (severity, error code, cascade mode) is set on the `For()` call, not inside the extension method. It applies to all operations within the method:
+
+```csharp
+// All operations inside MustBeValidIban run as Warning
+For(x => x.Iban, new RuleConfig { Severity = Severity.Warning, ErrorCode = "IBAN_001" })
+    .Test().MustBeValidIban();
+```
+
+### Using with ForTransform
+
+Extension methods chain naturally after `ForTransform`:
+
+```csharp
+ForTransform(x => x.Iban, v => v?.Trim().ToUpperInvariant())
+    .Test().MustBeValidIban();
+```
+
+### Rules with parameters
+
+Extension methods can accept parameters for configurable thresholds:
+
+```csharp
+public static class MoneyRules
+{
+    public static DecimalOperationsManager MustBeValidAmount(
+        this DecimalOperationsManager manager,
+        decimal maxAmount = 999_999_999.99m)
+        => manager
+            .BePositive()
+            .BeInRange(0.01m, maxAmount)
+            .HaveMaxDecimalPlaces(2);
+}
+
+// Usage
+price.Test().MustBeValidAmount();
+price.Test().MustBeValidAmount(maxAmount: 50_000m);
+```
+
+### More examples
+
+```csharp
+// Phone (E.164)
+public static StringOperationsManager MustBeValidPhone(
+    this StringOperationsManager manager)
+    => manager
+        .NotBeNull()
+        .NotBeEmpty()
+        .HaveLengthBetween(7, 15)
+        .Match(@"^\+?[1-9]\d{1,14}$");
+
+// Age
+public static IntegerOperationsManager MustBeValidAge(
+    this IntegerOperationsManager manager)
+    => manager.BeInRange(0, 150);
+
+// Corporate email with configurable domain
+public static StringOperationsManager MustBeCorporateEmail(
+    this StringOperationsManager manager,
+    string domain)
+    => manager
+        .NotBeNull()
+        .BeEmail()
+        .EndWith($"@{domain}", StringComparison.OrdinalIgnoreCase);
+```
+
+### Limitations
+
+**`RuleConfig` applies to all operations in the extension method.** You cannot apply different severity levels to different operations inside a single extension method call. If you need different severities, split into multiple `For()` calls.
+
+**Nullable vs non-nullable managers are distinct types.** An extension on `IntegerOperationsManager` does not apply to `NullableIntegerOperationsManager`. Define two overloads if you need both:
+
+```csharp
+public static IntegerOperationsManager MustBeValidAge(this IntegerOperationsManager m)
+    => m.BeInRange(0, 150);
+
+public static NullableIntegerOperationsManager MustBeValidAge(this NullableIntegerOperationsManager m)
+    => m.HaveValue().BeInRange(0, 150);
+```
+
+**Error messages are per-operation, not per composite rule.** If `MustBeValidIban()` fails inside `Match()`, the message describes the `Match` failure, not a unified "invalid IBAN" message. Use the `Reason` parameter to add context, or use `ICustomValidator<T>` when a single unified message is required.
+
+**No async extension methods.** Managers return `this` synchronously; there is no `Task<TManager>` return path. For rules requiring async logic, use `IAsyncCustomValidator<T>` with `EvaluateAsync()`.
+
+For extended examples and testing guidance, see [Reusable Rule Builders Guide](./REUSABLE_RULES.md).
+
+---
+
 ## Quality Blueprints
 
 ### QualityBlueprint&lt;T&gt;
 
 Abstract base class for validation schemas.
+
+#### Protected Properties
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `CascadeMode` | `CascadeMode` | `Continue` | Controls cascade behavior for the entire blueprint. |
+| `CascadeSeverityMode` | `CascadeSeverityMode` | `ErrorOnly` | Controls which severity levels can trigger cascade stop. |
+| `ParallelExecution` | `bool` | `false` | When `true`, `CheckAsync` evaluates all property definitions concurrently. See [ParallelExecution](#parallelexecution). |
 
 #### Protected Methods
 
@@ -1077,8 +1262,17 @@ protected void Scenario<TInterface>(Action action)
 // Nested object validation
 protected void ForNested<TChild>(Expression<Func<T, TChild?>> expr, QualityBlueprint<TChild> blueprint)
 
-// Per-item collection validation
+// Per-item collection validation (captured-rules variants)
+protected IPropertyProxy<TManager> ForEach<TItem, TManager>(Expression<Func<T, IEnumerable<TItem>?>> expr)
+protected IPropertyProxy<TManager> ForEach<TItem, TManager>(Expression<Func<T, IEnumerable<TItem>?>> expr, RuleConfig config)
+protected IPropertyProxy<StringOperationsManager> ForEach(Expression<Func<T, IEnumerable<string?>?>> expr)
+protected IPropertyProxy<StringOperationsManager> ForEach(Expression<Func<T, IEnumerable<string?>?>> expr, RuleConfig config)
+protected IPropertyProxy<IntegerOperationsManager> ForEach(Expression<Func<T, IEnumerable<int>?>> expr)
+protected IPropertyProxy<IntegerOperationsManager> ForEach(Expression<Func<T, IEnumerable<int>?>> expr, RuleConfig config)
+
+// Per-item collection validation (sub-blueprint variants)
 protected void ForEach<TItem>(Expression<Func<T, IEnumerable<TItem>?>> expr, QualityBlueprint<TItem> blueprint)
+protected void ForEach<TItem>(Expression<Func<T, IEnumerable<TItem>?>> expr, QualityBlueprint<TItem> blueprint, RuleConfig config)
 
 // Compose blueprints
 protected void Include(QualityBlueprint<T> other)
@@ -1116,9 +1310,19 @@ protected IPropertyProxy<TTargetManager> ForTransform<TProp, TTarget, TTargetMan
 // Conditional validation
 protected void When(Func<T, bool> condition, Action then, Action? otherwise = null)
 
-// Filtered collection validation
+// Filtered collection validation (captured-rules variants)
+protected IPropertyProxy<TManager> ForEachWhere<TItem, TManager>(Expression<Func<T, IEnumerable<TItem>?>> expr, Func<TItem, bool> predicate)
+protected IPropertyProxy<TManager> ForEachWhere<TItem, TManager>(Expression<Func<T, IEnumerable<TItem>?>> expr, Func<TItem, bool> predicate, RuleConfig config)
+protected IPropertyProxy<StringOperationsManager> ForEachWhere(Expression<Func<T, IEnumerable<string?>?>> expr, Func<string?, bool> predicate)
+protected IPropertyProxy<StringOperationsManager> ForEachWhere(Expression<Func<T, IEnumerable<string?>?>> expr, Func<string?, bool> predicate, RuleConfig config)
+protected IPropertyProxy<IntegerOperationsManager> ForEachWhere(Expression<Func<T, IEnumerable<int>?>> expr, Func<int, bool> predicate)
+protected IPropertyProxy<IntegerOperationsManager> ForEachWhere(Expression<Func<T, IEnumerable<int>?>> expr, Func<int, bool> predicate, RuleConfig config)
+
+// Filtered collection validation (sub-blueprint variants)
 protected void ForEachWhere<TItem>(Expression<Func<T, IEnumerable<TItem>?>> expr,
     Func<TItem, bool> predicate, QualityBlueprint<TItem> blueprint)
+protected void ForEachWhere<TItem>(Expression<Func<T, IEnumerable<TItem>?>> expr,
+    Func<TItem, bool> predicate, QualityBlueprint<TItem> blueprint, RuleConfig config)
 ```
 
 #### Public Methods
@@ -1189,11 +1393,44 @@ Extension methods (in `QualityReportAspNetExtensions`, requires `AspNetCore` pac
 public record RuleConfig
 {
     public Severity? Severity { get; init; }
-    public ErrorCode? ErrorCode { get; init; }
+    public string? ErrorCode { get; init; }
     public string? CustomMessage { get; init; }
     public CascadeMode? CascadeMode { get; init; }
+    public CascadeSeverityMode? CascadeSeverityMode { get; init; }
+    public Func<object, string>? MessageFactory { get; init; }
 }
 ```
+
+#### Message Priority Order
+
+When a rule fails, the message is resolved in this order:
+
+1. `MessageFactory` — dynamic factory function (highest priority)
+2. `CustomMessage` — static override string
+3. Localized message via `IMessageProvider` + `MessageKey`
+4. Auto-generated template (default)
+
+#### MessageFactory
+
+`MessageFactory` receives the root model instance as `object`. Cast to your model type inside the lambda:
+
+```csharp
+For(x => x.Email, new RuleConfig
+{
+    MessageFactory = model =>
+    {
+        var order = (Order)model;
+        return $"Email for customer '{order.CustomerName}' is invalid.";
+    }
+}).Test().BeEmail();
+```
+
+**Notes:**
+- Only invoked during Blueprint `Check()`/`CheckAsync()` evaluation — not in inline (eager) mode.
+- Only invoked when the rule fails — not for passing rules.
+- `MessageFactory` takes precedence over `CustomMessage` when both are set.
+- If `MessageFactory` throws, the exception propagates — the factory must not throw.
+- Compatible with all `For()`, `ForEach()`, `ForTransform()`, and `Scenario<T>()` overloads.
 
 ---
 
@@ -1228,13 +1465,31 @@ Failures are reported as `"Address.Street"`, `"Address.City"`, etc.
 
 ### ForEach
 
-Validate each item in a collection:
+Validate each item in a collection using captured rules or a sub-blueprint:
 
 ```csharp
+// Captured-rules variant — chain .Test() after ForEach
+using (Define())
+{
+    ForEach(x => x.Tags).Test().NotBeNull().HaveMinLength(3);
+
+    // Per-ForEach RuleConfig — overrides blueprint-level CascadeMode for this collection
+    ForEach(x => x.Tags, new RuleConfig { CascadeMode = CascadeMode.StopOnFirstFailure })
+        .Test().NotBeNull().NotBeEmpty();
+
+    // Severity and ErrorCode also apply to each captured item's failures
+    ForEach(x => x.Tags, new RuleConfig { Severity = Severity.Warning, ErrorCode = "TAGS_001" })
+        .Test().NotBeNull();
+}
+
+// Sub-blueprint variant
 ForEach(x => x.Items, new OrderItemBlueprint());
+ForEach(x => x.Items, new OrderItemBlueprint(), new RuleConfig { CascadeMode = CascadeMode.StopOnFirstFailure });
 ```
 
 Failures are reported as `"Items[0].Name"`, `"Items[1].Price"`, etc.
+
+`RuleConfig` on captured-rules ForEach overloads applies to each item evaluation: `CascadeMode` controls per-item cascade (stops after first failure within the same item), while `Severity`, `ErrorCode`, and `CustomMessage` are applied to every failure produced by that collection's rules.
 
 ---
 
@@ -1245,6 +1500,67 @@ Compose blueprints by including rules from another:
 ```csharp
 Include(new BaseEntityBlueprint()); // Call before Define()
 ```
+
+---
+
+### CompositeBlueprint&lt;T&gt;
+
+Composes N independent blueprints at runtime and merges their `QualityReport` results into a single report. Unlike `Include()` (which copies rules at definition time into one blueprint), `CompositeBlueprint<T>` keeps each blueprint independent and merges their outputs on every `Check`/`CheckAsync` call.
+
+```csharp
+var composite = new CompositeBlueprint<User>(
+    new NameBlueprint(),
+    new EmailBlueprint(),
+    new AgeBlueprint());
+
+// Sequential execution
+QualityReport report = composite.Check(user);
+
+// Parallel execution (Task.WhenAll)
+QualityReport report = await composite.CheckAsync(user);
+
+Console.WriteLine(report.IsValid);          // false if any sub-blueprint has Error failures
+Console.WriteLine(report.RulesEvaluated);   // sum of RulesEvaluated across all blueprints
+Console.WriteLine(report.Failures.Count);   // all failures from all blueprints
+```
+
+**Constructors:**
+
+| Overload | Usage |
+|----------|-------|
+| `CompositeBlueprint<T>(IEnumerable<IBlueprintValidator>)` | DI / dynamic composition |
+| `CompositeBlueprint<T>(params QualityBlueprint<T>[])` | Manual / inline composition |
+
+**Merge strategy:**
+
+| Field | Strategy |
+|-------|----------|
+| `Failures` | Concatenated from all sub-reports in blueprint order |
+| `RulesEvaluated` | Sum of all sub-reports |
+| `IsValid`, `HasErrors`, `HasWarnings`, `HasInfos`, `Errors`, `Warnings`, `Infos` | Recalculated automatically from merged `Failures` |
+
+**`CheckAsync` parallelism:** blueprints execute concurrently via `Task.WhenAll`. Failures are merged in the original blueprint order regardless of completion order. Each blueprint must be a distinct instance — passing the same instance twice is not safe for concurrent async execution.
+
+**DI registration** (requires `JAAvila.FluentOperations.DependencyInjection`):
+
+```csharp
+// Register individual blueprints (by concrete type only — NOT as IBlueprintValidator)
+// and the composite (as both its concrete type and IBlueprintValidator):
+services.AddCompositeBlueprint<User>(
+    typeof(NameBlueprint),
+    typeof(EmailBlueprint));
+
+// Or with a factory for custom resolution:
+services.AddCompositeBlueprint<User>(sp =>
+[
+    sp.GetRequiredService<NameBlueprint>(),
+    sp.GetRequiredService<EmailBlueprint>()
+]);
+```
+
+> **Important**: Do NOT call `AddBlueprint<T>()` for blueprints that are part of a composite. `AddBlueprint<T>()` registers them as `IBlueprintValidator`, which causes integration filters to find the individual blueprint before the composite for the same model type `T`.
+
+**Integration filters** (`BlueprintValidationFilter`, `MediatRBlueprintBehavior`, `GrpcBlueprintInterceptor`) discover `CompositeBlueprint<T>` automatically via `IEnumerable<IBlueprintValidator>` — no special configuration needed. `MinimalApiBlueprintFilter<TModel, TBlueprint>` requires `TBlueprint : QualityBlueprint<TModel>` and is therefore not directly compatible; use the composite directly in the endpoint handler instead.
 
 ---
 
@@ -1259,6 +1575,79 @@ CascadeMode = CascadeMode.StopOnFirstFailure; // Blueprint-level
 For(x => x.Email, new RuleConfig { CascadeMode = CascadeMode.StopOnFirstFailure })
     .Test().NotBeNull().BeEmail();
 ```
+
+By default, `StopOnFirstFailure` only stops on Error-severity failures. Warning and Info failures do not stop cascade. See [CascadeSeverityMode](#cascadeseveritymode) to change this behavior.
+
+---
+
+### CascadeSeverityMode
+
+Controls which severity levels can trigger cascade stop when `CascadeMode.StopOnFirstFailure` is active.
+
+| Value | Behavior |
+|-------|----------|
+| `ErrorOnly` | Only Error failures trigger cascade stop (default). Warning and Info failures are recorded but do not stop subsequent rules. |
+| `AllFailures` | Any failure (Error, Warning, Info) triggers cascade stop. Matches the behavior of library versions before this feature was added. |
+| `SameOrLowerSeverity` | A failure stops subsequent rules of equal or lower severity. Error (0) stops all; Warning (1) stops Warning and Info; Info (2) stops only Info. Higher-severity rules always execute. |
+
+```csharp
+// Blueprint-level (applies to all properties unless overridden)
+CascadeSeverityMode = CascadeSeverityMode.ErrorOnly; // default
+
+// Legacy behavior: any failure stops cascade
+CascadeSeverityMode = CascadeSeverityMode.AllFailures;
+
+// Graduated: Warning failure skips subsequent Warning/Info but not Error
+CascadeSeverityMode = CascadeSeverityMode.SameOrLowerSeverity;
+
+// Per-property override via RuleConfig
+For(x => x.Name, new RuleConfig
+{
+    CascadeMode = CascadeMode.StopOnFirstFailure,
+    CascadeSeverityMode = CascadeSeverityMode.AllFailures
+})
+.Test().NotBeNull().NotBeEmpty();
+```
+
+> **Migration note**: In versions prior to this feature, `StopOnFirstFailure` was severity-blind (equivalent to `AllFailures`). If your blueprint relies on Warning/Info failures stopping cascade, set `CascadeSeverityMode = CascadeSeverityMode.AllFailures` to restore the previous behavior.
+
+---
+
+### ParallelExecution
+
+Enables concurrent evaluation of independent property definitions in `CheckAsync`. When `true`, each `For`, `ForEach`, and `ForNested` definition is dispatched as a separate task and all tasks run via `Task.WhenAll`. Rules within a single property definition are always evaluated sequentially.
+
+```csharp
+public class OrderBlueprint : QualityBlueprint<Order>
+{
+    public OrderBlueprint()
+    {
+        ParallelExecution = true; // opt-in; default is false
+
+        using (Define())
+        {
+            For(x => x.CustomerName).Test().NotBeNull().NotBeEmpty();
+            For(x => x.Email).Test().NotBeNull().BeEmail();
+            // Each For() definition runs concurrently when ParallelExecution = true
+        }
+    }
+}
+```
+
+**When to use**: Only beneficial when validators contain real async I/O (HTTP calls, database queries, file system access via `EvaluateAsync` / `ForAsync`). For CPU-bound validators, the overhead of task scheduling exceeds the benefit.
+
+**Restrictions**:
+
+| Scenario | Behavior |
+|----------|----------|
+| `ParallelExecution = false` (default) | Sequential; no change |
+| `ParallelExecution = true` + `CascadeMode.StopOnFirstFailure` (blueprint-level) | `InvalidOperationException` at runtime — incompatible |
+| `ParallelExecution = true` + per-property `RuleConfig.CascadeMode.StopOnFirstFailure` | Supported — each property's rules still run sequentially |
+| `Check()` (synchronous) | Always sequential; `ParallelExecution` is ignored |
+
+**Failure order**: Failures are merged in the original definition order (the order `For`/`ForEach`/`ForNested` was called), so `QualityReport.Failures` is deterministic regardless of task scheduling.
+
+**Isolation**: Each parallel task creates its own `TransactionalOperations` scope, ensuring there is no cross-contamination between property results.
 
 ---
 
@@ -1355,13 +1744,28 @@ When(
 
 ### ForEachWhere
 
-Validate a filtered subset of a collection:
+Validate a filtered subset of a collection using captured rules or a sub-blueprint:
 
 ```csharp
-ForEachWhere(x => x.Items,
-    item => item.IsActive,
-    new ActiveItemBlueprint());
+// Captured-rules variant
+using (Define())
+{
+    ForEachWhere(x => x.Tags, tag => tag != null)
+        .Test().NotBeEmpty().HaveMinLength(3);
+
+    // With per-ForEachWhere RuleConfig
+    ForEachWhere(x => x.Tags, tag => tag != null,
+        new RuleConfig { CascadeMode = CascadeMode.StopOnFirstFailure })
+        .Test().NotBeEmpty().HaveMinLength(3);
+}
+
+// Sub-blueprint variant
+ForEachWhere(x => x.Items, item => item.IsActive, new ActiveItemBlueprint());
+ForEachWhere(x => x.Items, item => item.IsActive, new ActiveItemBlueprint(),
+    new RuleConfig { CascadeMode = CascadeMode.StopOnFirstFailure });
 ```
+
+Items that do not satisfy the predicate are skipped. The original collection index is preserved in failure property names (e.g., `"Tags[2]"` even if items at index 0 and 1 were filtered out).
 
 ---
 
@@ -1515,6 +1919,20 @@ FluentOperationsConfig.Configure(c =>
 });
 ```
 
+### Flag-to-Instrument Mapping
+
+Each `Track*` flag gates one optional instrument. `Enabled` is the master switch — all other flags are only meaningful when `Enabled = true`.
+
+| Flag | Controls | Instrument |
+|------|----------|------------|
+| `Enabled` | Master switch | All instruments |
+| `TrackRuleExecutionTime` | Per-rule timing | `fo.rule.duration` |
+| `TrackFailureRates` | Failure counting | `fo.rules.failed` |
+| `TrackBlueprintExecutionTime` | Blueprint timing | `fo.blueprint.duration` |
+
+`fo.rules.evaluated` is always emitted when `Enabled = true`, regardless of other flags.
+When `TrackFailureRates = false` (the default), `fo.rules.failed` is not emitted even if rules fail.
+
 ### Instruments
 
 Meter name: `JAAvila.FluentOperations`
@@ -1522,7 +1940,7 @@ Meter name: `JAAvila.FluentOperations`
 | Instrument | Kind | Unit | Description |
 |------------|------|------|-------------|
 | `fo.rules.evaluated` | Counter | — | Total rules evaluated |
-| `fo.rules.failed` | Counter | — | Total rules that failed |
+| `fo.rules.failed` | Counter | — | Total rules that failed (requires `TrackFailureRates = true`) |
 | `fo.rule.duration` | Histogram | ms | Duration of individual eager rule execution |
 | `fo.blueprint.duration` | Histogram | ms | Duration of a full `Check()` / `CheckAsync()` call |
 

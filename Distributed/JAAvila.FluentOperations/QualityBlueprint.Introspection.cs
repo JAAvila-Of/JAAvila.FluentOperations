@@ -28,7 +28,8 @@ public abstract partial class QualityBlueprint<T>
                 var info = ExtractRuleInfo(
                     rule,
                     def.PropertyName,
-                    def.Scenario
+                    def.Scenario,
+                    def.RuleSet
                 );
                 if (info is not null)
                 {
@@ -46,7 +47,8 @@ public abstract partial class QualityBlueprint<T>
                 var info = ExtractRuleInfo(
                     rule,
                     collectionPropertyName,
-                    def.Scenario
+                    def.Scenario,
+                    def.RuleSet
                 );
                 if (info is not null)
                 {
@@ -66,7 +68,8 @@ public abstract partial class QualityBlueprint<T>
     private static BlueprintRuleInfo? ExtractRuleInfo(
         IQualityRule rule,
         string propertyName,
-        Type? scenario)
+        Type? scenario,
+        string? ruleSet = null)
     {
         // Unwrap CapturedRule decorator to access the inner engine and its config
         var capturedRule = rule as CapturedRule;
@@ -89,6 +92,7 @@ public abstract partial class QualityBlueprint<T>
                 Severity = severity,
                 ErrorCode = errorCode,
                 Scenario = scenario,
+                RuleSetName = ruleSet,
             };
         }
 
@@ -102,6 +106,7 @@ public abstract partial class QualityBlueprint<T>
             Severity = severity,
             ErrorCode = errorCode,
             Scenario = scenario,
+            RuleSetName = ruleSet,
         };
     }
 }

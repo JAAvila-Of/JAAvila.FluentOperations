@@ -22,12 +22,35 @@ public static class MediatRExtensions
     }
 
     /// <summary>
-    /// Adds a specific blueprint behavior for a request type.
-    /// Use when the blueprint's model type matches the request type exactly.
+    /// Adds a strongly-typed blueprint behavior for a request type.
+    /// The blueprint MUST validate the request type directly
+    /// (<typeparamref name="TBlueprint"/> must inherit <c>QualityBlueprint&lt;TRequest&gt;</c>).
     /// </summary>
-    /// <typeparam name="TRequest">The request type</typeparam>
+    /// <remarks>
+    /// <para>
+    /// Use this overload when you have a blueprint that models the request directly, e.g.:
+    /// <code>
+    /// // Blueprint: public class CreateOrderBlueprint : QualityBlueprint&lt;CreateOrderCommand&gt;
+    /// services.AddBlueprintBehavior&lt;CreateOrderCommand, OrderResult, CreateOrderBlueprint&gt;();
+    /// </code>
+    /// </para>
+    /// <para>
+    /// If your blueprint validates a base model and the request derives from it, use the
+    /// 4-generic overload <see cref="AddBlueprintBehavior{TRequest, TResponse, TModel, TBlueprint}"/> instead:
+    /// <code>
+    /// // Blueprint: public class UserBlueprint : QualityBlueprint&lt;User&gt;
+    /// // Request:   public class CreateUserCommand : User, IRequest&lt;string&gt;
+    /// services.AddBlueprintBehavior&lt;CreateUserCommand, string, User, UserBlueprint&gt;();
+    /// </code>
+    /// </para>
+    /// <para>
+    /// Alternatively, use <see cref="AddBlueprintValidation"/> for automatic blueprint discovery
+    /// at runtime via <see cref="IBlueprintValidator.CanValidate"/>.
+    /// </para>
+    /// </remarks>
+    /// <typeparam name="TRequest">The request type (must match the blueprint's model type)</typeparam>
     /// <typeparam name="TResponse">The response type</typeparam>
-    /// <typeparam name="TBlueprint">The blueprint type</typeparam>
+    /// <typeparam name="TBlueprint">The blueprint type (must inherit <c>QualityBlueprint&lt;TRequest&gt;</c>)</typeparam>
     /// <param name="services">The service collection</param>
     /// <returns>The service collection for chaining</returns>
     public static IServiceCollection AddBlueprintBehavior<TRequest, TResponse, TBlueprint>(

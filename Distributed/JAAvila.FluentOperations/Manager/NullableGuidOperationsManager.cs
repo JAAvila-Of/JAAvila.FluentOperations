@@ -149,6 +149,208 @@ public class NullableGuidOperationsManager
     }
 
     /// <summary>
+    /// Asserts that the value is equal to <see cref="Guid.Empty"/>.
+    /// </summary>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public NullableGuidOperationsManager BeEmpty(Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Guid.BeEmpty))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableGuidOperationsManager, Guid?>
+            .New(this)
+            .WithOperation(NullableGuidBeEmptyValidator.New(PrincipalChain))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.MessageKey, operation.ResultValidation,
+                            BaseFormatter.Format(PrincipalChain.GetValue())
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(BeEmpty)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the value is not equal to <see cref="Guid.Empty"/>.
+    /// </summary>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public NullableGuidOperationsManager NotBeEmpty(Reason? reason = null)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Guid.NotBeEmpty))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableGuidOperationsManager, Guid?>
+            .New(this)
+            .WithOperation(NullableGuidNotBeEmptyValidator.New(PrincipalChain))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(NotBeEmpty)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the value is one of the specified <paramref name="expected"/> values.
+    /// </summary>
+    /// <param name="expected">The set of allowed values.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public NullableGuidOperationsManager BeOneOf(params Guid[] expected)
+    {
+        return BeOneOf(null, expected);
+    }
+
+    /// <summary>
+    /// Asserts that the value is one of the specified <paramref name="expected"/> values.
+    /// </summary>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <param name="expected">The set of allowed values.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// Throws immediately if <paramref name="expected"/> is empty (empty set guard).
+    /// Also throws immediately if the value is <c>null</c> (null guard).
+    /// </remarks>
+    public NullableGuidOperationsManager BeOneOf(Reason? reason, params Guid[] expected)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Guid.BeOneOf))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableGuidOperationsManager, Guid?>
+            .New(this)
+            .WithOperation(NullableGuidBeOneOfValidator.New(PrincipalChain, expected))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.MessageKey, operation.ResultValidation,
+                            string.Join(", ", expected.Select(g => BaseFormatter.Format(g))),
+                            BaseFormatter.Format(PrincipalChain.GetValue())
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                _ =>
+                    (
+                        expected.Length == 0,
+                        Fail.New(
+                            $"The {nameof(BeOneOf)} operation failed because you have not provided any values."
+                        )
+                    )
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(BeOneOf)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the value is not any of the specified <paramref name="expected"/> values.
+    /// </summary>
+    /// <param name="expected">The set of disallowed values.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public NullableGuidOperationsManager NotBeOneOf(params Guid[] expected)
+    {
+        return NotBeOneOf(null, expected);
+    }
+
+    /// <summary>
+    /// Asserts that the value is not any of the specified <paramref name="expected"/> values.
+    /// </summary>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <param name="expected">The set of disallowed values.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    /// <remarks>
+    /// Throws immediately if <paramref name="expected"/> is empty (empty set guard).
+    /// Also throws immediately if the value is <c>null</c> (null guard).
+    /// </remarks>
+    public NullableGuidOperationsManager NotBeOneOf(Reason? reason, params Guid[] expected)
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Guid.NotBeOneOf))
+        {
+            return this;
+        }
+
+        ExecutionEngine<NullableGuidOperationsManager, Guid?>
+            .New(this)
+            .WithOperation(NullableGuidNotBeOneOfValidator.New(PrincipalChain, expected))
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.MessageKey, operation.ResultValidation,
+                            string.Join(", ", expected.Select(g => BaseFormatter.Format(g)))
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                _ =>
+                    (
+                        expected.Length == 0,
+                        Fail.New(
+                            $"The {nameof(NotBeOneOf)} operation failed because you have not provided any values."
+                        )
+                    )
+            )
+            .FailIf(
+                manager =>
+                    (
+                        manager.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(NotBeOneOf)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
     /// Asserts that the runtime type of the value is exactly <typeparamref name="TType"/>.
     /// </summary>
     public NullableGuidOperationsManager BeOfType<TType>(Reason? reason = null)

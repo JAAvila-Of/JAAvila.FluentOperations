@@ -54,7 +54,7 @@ internal static class FluentOperationsMeter
 
         RulesEvaluated.Add(rulesEvaluated, tags);
 
-        if (rulesFailed > 0)
+        if (rulesFailed > 0 && config.TrackFailureRates)
         {
             RulesFailed.Add(rulesFailed, tags);
         }
@@ -85,7 +85,7 @@ internal static class FluentOperationsMeter
 
         RulesEvaluated.Add(1, tags);
 
-        if (!passed)
+        if (!passed && config.TrackFailureRates)
         {
             RulesFailed.Add(1, tags);
         }
