@@ -242,6 +242,7 @@ public static class MessageKeys
         public const string BeRoundedTo = "Decimal.BeRoundedTo";
         public const string BeZero = "Decimal.BeZero";
         public const string HavePrecision = "Decimal.HavePrecision";
+        public const string HaveScaledPrecision = "Decimal.HaveScaledPrecision";
         public const string NotBe = "Decimal.NotBe";
         public const string NotBeInRange = "Decimal.NotBeInRange";
         public const string NotBeOneOf = "Decimal.NotBeOneOf";
@@ -284,6 +285,7 @@ public static class MessageKeys
         public const string BeRoundedTo = "Double.BeRoundedTo";
         public const string BeZero = "Double.BeZero";
         public const string HavePrecision = "Double.HavePrecision";
+        public const string HaveScaledPrecision = "Double.HaveScaledPrecision";
         public const string NotBe = "Double.NotBe";
         public const string NotBeInRange = "Double.NotBeInRange";
         public const string NotBeNaN = "Double.NotBeNaN";
@@ -323,6 +325,7 @@ public static class MessageKeys
         public const string BeRoundedTo = "Float.BeRoundedTo";
         public const string BeZero = "Float.BeZero";
         public const string HavePrecision = "Float.HavePrecision";
+        public const string HaveScaledPrecision = "Float.HaveScaledPrecision";
         public const string NotBe = "Float.NotBe";
         public const string NotBeInRange = "Float.NotBeInRange";
         public const string NotBeNaN = "Float.NotBeNaN";
@@ -444,8 +447,20 @@ public static class MessageKeys
     public static class NullableDateOnly
     {
         public const string Be = "NullableDateOnly.Be";
+        public const string BeAfter = "NullableDateOnly.BeAfter";
+        public const string BeBefore = "NullableDateOnly.BeBefore";
         public const string BeInRange = "NullableDateOnly.BeInRange";
+        public const string BeOnOrAfter = "NullableDateOnly.BeOnOrAfter";
+        public const string BeOnOrBefore = "NullableDateOnly.BeOnOrBefore";
+        public const string BeToday = "NullableDateOnly.BeToday";
+        public const string BeTomorrow = "NullableDateOnly.BeTomorrow";
+        public const string BeWeekday = "NullableDateOnly.BeWeekday";
+        public const string BeWeekend = "NullableDateOnly.BeWeekend";
+        public const string BeYesterday = "NullableDateOnly.BeYesterday";
+        public const string HaveDay = "NullableDateOnly.HaveDay";
+        public const string HaveMonth = "NullableDateOnly.HaveMonth";
         public const string HaveValue = "NullableDateOnly.HaveValue";
+        public const string HaveYear = "NullableDateOnly.HaveYear";
         public const string NotBe = "NullableDateOnly.NotBe";
         public const string NotBeInRange = "NullableDateOnly.NotBeInRange";
         public const string NotHaveValue = "NullableDateOnly.NotHaveValue";
@@ -455,9 +470,26 @@ public static class MessageKeys
     public static class NullableDateTime
     {
         public const string Be = "NullableDateTime.Be";
+        public const string BeAfter = "NullableDateTime.BeAfter";
+        public const string BeBefore = "NullableDateTime.BeBefore";
         public const string BeCloseTo = "NullableDateTime.BeCloseTo";
         public const string BeInRange = "NullableDateTime.BeInRange";
+        public const string BeInTheFuture = "NullableDateTime.BeInTheFuture";
+        public const string BeInThePast = "NullableDateTime.BeInThePast";
+        public const string BeOnOrAfter = "NullableDateTime.BeOnOrAfter";
+        public const string BeOnOrBefore = "NullableDateTime.BeOnOrBefore";
+        public const string BeSameDay = "NullableDateTime.BeSameDay";
+        public const string BeSameMonth = "NullableDateTime.BeSameMonth";
+        public const string BeSameYear = "NullableDateTime.BeSameYear";
+        public const string BeToday = "NullableDateTime.BeToday";
+        public const string BeTomorrow = "NullableDateTime.BeTomorrow";
+        public const string BeWeekday = "NullableDateTime.BeWeekday";
+        public const string BeWeekend = "NullableDateTime.BeWeekend";
+        public const string BeYesterday = "NullableDateTime.BeYesterday";
+        public const string HaveDay = "NullableDateTime.HaveDay";
+        public const string HaveMonth = "NullableDateTime.HaveMonth";
         public const string HaveValue = "NullableDateTime.HaveValue";
+        public const string HaveYear = "NullableDateTime.HaveYear";
         public const string NotBe = "NullableDateTime.NotBe";
         public const string NotBeCloseTo = "NullableDateTime.NotBeCloseTo";
         public const string NotBeInRange = "NullableDateTime.NotBeInRange";
@@ -468,9 +500,20 @@ public static class MessageKeys
     public static class NullableDateTimeOffset
     {
         public const string Be = "NullableDateTimeOffset.Be";
+        public const string BeAfter = "NullableDateTimeOffset.BeAfter";
+        public const string BeBefore = "NullableDateTimeOffset.BeBefore";
         public const string BeCloseTo = "NullableDateTimeOffset.BeCloseTo";
         public const string BeInRange = "NullableDateTimeOffset.BeInRange";
+        public const string BeInTheFuture = "NullableDateTimeOffset.BeInTheFuture";
+        public const string BeInThePast = "NullableDateTimeOffset.BeInThePast";
+        public const string BeOnOrAfter = "NullableDateTimeOffset.BeOnOrAfter";
+        public const string BeOnOrBefore = "NullableDateTimeOffset.BeOnOrBefore";
+        public const string BeSameDay = "NullableDateTimeOffset.BeSameDay";
+        public const string HaveDay = "NullableDateTimeOffset.HaveDay";
+        public const string HaveMonth = "NullableDateTimeOffset.HaveMonth";
+        public const string HaveOffset = "NullableDateTimeOffset.HaveOffset";
         public const string HaveValue = "NullableDateTimeOffset.HaveValue";
+        public const string HaveYear = "NullableDateTimeOffset.HaveYear";
         public const string NotBe = "NullableDateTimeOffset.NotBe";
         public const string NotBeCloseTo = "NullableDateTimeOffset.NotBeCloseTo";
         public const string NotBeInRange = "NullableDateTimeOffset.NotBeInRange";
@@ -494,6 +537,7 @@ public static class MessageKeys
         public const string BeRoundedTo = "NullableDecimal.BeRoundedTo";
         public const string BeZero = "NullableDecimal.BeZero";
         public const string HavePrecision = "NullableDecimal.HavePrecision";
+        public const string HaveScaledPrecision = "NullableDecimal.HaveScaledPrecision";
         public const string HaveValue = "NullableDecimal.HaveValue";
         public const string NotBe = "NullableDecimal.NotBe";
         public const string NotBeInRange = "NullableDecimal.NotBeInRange";
@@ -522,6 +566,7 @@ public static class MessageKeys
         public const string BeRoundedTo = "NullableDouble.BeRoundedTo";
         public const string BeZero = "NullableDouble.BeZero";
         public const string HavePrecision = "NullableDouble.HavePrecision";
+        public const string HaveScaledPrecision = "NullableDouble.HaveScaledPrecision";
         public const string HaveValue = "NullableDouble.HaveValue";
         public const string NotBe = "NullableDouble.NotBe";
         public const string NotBeInRange = "NullableDouble.NotBeInRange";
@@ -565,6 +610,7 @@ public static class MessageKeys
         public const string BeRoundedTo = "NullableFloat.BeRoundedTo";
         public const string BeZero = "NullableFloat.BeZero";
         public const string HavePrecision = "NullableFloat.HavePrecision";
+        public const string HaveScaledPrecision = "NullableFloat.HaveScaledPrecision";
         public const string HaveValue = "NullableFloat.HaveValue";
         public const string NotBe = "NullableFloat.NotBe";
         public const string NotBeInRange = "NullableFloat.NotBeInRange";
@@ -577,8 +623,12 @@ public static class MessageKeys
     public static class NullableGuid
     {
         public const string Be = "NullableGuid.Be";
+        public const string BeEmpty = "NullableGuid.BeEmpty";
+        public const string BeOneOf = "NullableGuid.BeOneOf";
         public const string HaveValue = "NullableGuid.HaveValue";
         public const string NotBe = "NullableGuid.NotBe";
+        public const string NotBeEmpty = "NullableGuid.NotBeEmpty";
+        public const string NotBeOneOf = "NullableGuid.NotBeOneOf";
         public const string NotHaveValue = "NullableGuid.NotHaveValue";
     }
 
@@ -670,7 +720,12 @@ public static class MessageKeys
     public static class NullableTimeOnly
     {
         public const string Be = "NullableTimeOnly.Be";
+        public const string BeAfter = "NullableTimeOnly.BeAfter";
+        public const string BeBefore = "NullableTimeOnly.BeBefore";
         public const string BeInRange = "NullableTimeOnly.BeInRange";
+        public const string HaveHour = "NullableTimeOnly.HaveHour";
+        public const string HaveMinute = "NullableTimeOnly.HaveMinute";
+        public const string HaveSecond = "NullableTimeOnly.HaveSecond";
         public const string HaveValue = "NullableTimeOnly.HaveValue";
         public const string NotBe = "NullableTimeOnly.NotBe";
         public const string NotBeInRange = "NullableTimeOnly.NotBeInRange";
@@ -681,7 +736,15 @@ public static class MessageKeys
     public static class NullableTimeSpan
     {
         public const string Be = "NullableTimeSpan.Be";
+        public const string BeGreaterThan = "NullableTimeSpan.BeGreaterThan";
         public const string BeInRange = "NullableTimeSpan.BeInRange";
+        public const string BeLessThan = "NullableTimeSpan.BeLessThan";
+        public const string BeNegative = "NullableTimeSpan.BeNegative";
+        public const string BePositive = "NullableTimeSpan.BePositive";
+        public const string HaveDays = "NullableTimeSpan.HaveDays";
+        public const string HaveHours = "NullableTimeSpan.HaveHours";
+        public const string HaveMinutes = "NullableTimeSpan.HaveMinutes";
+        public const string HaveSeconds = "NullableTimeSpan.HaveSeconds";
         public const string HaveValue = "NullableTimeSpan.HaveValue";
         public const string NotBe = "NullableTimeSpan.NotBe";
         public const string NotBeInRange = "NullableTimeSpan.NotBeInRange";

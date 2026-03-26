@@ -6,9 +6,10 @@ namespace JAAvila.FluentOperations;
 internal class AsyncCustomValidatorRule<TProp>(
     IAsyncCustomValidator<TProp> validator,
     RuleConfig? config = null
-) : IQualityRule, IAsyncQualityRule
+) : IQualityRule, IAsyncQualityRule, IModelAwareRule
 {
     private TProp? _value;
+    private object? _currentModel;
 
     public bool Validate()
     {
@@ -22,7 +23,7 @@ internal class AsyncCustomValidatorRule<TProp>(
 
     public string GetReport()
     {
-        return config?.CustomMessage ?? validator.GetFailureMessage(_value!);
+        return GetCustomMessage() ?? validator.GetFailureMessage(_value!);
     }
 
     public void SetValue(object? value)
@@ -39,5 +40,15 @@ internal class AsyncCustomValidatorRule<TProp>(
 
     public string? GetErrorCode() => config?.ErrorCode;
 
-    public string? GetCustomMessage() => config?.CustomMessage;
+    public string? GetCustomMessage()
+    {
+        if (config?.MessageFactory is { } factory && _currentModel is not null)
+        {
+            return factory(_currentModel);
+        }
+
+        return config?.CustomMessage;
+    }
+
+    void IModelAwareRule.SetModelInstance(object model) => _currentModel = model;
 }

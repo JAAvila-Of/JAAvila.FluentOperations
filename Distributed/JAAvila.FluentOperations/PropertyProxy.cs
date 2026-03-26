@@ -31,18 +31,21 @@ internal class PropertyProxy<TProp, TManager>(
     string propertyName,
     List<IQualityRule> captureList,
     Func<Type?> scenarioProvider,
-    Func<string, TManager>? managerFactory = null
+    Func<string, TManager>? managerFactory = null,
+    Func<string?>? ruleSetProvider = null
 ) : IPropertyProxy<TManager>
     where TManager : class
 {
     public TManager Test()
     {
-        // Start the property capture before returning the manager
-        // The scenario is taken from the RuleCaptureContext context that was set in the Blueprint/For
+        // Start the property capture before returning the manager.
+        // Both scenario and ruleSet are taken from the providers captured at For() time,
+        // so that RuleSet() scoping is preserved even when Test() is called later.
         ExecutionEngine<ObjectOperationsManager, object?>.BeginPropertyCapture(
             captureList,
             propertyName,
-            scenarioProvider()
+            scenarioProvider(),
+            ruleSetProvider?.Invoke()
         );
 
         if (managerFactory != null)
