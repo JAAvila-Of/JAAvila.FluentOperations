@@ -23,6 +23,25 @@ public record RuleConfig
     public string? CustomMessage { get; init; }
 
     /// <summary>
+    /// Optional factory function that generates a dynamic error message using the root model instance.
+    /// When set, this takes precedence over <see cref="CustomMessage"/>.
+    /// The factory receives the model as <c>object</c> — cast to your model type inside the lambda.
+    /// </summary>
+    /// <remarks>
+    /// The factory is invoked only during Blueprint <c>Check()</c>/<c>CheckAsync()</c> evaluation,
+    /// when a rule fails. It is NOT invoked in inline (eager) mode where no root model is available.
+    /// </remarks>
+    /// <example>
+    /// <code>
+    /// For(x => x.Email, new RuleConfig
+    /// {
+    ///     MessageFactory = model => $"Email for {((Order)model).CustomerName} is invalid"
+    /// }).Test().BeEmail();
+    /// </code>
+    /// </example>
+    public Func<object, string>? MessageFactory { get; init; }
+
+    /// <summary>
     /// Creates a new RuleConfig with default values (Severity.Error, no code, no message).
     /// </summary>
     public static RuleConfig Default => new();

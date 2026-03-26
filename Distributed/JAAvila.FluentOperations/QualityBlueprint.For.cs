@@ -26,11 +26,13 @@ public abstract partial class QualityBlueprint<T>
         _extractors[propertyName] = x => valueExtractor(x);
 
         var currentScenario = _currentScenario;
+        var currentRuleSet = _currentRuleSet;
 
         RuleCaptureContext.BeginPropertyCapture(
             _capturedDuringDefinition,
             propertyName,
-            currentScenario
+            currentScenario,
+            currentRuleSet
         );
 
         // Clear any previous RuleConfig — this For() has no config
@@ -39,7 +41,8 @@ public abstract partial class QualityBlueprint<T>
         return new PropertyProxy<TProp, TManager>(
             propertyName,
             _capturedDuringDefinition,
-            () => currentScenario
+            () => currentScenario,
+            ruleSetProvider: () => currentRuleSet
         );
     }
 
@@ -65,11 +68,13 @@ public abstract partial class QualityBlueprint<T>
         _extractors[propertyName] = x => valueExtractor(x);
 
         var currentScenario = _currentScenario;
+        var currentRuleSet = _currentRuleSet;
 
         RuleCaptureContext.BeginPropertyCapture(
             _capturedDuringDefinition,
             propertyName,
-            currentScenario
+            currentScenario,
+            currentRuleSet
         );
 
         // Store config in context for this property capture
@@ -78,7 +83,8 @@ public abstract partial class QualityBlueprint<T>
         return new PropertyProxy<TProp, TManager>(
             propertyName,
             _capturedDuringDefinition,
-            () => currentScenario
+            () => currentScenario,
+            ruleSetProvider: () => currentRuleSet
         );
     }
 

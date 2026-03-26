@@ -16,6 +16,7 @@ internal static class RuleCaptureContext
     private static readonly AsyncLocal<string?> CurrentPropertyNameContext = new();
     private static readonly AsyncLocal<Type?> CurrentScenarioContext = new();
     private static readonly AsyncLocal<RuleConfig?> CurrentRuleConfigContext = new();
+    private static readonly AsyncLocal<string?> CurrentRuleSetContext = new();
 
     /// <summary>Gets the property name currently being captured, or <c>null</c> outside a capture scope.</summary>
     public static string? CurrentPropertyName => CurrentPropertyNameContext.Value;
@@ -25,6 +26,9 @@ internal static class RuleCaptureContext
 
     /// <summary>Gets the <see cref="RuleConfig"/> to attach to the next captured rule, or <c>null</c> if none.</summary>
     public static RuleConfig? CurrentRuleConfig => CurrentRuleConfigContext.Value;
+
+    /// <summary>Gets the rule set name active in the current capture scope, or <c>null</c> if none.</summary>
+    public static string? CurrentRuleSet => CurrentRuleSetContext.Value;
 
     /// <summary>Gets a value indicating whether a rule-collection scope is currently active.</summary>
     public static bool IsCollecting => RulesCollection.Value is not null;
@@ -40,13 +44,15 @@ internal static class RuleCaptureContext
     public static IDisposable StartCollecting(
         List<IQualityRule> rules,
         string? propertyName = null,
-        Type? scenario = null
+        Type? scenario = null,
+        string? ruleSet = null
     )
     {
         RulesCollection.Value = rules;
         CurrentPropertyNameContext.Value = propertyName;
         CurrentScenarioContext.Value = scenario;
         CurrentRuleConfigContext.Value = null;
+        CurrentRuleSetContext.Value = ruleSet;
         return new Scope();
     }
 
@@ -61,12 +67,14 @@ internal static class RuleCaptureContext
     public static void BeginPropertyCapture(
         List<IQualityRule> rules,
         string propertyName,
-        Type? scenario = null
+        Type? scenario = null,
+        string? ruleSet = null
     )
     {
         RulesCollection.Value = rules;
         CurrentPropertyNameContext.Value = propertyName;
         CurrentScenarioContext.Value = scenario;
+        CurrentRuleSetContext.Value = ruleSet;
         // NOTE: CurrentRuleConfig is intentionally NOT cleared here.
         // It is set by SetRuleConfig() in the For(expr, config) overload,
         // and cleared by EndPropertyCapture() or by the For(expr) overload (no config) via SetRuleConfig(null).
@@ -92,6 +100,15 @@ internal static class RuleCaptureContext
     }
 
     /// <summary>
+    /// Overrides the rule set name for the current capture scope.
+    /// </summary>
+    /// <param name="ruleSet">The rule set name to set, or <c>null</c> to clear.</param>
+    public static void SetRuleSet(string? ruleSet)
+    {
+        CurrentRuleSetContext.Value = ruleSet;
+    }
+
+    /// <summary>
     /// Ends the current property capture scope and resets all context values to <c>null</c>.
     /// </summary>
     public static void EndPropertyCapture()
@@ -100,6 +117,7 @@ internal static class RuleCaptureContext
         CurrentPropertyNameContext.Value = null;
         CurrentScenarioContext.Value = null;
         CurrentRuleConfigContext.Value = null;
+        CurrentRuleSetContext.Value = null;
     }
 
     /// <summary>
@@ -119,8 +137,9 @@ internal static class RuleCaptureContext
         var property = CurrentPropertyName ?? string.Empty;
         var scenario = scenarioOverride ?? CurrentScenario;
         var config = CurrentRuleConfig;
+        var ruleSet = CurrentRuleSet;
 
-        RulesCollection.Value.Add(new CapturedRule(property, rule, scenario, config));
+        RulesCollection.Value.Add(new CapturedRule(property, rule, scenario, config, ruleSet));
     }
 
     private class Scope : IDisposable
@@ -131,6 +150,7 @@ internal static class RuleCaptureContext
             CurrentPropertyNameContext.Value = null;
             CurrentScenarioContext.Value = null;
             CurrentRuleConfigContext.Value = null;
+            CurrentRuleSetContext.Value = null;
         }
     }
 }
