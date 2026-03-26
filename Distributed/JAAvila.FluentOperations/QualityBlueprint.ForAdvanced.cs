@@ -26,17 +26,20 @@ public abstract partial class QualityBlueprint<T>
         var valueExtractor = propertyExpression.Compile();
         _extractors[propertyName] = x => valueExtractor(x);
         var currentScenario = _currentScenario;
+        var currentRuleSet = _currentRuleSet;
         RuleCaptureContext.BeginPropertyCapture(
             _capturedDuringDefinition,
             propertyName,
-            currentScenario
+            currentScenario,
+            currentRuleSet
         );
         RuleCaptureContext.SetRuleConfig(null);
         return new PropertyProxy<TEnum, EnumOperationsManager<TEnum>>(
             propertyName,
             _capturedDuringDefinition,
             () => currentScenario,
-            caller => new EnumOperationsManager<TEnum>(default!, caller)
+            caller => new EnumOperationsManager<TEnum>(default!, caller),
+            () => currentRuleSet
         );
     }
 
@@ -59,17 +62,20 @@ public abstract partial class QualityBlueprint<T>
         var valueExtractor = propertyExpression.Compile();
         _extractors[propertyName] = x => valueExtractor(x);
         var currentScenario = _currentScenario;
+        var currentRuleSet = _currentRuleSet;
         RuleCaptureContext.BeginPropertyCapture(
             _capturedDuringDefinition,
             propertyName,
-            currentScenario
+            currentScenario,
+            currentRuleSet
         );
         RuleCaptureContext.SetRuleConfig(config);
         return new PropertyProxy<TEnum, EnumOperationsManager<TEnum>>(
             propertyName,
             _capturedDuringDefinition,
             () => currentScenario,
-            caller => new EnumOperationsManager<TEnum>(default!, caller)
+            caller => new EnumOperationsManager<TEnum>(default!, caller),
+            () => currentRuleSet
         );
     }
 
@@ -91,17 +97,20 @@ public abstract partial class QualityBlueprint<T>
         var valueExtractor = propertyExpression.Compile();
         _extractors[propertyName] = x => valueExtractor(x);
         var currentScenario = _currentScenario;
+        var currentRuleSet = _currentRuleSet;
         RuleCaptureContext.BeginPropertyCapture(
             _capturedDuringDefinition,
             propertyName,
-            currentScenario
+            currentScenario,
+            currentRuleSet
         );
         RuleCaptureContext.SetRuleConfig(null);
         return new PropertyProxy<TEnum?, NullableEnumOperationsManager<TEnum>>(
             propertyName,
             _capturedDuringDefinition,
             () => currentScenario,
-            caller => new NullableEnumOperationsManager<TEnum>(null, caller)
+            caller => new NullableEnumOperationsManager<TEnum>(null, caller),
+            () => currentRuleSet
         );
     }
 
@@ -124,17 +133,20 @@ public abstract partial class QualityBlueprint<T>
         var valueExtractor = propertyExpression.Compile();
         _extractors[propertyName] = x => valueExtractor(x);
         var currentScenario = _currentScenario;
+        var currentRuleSet = _currentRuleSet;
         RuleCaptureContext.BeginPropertyCapture(
             _capturedDuringDefinition,
             propertyName,
-            currentScenario
+            currentScenario,
+            currentRuleSet
         );
         RuleCaptureContext.SetRuleConfig(config);
         return new PropertyProxy<TEnum?, NullableEnumOperationsManager<TEnum>>(
             propertyName,
             _capturedDuringDefinition,
             () => currentScenario,
-            caller => new NullableEnumOperationsManager<TEnum>(null, caller)
+            caller => new NullableEnumOperationsManager<TEnum>(null, caller),
+            () => currentRuleSet
         );
     }
 
@@ -159,6 +171,7 @@ public abstract partial class QualityBlueprint<T>
         _extractors[propertyName] = x => valueExtractor(x);
 
         var currentScenario = _currentScenario;
+        var currentRuleSet = _currentRuleSet;
 
         return new CrossPropertyOperationsManager<T, TProp>(
             propertyName,
@@ -166,7 +179,8 @@ public abstract partial class QualityBlueprint<T>
             valueExtractor,
             referenceExtractor,
             _capturedDuringDefinition,
-            currentScenario
+            currentScenario,
+            ruleSet: currentRuleSet
         );
     }
 
@@ -193,6 +207,7 @@ public abstract partial class QualityBlueprint<T>
         _extractors[propertyName] = x => valueExtractor(x);
 
         var currentScenario = _currentScenario;
+        var currentRuleSet = _currentRuleSet;
 
         return new CrossPropertyOperationsManager<T, TProp>(
             propertyName,
@@ -201,7 +216,8 @@ public abstract partial class QualityBlueprint<T>
             referenceExtractor,
             _capturedDuringDefinition,
             currentScenario,
-            config
+            config,
+            currentRuleSet
         );
     }
 
@@ -219,7 +235,7 @@ public abstract partial class QualityBlueprint<T>
 
         var currentScenario = _currentScenario;
         var rule = new CustomValidatorRule<TProp>(validator);
-        _capturedDuringDefinition.Add(new CapturedRule(propertyName, rule, currentScenario));
+        _capturedDuringDefinition.Add(new CapturedRule(propertyName, rule, currentScenario, null, _currentRuleSet));
     }
 
     /// <summary>
@@ -242,7 +258,7 @@ public abstract partial class QualityBlueprint<T>
         var currentScenario = _currentScenario;
         var rule = new CustomValidatorRule<TProp>(validator, config);
         _capturedDuringDefinition.Add(
-            new CapturedRule(propertyName, rule, currentScenario, config)
+            new CapturedRule(propertyName, rule, currentScenario, config, _currentRuleSet)
         );
     }
 
@@ -261,7 +277,7 @@ public abstract partial class QualityBlueprint<T>
 
         var currentScenario = _currentScenario;
         var rule = new AsyncCustomValidatorRule<TProp>(validator);
-        _capturedDuringDefinition.Add(new CapturedRule(propertyName, rule, currentScenario));
+        _capturedDuringDefinition.Add(new CapturedRule(propertyName, rule, currentScenario, null, _currentRuleSet));
     }
 
     /// <summary>
@@ -285,7 +301,7 @@ public abstract partial class QualityBlueprint<T>
         var currentScenario = _currentScenario;
         var rule = new AsyncCustomValidatorRule<TProp>(validator, config);
         _capturedDuringDefinition.Add(
-            new CapturedRule(propertyName, rule, currentScenario, config)
+            new CapturedRule(propertyName, rule, currentScenario, config, _currentRuleSet)
         );
     }
 
@@ -307,7 +323,7 @@ public abstract partial class QualityBlueprint<T>
         var currentScenario = _currentScenario;
 
         var rule = new AsyncPredicateRule<TProp>(predicate, failureMessage);
-        _capturedDuringDefinition.Add(new CapturedRule(propertyName, rule, currentScenario));
+        _capturedDuringDefinition.Add(new CapturedRule(propertyName, rule, currentScenario, null, _currentRuleSet));
     }
 
     /// <summary>
@@ -334,7 +350,145 @@ public abstract partial class QualityBlueprint<T>
 
         var rule = new AsyncPredicateRule<TProp>(predicate, failureMessage, config);
         _capturedDuringDefinition.Add(
-            new CapturedRule(propertyName, rule, currentScenario, config)
+            new CapturedRule(propertyName, rule, currentScenario, config, _currentRuleSet)
+        );
+    }
+
+    // ============================================================
+    // ForPredicate -- Synchronous model-aware predicates
+    // ============================================================
+
+    /// <summary>
+    /// Registers a synchronous validation rule for a property that also receives the root model.
+    /// Enables cross-property validations like comparing a property against another property on the model.
+    /// </summary>
+    /// <typeparam name="TProp">The type of the property to validate.</typeparam>
+    /// <param name="propertyExpression">An expression selecting the property to validate.</param>
+    /// <param name="predicate">
+    /// A function that receives the root model instance and the property value,
+    /// returning <c>true</c> if validation passes.
+    /// </param>
+    /// <param name="failureMessage">The message to include in the report when the predicate returns <c>false</c>.</param>
+    protected void ForPredicate<TProp>(
+        Expression<Func<T, TProp>> propertyExpression,
+        Func<T, TProp, bool> predicate,
+        string failureMessage
+    )
+    {
+        ArgumentNullException.ThrowIfNull(predicate);
+        ArgumentNullException.ThrowIfNull(failureMessage);
+
+        var propertyName = GetPropertyName(propertyExpression);
+        var valueExtractor = propertyExpression.Compile();
+        _extractors[propertyName] = x => valueExtractor(x);
+
+        var currentScenario = _currentScenario;
+
+        var rule = new ModelAwarePredicateRule<T, TProp>(predicate, failureMessage);
+        _capturedDuringDefinition.Add(new CapturedRule(propertyName, rule, currentScenario, null, _currentRuleSet));
+    }
+
+    /// <summary>
+    /// Registers a synchronous validation rule for a property that also receives the root model,
+    /// with a <see cref="RuleConfig"/> that controls severity, error code, and cascade behavior.
+    /// </summary>
+    /// <typeparam name="TProp">The type of the property to validate.</typeparam>
+    /// <param name="propertyExpression">An expression selecting the property to validate.</param>
+    /// <param name="predicate">
+    /// A function that receives the root model instance and the property value,
+    /// returning <c>true</c> if validation passes.
+    /// </param>
+    /// <param name="failureMessage">The message to include in the report when the predicate returns <c>false</c>.</param>
+    /// <param name="config">Configuration for this rule (severity, error code, cascade mode).</param>
+    protected void ForPredicate<TProp>(
+        Expression<Func<T, TProp>> propertyExpression,
+        Func<T, TProp, bool> predicate,
+        string failureMessage,
+        RuleConfig config
+    )
+    {
+        ArgumentNullException.ThrowIfNull(predicate);
+        ArgumentNullException.ThrowIfNull(failureMessage);
+
+        var propertyName = GetPropertyName(propertyExpression);
+        var valueExtractor = propertyExpression.Compile();
+        _extractors[propertyName] = x => valueExtractor(x);
+
+        var currentScenario = _currentScenario;
+
+        var rule = new ModelAwarePredicateRule<T, TProp>(predicate, failureMessage, config);
+        _capturedDuringDefinition.Add(
+            new CapturedRule(propertyName, rule, currentScenario, config, _currentRuleSet)
+        );
+    }
+
+    // ============================================================
+    // ForPredicateAsync -- Asynchronous model-aware predicates
+    // ============================================================
+
+    /// <summary>
+    /// Registers an asynchronous validation rule for a property that also receives the root model.
+    /// Enables async cross-property validations like querying a repository using another property.
+    /// Use <see cref="QualityBlueprint{T}.CheckAsync(T)"/> to execute blueprints containing async predicates.
+    /// </summary>
+    /// <typeparam name="TProp">The type of the property to validate.</typeparam>
+    /// <param name="propertyExpression">An expression selecting the property to validate.</param>
+    /// <param name="predicate">
+    /// An async function that receives the root model instance and the property value,
+    /// returning <c>true</c> if validation passes.
+    /// </param>
+    /// <param name="failureMessage">The message to include in the report when the predicate returns <c>false</c>.</param>
+    protected void ForPredicateAsync<TProp>(
+        Expression<Func<T, TProp>> propertyExpression,
+        Func<T, TProp, Task<bool>> predicate,
+        string failureMessage
+    )
+    {
+        ArgumentNullException.ThrowIfNull(predicate);
+        ArgumentNullException.ThrowIfNull(failureMessage);
+
+        var propertyName = GetPropertyName(propertyExpression);
+        var valueExtractor = propertyExpression.Compile();
+        _extractors[propertyName] = x => valueExtractor(x);
+
+        var currentScenario = _currentScenario;
+
+        var rule = new ModelAwareAsyncPredicateRule<T, TProp>(predicate, failureMessage);
+        _capturedDuringDefinition.Add(new CapturedRule(propertyName, rule, currentScenario, null, _currentRuleSet));
+    }
+
+    /// <summary>
+    /// Registers an asynchronous validation rule for a property that also receives the root model,
+    /// with a <see cref="RuleConfig"/> that controls severity, error code, and cascade behavior.
+    /// Use <see cref="QualityBlueprint{T}.CheckAsync(T)"/> to execute blueprints containing async predicates.
+    /// </summary>
+    /// <typeparam name="TProp">The type of the property to validate.</typeparam>
+    /// <param name="propertyExpression">An expression selecting the property to validate.</param>
+    /// <param name="predicate">
+    /// An async function that receives the root model instance and the property value,
+    /// returning <c>true</c> if validation passes.
+    /// </param>
+    /// <param name="failureMessage">The message to include in the report when the predicate returns <c>false</c>.</param>
+    /// <param name="config">Configuration for this rule (severity, error code, cascade mode).</param>
+    protected void ForPredicateAsync<TProp>(
+        Expression<Func<T, TProp>> propertyExpression,
+        Func<T, TProp, Task<bool>> predicate,
+        string failureMessage,
+        RuleConfig config
+    )
+    {
+        ArgumentNullException.ThrowIfNull(predicate);
+        ArgumentNullException.ThrowIfNull(failureMessage);
+
+        var propertyName = GetPropertyName(propertyExpression);
+        var valueExtractor = propertyExpression.Compile();
+        _extractors[propertyName] = x => valueExtractor(x);
+
+        var currentScenario = _currentScenario;
+
+        var rule = new ModelAwareAsyncPredicateRule<T, TProp>(predicate, failureMessage, config);
+        _capturedDuringDefinition.Add(
+            new CapturedRule(propertyName, rule, currentScenario, config, _currentRuleSet)
         );
     }
 
@@ -390,7 +544,7 @@ public abstract partial class QualityBlueprint<T>
         var currentScenario = _currentScenario;
 
         _nestedDefinitions.Add(
-            new NestedDefinition(propertyName, x => valueExtractor(x), typedRule, currentScenario)
+            new NestedDefinition(propertyName, x => valueExtractor(x), typedRule, currentScenario, _currentRuleSet)
         );
     }
 
@@ -412,7 +566,7 @@ public abstract partial class QualityBlueprint<T>
         var currentScenario = _currentScenario;
 
         _nestedDefinitions.Add(
-            new NestedDefinition(propertyName, x => valueExtractor(x), typedRule, currentScenario)
+            new NestedDefinition(propertyName, x => valueExtractor(x), typedRule, currentScenario, _currentRuleSet)
         );
     }
 }

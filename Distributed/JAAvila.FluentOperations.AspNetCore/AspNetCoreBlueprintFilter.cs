@@ -18,10 +18,14 @@ namespace JAAvila.FluentOperations.Integration;
 public class BlueprintValidationFilter : IActionFilter
 {
     private readonly IEnumerable<IBlueprintValidator> _validators;
+    private readonly IReadOnlyList<IBlueprintInterceptor> _interceptors;
 
-    public BlueprintValidationFilter(IEnumerable<IBlueprintValidator> validators)
+    public BlueprintValidationFilter(
+        IEnumerable<IBlueprintValidator> validators,
+        IEnumerable<IBlueprintInterceptor>? interceptors = null)
     {
         _validators = validators ?? throw new ArgumentNullException(nameof(validators));
+        _interceptors = interceptors?.ToList() ?? (IReadOnlyList<IBlueprintInterceptor>)Array.Empty<IBlueprintInterceptor>();
     }
 
     public void OnActionExecuting(ActionExecutingContext context)
@@ -41,7 +45,18 @@ public class BlueprintValidationFilter : IActionFilter
                 continue;
             }
 
-            var report = validator.Validate(argument.Value);
+            QualityReport report;
+
+            if (_interceptors.Count == 0)
+            {
+                report = validator.Validate(argument.Value);
+            }
+            else
+            {
+                var ctx = new BlueprintInterceptionContext(argument.Value, type, validator, "AspNetCore");
+                report = BlueprintInterceptorPipeline.Execute(
+                    _interceptors, ctx, instance => validator.Validate(instance));
+            }
 
             if (report.IsValid)
             {
@@ -88,10 +103,14 @@ public class BlueprintValidationFilter<TModel, TBlueprint> : IActionFilter
     where TBlueprint : QualityBlueprint<TModel>
 {
     private readonly TBlueprint _blueprint;
+    private readonly IReadOnlyList<IBlueprintInterceptor> _interceptors;
 
-    public BlueprintValidationFilter(TBlueprint blueprint)
+    public BlueprintValidationFilter(
+        TBlueprint blueprint,
+        IEnumerable<IBlueprintInterceptor>? interceptors = null)
     {
         _blueprint = blueprint ?? throw new ArgumentNullException(nameof(blueprint));
+        _interceptors = interceptors?.ToList() ?? (IReadOnlyList<IBlueprintInterceptor>)Array.Empty<IBlueprintInterceptor>();
     }
 
     public void OnActionExecuting(ActionExecutingContext context)
@@ -103,7 +122,19 @@ public class BlueprintValidationFilter<TModel, TBlueprint> : IActionFilter
                 continue;
             }
 
-            var report = _blueprint.Check(model);
+            QualityReport report;
+
+            if (_interceptors.Count == 0)
+            {
+                report = _blueprint.Check(model);
+            }
+            else
+            {
+                var validator = (IBlueprintValidator)_blueprint;
+                var ctx = new BlueprintInterceptionContext(model!, typeof(TModel), validator, "AspNetCore");
+                report = BlueprintInterceptorPipeline.Execute(
+                    _interceptors, ctx, instance => _blueprint.Check((TModel)instance));
+            }
 
             if (report.IsValid)
             {
