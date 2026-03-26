@@ -43,4 +43,24 @@ public interface IBlueprintValidator
     /// Thrown when <paramref name="instance"/> is <see langword="null"/>.
     /// </exception>
     Task<QualityReport> ValidateAsync(object instance);
+
+    /// <summary>
+    /// Synchronously validates <paramref name="instance"/> against only the rules belonging to the
+    /// specified <paramref name="ruleSets"/>. Default rules are included only when <c>"default"</c>
+    /// is among the requested names.
+    /// </summary>
+    /// <param name="instance">The model instance to validate. Must not be <see langword="null"/>.</param>
+    /// <param name="ruleSets">The rule set names to activate. Case-insensitive.</param>
+    QualityReport Validate(object instance, params string[] ruleSets)
+        => Validate(instance);
+
+    /// <summary>
+    /// Asynchronously validates <paramref name="instance"/> against only the rules belonging to the
+    /// specified <paramref name="ruleSets"/>. Default rules are included only when <c>"default"</c>
+    /// is among the requested names.
+    /// </summary>
+    /// <param name="instance">The model instance to validate. Must not be <see langword="null"/>.</param>
+    /// <param name="ruleSets">The rule set names to activate. Case-insensitive.</param>
+    Task<QualityReport> ValidateAsync(object instance, params string[] ruleSets)
+        => ValidateAsync(instance);
 }

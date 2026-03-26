@@ -21,7 +21,7 @@ internal class CrossPropertyRule<TModel, TProp>(
     CrossPropertyComparison comparison,
     RuleConfig? config = null,
     Reason? reason = null
-) : IQualityRule, ICrossPropertyRule
+) : IQualityRule, ICrossPropertyRule, IModelAwareRule
 {
     private TModel? _instance;
 
@@ -93,5 +93,24 @@ internal class CrossPropertyRule<TModel, TProp>(
 
     public string? GetErrorCode() => config?.ErrorCode;
 
-    public string? GetCustomMessage() => config?.CustomMessage;
+    public string? GetCustomMessage()
+    {
+        if (config?.MessageFactory is { } factory && _instance is not null)
+        {
+            return factory(_instance);
+        }
+
+        return config?.CustomMessage;
+    }
+
+    void IModelAwareRule.SetModelInstance(object model)
+    {
+        // CrossPropertyRule already receives the model via SetValue(instance).
+        // SetModelInstance is called before SetValue in the loop, so we store it here
+        // to make MessageFactory available via GetCustomMessage().
+        if (model is TModel typed)
+        {
+            _instance = typed;
+        }
+    }
 }

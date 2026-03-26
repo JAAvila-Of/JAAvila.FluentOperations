@@ -7,9 +7,10 @@ internal class AsyncPredicateRule<TProp>(
     Func<TProp, Task<bool>> predicate,
     string failureMessage,
     RuleConfig? config = null
-) : IQualityRule, IAsyncQualityRule
+) : IQualityRule, IAsyncQualityRule, IModelAwareRule
 {
     private TProp? _value;
+    private object? _currentModel;
 
     public bool Validate()
     {
@@ -25,7 +26,7 @@ internal class AsyncPredicateRule<TProp>(
 
     public string GetReport()
     {
-        return config?.CustomMessage ?? failureMessage;
+        return GetCustomMessage() ?? failureMessage;
     }
 
     public void SetValue(object? value)
@@ -42,5 +43,15 @@ internal class AsyncPredicateRule<TProp>(
 
     public string? GetErrorCode() => config?.ErrorCode;
 
-    public string? GetCustomMessage() => config?.CustomMessage;
+    public string? GetCustomMessage()
+    {
+        if (config?.MessageFactory is { } factory && _currentModel is not null)
+        {
+            return factory(_currentModel);
+        }
+
+        return config?.CustomMessage;
+    }
+
+    void IModelAwareRule.SetModelInstance(object model) => _currentModel = model;
 }

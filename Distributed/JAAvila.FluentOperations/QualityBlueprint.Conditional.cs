@@ -27,7 +27,8 @@ public abstract partial class QualityBlueprint<T>
         RuleCaptureContext.BeginPropertyCapture(
             _capturedDuringDefinition,
             RuleCaptureContext.CurrentPropertyName ?? string.Empty,
-            _currentScenario
+            _currentScenario,
+            _currentRuleSet
         );
 
         then();
@@ -42,7 +43,8 @@ public abstract partial class QualityBlueprint<T>
             RuleCaptureContext.BeginPropertyCapture(
                 _capturedDuringDefinition,
                 RuleCaptureContext.CurrentPropertyName ?? string.Empty,
-                _currentScenario
+                _currentScenario,
+                _currentRuleSet
             );
 
             otherwise();
@@ -69,7 +71,7 @@ public abstract partial class QualityBlueprint<T>
                 conditionGroup: group
             );
             _capturedDuringDefinition.Add(
-                new CapturedRule(captured.PropertyName, wrapped, captured.Scenario, captured.Config)
+                new CapturedRule(captured.PropertyName, wrapped, captured.Scenario, captured.Config, captured.RuleSet)
             );
 
             // Ensure the extractor is registered
@@ -93,7 +95,7 @@ public abstract partial class QualityBlueprint<T>
                 conditionGroup: group
             );
             _capturedDuringDefinition.Add(
-                new CapturedRule(captured.PropertyName, wrapped, captured.Scenario, captured.Config)
+                new CapturedRule(captured.PropertyName, wrapped, captured.Scenario, captured.Config, captured.RuleSet)
             );
 
             if (!_extractors.ContainsKey(captured.PropertyName))
