@@ -192,7 +192,7 @@ public abstract class DataAnnotationsBlueprint<T> : QualityBlueprint<T>
         AnnotationOptions options
     )
     {
-        var config = BuildRuleConfig(options, null);
+        var config = BuildRuleConfig(options, attributes);
 
         var proxy = For(lambda, config);
         var manager = proxy.Test();
@@ -201,16 +201,10 @@ public abstract class DataAnnotationsBlueprint<T> : QualityBlueprint<T>
         {
             switch (attr)
             {
-                case RequiredAttribute req when !options.IgnoreRequired:
+                case RequiredAttribute when !options.IgnoreRequired:
                     manager
                         .NotBeNull()
                         .NotBeEmpty();
-                    if (options.UseAnnotationErrorMessages && !string.IsNullOrEmpty(req.ErrorMessage))
-                    {
-                        // The rule config custom message applies to all rules in this For() block;
-                        // we set it via the config constructed above. Individual per-rule messages
-                        // are not supported by the engine — the last annotation message wins.
-                    }
                     break;
 
                 case StringLengthAttribute sl:
@@ -245,11 +239,21 @@ public abstract class DataAnnotationsBlueprint<T> : QualityBlueprint<T>
                     break;
 
                 case PhoneAttribute:
-                    // Common North-American phone pattern accepted by PhoneAttribute
+                    // Common North-American phone pattern accepted by PhoneAttribute.
+                    // NOTE: Standard DataAnnotations [Phone] passes validation when the value is null
+                    // (only [Required] enforces non-null). FluentOperations' Match() has a FailIf null
+                    // guard that rejects null values, creating an implicit non-null requirement.
+                    // This is an intentional divergence: DataAnnotationsBlueprint treats null phone
+                    // values as failures for safety. Add [Required] explicitly if you want the
+                    // null-rejection to be semantically clear, or exclude [Phone] properties and
+                    // add your own null-aware rule.
                     manager.Match(@"^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$");
                     break;
 
                 case CreditCardAttribute:
+                    // NOTE: Same intentional divergence as PhoneAttribute above.
+                    // Standard DataAnnotations [CreditCard] passes when the value is null.
+                    // FluentOperations' BeCreditCard() has a FailIf null guard that rejects null.
                     manager.BeCreditCard();
                     break;
             }
@@ -266,7 +270,7 @@ public abstract class DataAnnotationsBlueprint<T> : QualityBlueprint<T>
         AnnotationOptions options
     )
     {
-        var config = BuildRuleConfig(options, null);
+        var config = BuildRuleConfig(options, attributes);
         var proxy = For(lambda, config);
         var manager = proxy.Test();
 
@@ -292,7 +296,7 @@ public abstract class DataAnnotationsBlueprint<T> : QualityBlueprint<T>
         AnnotationOptions options
     )
     {
-        var config = BuildRuleConfig(options, null);
+        var config = BuildRuleConfig(options, attributes);
         var proxy = For(lambda, config);
         var manager = proxy.Test();
 
@@ -324,7 +328,7 @@ public abstract class DataAnnotationsBlueprint<T> : QualityBlueprint<T>
         AnnotationOptions options
     )
     {
-        var config = BuildRuleConfig(options, null);
+        var config = BuildRuleConfig(options, attributes);
         var proxy = For(lambda, config);
         var manager = proxy.Test();
 
@@ -332,7 +336,8 @@ public abstract class DataAnnotationsBlueprint<T> : QualityBlueprint<T>
         {
             if (attr is RangeAttribute range)
             {
-                if (range.Minimum is long min && range.Maximum is long max)
+                var (success, min, max) = ExtractLongRange(range);
+                if (success)
                 {
                     manager.BeInRange(min, max);
                 }
@@ -350,7 +355,7 @@ public abstract class DataAnnotationsBlueprint<T> : QualityBlueprint<T>
         AnnotationOptions options
     )
     {
-        var config = BuildRuleConfig(options, null);
+        var config = BuildRuleConfig(options, attributes);
         var proxy = For(lambda, config);
         var manager = proxy.Test();
 
@@ -363,7 +368,8 @@ public abstract class DataAnnotationsBlueprint<T> : QualityBlueprint<T>
                     break;
 
                 case RangeAttribute range:
-                    if (range.Minimum is long min && range.Maximum is long max)
+                    var (success, min, max) = ExtractLongRange(range);
+                    if (success)
                     {
                         manager.BeInRange(min, max);
                     }
@@ -382,7 +388,7 @@ public abstract class DataAnnotationsBlueprint<T> : QualityBlueprint<T>
         AnnotationOptions options
     )
     {
-        var config = BuildRuleConfig(options, null);
+        var config = BuildRuleConfig(options, attributes);
         var proxy = For(lambda, config);
         var manager = proxy.Test();
 
@@ -408,7 +414,7 @@ public abstract class DataAnnotationsBlueprint<T> : QualityBlueprint<T>
         AnnotationOptions options
     )
     {
-        var config = BuildRuleConfig(options, null);
+        var config = BuildRuleConfig(options, attributes);
         var proxy = For(lambda, config);
         var manager = proxy.Test();
 
@@ -440,7 +446,7 @@ public abstract class DataAnnotationsBlueprint<T> : QualityBlueprint<T>
         AnnotationOptions options
     )
     {
-        var config = BuildRuleConfig(options, null);
+        var config = BuildRuleConfig(options, attributes);
         var proxy = For(lambda, config);
         var manager = proxy.Test();
 
@@ -467,7 +473,7 @@ public abstract class DataAnnotationsBlueprint<T> : QualityBlueprint<T>
         AnnotationOptions options
     )
     {
-        var config = BuildRuleConfig(options, null);
+        var config = BuildRuleConfig(options, attributes);
         var proxy = For(lambda, config);
         var manager = proxy.Test();
 
@@ -519,7 +525,7 @@ public abstract class DataAnnotationsBlueprint<T> : QualityBlueprint<T>
         );
         var lambda = Expression.Lambda<Func<T, object?>>(body, param);
 
-        var config = BuildRuleConfig(options, null);
+        var config = BuildRuleConfig(options, attributes);
         For<object?, ObjectOperationsManager>(lambda, config).Test().NotBeNull();
     }
 
@@ -527,15 +533,54 @@ public abstract class DataAnnotationsBlueprint<T> : QualityBlueprint<T>
     // Helpers
     // -----------------------------------------------------------------
 
-    private static RuleConfig BuildRuleConfig(AnnotationOptions options, ValidationAttribute? attr)
+    /// <summary>
+    /// Extracts long min/max from a <see cref="RangeAttribute"/>, handling all three constructor forms:
+    /// <list type="bullet">
+    ///   <item><description><c>RangeAttribute(int, int)</c>: <c>Minimum</c>/<c>Maximum</c> are boxed <see langword="int"/> — converted to <see langword="long"/>.</description></item>
+    ///   <item><description><c>RangeAttribute(double, double)</c>: <c>Minimum</c>/<c>Maximum</c> are boxed <see langword="double"/> — truncated to <see langword="long"/>.</description></item>
+    ///   <item><description><c>RangeAttribute(Type, string, string)</c>: <c>Minimum</c>/<c>Maximum</c> are <see langword="string"/> — parsed via <see cref="long.TryParse(string, out long)"/>.</description></item>
+    /// </list>
+    /// </summary>
+    private static (bool Success, long Min, long Max) ExtractLongRange(RangeAttribute range)
+    {
+        switch (range.Minimum)
+        {
+            case int intMin when range.Maximum is int intMax:
+                return (true, intMin, intMax);
+
+            case long longMin when range.Maximum is long longMax:
+                return (true, longMin, longMax);
+
+            case double doubleMin when range.Maximum is double doubleMax:
+                return (true, (long)doubleMin, (long)doubleMax);
+
+            case string strMin when range.Maximum is string strMax:
+                if (long.TryParse(strMin, out var parsedMin) && long.TryParse(strMax, out var parsedMax))
+                {
+                    return (true, parsedMin, parsedMax);
+                }
+                return (false, 0, 0);
+
+            default:
+                return (false, 0, 0);
+        }
+    }
+
+    private static RuleConfig BuildRuleConfig(
+        AnnotationOptions options,
+        IReadOnlyList<ValidationAttribute> attributes)
     {
         string? customMessage = null;
 
-        if (options.UseAnnotationErrorMessages
-            && attr is not null
-            && !string.IsNullOrEmpty(attr.ErrorMessage))
+        if (options.UseAnnotationErrorMessages)
         {
-            customMessage = attr.ErrorMessage;
+            var firstWithMessage = attributes.FirstOrDefault(
+                a => !string.IsNullOrEmpty(a.ErrorMessage));
+
+            if (firstWithMessage is not null)
+            {
+                customMessage = firstWithMessage.ErrorMessage;
+            }
         }
 
         return new RuleConfig

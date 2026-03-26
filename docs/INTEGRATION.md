@@ -277,6 +277,33 @@ For explicit registration of specific command-blueprint pairs:
 builder.Services.AddBlueprintBehavior<CreateUserCommand, string, CreateUserCommandBlueprint>();
 ```
 
+### Registration Approach Comparison
+
+Three registration approaches are available. Choose based on your blueprint and request relationship:
+
+| Approach | Method | Use Case |
+|----------|--------|----------|
+| **Auto-discovery** (recommended) | `AddBlueprintValidation()` | Discovers matching blueprints at runtime via `IBlueprintValidator.CanValidate`. Works for any relationship. |
+| **Direct — 3-generic** | `AddBlueprintBehavior<TRequest, TResponse, TBlueprint>()` | Blueprint validates the **request type directly**: `TBlueprint : QualityBlueprint<TRequest>`. Compile-time checked. |
+| **Base model — 4-generic** | `AddBlueprintBehavior<TRequest, TResponse, TModel, TBlueprint>()` | Blueprint validates a **base model**; request derives from it: `TRequest : TModel`. Use when you have `QualityBlueprint<User>` and `CreateUserCommand : User`. |
+
+> **Common mistake:** Trying to use the 3-generic overload with a base-model blueprint results in a compile error because `TBlueprint : QualityBlueprint<TRequest>` is not satisfied. Use the 4-generic overload or `AddBlueprintValidation()` instead.
+
+```csharp
+// Blueprint validates User (base model)
+// Request CreateUserCommand inherits from User
+
+// WRONG — compile error: UserBlueprint : QualityBlueprint<User>, not QualityBlueprint<CreateUserCommand>
+// services.AddBlueprintBehavior<CreateUserCommand, string, UserBlueprint>();
+
+// CORRECT — 4-generic overload
+services.AddBlueprintBehavior<CreateUserCommand, string, User, UserBlueprint>();
+
+// ALSO CORRECT — auto-discovery (register blueprint separately)
+services.AddSingleton<QualityBlueprint<User>, UserBlueprint>();
+services.AddBlueprintValidation();
+```
+
 ---
 
 ## Minimal API Integration
@@ -460,17 +487,30 @@ public class UserBlueprint : DataAnnotationsBlueprint<User>
 | `[RegularExpression(pattern)]` | `Match(pattern)` |
 | `[Range(min, max)]` | `BeInRange(min, max)` |
 
+### Divergence from standard DataAnnotations
+
+`[Phone]` and `[CreditCard]` behave differently from standard DataAnnotations when the property value is `null`:
+
+| Attribute | Standard DataAnnotations | DataAnnotationsBlueprint |
+|-----------|--------------------------|--------------------------|
+| `[Phone]` | Passes on `null` | **Fails** — `Match()` has a FailIf null guard |
+| `[CreditCard]` | Passes on `null` | **Fails** — `BeCreditCard()` has a FailIf null guard |
+
+In standard DataAnnotations, `[Phone]` and `[CreditCard]` are format validators; only `[Required]` enforces non-null. `DataAnnotationsBlueprint` intentionally rejects null values for these attributes to prevent unvalidated nulls from passing through to downstream systems. If you want null to pass, exclude the property from annotation mapping and add your own rule using `For(x => x.Prop).Test().NotBeNull().Match(pattern)` only when appropriate.
+
 ### AnnotationOptions
 
 ```csharp
 DataAnnotationsBlueprint<User>.FromAnnotations(new AnnotationOptions
 {
     IgnoreRequired = false,              // default: translate [Required]
-    UseAnnotationErrorMessages = true,   // use attribute ErrorMessage as CustomMessage
+    UseAnnotationErrorMessages = true,   // use attribute ErrorMessage as CustomMessage (first attribute wins)
     DefaultSeverity = Severity.Error,    // default: Error
     ErrorCodePrefix = "DA"               // prefix for all generated error codes
 });
 ```
+
+> **Note on `UseAnnotationErrorMessages`:** When multiple validation attributes are present on a property and more than one has a custom `ErrorMessage`, the first attribute (in declaration order) with a non-empty `ErrorMessage` is used as the `CustomMessage` for all rules on that property. This is a limitation of the engine's single `RuleConfig` per `For()` block design.
 
 ---
 

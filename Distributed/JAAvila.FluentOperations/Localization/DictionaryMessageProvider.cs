@@ -11,18 +11,24 @@ namespace JAAvila.FluentOperations.Localization;
 /// Keys are <c>(messageKey, cultureName)</c> pairs. Use an empty culture name
 /// (<c>""</c>) to provide a culture-neutral fallback entry.
 /// </remarks>
-public class DictionaryMessageProvider(
-    Dictionary<(string key, string culture), string> messages
-) : IMessageProvider
+public class DictionaryMessageProvider : IMessageProvider
 {
+    private readonly Dictionary<(string key, string culture), string> _messages;
+
+    public DictionaryMessageProvider(Dictionary<(string key, string culture), string> messages)
+    {
+        ArgumentNullException.ThrowIfNull(messages);
+        _messages = messages;
+    }
+
     /// <inheritdoc />
     public string? GetMessage(string messageKey, CultureInfo culture)
     {
         // Try exact culture match first, then neutral culture (empty string).
-        if (messages.TryGetValue((messageKey, culture.Name), out var message))
+        if (_messages.TryGetValue((messageKey, culture.Name), out var message))
             return message;
 
-        if (messages.TryGetValue((messageKey, ""), out var fallback))
+        if (_messages.TryGetValue((messageKey, ""), out var fallback))
             return fallback;
 
         return null;
