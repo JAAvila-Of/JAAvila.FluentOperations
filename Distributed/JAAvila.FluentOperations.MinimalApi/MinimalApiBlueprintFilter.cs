@@ -1,3 +1,4 @@
+using JAAvila.FluentOperations.Contract;
 using JAAvila.FluentOperations.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -45,8 +46,24 @@ public class MinimalApiBlueprintFilter<TModel, TBlueprint> : IEndpointFilter
         // 2. Resolve the blueprint from DI
         var blueprint = context.HttpContext.RequestServices.GetRequiredService<TBlueprint>();
 
-        // 3. Execute async validation
-        var report = await blueprint.CheckAsync(model);
+        // 3. Execute async validation (with interceptor pipeline when interceptors are registered)
+        var interceptors = context.HttpContext.RequestServices
+            .GetServices<IAsyncBlueprintInterceptor>()
+            .ToList();
+
+        QualityReport report;
+
+        if (interceptors.Count == 0)
+        {
+            report = await blueprint.CheckAsync(model);
+        }
+        else
+        {
+            var validator = (IBlueprintValidator)blueprint;
+            var ctx = new BlueprintInterceptionContext(model, typeof(TModel), validator, "MinimalApi");
+            report = await BlueprintInterceptorPipeline.ExecuteAsync(
+                interceptors, ctx, async instance => await blueprint.CheckAsync((TModel)instance));
+        }
 
         // 4. If invalid (has Error-severity failures), return ValidationProblem (RFC 7807)
         if (!report.IsValid)

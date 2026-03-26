@@ -19,10 +19,12 @@ public class PrincipalChain<T> : IDisposable
     private static readonly AsyncLocal<PrincipalChain<T>?> Instance = new();
 
     private readonly Guid _chainId;
+    private readonly string _subject;
 
-    private PrincipalChain(Guid chainId, BaseChain<T> value)
+    private PrincipalChain(Guid chainId, BaseChain<T> value, string rawCaller)
     {
         _chainId = chainId;
+        _subject = rawCaller;
         Contexts.Value ??= new ConcurrentDictionary<Guid, Stack<BaseChain<T>>>();
 
         var stack = new Stack<BaseChain<T>>();
@@ -58,7 +60,8 @@ public class PrincipalChain<T> : IDisposable
 
         return new PrincipalChain<T>(
             chainId,
-            BaseChain<T>.Create(BaseValue<T>.Create(value), BaseSubject.Create(caller))
+            BaseChain<T>.Create(BaseValue<T>.Create(value), BaseSubject.Create(caller)),
+            caller
         );
     }
 
@@ -71,6 +74,34 @@ public class PrincipalChain<T> : IDisposable
     public void SetValue(T value)
     {
         GetStack().Peek().BaseValue.Value = value;
+    }
+
+    /// <summary>
+    /// Re-creates the <see cref="AsyncLocal{T}"/>-backed stack entry for this chain's
+    /// <c>_chainId</c> in the <b>current</b> async context, replacing whatever value
+    /// was on the stack. This enables singleton Blueprint execution: the chain was
+    /// originally created in the DI startup context, but validation runs in a
+    /// different async context where <c>Contexts.Value</c> may be <c>null</c>.
+    /// After this call, <see cref="GetValue"/>, <see cref="GetSubject"/>, and all
+    /// other stack-dependent methods work normally in the current context.
+    /// </summary>
+    /// <param name="value">The value to place on the re-initialized chain.</param>
+    internal void ReInitialize(T value)
+    {
+        Contexts.Value ??= new ConcurrentDictionary<Guid, Stack<BaseChain<T>>>();
+
+        var chain = BaseChain<T>.Create(
+            BaseValue<T>.Create(value),
+            GetSubjectSafe()
+        );
+
+        // Always create a fresh single-element stack for this chain ID.
+        // This is safe in concurrent scenarios because each async context has its own
+        // Contexts.Value (AsyncLocal isolates per-context), and within one context we
+        // only need one stack entry per _chainId during Blueprint validation.
+        var stack = new Stack<BaseChain<T>>();
+        stack.Push(chain);
+        Contexts.Value[_chainId] = stack;
     }
 
     /// <summary>
@@ -154,6 +185,15 @@ public class PrincipalChain<T> : IDisposable
     private Stack<BaseChain<T>> GetStack()
     {
         return Contexts.Value![_chainId];
+    }
+
+    /// <summary>
+    /// Returns the subject without accessing the AsyncLocal stack.
+    /// Used by <see cref="ReInitialize"/> which may run in a different async context.
+    /// </summary>
+    private BaseSubject GetSubjectSafe()
+    {
+        return BaseSubject.Create(_subject);
     }
 
     #endregion
