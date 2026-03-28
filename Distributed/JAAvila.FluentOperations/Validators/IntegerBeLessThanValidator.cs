@@ -5,13 +5,15 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the integer value is less than the expected value.
 /// </summary>
-internal class IntegerBeLessThanValidator(PrincipalChain<int> chain, int expected) : IValidator, IRuleDescriptor
+internal class IntegerBeLessThanValidator(PrincipalChain<int> chain, int expected)
+    : IValidator,
+        IRuleDescriptor
 {
     public static IntegerBeLessThanValidator New(PrincipalChain<int> chain, int expected) =>
         new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Integer.BeLessThan";
 
     string IRuleDescriptor.OperationName => "BeLessThan";
@@ -26,7 +28,8 @@ internal class IntegerBeLessThanValidator(PrincipalChain<int> chain, int expecte
             return true;
         }
 
-        ResultValidation = "The resulting value was expected to be less than {0}, but {1} was found.";
+        ResultValidation =
+            "The resulting value was expected to be less than {0}, but {1} was found.";
         return false;
     }
 

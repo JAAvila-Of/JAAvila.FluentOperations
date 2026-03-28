@@ -15,8 +15,8 @@ internal class CollectionHaveLengthGreaterThanValidator<T>(
         int expected
     ) => new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Collection.HaveLengthGreaterThan";
     string IRuleDescriptor.OperationName => "HaveLengthGreaterThan";
     Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);

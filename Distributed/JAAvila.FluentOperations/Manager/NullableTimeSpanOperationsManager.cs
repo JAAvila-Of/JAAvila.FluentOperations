@@ -9,7 +9,7 @@ using JAAvila.FluentOperations.Validators;
 namespace JAAvila.FluentOperations.Manager;
 
 /// <summary>
-/// Provides fluent validation operations for <c>TimeSpan?</c> values.
+/// Provides fluent validation operations for <c>TimeSpan?</c> Values.
 /// Supports value presence, null-checking, and inherited nullable operations.
 /// </summary>
 public class NullableTimeSpanOperationsManager
@@ -28,7 +28,7 @@ public class NullableTimeSpanOperationsManager
     {
         PrincipalChain = PrincipalChain<TimeSpan?>.Get(value, caller);
         GlobalConfig.Initialize();
-        SetManager(this);
+        base.SetManager(this);
     }
 
     /// <summary>
@@ -106,7 +106,8 @@ public class NullableTimeSpanOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue()),
                             BaseFormatter.Format(expected)
                         )
@@ -137,7 +138,11 @@ public class NullableTimeSpanOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.MessageKey, operation.ResultValidation, BaseFormatter.Format(expected))
+                        .WithResult(
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            BaseFormatter.Format(expected)
+                        )
                         .WithReason(reason?.ToString())
             )
             .Execute();
@@ -156,7 +161,11 @@ public class NullableTimeSpanOperationsManager
     /// Throws immediately if the value is <c>null</c> (null guard).
     /// Also throws immediately if <paramref name="min"/> is greater than <paramref name="max"/> (inverted range guard).
     /// </remarks>
-    public NullableTimeSpanOperationsManager BeInRange(TimeSpan min, TimeSpan max, Reason? reason = null)
+    public NullableTimeSpanOperationsManager BeInRange(
+        TimeSpan min,
+        TimeSpan max,
+        Reason? reason = null
+    )
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.TimeSpan.BeInRange))
         {
@@ -174,9 +183,9 @@ public class NullableTimeSpanOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeInRange)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -207,7 +216,11 @@ public class NullableTimeSpanOperationsManager
     /// Throws immediately if the value is <c>null</c> (null guard).
     /// Also throws immediately if <paramref name="min"/> is greater than <paramref name="max"/> (inverted range guard).
     /// </remarks>
-    public NullableTimeSpanOperationsManager NotBeInRange(TimeSpan min, TimeSpan max, Reason? reason = null)
+    public NullableTimeSpanOperationsManager NotBeInRange(
+        TimeSpan min,
+        TimeSpan max,
+        Reason? reason = null
+    )
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.TimeSpan.NotBeInRange))
         {
@@ -225,9 +238,9 @@ public class NullableTimeSpanOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(NotBeInRange)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -267,15 +280,16 @@ public class NullableTimeSpanOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BePositive)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -306,15 +320,16 @@ public class NullableTimeSpanOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeNegative)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -356,16 +371,17 @@ public class NullableTimeSpanOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeGreaterThan)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -397,16 +413,17 @@ public class NullableTimeSpanOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeLessThan)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -438,16 +455,17 @@ public class NullableTimeSpanOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(days),
                             BaseFormatter.Format(PrincipalChain.GetValue()!.Value.Days)
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(HaveDays)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -479,16 +497,17 @@ public class NullableTimeSpanOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(hours),
                             BaseFormatter.Format(PrincipalChain.GetValue()!.Value.Hours)
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(HaveHours)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -520,16 +539,17 @@ public class NullableTimeSpanOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(minutes),
                             BaseFormatter.Format(PrincipalChain.GetValue()!.Value.Minutes)
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(HaveMinutes)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -561,16 +581,17 @@ public class NullableTimeSpanOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(seconds),
                             BaseFormatter.Format(PrincipalChain.GetValue()!.Value.Seconds)
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(HaveSeconds)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -587,7 +608,10 @@ public class NullableTimeSpanOperationsManager
     public NullableTimeSpanOperationsManager BeOfType<TType>(Reason? reason = null)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Common.BeOfType))
+        {
             return this;
+        }
+
         ValidateBeOfTypeOperation(reason, typeof(TType));
         return this;
     }
@@ -598,7 +622,10 @@ public class NullableTimeSpanOperationsManager
     public NullableTimeSpanOperationsManager BeOfType(Type expected, Reason? reason = null)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Common.BeOfType))
+        {
             return this;
+        }
+
         ValidateBeOfTypeOperation(reason, expected);
         return this;
     }
@@ -609,7 +636,10 @@ public class NullableTimeSpanOperationsManager
     public NullableTimeSpanOperationsManager NotBeOfType<TType>(Reason? reason = null)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Common.NotBeOfType))
+        {
             return this;
+        }
+
         ValidateNotBeOfTypeOperation(reason, typeof(TType));
         return this;
     }
@@ -620,7 +650,10 @@ public class NullableTimeSpanOperationsManager
     public NullableTimeSpanOperationsManager NotBeOfType(Type expected, Reason? reason = null)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Common.NotBeOfType))
+        {
             return this;
+        }
+
         ValidateNotBeOfTypeOperation(reason, expected);
         return this;
     }
@@ -641,14 +674,18 @@ public class NullableTimeSpanOperationsManager
                 _ =>
                     (
                         type is null,
-                        Fail.New($"The {nameof(BeOfType)} operation failed because the expected type was <null>.")
+                        Fail.New(
+                            $"The {nameof(BeOfType)} operation failed because the expected type was <null>."
+                        )
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
-                        Fail.New($"The {nameof(BeOfType)} operation failed because the value was <null>.")
+                        m.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(BeOfType)} operation failed because the value was <null>."
+                        )
                     )
             )
             .Execute();
@@ -670,14 +707,18 @@ public class NullableTimeSpanOperationsManager
                 _ =>
                     (
                         type is null,
-                        Fail.New($"The {nameof(NotBeOfType)} operation failed because the expected type was <null>.")
+                        Fail.New(
+                            $"The {nameof(NotBeOfType)} operation failed because the expected type was <null>."
+                        )
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
-                        Fail.New($"The {nameof(NotBeOfType)} operation failed because the value was <null>.")
+                        m.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(NotBeOfType)} operation failed because the value was <null>."
+                        )
                     )
             )
             .Execute();

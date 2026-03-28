@@ -26,10 +26,11 @@ public sealed record BlueprintRuleInfo
     /// Named parameters captured at rule-definition time.
     /// For parameterless rules this is an empty dictionary.
     /// </summary>
-    public IReadOnlyDictionary<string, object> Parameters { get; init; } = new Dictionary<string, object>();
+    public IReadOnlyDictionary<string, object> Parameters { get; init; } =
+        new Dictionary<string, object>();
 
     /// <summary>
-    /// The scenario interface type that activates this rule, or <c>null</c> for unconditional rules.
+    /// The scenario interface type that activates this rule or <c>null</c> for unconditional rules.
     /// </summary>
     public Type? Scenario { get; init; }
 

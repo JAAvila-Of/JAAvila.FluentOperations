@@ -5,13 +5,14 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the float value is positive infinity.
 /// </summary>
-internal class FloatBePositiveInfinityValidator(PrincipalChain<float> chain) : IValidator, IRuleDescriptor
+internal class FloatBePositiveInfinityValidator(PrincipalChain<float> chain)
+    : IValidator,
+        IRuleDescriptor
 {
-    public static FloatBePositiveInfinityValidator New(PrincipalChain<float> chain) =>
-        new(chain);
+    public static FloatBePositiveInfinityValidator New(PrincipalChain<float> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Float.BePositiveInfinity";
     string IRuleDescriptor.OperationName => "BePositiveInfinity";
     Type IRuleDescriptor.SubjectType => typeof(float);
@@ -25,7 +26,8 @@ internal class FloatBePositiveInfinityValidator(PrincipalChain<float> chain) : I
             return true;
         }
 
-        ResultValidation = "The resulting value was expected to be positive infinity, but {0} was found.";
+        ResultValidation =
+            "The resulting value was expected to be positive infinity, but {0} was found.";
         return false;
     }
 

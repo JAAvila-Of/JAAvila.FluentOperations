@@ -22,8 +22,14 @@ public static class FluentOperationsDIExtensions
         where TBlueprint : class
     {
         services.AddSingleton<TBlueprint>();
+
         if (typeof(IBlueprintValidator).IsAssignableFrom(typeof(TBlueprint)))
-            services.AddSingleton<IBlueprintValidator>(sp => (IBlueprintValidator)sp.GetRequiredService<TBlueprint>());
+        {
+            services.AddSingleton<IBlueprintValidator>(
+                sp => (IBlueprintValidator)sp.GetRequiredService<TBlueprint>()
+            );
+        }
+
         return services;
     }
 
@@ -42,8 +48,14 @@ public static class FluentOperationsDIExtensions
         foreach (var type in blueprintTypes)
         {
             services.AddSingleton(type);
+
             if (typeof(IBlueprintValidator).IsAssignableFrom(type))
-                services.AddSingleton(typeof(IBlueprintValidator), sp => (IBlueprintValidator)sp.GetRequiredService(type));
+            {
+                services.AddSingleton(
+                    typeof(IBlueprintValidator),
+                    sp => (IBlueprintValidator)sp.GetRequiredService(type)
+                );
+            }
         }
 
         return services;
@@ -73,7 +85,7 @@ public static class FluentOperationsDIExtensions
     /// or standard DI registration methods.
     /// </para>
     /// <para>
-    /// The dual registration (concrete + base generic) ensures compatibility with
+    /// The dual registration (concrete and base generic) ensures compatibility with
     /// <c>BlueprintValidationFilter</c> (ASP.NET Core) and <c>MediatRBlueprintBehavior</c>.
     /// </para>
     /// </remarks>
@@ -151,7 +163,7 @@ public static class FluentOperationsDIExtensions
 
         foreach (var type in blueprintTypes)
         {
-            // Register as concrete type (e.g., OrderBlueprint)
+            // Register as a concrete type (e.g., OrderBlueprint)
             services.AddSingleton(type);
 
             // Register as QualityBlueprint<TModel> for generic resolution
@@ -163,7 +175,10 @@ public static class FluentOperationsDIExtensions
             }
 
             // Register as IBlueprintValidator for AOT-safe filter/behavior resolution
-            services.AddSingleton(typeof(IBlueprintValidator), sp => (IBlueprintValidator)sp.GetRequiredService(type));
+            services.AddSingleton(
+                typeof(IBlueprintValidator),
+                sp => (IBlueprintValidator)sp.GetRequiredService(type)
+            );
         }
 
         return services;
@@ -203,23 +218,27 @@ public static class FluentOperationsDIExtensions
     /// </remarks>
     public static IServiceCollection AddCompositeBlueprint<T>(
         this IServiceCollection services,
-        params Type[] blueprintTypes)
+        params Type[] blueprintTypes
+    )
         where T : notnull
     {
         ArgumentNullException.ThrowIfNull(services);
         ArgumentNullException.ThrowIfNull(blueprintTypes);
 
         if (blueprintTypes.Length == 0)
+        {
             throw new ArgumentException(
-                "At least one blueprint type is required.", nameof(blueprintTypes));
+                "At least one blueprint type is required.",
+                nameof(blueprintTypes)
+            );
+        }
 
         // Register each individual blueprint as its concrete type only (not as IBlueprintValidator).
-        foreach (var type in blueprintTypes)
+        foreach (
+            var type in blueprintTypes.Where(type => services.All(sd => sd.ServiceType != type))
+        )
         {
-            if (!services.Any(sd => sd.ServiceType == type))
-            {
-                services.AddSingleton(type);
-            }
+            services.AddSingleton(type);
         }
 
         // Register the composite as its concrete type (Singleton).
@@ -232,8 +251,9 @@ public static class FluentOperationsDIExtensions
         });
 
         // Register the composite as IBlueprintValidator for filter/behavior discovery.
-        services.AddSingleton<IBlueprintValidator>(sp =>
-            sp.GetRequiredService<CompositeBlueprint<T>>());
+        services.AddSingleton<IBlueprintValidator>(
+            sp => sp.GetRequiredService<CompositeBlueprint<T>>()
+        );
 
         return services;
     }
@@ -255,7 +275,8 @@ public static class FluentOperationsDIExtensions
     /// </exception>
     public static IServiceCollection AddCompositeBlueprint<T>(
         this IServiceCollection services,
-        Func<IServiceProvider, IEnumerable<IBlueprintValidator>> factory)
+        Func<IServiceProvider, IEnumerable<IBlueprintValidator>> factory
+    )
         where T : notnull
     {
         ArgumentNullException.ThrowIfNull(services);
@@ -265,8 +286,9 @@ public static class FluentOperationsDIExtensions
         services.AddSingleton(sp => new CompositeBlueprint<T>(factory(sp)));
 
         // Register the composite as IBlueprintValidator for filter/behavior discovery.
-        services.AddSingleton<IBlueprintValidator>(sp =>
-            sp.GetRequiredService<CompositeBlueprint<T>>());
+        services.AddSingleton<IBlueprintValidator>(
+            sp => sp.GetRequiredService<CompositeBlueprint<T>>()
+        );
 
         return services;
     }
@@ -281,24 +303,35 @@ public static class FluentOperationsDIExtensions
     /// Interceptors are invoked in registration order unless they implement
     /// <see cref="IOrderedBlueprintInterceptor"/>.
     /// </summary>
-    public static IServiceCollection AddBlueprintInterceptor<TInterceptor>(this IServiceCollection services)
+    public static IServiceCollection AddBlueprintInterceptor<TInterceptor>(
+        this IServiceCollection services
+    )
         where TInterceptor : class
     {
         var implementsSync = typeof(IBlueprintInterceptor).IsAssignableFrom(typeof(TInterceptor));
-        var implementsAsync = typeof(IAsyncBlueprintInterceptor).IsAssignableFrom(typeof(TInterceptor));
+        var implementsAsync = typeof(IAsyncBlueprintInterceptor).IsAssignableFrom(
+            typeof(TInterceptor)
+        );
 
         if (implementsSync)
+        {
             services.AddSingleton(typeof(IBlueprintInterceptor), typeof(TInterceptor));
+        }
 
         if (implementsAsync)
+        {
             services.AddSingleton(typeof(IAsyncBlueprintInterceptor), typeof(TInterceptor));
+        }
 
         // If only sync: auto-register an adapter so async filters can pick it up
         if (implementsSync && !implementsAsync)
         {
-            services.AddSingleton<IAsyncBlueprintInterceptor>(sp =>
-                new SyncToAsyncInterceptorAdapter(
-                    (IBlueprintInterceptor)sp.GetRequiredService(typeof(TInterceptor))));
+            services.AddSingleton<IAsyncBlueprintInterceptor>(
+                sp =>
+                    new SyncToAsyncInterceptorAdapter(
+                        (IBlueprintInterceptor)sp.GetRequiredService(typeof(TInterceptor))
+                    )
+            );
         }
 
         return services;
@@ -312,16 +345,23 @@ public static class FluentOperationsDIExtensions
     /// </summary>
     public static IServiceCollection AddBlueprintInterceptor(
         this IServiceCollection services,
-        IBlueprintInterceptor interceptor)
+        IBlueprintInterceptor interceptor
+    )
     {
         ArgumentNullException.ThrowIfNull(interceptor);
 
         services.AddSingleton(interceptor);
 
         if (interceptor is IAsyncBlueprintInterceptor asyncInterceptor)
+        {
             services.AddSingleton(asyncInterceptor);
+        }
         else
-            services.AddSingleton<IAsyncBlueprintInterceptor>(new SyncToAsyncInterceptorAdapter(interceptor));
+        {
+            services.AddSingleton<IAsyncBlueprintInterceptor>(
+                new SyncToAsyncInterceptorAdapter(interceptor)
+            );
+        }
 
         return services;
     }
@@ -336,8 +376,10 @@ public static class FluentOperationsDIExtensions
 
         while (current is not null)
         {
-            if (current.IsGenericType
-                && current.GetGenericTypeDefinition() == typeof(QualityBlueprint<>))
+            if (
+                current.IsGenericType
+                && current.GetGenericTypeDefinition() == typeof(QualityBlueprint<>)
+            )
             {
                 return true;
             }
@@ -359,8 +401,10 @@ public static class FluentOperationsDIExtensions
 
         while (current is not null)
         {
-            if (current.IsGenericType
-                && current.GetGenericTypeDefinition() == typeof(QualityBlueprint<>))
+            if (
+                current.IsGenericType
+                && current.GetGenericTypeDefinition() == typeof(QualityBlueprint<>)
+            )
             {
                 return current;
             }

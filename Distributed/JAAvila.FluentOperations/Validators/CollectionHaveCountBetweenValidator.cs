@@ -17,8 +17,8 @@ internal class CollectionHaveCountBetweenValidator<T>(
         int max
     ) => new(chain, min, max);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Collection.HaveCountBetween";
     string IRuleDescriptor.OperationName => "HaveCountBetween";
     Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);

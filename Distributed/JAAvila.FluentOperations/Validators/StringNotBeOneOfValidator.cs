@@ -17,13 +17,18 @@ internal class StringNotBeOneOfValidator(
         StringComparison? comparison = null
     ) => new(chain, expected, comparison);
 
-    public string Expected { get; } = string.Join(", ", expected.Select(e => e is null ? "<null>" : $"\"{e}\""));
-    public string ResultValidation { get; set; }
+    public string Expected { get; } =
+        string.Join(", ", expected.Select(e => e is null ? "<null>" : $"\"{e}\""));
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "String.NotBeOneOf";
     string IRuleDescriptor.OperationName => "NotBeOneOf";
     Type IRuleDescriptor.SubjectType => typeof(string);
     IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
-        new Dictionary<string, object> { ["values"] = expected, ["comparison"] = comparison.ToString() };
+        new Dictionary<string, object>
+        {
+            ["values"] = expected,
+            ["comparison"] = comparison?.ToString()!
+        };
 
     public bool Validate()
     {

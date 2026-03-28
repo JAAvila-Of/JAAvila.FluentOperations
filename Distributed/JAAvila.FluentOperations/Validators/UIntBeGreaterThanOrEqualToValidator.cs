@@ -5,13 +5,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the uint value is greater than or equal to the expected value.
 /// </summary>
-internal class UIntBeGreaterThanOrEqualToValidator(PrincipalChain<uint> chain, uint expected) : IValidator, IRuleDescriptor
+internal class UIntBeGreaterThanOrEqualToValidator(PrincipalChain<uint> chain, uint expected)
+    : IValidator,
+        IRuleDescriptor
 {
-    public static UIntBeGreaterThanOrEqualToValidator New(PrincipalChain<uint> chain, uint expected) =>
-        new(chain, expected);
+    public static UIntBeGreaterThanOrEqualToValidator New(
+        PrincipalChain<uint> chain,
+        uint expected
+    ) => new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "UInt.BeGreaterThanOrEqualTo";
     string IRuleDescriptor.OperationName => "BeGreaterThanOrEqualTo";
     Type IRuleDescriptor.SubjectType => typeof(uint);
@@ -25,7 +29,8 @@ internal class UIntBeGreaterThanOrEqualToValidator(PrincipalChain<uint> chain, u
             return true;
         }
 
-        ResultValidation = "The resulting value was expected to be greater than or equal to {0}, but {1} was found.";
+        ResultValidation =
+            "The resulting value was expected to be greater than or equal to {0}, but {1} was found.";
         return false;
     }
 

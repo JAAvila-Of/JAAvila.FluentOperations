@@ -19,12 +19,16 @@ internal class StringBeWithComparisonValidator(
     ) => new(chain, expectedValue, comparison);
 
     public string Expected { get; } = $"Be - <{comparison}>";
-    public string ResultValidation { get; set; }
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "String.Be";
     string IRuleDescriptor.OperationName => "Be";
     Type IRuleDescriptor.SubjectType => typeof(string);
     IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
-        new Dictionary<string, object> { ["value"] = expectedValue, ["comparison"] = comparison.ToString() };
+        new Dictionary<string, object>
+        {
+            ["value"] = expectedValue!,
+            ["comparison"] = comparison.ToString()
+        };
 
     public bool Validate()
     {

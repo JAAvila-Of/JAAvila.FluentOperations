@@ -15,8 +15,8 @@ internal class NullableDateTimeOffsetHaveOffsetValidator(
         TimeSpan expectedOffset
     ) => new(chain, expectedOffset);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableDateTimeOffset.HaveOffset";
     string IRuleDescriptor.OperationName => "HaveOffset";
     Type IRuleDescriptor.SubjectType => typeof(DateTimeOffset?);
@@ -30,7 +30,8 @@ internal class NullableDateTimeOffsetHaveOffsetValidator(
             return true;
         }
 
-        ResultValidation = "The resulting value was expected to have offset {0}, but {1} was found.";
+        ResultValidation =
+            "The resulting value was expected to have offset {0}, but {1} was found.";
         return false;
     }
 

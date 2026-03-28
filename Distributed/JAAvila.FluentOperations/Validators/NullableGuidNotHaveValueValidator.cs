@@ -5,13 +5,14 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable guid does not have a value (is null).
 /// </summary>
-internal class NullableGuidNotHaveValueValidator(PrincipalChain<Guid?> chain) : IValidator, IRuleDescriptor
+internal class NullableGuidNotHaveValueValidator(PrincipalChain<Guid?> chain)
+    : IValidator,
+        IRuleDescriptor
 {
-    public static NullableGuidNotHaveValueValidator New(PrincipalChain<Guid?> chain) =>
-        new(chain);
+    public static NullableGuidNotHaveValueValidator New(PrincipalChain<Guid?> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableGuid.NotHaveValue";
     string IRuleDescriptor.OperationName => "NotHaveValue";
     Type IRuleDescriptor.SubjectType => typeof(Guid?);

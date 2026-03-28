@@ -6,7 +6,8 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the double value is within the specified inclusive range.
 /// </summary>
 internal class DoubleBeInRangeValidator(PrincipalChain<double> chain, double min, double max)
-    : IValidator, IRuleDescriptor
+    : IValidator,
+        IRuleDescriptor
 {
     public static DoubleBeInRangeValidator New(
         PrincipalChain<double> chain,
@@ -14,8 +15,8 @@ internal class DoubleBeInRangeValidator(PrincipalChain<double> chain, double min
         double max
     ) => new(chain, min, max);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Double.BeInRange";
     string IRuleDescriptor.OperationName => "BeInRange";
     Type IRuleDescriptor.SubjectType => typeof(double);

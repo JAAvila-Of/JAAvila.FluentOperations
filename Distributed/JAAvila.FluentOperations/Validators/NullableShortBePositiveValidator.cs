@@ -5,12 +5,14 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable short value is strictly positive.
 /// </summary>
-internal class NullableShortBePositiveValidator(PrincipalChain<short?> chain) : IValidator, IRuleDescriptor
+internal class NullableShortBePositiveValidator(PrincipalChain<short?> chain)
+    : IValidator,
+        IRuleDescriptor
 {
     public static NullableShortBePositiveValidator New(PrincipalChain<short?> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableShort.BePositive";
     string IRuleDescriptor.OperationName => "BePositive";
     Type IRuleDescriptor.SubjectType => typeof(short?);

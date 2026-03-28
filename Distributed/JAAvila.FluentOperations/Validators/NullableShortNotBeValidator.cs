@@ -5,18 +5,20 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable short value does not equal the expected value.
 /// </summary>
-internal class NullableShortNotBeValidator(PrincipalChain<short?> chain, short? expected) : IValidator, IRuleDescriptor
+internal class NullableShortNotBeValidator(PrincipalChain<short?> chain, short? expected)
+    : IValidator,
+        IRuleDescriptor
 {
     public static NullableShortNotBeValidator New(PrincipalChain<short?> chain, short? expected) =>
         new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableShort.NotBe";
     string IRuleDescriptor.OperationName => "NotBe";
     Type IRuleDescriptor.SubjectType => typeof(short?);
     IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
-        new Dictionary<string, object> { ["value"] = expected };
+        new Dictionary<string, object> { ["value"] = expected! };
 
     public bool Validate()
     {

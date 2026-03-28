@@ -5,12 +5,14 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable char value is a digit character.
 /// </summary>
-internal class NullableCharBeDigitValidator(PrincipalChain<char?> chain) : IValidator, IRuleDescriptor
+internal class NullableCharBeDigitValidator(PrincipalChain<char?> chain)
+    : IValidator,
+        IRuleDescriptor
 {
     public static NullableCharBeDigitValidator New(PrincipalChain<char?> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableChar.BeDigit";
     string IRuleDescriptor.OperationName => "BeDigit";
     Type IRuleDescriptor.SubjectType => typeof(char?);
@@ -26,8 +28,7 @@ internal class NullableCharBeDigitValidator(PrincipalChain<char?> chain) : IVali
             return true;
         }
 
-        ResultValidation =
-            "The resulting value was expected to be a digit, but it was not.";
+        ResultValidation = "The resulting value was expected to be a digit, but it was not.";
         return false;
     }
 

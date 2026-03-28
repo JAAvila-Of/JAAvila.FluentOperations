@@ -6,20 +6,21 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the nullable decimal value does not equal the expected value.
 /// </summary>
 internal class NullableDecimalNotBeValidator(PrincipalChain<decimal?> chain, decimal? expected)
-    : IValidator, IRuleDescriptor
+    : IValidator,
+        IRuleDescriptor
 {
     public static NullableDecimalNotBeValidator New(
         PrincipalChain<decimal?> chain,
         decimal? expected
     ) => new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableDecimal.NotBe";
     string IRuleDescriptor.OperationName => "NotBe";
     Type IRuleDescriptor.SubjectType => typeof(decimal?);
     IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
-        new Dictionary<string, object> { ["value"] = expected };
+        new Dictionary<string, object> { ["value"] = expected! };
 
     public bool Validate()
     {

@@ -23,30 +23,28 @@ internal class CollectionNotContainEquivalentOfValidator<T, TExpected>(
         ComparisonOptions options
     ) => new(chain, expected, options);
 
-    public string Expected { get; } = string.Empty;
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Collection.NotContainEquivalentOf";
     string IRuleDescriptor.OperationName => "NotContainEquivalentOf";
     Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);
     IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
-        new Dictionary<string, object> { ["value"] = expected };
+        new Dictionary<string, object> { ["value"] = expected! };
 
     public bool Validate()
     {
         var collection = chain.GetValue();
         var items = collection.ToList();
 
-        foreach (var element in items)
+        if (
+            items
+                .Select(element => ObjectComparator.DeepCompare(expected, element, options))
+                .Any(result => result.AreEqual)
+        )
         {
-            // Swap: iterate expected's properties, resolve against element
-            var result = ObjectComparator.DeepCompare(expected, element, options);
-
-            if (result.AreEqual)
-            {
-                ResultValidation =
-                    "The collection was expected to NOT contain an element structurally equivalent to the specified object, but a matching element was found.";
-                return false;
-            }
+            ResultValidation =
+                "The collection was expected to NOT contain an element structurally equivalent to the specified object, but a matching element was found.";
+            return false;
         }
 
         return true;

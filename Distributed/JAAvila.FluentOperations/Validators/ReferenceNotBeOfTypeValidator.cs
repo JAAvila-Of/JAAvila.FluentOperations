@@ -15,8 +15,8 @@ internal class ReferenceNotBeOfTypeValidator<TSubject>(
         Type expected
     ) => new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Reference.NotBeOfType";
     string IRuleDescriptor.OperationName => "NotBeOfType";
     Type IRuleDescriptor.SubjectType => typeof(TSubject);

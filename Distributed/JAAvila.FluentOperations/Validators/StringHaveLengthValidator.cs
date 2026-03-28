@@ -5,13 +5,15 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the string has the expected length.
 /// </summary>
-internal class StringHaveLengthValidator(PrincipalChain<string?> chain, int length) : IValidator, IRuleDescriptor
+internal class StringHaveLengthValidator(PrincipalChain<string?> chain, int length)
+    : IValidator,
+        IRuleDescriptor
 {
     public static StringHaveLengthValidator New(PrincipalChain<string?> chain, int length) =>
         new(chain, length);
 
     public string Expected => "(Length {0})";
-    public string ResultValidation { get; set; }
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "String.HaveLength";
     string IRuleDescriptor.OperationName => "HaveLength";
     Type IRuleDescriptor.SubjectType => typeof(string);

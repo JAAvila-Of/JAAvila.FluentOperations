@@ -5,13 +5,15 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the dateonly value has the expected day.
 /// </summary>
-internal class DateOnlyHaveDayValidator(PrincipalChain<DateOnly> chain, int expectedDay) : IValidator, IRuleDescriptor
+internal class DateOnlyHaveDayValidator(PrincipalChain<DateOnly> chain, int expectedDay)
+    : IValidator,
+        IRuleDescriptor
 {
     public static DateOnlyHaveDayValidator New(PrincipalChain<DateOnly> chain, int expectedDay) =>
         new(chain, expectedDay);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "DateOnly.HaveDay";
     string IRuleDescriptor.OperationName => "HaveDay";
     Type IRuleDescriptor.SubjectType => typeof(DateOnly);

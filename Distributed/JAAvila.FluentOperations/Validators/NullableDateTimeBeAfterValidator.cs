@@ -5,13 +5,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable datetime value is strictly after the expected value.
 /// </summary>
-internal class NullableDateTimeBeAfterValidator(PrincipalChain<DateTime?> chain, DateTime expected) : IValidator, IRuleDescriptor
+internal class NullableDateTimeBeAfterValidator(PrincipalChain<DateTime?> chain, DateTime expected)
+    : IValidator,
+        IRuleDescriptor
 {
-    public static NullableDateTimeBeAfterValidator New(PrincipalChain<DateTime?> chain, DateTime expected) =>
-        new(chain, expected);
+    public static NullableDateTimeBeAfterValidator New(
+        PrincipalChain<DateTime?> chain,
+        DateTime expected
+    ) => new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableDateTime.BeAfter";
     string IRuleDescriptor.OperationName => "BeAfter";
     Type IRuleDescriptor.SubjectType => typeof(DateTime?);

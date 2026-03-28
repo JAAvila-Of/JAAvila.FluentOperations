@@ -24,7 +24,8 @@ public class MinimalApiBlueprintFilter<TModel, TBlueprint> : IEndpointFilter
     /// </summary>
     public async ValueTask<object?> InvokeAsync(
         EndpointFilterInvocationContext context,
-        EndpointFilterDelegate next)
+        EndpointFilterDelegate next
+    )
     {
         // 1. Search for TModel in the endpoint arguments
         TModel? model = default;
@@ -46,9 +47,9 @@ public class MinimalApiBlueprintFilter<TModel, TBlueprint> : IEndpointFilter
         // 2. Resolve the blueprint from DI
         var blueprint = context.HttpContext.RequestServices.GetRequiredService<TBlueprint>();
 
-        // 3. Execute async validation (with interceptor pipeline when interceptors are registered)
-        var interceptors = context.HttpContext.RequestServices
-            .GetServices<IAsyncBlueprintInterceptor>()
+        // 3. Execute async validation (with an interceptor pipeline when interceptors are registered)
+        var interceptors = context
+            .HttpContext.RequestServices.GetServices<IAsyncBlueprintInterceptor>()
             .ToList();
 
         QualityReport report;
@@ -59,26 +60,32 @@ public class MinimalApiBlueprintFilter<TModel, TBlueprint> : IEndpointFilter
         }
         else
         {
-            var validator = (IBlueprintValidator)blueprint;
-            var ctx = new BlueprintInterceptionContext(model, typeof(TModel), validator, "MinimalApi");
+            IBlueprintValidator validator = blueprint;
+            var ctx = new BlueprintInterceptionContext(
+                model,
+                typeof(TModel),
+                validator,
+                "MinimalApi"
+            );
             report = await BlueprintInterceptorPipeline.ExecuteAsync(
-                interceptors, ctx, async instance => await blueprint.CheckAsync((TModel)instance));
+                interceptors,
+                ctx,
+                async instance => await blueprint.CheckAsync((TModel)instance)
+            );
         }
 
         // 4. If invalid (has Error-severity failures), return ValidationProblem (RFC 7807)
         if (!report.IsValid)
         {
-            var errors = report.Failures
-                .Where(f => f.Severity == Severity.Error)
+            var errors = report
+                .Failures.Where(f => f.Severity == Severity.Error)
                 .GroupBy(f => f.PropertyName)
-                .ToDictionary(
-                    g => g.Key,
-                    g => g.Select(f => f.Message).ToArray());
+                .ToDictionary(g => g.Key, g => g.Select(f => f.Message).ToArray());
 
             return TypedResults.ValidationProblem(errors);
         }
 
-        // 5. Continue the pipeline (warnings and infos do not block)
+        // 5. Continue the pipeline (warnings and info do not block)
         return await next(context);
     }
 }

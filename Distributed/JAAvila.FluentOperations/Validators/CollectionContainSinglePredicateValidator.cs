@@ -5,13 +5,18 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the collection contains exactly one element matching the specified predicate.
 /// </summary>
-internal class CollectionContainSinglePredicateValidator<T>(PrincipalChain<IEnumerable<T>> chain, Func<T, bool> predicate) : IValidator, IRuleDescriptor
+internal class CollectionContainSinglePredicateValidator<T>(
+    PrincipalChain<IEnumerable<T>> chain,
+    Func<T, bool> predicate
+) : IValidator, IRuleDescriptor
 {
-    public static CollectionContainSinglePredicateValidator<T> New(PrincipalChain<IEnumerable<T>> chain, Func<T, bool> predicate) =>
-        new(chain, predicate);
+    public static CollectionContainSinglePredicateValidator<T> New(
+        PrincipalChain<IEnumerable<T>> chain,
+        Func<T, bool> predicate
+    ) => new(chain, predicate);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Collection.ContainSinglePredicate";
     string IRuleDescriptor.OperationName => "ContainSinglePredicate";
     Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);
@@ -27,9 +32,10 @@ internal class CollectionContainSinglePredicateValidator<T>(PrincipalChain<IEnum
             return true;
         }
 
-        ResultValidation = count == 0
-            ? "The resulting collection was expected to contain a single element matching the predicate, but no matching element was found."
-            : "The resulting collection was expected to contain a single element matching the predicate, but {0} matching elements were found.";
+        ResultValidation =
+            count == 0
+                ? "The resulting collection was expected to contain a single element matching the predicate, but no matching element was found."
+                : "The resulting collection was expected to contain a single element matching the predicate, but {0} matching elements were found.";
         return false;
     }
 

@@ -9,7 +9,7 @@ using JAAvila.FluentOperations.Validators;
 namespace JAAvila.FluentOperations.Manager;
 
 /// <summary>
-/// Provides fluent validation operations for <c>DateOnly?</c> values.
+/// Provides fluent validation operations for <c>DateOnly?</c> Values.
 /// Supports value presence, null-checking, and inherited nullable operations.
 /// </summary>
 public class NullableDateOnlyOperationsManager
@@ -28,7 +28,7 @@ public class NullableDateOnlyOperationsManager
     {
         PrincipalChain = PrincipalChain<DateOnly?>.Get(value, caller);
         GlobalConfig.Initialize();
-        SetManager(this);
+        base.SetManager(this);
     }
 
     /// <summary>
@@ -106,7 +106,8 @@ public class NullableDateOnlyOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue()),
                             BaseFormatter.Format(expected)
                         )
@@ -137,7 +138,11 @@ public class NullableDateOnlyOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.MessageKey, operation.ResultValidation, BaseFormatter.Format(expected))
+                        .WithResult(
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            BaseFormatter.Format(expected)
+                        )
                         .WithReason(reason?.ToString())
             )
             .Execute();
@@ -156,7 +161,11 @@ public class NullableDateOnlyOperationsManager
     /// Throws immediately if the value is <c>null</c> (null guard).
     /// Also throws immediately if <paramref name="min"/> is greater than <paramref name="max"/> (inverted range guard).
     /// </remarks>
-    public NullableDateOnlyOperationsManager BeInRange(DateOnly min, DateOnly max, Reason? reason = null)
+    public NullableDateOnlyOperationsManager BeInRange(
+        DateOnly min,
+        DateOnly max,
+        Reason? reason = null
+    )
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.DateOnly.BeInRange))
         {
@@ -174,9 +183,9 @@ public class NullableDateOnlyOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeInRange)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -207,7 +216,11 @@ public class NullableDateOnlyOperationsManager
     /// Throws immediately if the value is <c>null</c> (null guard).
     /// Also throws immediately if <paramref name="min"/> is greater than <paramref name="max"/> (inverted range guard).
     /// </remarks>
-    public NullableDateOnlyOperationsManager NotBeInRange(DateOnly min, DateOnly max, Reason? reason = null)
+    public NullableDateOnlyOperationsManager NotBeInRange(
+        DateOnly min,
+        DateOnly max,
+        Reason? reason = null
+    )
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.DateOnly.NotBeInRange))
         {
@@ -269,7 +282,8 @@ public class NullableDateOnlyOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -311,7 +325,8 @@ public class NullableDateOnlyOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -353,7 +368,8 @@ public class NullableDateOnlyOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -395,7 +411,8 @@ public class NullableDateOnlyOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -436,7 +453,8 @@ public class NullableDateOnlyOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -476,7 +494,8 @@ public class NullableDateOnlyOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -516,7 +535,8 @@ public class NullableDateOnlyOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -556,7 +576,8 @@ public class NullableDateOnlyOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -596,7 +617,8 @@ public class NullableDateOnlyOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -637,7 +659,8 @@ public class NullableDateOnlyOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expectedYear),
                             BaseFormatter.Format(PrincipalChain.GetValue()!.Value.Year)
                         )
@@ -679,7 +702,8 @@ public class NullableDateOnlyOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expectedMonth),
                             BaseFormatter.Format(PrincipalChain.GetValue()!.Value.Month)
                         )
@@ -721,7 +745,8 @@ public class NullableDateOnlyOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expectedDay),
                             BaseFormatter.Format(PrincipalChain.GetValue()!.Value.Day)
                         )
@@ -801,14 +826,18 @@ public class NullableDateOnlyOperationsManager
                 _ =>
                     (
                         type is null,
-                        Fail.New($"The {nameof(BeOfType)} operation failed because the expected type was <null>.")
+                        Fail.New(
+                            $"The {nameof(BeOfType)} operation failed because the expected type was <null>."
+                        )
                     )
             )
             .FailIf(
                 manager =>
                     (
                         manager.PrincipalChain.GetValue() is null,
-                        Fail.New($"The {nameof(BeOfType)} operation failed because the value was <null>.")
+                        Fail.New(
+                            $"The {nameof(BeOfType)} operation failed because the value was <null>."
+                        )
                     )
             )
             .Execute();
@@ -830,14 +859,18 @@ public class NullableDateOnlyOperationsManager
                 _ =>
                     (
                         type is null,
-                        Fail.New($"The {nameof(NotBeOfType)} operation failed because the expected type was <null>.")
+                        Fail.New(
+                            $"The {nameof(NotBeOfType)} operation failed because the expected type was <null>."
+                        )
                     )
             )
             .FailIf(
                 manager =>
                     (
                         manager.PrincipalChain.GetValue() is null,
-                        Fail.New($"The {nameof(NotBeOfType)} operation failed because the value was <null>.")
+                        Fail.New(
+                            $"The {nameof(NotBeOfType)} operation failed because the value was <null>."
+                        )
                     )
             )
             .Execute();

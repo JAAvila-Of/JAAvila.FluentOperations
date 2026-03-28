@@ -20,7 +20,7 @@ public class FluentOperationsOptionsAttribute([MinLength(10)] int stringMaxDispl
     public int NumericDecimalPlaces { get; set; } = -1;
 
     /// <summary>
-    /// Format string for DateTime display. null means not configured (use default).
+    /// Format string for DateTime display. Null means not configured (use default).
     /// </summary>
     public string? DateTimeFormat { get; set; }
 

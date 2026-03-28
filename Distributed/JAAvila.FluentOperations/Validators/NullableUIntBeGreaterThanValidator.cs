@@ -6,15 +6,16 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the nullable uint value is greater than the expected value.
 /// </summary>
 internal class NullableUIntBeGreaterThanValidator(PrincipalChain<uint?> chain, uint comparison)
-    : IValidator, IRuleDescriptor
+    : IValidator,
+        IRuleDescriptor
 {
     public static NullableUIntBeGreaterThanValidator New(
         PrincipalChain<uint?> chain,
         uint comparison
     ) => new(chain, comparison);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableUInt.BeGreaterThan";
     string IRuleDescriptor.OperationName => "BeGreaterThan";
     Type IRuleDescriptor.SubjectType => typeof(uint?);

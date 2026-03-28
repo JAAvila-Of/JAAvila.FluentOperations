@@ -5,13 +5,18 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable datetimeoffset value has the expected year.
 /// </summary>
-internal class NullableDateTimeOffsetHaveYearValidator(PrincipalChain<DateTimeOffset?> chain, int expectedYear) : IValidator, IRuleDescriptor
+internal class NullableDateTimeOffsetHaveYearValidator(
+    PrincipalChain<DateTimeOffset?> chain,
+    int expectedYear
+) : IValidator, IRuleDescriptor
 {
-    public static NullableDateTimeOffsetHaveYearValidator New(PrincipalChain<DateTimeOffset?> chain, int expectedYear) =>
-        new(chain, expectedYear);
+    public static NullableDateTimeOffsetHaveYearValidator New(
+        PrincipalChain<DateTimeOffset?> chain,
+        int expectedYear
+    ) => new(chain, expectedYear);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableDateTimeOffset.HaveYear";
     string IRuleDescriptor.OperationName => "HaveYear";
     Type IRuleDescriptor.SubjectType => typeof(DateTimeOffset?);

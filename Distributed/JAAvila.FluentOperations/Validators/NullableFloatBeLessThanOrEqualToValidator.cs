@@ -15,8 +15,8 @@ internal class NullableFloatBeLessThanOrEqualToValidator(
         float comparison
     ) => new(chain, comparison);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableFloat.BeLessThanOrEqualTo";
     string IRuleDescriptor.OperationName => "BeLessThanOrEqualTo";
     Type IRuleDescriptor.SubjectType => typeof(float?);

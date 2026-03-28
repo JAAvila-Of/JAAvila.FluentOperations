@@ -5,12 +5,14 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the string is a valid credit card number.
 /// </summary>
-internal class StringBeCreditCardValidator(PrincipalChain<string?> chain) : IValidator, IRuleDescriptor
+internal class StringBeCreditCardValidator(PrincipalChain<string?> chain)
+    : IValidator,
+        IRuleDescriptor
 {
     public static StringBeCreditCardValidator New(PrincipalChain<string?> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "String.BeCreditCard";
     string IRuleDescriptor.OperationName => "BeCreditCard";
     Type IRuleDescriptor.SubjectType => typeof(string);

@@ -65,8 +65,8 @@ public static partial class TestExtension
     /// </param>
     /// <returns>An <see cref="EnumOperationsManager{T}"/> for chaining enum-specific assertions.</returns>
     /// <remarks>
-    /// Use <c>TestEnum&lt;T&gt;()</c> instead of <c>Test()</c> for enum values to avoid ambiguity
-    /// with the <c>object?</c> overload.
+    /// Use <c>TestEnum&lt;T&gt;()</c> Instead of <c>Test()</c> for enum values to avoid ambiguity
+    /// with the <c>object?</c> Overload.
     /// </remarks>
     /// <example>
     /// <code>

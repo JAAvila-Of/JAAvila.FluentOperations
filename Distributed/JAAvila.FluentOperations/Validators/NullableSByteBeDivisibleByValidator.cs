@@ -6,15 +6,16 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the nullable sbyte value is evenly divisible by the specified divisor.
 /// </summary>
 internal class NullableSByteBeDivisibleByValidator(PrincipalChain<sbyte?> chain, sbyte divisor)
-    : IValidator, IRuleDescriptor
+    : IValidator,
+        IRuleDescriptor
 {
     public static NullableSByteBeDivisibleByValidator New(
         PrincipalChain<sbyte?> chain,
         sbyte divisor
     ) => new(chain, divisor);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableSByte.BeDivisibleBy";
     string IRuleDescriptor.OperationName => "BeDivisibleBy";
     Type IRuleDescriptor.SubjectType => typeof(sbyte?);

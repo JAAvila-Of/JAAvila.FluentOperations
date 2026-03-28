@@ -6,13 +6,15 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the string does not match the specified precompiled regular expression.
 /// </summary>
-internal class StringNotMatchRegexValidator(Regex regex, PrincipalChain<string?> chain) : IValidator, IRuleDescriptor
+internal class StringNotMatchRegexValidator(Regex regex, PrincipalChain<string?> chain)
+    : IValidator,
+        IRuleDescriptor
 {
     public static StringNotMatchRegexValidator New(Regex regex, PrincipalChain<string?> chain) =>
         new(regex, chain);
 
     public string Expected => $"Not match pattern \"{regex}\"";
-    public string ResultValidation { get; set; }
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "String.NotMatchRegex";
     string IRuleDescriptor.OperationName => "NotMatchRegex";
     Type IRuleDescriptor.SubjectType => typeof(string);

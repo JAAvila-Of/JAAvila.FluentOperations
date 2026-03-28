@@ -6,15 +6,16 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the nullable uint value is less than the expected value.
 /// </summary>
 internal class NullableUIntBeLessThanValidator(PrincipalChain<uint?> chain, uint comparison)
-    : IValidator, IRuleDescriptor
+    : IValidator,
+        IRuleDescriptor
 {
     public static NullableUIntBeLessThanValidator New(
         PrincipalChain<uint?> chain,
         uint comparison
     ) => new(chain, comparison);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableUInt.BeLessThan";
     string IRuleDescriptor.OperationName => "BeLessThan";
     Type IRuleDescriptor.SubjectType => typeof(uint?);

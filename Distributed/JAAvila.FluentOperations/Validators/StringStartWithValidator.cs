@@ -20,13 +20,17 @@ internal class StringStartWithValidator(
         StringComparison comparison
     ) => new(prefix, chain, comparison);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "String.StartWith";
     string IRuleDescriptor.OperationName => "StartWith";
     Type IRuleDescriptor.SubjectType => typeof(string);
     IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
-        new Dictionary<string, object> { ["value"] = prefix, ["comparison"] = StringComparison.Ordinal.ToString() };
+        new Dictionary<string, object>
+        {
+            ["value"] = prefix,
+            ["comparison"] = nameof(StringComparison.Ordinal)
+        };
 
     public bool Validate()
     {
