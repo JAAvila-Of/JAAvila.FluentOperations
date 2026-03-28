@@ -5,13 +5,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the decimal value is evenly divisible by the specified divisor.
 /// </summary>
-internal class DecimalBeDivisibleByValidator(PrincipalChain<decimal> chain, decimal divisor) : IValidator, IRuleDescriptor
+internal class DecimalBeDivisibleByValidator(PrincipalChain<decimal> chain, decimal divisor)
+    : IValidator,
+        IRuleDescriptor
 {
-    public static DecimalBeDivisibleByValidator New(PrincipalChain<decimal> chain, decimal divisor) =>
-        new(chain, divisor);
+    public static DecimalBeDivisibleByValidator New(
+        PrincipalChain<decimal> chain,
+        decimal divisor
+    ) => new(chain, divisor);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Decimal.BeDivisibleBy";
     string IRuleDescriptor.OperationName => "BeDivisibleBy";
     Type IRuleDescriptor.SubjectType => typeof(decimal);
@@ -25,7 +29,8 @@ internal class DecimalBeDivisibleByValidator(PrincipalChain<decimal> chain, deci
             return true;
         }
 
-        ResultValidation = "The resulting value was expected to be divisible by {0}, but {1} was found.";
+        ResultValidation =
+            "The resulting value was expected to be divisible by {0}, but {1} was found.";
         return false;
     }
 

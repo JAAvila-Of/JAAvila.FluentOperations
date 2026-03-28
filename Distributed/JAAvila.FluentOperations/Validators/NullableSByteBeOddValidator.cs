@@ -5,12 +5,14 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable sbyte value is odd.
 /// </summary>
-internal class NullableSByteBeOddValidator(PrincipalChain<sbyte?> chain) : IValidator, IRuleDescriptor
+internal class NullableSByteBeOddValidator(PrincipalChain<sbyte?> chain)
+    : IValidator,
+        IRuleDescriptor
 {
     public static NullableSByteBeOddValidator New(PrincipalChain<sbyte?> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableSByte.BeOdd";
     string IRuleDescriptor.OperationName => "BeOdd";
     Type IRuleDescriptor.SubjectType => typeof(sbyte?);

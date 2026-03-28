@@ -5,13 +5,18 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable datetime value falls on the same calendar day as the expected value.
 /// </summary>
-internal class NullableDateTimeBeSameDayValidator(PrincipalChain<DateTime?> chain, DateTime expected) : IValidator, IRuleDescriptor
+internal class NullableDateTimeBeSameDayValidator(
+    PrincipalChain<DateTime?> chain,
+    DateTime expected
+) : IValidator, IRuleDescriptor
 {
-    public static NullableDateTimeBeSameDayValidator New(PrincipalChain<DateTime?> chain, DateTime expected) =>
-        new(chain, expected);
+    public static NullableDateTimeBeSameDayValidator New(
+        PrincipalChain<DateTime?> chain,
+        DateTime expected
+    ) => new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableDateTime.BeSameDay";
     string IRuleDescriptor.OperationName => "BeSameDay";
     Type IRuleDescriptor.SubjectType => typeof(DateTime?);
@@ -25,7 +30,8 @@ internal class NullableDateTimeBeSameDayValidator(PrincipalChain<DateTime?> chai
             return true;
         }
 
-        ResultValidation = "The resulting value was expected to be on the same day as {0}, but {1} was found.";
+        ResultValidation =
+            "The resulting value was expected to be on the same day as {0}, but {1} was found.";
         return false;
     }
 

@@ -109,7 +109,7 @@ public static class FluentOperationsConfig
 public class ConfigBuilder
 {
     /// <summary>
-    /// Configuration options for string display and truncation behaviour.
+    /// Configuration options for string display and truncation behavior.
     /// </summary>
     public StringConfigBuilder String { get; } = new();
 
@@ -173,6 +173,7 @@ public class ConfigBuilder
         builder.TestFramework.Framework = tfc.Framework;
 
         var lc = existing.GetLocalizationConfigInternal();
+        
         if (lc is not null)
         {
             builder.Localization.Provider = lc.Provider;
@@ -181,6 +182,7 @@ public class ConfigBuilder
         }
 
         var tc = existing.GetTelemetryConfigInternal();
+        
         if (tc is not null)
         {
             builder.Telemetry.Enabled = tc.Enabled;
@@ -232,7 +234,10 @@ public class ConfigBuilder
 
     internal LocalizationConfig? BuildLocalizationConfig()
     {
-        if (Localization.Provider is null) return null;
+        if (Localization.Provider is null)
+        {
+            return null;
+        }
 
         return new LocalizationConfig
         {
@@ -244,7 +249,10 @@ public class ConfigBuilder
 
     internal TelemetryConfig? BuildTelemetryConfig()
     {
-        if (!Telemetry.Enabled) return null;
+        if (!Telemetry.Enabled)
+        {
+            return null;
+        }
 
         return new TelemetryConfig
         {
@@ -263,7 +271,7 @@ public class StringConfigBuilder
 {
     /// <summary>
     /// Maximum number of characters displayed when a string value appears in a failure message.
-    /// Longer strings are truncated. Minimum effective value is 10.
+    /// Longer strings are truncated. The minimum effective value is 10.
     /// </summary>
     public int MaxDisplayLength { get; set; } = 30;
 
@@ -298,7 +306,7 @@ public class NumericConfigBuilder
     public int DecimalPlaces { get; set; } = -1;
 
     /// <summary>
-    /// When <c>true</c>, numeric values in failure messages include a thousands separator
+    /// When <c>true</c>, numeric values in failure messages include a thousand separator
     /// according to the configured <see cref="Culture"/>.
     /// </summary>
     public bool UseThousandsSeparator { get; set; }
@@ -346,7 +354,7 @@ public class DateTimeConfigBuilder
 public class FormattingConfigBuilder
 {
     /// <summary>
-    /// Text used to represent a <c>null</c> value in failure messages. Defaults to <c>"&lt;null&gt;"</c>.
+    /// Text used to represent a <c>null</c> value in failure messages. Defaults to <c>"&lt;null&gt;""</c>.
     /// </summary>
     public string NullDisplay { get; set; } = "<null>";
 

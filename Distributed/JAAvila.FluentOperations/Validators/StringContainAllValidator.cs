@@ -18,12 +18,16 @@ internal class StringContainAllValidator(
     ) => new(chain, substrings, comparison);
 
     public string Expected => string.Join(", ", substrings);
-    public string ResultValidation { get; set; }
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "String.ContainAll";
     string IRuleDescriptor.OperationName => "ContainAll";
     Type IRuleDescriptor.SubjectType => typeof(string);
     IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
-        new Dictionary<string, object> { ["values"] = substrings, ["comparison"] = comparison.ToString() };
+        new Dictionary<string, object>
+        {
+            ["values"] = substrings,
+            ["comparison"] = comparison?.ToString()!
+        };
 
     public bool Validate()
     {

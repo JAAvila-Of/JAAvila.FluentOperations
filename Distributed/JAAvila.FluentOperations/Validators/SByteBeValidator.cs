@@ -5,13 +5,15 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the sbyte value equals the expected value.
 /// </summary>
-internal class SByteBeValidator(PrincipalChain<sbyte> chain, sbyte expected) : IValidator, IRuleDescriptor
+internal class SByteBeValidator(PrincipalChain<sbyte> chain, sbyte expected)
+    : IValidator,
+        IRuleDescriptor
 {
     public static SByteBeValidator New(PrincipalChain<sbyte> chain, sbyte expected) =>
         new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "SByte.Be";
     string IRuleDescriptor.OperationName => "Be";
     Type IRuleDescriptor.SubjectType => typeof(sbyte);

@@ -7,11 +7,10 @@ namespace JAAvila.FluentOperations.Validators;
 /// </summary>
 internal class GuidNotBeEmptyValidator(PrincipalChain<Guid> chain) : IValidator, IRuleDescriptor
 {
-    public static GuidNotBeEmptyValidator New(PrincipalChain<Guid> chain) =>
-        new(chain);
+    public static GuidNotBeEmptyValidator New(PrincipalChain<Guid> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Guid.NotBeEmpty";
     string IRuleDescriptor.OperationName => "NotBeEmpty";
     Type IRuleDescriptor.SubjectType => typeof(Guid);

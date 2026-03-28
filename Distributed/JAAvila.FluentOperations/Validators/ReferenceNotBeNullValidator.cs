@@ -5,13 +5,15 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the reference value is not null.
 /// </summary>
-internal class ReferenceNotBeNullValidator<TSubject>(PrincipalChain<TSubject> chain) : IValidator, IRuleDescriptor
+internal class ReferenceNotBeNullValidator<TSubject>(PrincipalChain<TSubject> chain)
+    : IValidator,
+        IRuleDescriptor
 {
     public static ReferenceNotBeNullValidator<TSubject> New(PrincipalChain<TSubject> chain) =>
         new(chain);
 
     public string Expected => "Not Be Null <not null>";
-    public string ResultValidation { get; set; }
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Reference.NotBeNull";
 
     string IRuleDescriptor.OperationName => "NotBeNull";

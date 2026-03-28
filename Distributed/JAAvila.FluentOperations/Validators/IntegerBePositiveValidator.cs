@@ -7,11 +7,10 @@ namespace JAAvila.FluentOperations.Validators;
 /// </summary>
 internal class IntegerBePositiveValidator(PrincipalChain<int> chain) : IValidator, IRuleDescriptor
 {
-    public static IntegerBePositiveValidator New(PrincipalChain<int> chain) =>
-        new(chain);
+    public static IntegerBePositiveValidator New(PrincipalChain<int> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Integer.BePositive";
     string IRuleDescriptor.OperationName => "BePositive";
     Type IRuleDescriptor.SubjectType => typeof(int);

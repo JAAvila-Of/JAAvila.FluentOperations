@@ -6,7 +6,9 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the string value equals the expected value.
 /// </summary>
-internal class StringBeValidator(PrincipalChain<string?> chain, string? expectedValue) : IValidator, IRuleDescriptor
+internal class StringBeValidator(PrincipalChain<string?> chain, string? expectedValue)
+    : IValidator,
+        IRuleDescriptor
 {
     public static StringBeValidator New(PrincipalChain<string?> chain, string? expectedValue) =>
         new(chain, expectedValue);
@@ -15,12 +17,12 @@ internal class StringBeValidator(PrincipalChain<string?> chain, string? expected
     public string Expected => "Be - <not null>";
 
     /// <inheritdoc />
-    public string ResultValidation { get; set; }
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "String.Be";
     string IRuleDescriptor.OperationName => "Be";
     Type IRuleDescriptor.SubjectType => typeof(string);
     IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
-        new Dictionary<string, object> { ["value"] = expectedValue };
+        new Dictionary<string, object> { ["value"] = expectedValue! };
 
     public bool Validate()
     {

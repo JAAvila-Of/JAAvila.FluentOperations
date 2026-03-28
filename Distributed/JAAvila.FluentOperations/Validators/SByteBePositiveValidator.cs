@@ -7,11 +7,10 @@ namespace JAAvila.FluentOperations.Validators;
 /// </summary>
 internal class SByteBePositiveValidator(PrincipalChain<sbyte> chain) : IValidator, IRuleDescriptor
 {
-    public static SByteBePositiveValidator New(PrincipalChain<sbyte> chain) =>
-        new(chain);
+    public static SByteBePositiveValidator New(PrincipalChain<sbyte> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "SByte.BePositive";
     string IRuleDescriptor.OperationName => "BePositive";
     Type IRuleDescriptor.SubjectType => typeof(sbyte);

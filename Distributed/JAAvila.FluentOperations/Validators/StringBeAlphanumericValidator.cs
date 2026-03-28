@@ -5,12 +5,14 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the string contains only alphanumeric characters.
 /// </summary>
-internal class StringBeAlphanumericValidator(PrincipalChain<string?> chain) : IValidator, IRuleDescriptor
+internal class StringBeAlphanumericValidator(PrincipalChain<string?> chain)
+    : IValidator,
+        IRuleDescriptor
 {
     public static StringBeAlphanumericValidator New(PrincipalChain<string?> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "String.BeAlphanumeric";
     string IRuleDescriptor.OperationName => "BeAlphanumeric";
     Type IRuleDescriptor.SubjectType => typeof(string);

@@ -5,12 +5,14 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable uint value is strictly positive.
 /// </summary>
-internal class NullableUIntBePositiveValidator(PrincipalChain<uint?> chain) : IValidator, IRuleDescriptor
+internal class NullableUIntBePositiveValidator(PrincipalChain<uint?> chain)
+    : IValidator,
+        IRuleDescriptor
 {
     public static NullableUIntBePositiveValidator New(PrincipalChain<uint?> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableUInt.BePositive";
     string IRuleDescriptor.OperationName => "BePositive";
     Type IRuleDescriptor.SubjectType => typeof(uint?);

@@ -13,7 +13,7 @@ internal class StringBeEmptyValidator(PrincipalChain<string?> chain) : IValidato
     public string Expected => "Be empty - \"\"";
 
     /// <inheritdoc />
-    public string ResultValidation { get; set; }
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "String.BeEmpty";
     string IRuleDescriptor.OperationName => "BeEmpty";
     Type IRuleDescriptor.SubjectType => typeof(string);

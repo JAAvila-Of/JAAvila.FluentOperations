@@ -15,8 +15,8 @@ internal class ReferenceEvaluateAsyncCustomValidator<TSubject>(
         IAsyncCustomValidator<TSubject> customValidator
     ) => new(chain, customValidator);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Custom.EvaluateAsync";
     string IRuleDescriptor.OperationName => "EvaluateAsync";
     Type IRuleDescriptor.SubjectType => typeof(TSubject);

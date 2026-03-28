@@ -13,9 +13,9 @@ namespace JAAvila.FluentOperations;
 /// and asynchronous operations, while delegating exception handling.
 /// </summary>
 /// <typeparam name="T">The type of the manager implementing ITestManager.</typeparam>
-/// <typeparam name="TS">The type for the principal chain's associated data.</typeparam>
-internal class ExecutionEngine<T, TS>(T manager) : IQualityRule, IRuleDescriptor, IModelAwareRule
-    where T : ITestManager<T, TS>
+/// <typeparam name="Ts">The type for the principal chain's associated data.</typeparam>
+internal class ExecutionEngine<T, Ts>(T manager) : IQualityRule, IRuleDescriptor, IModelAwareRule
+    where T : ITestManager<T, Ts>
 {
     private IValidator? _operation;
     private Func<TemplateHandler, IValidator, TemplateHandler>? _templateHandler;
@@ -31,14 +31,14 @@ internal class ExecutionEngine<T, TS>(T manager) : IQualityRule, IRuleDescriptor
     private static readonly IReadOnlyDictionary<string, object> EmptyParams =
         new Dictionary<string, object>();
 
-    /// <summary>Exposes the attached validator for introspection (e.g. IRuleDescriptor).</summary>
+    /// <summary>Exposes the attached validator for introspection (e.g., IRuleDescriptor).</summary>
     internal IValidator? Operation => _operation;
 
     string IRuleDescriptor.OperationName =>
         _operation is IRuleDescriptor rd ? rd.OperationName : (_operation?.MessageKey ?? "Unknown");
 
     Type IRuleDescriptor.SubjectType =>
-        _operation is IRuleDescriptor rd ? rd.SubjectType : typeof(TS);
+        _operation is IRuleDescriptor rd ? rd.SubjectType : typeof(Ts);
 
     IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
         _operation is IRuleDescriptor rd ? rd.Parameters : EmptyParams;
@@ -85,7 +85,7 @@ internal class ExecutionEngine<T, TS>(T manager) : IQualityRule, IRuleDescriptor
     /// </summary>
     /// <param name="manager">The operations manager that owns this execution engine.</param>
     /// <returns>A new <see cref="ExecutionEngine{T, TS}"/> instance.</returns>
-    public static ExecutionEngine<T, TS> New(T manager) => new(manager);
+    public static ExecutionEngine<T, Ts> New(T manager) => new(manager);
 
     /// <summary>
     /// Attaches the validator that will be executed when <see cref="Execute"/> or <see cref="ExecuteAsync"/> is called.
@@ -93,7 +93,7 @@ internal class ExecutionEngine<T, TS>(T manager) : IQualityRule, IRuleDescriptor
     /// <typeparam name="TOperation">The concrete validator type.</typeparam>
     /// <param name="operation">The validator instance to attach.</param>
     /// <returns>The current engine instance for fluent chaining.</returns>
-    public ExecutionEngine<T, TS> WithOperation<TOperation>(TOperation operation)
+    public ExecutionEngine<T, Ts> WithOperation<TOperation>(TOperation operation)
         where TOperation : IValidator
     {
         _operation = operation;
@@ -110,7 +110,7 @@ internal class ExecutionEngine<T, TS>(T manager) : IQualityRule, IRuleDescriptor
     /// and returns the configured handler whose <c>Result</c> will be used as the failure message.
     /// </param>
     /// <returns>The current engine instance for fluent chaining.</returns>
-    public ExecutionEngine<T, TS> WithTemplate(
+    public ExecutionEngine<T, Ts> WithTemplate(
         Func<TemplateHandler, IValidator, TemplateHandler> template
     )
     {
@@ -128,7 +128,7 @@ internal class ExecutionEngine<T, TS>(T manager) : IQualityRule, IRuleDescriptor
     /// A delegate that receives the manager and returns a tuple of (<c>bool</c> shouldFail, <see cref="Fail"/> details).
     /// </param>
     /// <returns>The current engine instance for fluent chaining.</returns>
-    public ExecutionEngine<T, TS> FailIf(Func<T, (bool, Fail)> condition)
+    public ExecutionEngine<T, Ts> FailIf(Func<T, (bool, Fail)> condition)
     {
         _conditions ??= new List<Func<T, (bool, Fail)>>(1);
         _conditions.Add(condition);
@@ -140,7 +140,7 @@ internal class ExecutionEngine<T, TS>(T manager) : IQualityRule, IRuleDescriptor
     /// In eager mode: Error throws, Warning, and Info are silently ignored.
     /// In Blueprint mode: all severities are captured in the report.
     /// </summary>
-    public ExecutionEngine<T, TS> WithSeverity(Severity severity)
+    public ExecutionEngine<T, Ts> WithSeverity(Severity severity)
     {
         _severity = severity;
         return this;
@@ -150,7 +150,7 @@ internal class ExecutionEngine<T, TS>(T manager) : IQualityRule, IRuleDescriptor
     /// Associates an error code with this validation rule.
     /// The code will be included in QualityFailure when used in Blueprint mode.
     /// </summary>
-    public ExecutionEngine<T, TS> WithErrorCode(string errorCode)
+    public ExecutionEngine<T, Ts> WithErrorCode(string errorCode)
     {
         _errorCode = errorCode;
         return this;
@@ -160,7 +160,7 @@ internal class ExecutionEngine<T, TS>(T manager) : IQualityRule, IRuleDescriptor
     /// Sets a custom error message that replaces the generated template.
     /// Useful for user-facing messages that differ from the technical validation message.
     /// </summary>
-    public ExecutionEngine<T, TS> WithCustomMessage(string message)
+    public ExecutionEngine<T, Ts> WithCustomMessage(string message)
     {
         _customMessage = message;
         return this;
@@ -181,8 +181,10 @@ internal class ExecutionEngine<T, TS>(T manager) : IQualityRule, IRuleDescriptor
         }
 
         var telemetryConfig = GlobalConfig.GetTelemetryConfig();
-        var sw = (telemetryConfig is { Enabled: true, TrackRuleExecutionTime: true })
-            ? Stopwatch.StartNew() : null;
+        var sw =
+            (telemetryConfig is { Enabled: true, TrackRuleExecutionTime: true })
+                ? Stopwatch.StartNew()
+                : null;
 
         var fail = EnsureFailConditions();
 
@@ -194,7 +196,8 @@ internal class ExecutionEngine<T, TS>(T manager) : IQualityRule, IRuleDescriptor
                 FluentOperationsMeter.RecordEagerRuleExecution(
                     false,
                     _severity.ToString(),
-                    sw?.Elapsed.TotalMilliseconds ?? 0);
+                    sw?.Elapsed.TotalMilliseconds ?? 0
+                );
             }
 
             // In eager mode, only Error severity throws
@@ -215,18 +218,21 @@ internal class ExecutionEngine<T, TS>(T manager) : IQualityRule, IRuleDescriptor
             FluentOperationsMeter.RecordEagerRuleExecution(
                 result,
                 _severity.ToString(),
-                sw?.Elapsed.TotalMilliseconds ?? 0);
+                sw?.Elapsed.TotalMilliseconds ?? 0
+            );
         }
 
-        if (!result)
+        if (result)
         {
-            if (_severity == Severity.Error)
-            {
-                ExceptionHandler.Handle(_customMessage ?? GetTemplate());
-            }
-
-            // Warning and Info: validation failed, but severity is not Error, so no exception
+            return;
         }
+
+        if (_severity == Severity.Error)
+        {
+            ExceptionHandler.Handle(_customMessage ?? GetTemplate());
+        }
+
+        // Warning and Info: validation failed, but severity is not Error, so no exception
     }
 
     /// <summary>
@@ -280,10 +286,10 @@ internal class ExecutionEngine<T, TS>(T manager) : IQualityRule, IRuleDescriptor
     {
         switch (value)
         {
-            case TS typedValue:
+            case Ts typedValue:
                 manager.PrincipalChain.ReInitialize(typedValue);
                 break;
-            case null when !typeof(TS).IsValueType:
+            case null when !typeof(Ts).IsValueType:
                 manager.PrincipalChain.ReInitialize(default!);
                 break;
         }
@@ -320,8 +326,10 @@ internal class ExecutionEngine<T, TS>(T manager) : IQualityRule, IRuleDescriptor
         }
 
         var telemetryConfig = GlobalConfig.GetTelemetryConfig();
-        var sw = (telemetryConfig is { Enabled: true, TrackRuleExecutionTime: true })
-            ? Stopwatch.StartNew() : null;
+        var sw =
+            (telemetryConfig is { Enabled: true, TrackRuleExecutionTime: true })
+                ? Stopwatch.StartNew()
+                : null;
 
         var fail = EnsureFailConditions();
 
@@ -333,7 +341,8 @@ internal class ExecutionEngine<T, TS>(T manager) : IQualityRule, IRuleDescriptor
                 FluentOperationsMeter.RecordEagerRuleExecution(
                     false,
                     _severity.ToString(),
-                    sw?.Elapsed.TotalMilliseconds ?? 0);
+                    sw?.Elapsed.TotalMilliseconds ?? 0
+                );
             }
 
             // In eager mode, only Error severity throws
@@ -354,7 +363,8 @@ internal class ExecutionEngine<T, TS>(T manager) : IQualityRule, IRuleDescriptor
             FluentOperationsMeter.RecordEagerRuleExecution(
                 result,
                 _severity.ToString(),
-                sw?.Elapsed.TotalMilliseconds ?? 0);
+                sw?.Elapsed.TotalMilliseconds ?? 0
+            );
         }
 
         if (!result)

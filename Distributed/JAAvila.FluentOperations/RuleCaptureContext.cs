@@ -34,13 +34,16 @@ internal static class RuleCaptureContext
     public static bool IsCollecting => RulesCollection.Value is not null;
 
     /// <summary>
-    /// Opens a rule-collection scope that routes all subsequent <see cref="AddRule"/> calls into
-    /// <paramref name="rules"/>. Returns a disposable that ends the scope when disposed.
+    /// Opens a rule-collection scope that directs all subsequent <see cref="AddRule"/> calls into
+    /// the specified <paramref name="rules"/> collection. The scope tracks the context including
+    /// property name, scenario type, and rule set, ensuring all captured rules are stored with appropriate metadata.
+    /// A disposable object is returned to terminate the scope and clear the context.
     /// </summary>
-    /// <param name="rules">The list that will receive captured rules.</param>
-    /// <param name="propertyName">Optional initial property name for the scope.</param>
-    /// <param name="scenario">Optional scenario type to associate with captured rules.</param>
-    /// <returns>An <see cref="IDisposable"/> that clears the collection context on disposal.</returns>
+    /// <param name="rules">The list where captured rules will be stored.</param>
+    /// <param name="propertyName">Optional property name associated with the scope.</param>
+    /// <param name="scenario">Optional scenario type to associate with rules captured in the scope.</param>
+    /// <param name="ruleSet">Optional rule set identifier for grouping captured rules.</param>
+    /// <returns>An <see cref="IDisposable"/> that ends the collection scope and clears the context upon disposal.</returns>
     public static IDisposable StartCollecting(
         List<IQualityRule> rules,
         string? propertyName = null,
@@ -57,13 +60,16 @@ internal static class RuleCaptureContext
     }
 
     /// <summary>
-    /// Switches the active collection target and property name without clearing the current
-    /// <see cref="RuleConfig"/>. Called by <c>PropertyProxy.Test()</c> before returning each
-    /// manager so that rules land in the correct group with the correct metadata.
+    /// Initiates a scoped rule capture for a specific property, associating the provided
+    /// <paramref name="rules"/> collection, <paramref name="propertyName"/>, and optional
+    /// metadata including <paramref name="scenario"/> and <paramref name="ruleSet"/>.
+    /// This method does not clear the existing <c>RuleConfig</c>, allowing captured rules to
+    /// retain prior configuration when applicable.
     /// </summary>
-    /// <param name="rules">The list that will receive captured rules for this property.</param>
-    /// <param name="propertyName">The property name to associate with captured rules.</param>
-    /// <param name="scenario">Optional scenario type filter for captured rules.</param>
+    /// <param name="rules">The collection that receives the rules captured within the property scope.</param>
+    /// <param name="propertyName">The name of the property associated with the captured rules.</param>
+    /// <param name="scenario">An optional scenario filter to tag captured rules.</param>
+    /// <param name="ruleSet">An optional identifier for grouping captured rules within a specific rule set.</param>
     public static void BeginPropertyCapture(
         List<IQualityRule> rules,
         string propertyName,
@@ -100,7 +106,7 @@ internal static class RuleCaptureContext
     }
 
     /// <summary>
-    /// Overrides the rule set name for the current capture scope.
+    /// Overrides the rule set a name for the current capture scope.
     /// </summary>
     /// <param name="ruleSet">The rule set name to set, or <c>null</c> to clear.</param>
     public static void SetRuleSet(string? ruleSet)
@@ -122,7 +128,7 @@ internal static class RuleCaptureContext
 
     /// <summary>
     /// Wraps <paramref name="rule"/> in a <see cref="CapturedRule"/> with the current property name,
-    /// scenario, and config, then adds it to the active rules collection.
+    /// scenario, and config, then adds it to the active rules' collection.
     /// No-ops when no collection scope is active.
     /// </summary>
     /// <param name="rule">The rule to capture.</param>

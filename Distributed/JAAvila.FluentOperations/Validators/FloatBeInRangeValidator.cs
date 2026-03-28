@@ -6,13 +6,14 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the float value is within the specified inclusive range.
 /// </summary>
 internal class FloatBeInRangeValidator(PrincipalChain<float> chain, float min, float max)
-    : IValidator, IRuleDescriptor
+    : IValidator,
+        IRuleDescriptor
 {
     public static FloatBeInRangeValidator New(PrincipalChain<float> chain, float min, float max) =>
         new(chain, min, max);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Float.BeInRange";
     string IRuleDescriptor.OperationName => "BeInRange";
     Type IRuleDescriptor.SubjectType => typeof(float);

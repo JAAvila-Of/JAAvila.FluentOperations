@@ -10,8 +10,8 @@ internal class DecimalBeOddValidator(PrincipalChain<decimal> chain) : IValidator
     public static DecimalBeOddValidator New(PrincipalChain<decimal> principalChain) =>
         new(principalChain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Decimal.BeOdd";
     string IRuleDescriptor.OperationName => "BeOdd";
     Type IRuleDescriptor.SubjectType => typeof(decimal);

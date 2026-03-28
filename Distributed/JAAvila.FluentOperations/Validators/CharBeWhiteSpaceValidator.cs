@@ -9,8 +9,8 @@ internal class CharBeWhiteSpaceValidator(PrincipalChain<char> chain) : IValidato
 {
     public static CharBeWhiteSpaceValidator New(PrincipalChain<char> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Char.BeWhiteSpace";
     string IRuleDescriptor.OperationName => "BeWhiteSpace";
     Type IRuleDescriptor.SubjectType => typeof(char);
@@ -24,7 +24,8 @@ internal class CharBeWhiteSpaceValidator(PrincipalChain<char> chain) : IValidato
             return true;
         }
 
-        ResultValidation = "The resulting value was expected to be a white-space character, but {0} was found.";
+        ResultValidation =
+            "The resulting value was expected to be a white-space character, but {0} was found.";
         return false;
     }
 

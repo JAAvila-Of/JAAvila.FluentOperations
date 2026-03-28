@@ -18,13 +18,13 @@ internal class DictionaryContainPairValidator<TKey, TValue>(
         TValue value
     ) => new(chain, key, value);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Dictionary.ContainPair";
     string IRuleDescriptor.OperationName => "ContainPair";
     Type IRuleDescriptor.SubjectType => typeof(IDictionary<,>);
     IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
-        new Dictionary<string, object> { ["value"] = key, ["value"] = value };
+        new Dictionary<string, object> { ["key"] = key, ["value"] = value! };
 
     public bool Validate()
     {

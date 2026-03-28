@@ -16,14 +16,14 @@ public abstract class BaseOperationsManager<TManager, TSubject>
     : BaseNullableOperationsManager<TManager, TSubject>
     where TManager : ITestManager<TManager, TSubject>
 {
-    private TManager Manager { get; set; }
+    private TManager Manager { get; set; } = default!;
 
     /// <summary>
     /// Sets the concrete manager instance used for method chaining returns.
     /// Must be called in the constructor of each derived class.
     /// </summary>
     /// <param name="manager">The concrete manager instance.</param>
-    protected void SetManager(TManager manager)
+    protected override void SetManager(TManager manager)
     {
         Manager = manager;
         base.SetManager(manager);
@@ -140,7 +140,8 @@ public abstract class BaseOperationsManager<TManager, TSubject>
                     template
                         .WithSubject(Manager.PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(Manager.PrincipalChain.GetValue())
                         )
@@ -173,7 +174,11 @@ public abstract class BaseOperationsManager<TManager, TSubject>
                 (template, operation) =>
                     template
                         .WithSubject(Manager.PrincipalChain.GetSubject())
-                        .WithResult(operation.MessageKey, operation.ResultValidation, BaseFormatter.Format(expected))
+                        .WithResult(
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            BaseFormatter.Format(expected)
+                        )
                         .WithReason(reason?.ToString())
             )
             .Execute();
@@ -342,22 +347,22 @@ public abstract class BaseOperationsManager<TManager, TSubject>
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(Evaluate)} operation failed because the resulting value was <null>."
                         )
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is not TType,
+                        m.PrincipalChain.GetValue() is not TType,
                         Fail.New(
                             $"The {nameof(Evaluate)} operation failed because the resulting value should be assignable to {{0}}, but {{1}} was found.",
                             TypeFormatter.FriendlyName(typeof(TType)),
-                            TypeFormatter.FriendlyName(manager.PrincipalChain.GetValue()!.GetType())
+                            TypeFormatter.FriendlyName(m.PrincipalChain.GetValue()!.GetType())
                         )
                     )
             )
@@ -400,7 +405,7 @@ public abstract class BaseOperationsManager<TManager, TSubject>
             .FailIf(
                 _ =>
                     (
-                        customValidator is null,
+                        customValidator.IsNull(),
                         Fail.New(
                             $"The {nameof(Evaluate)} operation failed because the custom validator was <null>."
                         )
@@ -448,7 +453,7 @@ public abstract class BaseOperationsManager<TManager, TSubject>
             .FailIf(
                 _ =>
                     (
-                        customValidator is null,
+                        customValidator.IsNull(),
                         Fail.New(
                             $"The {nameof(EvaluateAsync)} operation failed because the async custom validator was <null>."
                         )
@@ -485,9 +490,9 @@ public abstract class BaseOperationsManager<TManager, TSubject>
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(NotBeCastTo)} operation failed because the parent value was <null>, {{0}}.",
                             $"it is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -514,9 +519,9 @@ public abstract class BaseOperationsManager<TManager, TSubject>
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeCastTo)} operation failed because the parent value was <null>, {{0}}.",
                             $"it is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -552,9 +557,9 @@ public abstract class BaseOperationsManager<TManager, TSubject>
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeCastTo)} operation failed because the parent value was <null>, {{0}}.",
                             $"it is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -588,9 +593,9 @@ public abstract class BaseOperationsManager<TManager, TSubject>
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeOfType)} operation failed because the parent value was <null>, {{0}}.",
                             $"it is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -624,9 +629,9 @@ public abstract class BaseOperationsManager<TManager, TSubject>
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(NotBeOfType)} operation failed because the parent value was <null>, {{0}}.",
                             $"it is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"

@@ -17,13 +17,13 @@ internal class DateTimeOffsetNotBeCloseToValidator(
         TimeSpan tolerance
     ) => new(chain, expected, tolerance);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "DateTimeOffset.NotBeCloseTo";
     string IRuleDescriptor.OperationName => "NotBeCloseTo";
     Type IRuleDescriptor.SubjectType => typeof(DateTimeOffset);
     IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
-        new Dictionary<string, object> { ["value"] = expected, ["value"] = tolerance };
+        new Dictionary<string, object> { ["value_exp"] = expected, ["value_tol"] = tolerance };
 
     public bool Validate()
     {

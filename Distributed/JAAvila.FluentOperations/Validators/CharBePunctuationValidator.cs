@@ -9,8 +9,8 @@ internal class CharBePunctuationValidator(PrincipalChain<char> chain) : IValidat
 {
     public static CharBePunctuationValidator New(PrincipalChain<char> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Char.BePunctuation";
     string IRuleDescriptor.OperationName => "BePunctuation";
     Type IRuleDescriptor.SubjectType => typeof(char);
@@ -24,7 +24,8 @@ internal class CharBePunctuationValidator(PrincipalChain<char> chain) : IValidat
             return true;
         }
 
-        ResultValidation = "The resulting value was expected to be a punctuation character, but {0} was found.";
+        ResultValidation =
+            "The resulting value was expected to be a punctuation character, but {0} was found.";
         return false;
     }
 

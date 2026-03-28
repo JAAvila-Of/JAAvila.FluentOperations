@@ -16,8 +16,8 @@ internal class CollectionContainInOrderValidator<T>(
         T[] expected
     ) => new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Collection.ContainInOrder";
     string IRuleDescriptor.OperationName => "ContainInOrder";
     Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);
