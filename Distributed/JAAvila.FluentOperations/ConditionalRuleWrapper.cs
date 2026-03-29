@@ -35,6 +35,8 @@ internal class ConditionalRuleWrapper<TModel>(
             return false;
         }
 
+        // Use the shared ConditionGroup — reads from ConditionCacheContext (AsyncLocal),
+        // ensuring the condition is evaluated at most once per Check() call per group.
         var result = conditionGroup?.GetResult(_modelInstance) ?? condition(_modelInstance);
 
         return isOtherwise ? !result : result;

@@ -88,17 +88,28 @@ public class PrincipalChain<T> : IDisposable
     /// <param name="value">The value to place on the re-initialized chain.</param>
     internal void ReInitialize(T value)
     {
-        Contexts.Value ??= new ConcurrentDictionary<Guid, Stack<BaseChain<T>>>();
-
         var chain = BaseChain<T>.Create(BaseValue<T>.Create(value), GetSubjectSafe());
-
-        // Always create a fresh single-element stack for this chain ID.
-        // This is safe in concurrent scenarios because each async context has its own
-        // Contexts.Value (AsyncLocal isolates per-context), and within one context we
-        // only need one stack entry per _chainId during Blueprint validation.
         var stack = new Stack<BaseChain<T>>();
         stack.Push(chain);
-        Contexts.Value[_chainId] = stack;
+
+        if (Contexts.Value is null)
+        {
+            // No inherited context — create a fresh dict and assign to trigger AsyncLocal isolation.
+            var dict = new ConcurrentDictionary<Guid, Stack<BaseChain<T>>> { [_chainId] = stack };
+            Contexts.Value = dict;
+        }
+        else
+        {
+            // There is an existing dict (possibly inherited from a parent async context).
+            // Create a new dict by copying all existing entries, then add/update our entry.
+            // Assigning to Contexts.Value triggers AsyncLocal copy-on-write isolation so that
+            // this child context gets its own independent dict and won't interfere with other tasks.
+            var dict = new ConcurrentDictionary<Guid, Stack<BaseChain<T>>>(Contexts.Value)
+            {
+                [_chainId] = stack
+            };
+            Contexts.Value = dict;
+        }
     }
 
     /// <summary>
@@ -126,6 +137,10 @@ public class PrincipalChain<T> : IDisposable
         return GetStack().Peek().BaseSubject.ToString();
     }
 
+    /// <summary>
+    /// Retrieves the current value stored in the chain as a string representation.
+    /// </summary>
+    /// <returns>A string representation of the current value, or null if the value is not set.</returns>
     public string? GetValueAsString()
     {
         return GetValue()?.ToString();
@@ -152,6 +167,12 @@ public class PrincipalChain<T> : IDisposable
         }
     }
 
+    /// <summary>
+    /// Retrieves the unique <see cref="Guid"/> identifier associated with the current
+    /// <see cref="PrincipalChain{T}"/> instance. This identifier is used to track and isolate
+    /// individual chains within an async or nested context.
+    /// </summary>
+    /// <returns>The <see cref="Guid"/> representing the unique identifier for the active chain.</returns>
     protected Guid GetCurrentChainId()
     {
         return _chainId;
@@ -162,6 +183,12 @@ public class PrincipalChain<T> : IDisposable
         GetStack().Push(value);
     }
 
+    /// <summary>
+    /// Clears the current active instance of the <see cref="PrincipalChain{T}"/> in the async context.
+    /// This method ensures that the static storage for the chain is reset, allowing for proper cleanup
+    /// or reinitialization of the chain when needed. Should be invoked to prevent retaining stale chain
+    /// instances in <see cref="AsyncLocal{T}"/> storage.
+    /// </summary>
     protected void CleanInstance()
     {
         Instance.Value = null;

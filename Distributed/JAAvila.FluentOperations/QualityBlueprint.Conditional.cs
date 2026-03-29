@@ -14,7 +14,6 @@ public abstract partial class QualityBlueprint<T>
     {
         // Create a shared ConditionGroup for all rules in this When() group
         var group = new ConditionGroup<T>(condition);
-        _conditionGroups.Add(group);
 
         // Save previously captured rules
         var previousCollected = _capturedDuringDefinition.ToList();
