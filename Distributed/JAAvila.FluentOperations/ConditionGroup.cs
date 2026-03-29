@@ -1,4 +1,37 @@
+using System.Collections.Concurrent;
+
+// ReSharper disable InconsistentNaming
+
 namespace JAAvila.FluentOperations;
+
+/// <summary>
+/// Holds the per-Check() condition result cache and model instance as AsyncLocal values so that
+/// each concurrent Check() invocation gets its own isolated slot. Parallel tasks spawned within
+/// the same Check() call inherit the parent's values, ensuring they share the same cache and model
+/// (correct behavior: same Check() call, same condition results, and model instance).
+/// </summary>
+internal static class ConditionCacheContext
+{
+    private static readonly AsyncLocal<ConcurrentDictionary<object, bool>?> _current = new();
+    private static readonly AsyncLocal<object?> _modelInstance = new();
+
+    public static ConcurrentDictionary<object, bool>? Current
+    {
+        get => _current.Value;
+        set => _current.Value = value;
+    }
+
+    /// <summary>
+    /// The root model instance for the current Check() call.
+    /// Used by <see cref="ConditionGroup{TModel}.GetResult"/> to evaluate the condition
+    /// without relying on mutable instance fields on shared singleton rule wrappers.
+    /// </summary>
+    public static object? ModelInstance
+    {
+        get => _modelInstance.Value;
+        set => _modelInstance.Value = value;
+    }
+}
 
 /// <summary>
 /// Caches the result of a condition function so it is evaluated at most once per Check() invocation.
@@ -7,7 +40,6 @@ namespace JAAvila.FluentOperations;
 internal sealed class ConditionGroup<TModel>
 {
     private readonly Func<TModel, bool> _condition;
-    private bool? _cachedResult;
 
     public ConditionGroup(Func<TModel, bool> condition)
     {
@@ -15,24 +47,23 @@ internal sealed class ConditionGroup<TModel>
     }
 
     /// <summary>
-    /// Returns the cached condition result, evaluating it on first call per Check() cycle.
+    /// Returns the cached condition result, evaluating and storing it on the first call per Check() cycle.
+    /// The cache is read from <see cref="ConditionCacheContext.Current"/>, which is set at the start
+    /// of each Check() / CheckAsync() call and is isolated per concurrent invocation via AsyncLocal.
     /// </summary>
-    public bool GetResult(TModel instance)
+    /// <param name="fallbackInstance">
+    /// The model instance to use when <see cref="ConditionCacheContext.ModelInstance"/> is not set.
+    /// In the normal singleton-blueprint and concurrent-Check() flow, the context carries the model.
+    /// </param>
+    public bool GetResult(TModel fallbackInstance)
     {
-        if (_cachedResult.HasValue)
-        {
-            return _cachedResult.Value;
-        }
+        // Prefer the context-carried model instance to avoid races on the caller's field.
+        var modelInstance = ConditionCacheContext.ModelInstance is TModel contextModel
+            ? contextModel
+            : fallbackInstance;
 
-        _cachedResult = _condition(instance);
-        return _cachedResult.Value;
-    }
+        var cache = ConditionCacheContext.Current;
 
-    /// <summary>
-    /// Clears the cached result so the condition will be re-evaluated on the next Check() call.
-    /// </summary>
-    public void Reset()
-    {
-        _cachedResult = null;
+        return cache?.GetOrAdd(this, _ => _condition(modelInstance)) ?? _condition(modelInstance);
     }
 }

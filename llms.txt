@@ -4,7 +4,7 @@
 
 ## Overview
 
-JAAvila.FluentOperations is a NuGet package family of 9 packages. The core library targets .NET 8.0 and C# 13.0.
+JAAvila.FluentOperations is a NuGet package family of 10 packages. The core library targets .NET 8.0 and C# 13.0.
 
 **Two validation approaches:**
 1. **Inline assertions** — `value.Test().Operation()` chains that throw immediately on failure
@@ -39,7 +39,7 @@ User-defined asynchronous validator.
 - Methods: `Task<bool> IsValidAsync(T)`, `string GetFailureMessage(T)`
 
 ### IRuleDescriptor
-Introspection metadata. All 730+ validators implement this.
+Introspection metadata. All 800+ validators implement this.
 - Properties: `string OperationName`, `Type SubjectType`, `IReadOnlyDictionary<string, object> Parameters`
 
 ### IMessageProvider
@@ -179,6 +179,12 @@ Async variants of ActionOperationsManager operations.
 ### ActionStatsOperationsManager (`ActionStats?`)
 Operations: `TakeLongerThan(TimeSpan)`, `TakeShorterThan(TimeSpan)`, `HaveElapsedTimeBetween(TimeSpan,TimeSpan)`, `CompleteWithin(TimeSpan)`, `Succeed()`, `NotSucceed()`, `HaveException()`, `HaveException(Type)`, `ConsumeMemoryGreaterThan(long)`, `ConsumeMemoryLessThan(long)`
 
+### TypeOperationsManager (`Type`)
+Operations: `BeClass()`, `NotBeClass()`, `BeInterface()`, `NotBeInterface()`, `BeAbstract()`, `NotBeAbstract()`, `BeSealed()`, `NotBeSealed()`, `BeStatic()`, `NotBeStatic()`, `BePublic()`, `NotBePublic()`, `BeInternal()`, `NotBeInternal()`, `BeGeneric()`, `NotBeGeneric()`, `BeRecord()`, `BeValueType()`, `BeEnum()`, `BeNested()`, `BeImmutable()`, `NotBeImmutable()`, `BeInNamespace(string)`, `NotBeInNamespace(string)`, `BeInNamespaceStartingWith(string)`, `HaveName(string)`, `NotHaveName(string)`, `HaveNameEndingWith(string)`, `NotHaveNameEndingWith(string)`, `HaveNameStartingWith(string)`, `NotHaveNameStartingWith(string)`, `MatchName(string)`, `MatchNamespace(string)`, `ImplementInterface<T>()`, `ImplementInterface(Type)`, `NotImplementInterface<T>()`, `NotImplementInterface(Type)`, `DeriveFrom<T>()`, `DeriveFrom(Type)`, `NotDeriveFrom<T>()`, `NotDeriveFrom(Type)`, `HaveAttribute<T>()`, `HaveAttribute(Type)`, `NotHaveAttribute<T>()`, `NotHaveAttribute(Type)`, `HavePublicConstructor()`, `NotHavePublicConstructor()`, `HaveConstructorWithParameters(params Type[])`, `HavePrivateConstructorWithParameters(params Type[])`, `HavePropertyOfType<T>(string)`, `HavePropertyOfType(string, Type)`, `HaveMethodReturning<T>(string)`, `HaveMethodReturning(string, Type)`, `HaveMethodOverride(string)`, `NotHaveMethodOverride(string)`, `HaveProtectedMembers()`, `NotHaveProtectedMembers()`, `HaveMaxPublicMethods(int)`, `HaveMaxFields(int)`, `HaveAsyncVoidMethods()`, `NotHaveAsyncVoidMethods()`, `ReturnTypesFromNamespace(string)`, `NotReturnTypesFromNamespace(string)`, `HaveDependencyOn(string)`, `NotHaveDependencyOn(string)`, `HaveDependencyOnAny(params string[])`, `NotHaveDependencyOnAny(params string[])`, `OnlyHaveDependenciesOn(params string[])`, `HaveDependencyOnType<T>()`, `HaveDependencyOnType(string)`, `NotHaveDependencyOnType<T>()`, `NotHaveDependencyOnType(string)`
+
+### AssemblyOperationsManager (`Assembly`)
+Operations: `ContainType<T>()`, `ContainType(Type)`, `ContainTypeMatching(string)`, `ReferenceAssembly(string)`, `NotReferenceAssembly(string)`, `HaveVersion(Version)`, `HaveMinimumVersion(Version)`, `HavePublicKey()`
+
 ### CrossPropertyOperationsManager<T>
 Used for cross-property validation within blueprints.
 
@@ -198,7 +204,7 @@ All types expose a `.Test()` extension method that returns the corresponding man
 
 **Date/Time:** `DateTime.Test()`, `DateTime?.Test()`, `DateOnly.Test()`, `DateOnly?.Test()`, `TimeOnly.Test()`, `TimeOnly?.Test()`, `TimeSpan.Test()`, `TimeSpan?.Test()`, `DateTimeOffset.Test()`, `DateTimeOffset?.Test()`
 
-**Other:** `Guid.Test()`, `Guid?.Test()`, `Uri.Test()`, `Action.Test()`, `Func<Task>.Test()`, `ActionStats?.Test()`
+**Other:** `Guid.Test()`, `Guid?.Test()`, `Uri.Test()`, `Action.Test()`, `Func<Task>.Test()`, `ActionStats?.Test()`, `Type.Test()`, `Assembly.Test()`
 
 **Collections:** `IEnumerable<T>.Test()`, `T[].Test()`, `IDictionary<TKey,TValue>.Test()`
 
@@ -240,6 +246,26 @@ Composes N blueprints validating the same model type. Merges all `QualityReport`
 - `CompositeBlueprint(params QualityBlueprint<T>[] blueprints)`
 - `Check(T)`, `CheckAsync(T)` — execute all blueprints and merge reports
 
+### Types (static utility)
+Selects and filters types from assemblies and namespaces for batch architecture testing.
+- `InAssembly(Assembly)`, `InAssembly(Assembly, Func<Type, bool>)` — exported types from one assembly
+- `InAssemblySafe(Assembly)` — handles `ReflectionTypeLoadException`
+- `InAssemblies(params Assembly[])`, `InAssembliesSafe(params Assembly[])` — multiple assemblies
+- `InNamespace(string)` — exported types in a namespace across all loaded assemblies
+- `InNamespaceOf<T>()` — types sharing the same namespace as T
+- `InCurrentDomain()` — all exported types in the AppDomain
+- `That(this IEnumerable<Type>, Func<Type, bool>)` — fluent predicate filtering extension
+
+### IDependencyScanner (interface)
+Abstraction for dependency analysis used by `TypeOperationsManager`.
+- `HashSet<string> GetReferencedNamespaces(Type)`, `bool HasDependencyOnNamespace(Type, string)`, `HashSet<string> GetReferencedTypes(Type)`, `bool HasDependencyOnType(Type, string)`, `CheckOnlyDependenciesOn(Type, IReadOnlyList<string>)`
+
+### DependencyScannerProvider (static)
+Manages the active `IDependencyScanner` instance.
+- `IDependencyScanner Current` — returns active scanner (default: reflection-based)
+- `SetScanner(IDependencyScanner)` — replaces active scanner
+- `Reset()` — reverts to reflection-based default
+
 ### AssertionScope
 Batches inline assertion failures and throws a combined exception on Dispose.
 - Constructors: `AssertionScope()`, `AssertionScope(string name)`
@@ -275,7 +301,7 @@ Single validation failure entry in a `QualityReport`.
 - `CascadeMode CascadeMode`
 - `CascadeSeverityMode CascadeSeverityMode`
 - `string? CustomMessage`
-- `Func<string>? MessageFactory`
+- `Func<object, string>? MessageFactory` — receives root model instance, invoked only on failure during Blueprint Check
 
 **Reason** — Record for contextual failure messages. `Reason.New("because {0}", arg)`
 
@@ -388,6 +414,7 @@ Each integration package is a separate NuGet package with namespace `JAAvila.Flu
 | `JAAvila.FluentOperations.OpenApi` | Swagger/OpenAPI schema generation (Swashbuckle 6.x) | — |
 | `JAAvila.FluentOperations.Grpc` | gRPC server interceptor | `GrpcBlueprintInterceptor` |
 | `JAAvila.FluentOperations.DataAnnotations` | Bridge to `System.ComponentModel.Annotations` | — |
+| `JAAvila.FluentOperations.Architecture` | IL-level dependency scanning via Mono.Cecil (opt-in for architecture tests) | `ArchitectureScannerConfig`, `CecilDependencyScanner` |
 
 All DI-registered blueprints are automatically registered as both `QualityBlueprint<T>` and `IBlueprintValidator`. Integration filters resolve blueprints via `IEnumerable<IBlueprintValidator>` — no reflection or `MakeGenericType` is used (AOT-safe).
 
@@ -621,6 +648,44 @@ public class LoggingInterceptor : IBlueprintInterceptor, IOrderedBlueprintInterc
         return report;
     }
 }
+```
+
+### Architecture Testing
+
+```csharp
+using JAAvila.FluentOperations;
+using JAAvila.FluentOperations.Architecture;
+
+// Type assertions
+typeof(MyService).Test()
+    .BeClass()
+    .BePublic()
+    .NotBeAbstract()
+    .ImplementInterface<IMyService>()
+    .NotHaveDependencyOn("MyApp.Infrastructure")
+    .NotHaveAsyncVoidMethods();
+
+// Assembly assertions
+typeof(MyService).Assembly.Test()
+    .ContainType<MyService>()
+    .NotReferenceAssembly("Newtonsoft.Json")
+    .HaveMinimumVersion(new Version(1, 0));
+
+// Batch type selection with Types utility
+var domainTypes = Types.InNamespace("MyApp.Domain");
+foreach (var type in domainTypes)
+    type.Test().NotHaveDependencyOn("MyApp.Infrastructure");
+
+// Filtered selection
+Types.InAssembly(typeof(MyService).Assembly)
+    .That(t => t.IsClass && t.Name.EndsWith("Service"))
+    .ToList()
+    .ForEach(t => t.Test().ImplementInterface<IService>());
+
+// Optional: IL-level dependency scanning (requires JAAvila.FluentOperations.Architecture package)
+ArchitectureScannerConfig.UseCecilDependencyScanning(); // activate once in test setup
+// Now HaveDependencyOn/OnlyHaveDependenciesOn/etc. also scan method body IL
+ArchitectureScannerConfig.Reset(); // restore default in teardown
 ```
 
 ## Core Execution Flow
