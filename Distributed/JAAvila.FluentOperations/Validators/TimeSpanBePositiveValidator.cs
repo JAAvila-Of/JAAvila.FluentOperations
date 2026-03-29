@@ -5,13 +5,14 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the timespan value is strictly positive.
 /// </summary>
-internal class TimeSpanBePositiveValidator(PrincipalChain<TimeSpan> chain) : IValidator, IRuleDescriptor
+internal class TimeSpanBePositiveValidator(PrincipalChain<TimeSpan> chain)
+    : IValidator,
+        IRuleDescriptor
 {
-    public static TimeSpanBePositiveValidator New(PrincipalChain<TimeSpan> chain) =>
-        new(chain);
+    public static TimeSpanBePositiveValidator New(PrincipalChain<TimeSpan> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "TimeSpan.BePositive";
     string IRuleDescriptor.OperationName => "BePositive";
     Type IRuleDescriptor.SubjectType => typeof(TimeSpan);

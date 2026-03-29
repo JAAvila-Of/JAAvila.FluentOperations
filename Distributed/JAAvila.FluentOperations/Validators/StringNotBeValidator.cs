@@ -6,7 +6,8 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the string value does not equal the expected value.
 /// </summary>
 internal class StringNotBeValidator(PrincipalChain<string?> chain, string? expectedValue)
-    : IValidator, IRuleDescriptor
+    : IValidator,
+        IRuleDescriptor
 {
     public static StringNotBeValidator New(PrincipalChain<string?> chain, string? expectedValue) =>
         new(chain, expectedValue);
@@ -15,12 +16,12 @@ internal class StringNotBeValidator(PrincipalChain<string?> chain, string? expec
     public string Expected => "Not Be - <not null>";
 
     /// <inheritdoc />
-    public string ResultValidation { get; set; }
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "String.NotBe";
     string IRuleDescriptor.OperationName => "NotBe";
     Type IRuleDescriptor.SubjectType => typeof(string);
     IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
-        new Dictionary<string, object> { ["value"] = expectedValue };
+        new Dictionary<string, object> { ["value"] = expectedValue! };
 
     public bool Validate()
     {

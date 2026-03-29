@@ -9,8 +9,8 @@ internal class UIntBeZeroValidator(PrincipalChain<uint> chain) : IValidator, IRu
 {
     public static UIntBeZeroValidator New(PrincipalChain<uint> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "UInt.BeZero";
     string IRuleDescriptor.OperationName => "BeZero";
     Type IRuleDescriptor.SubjectType => typeof(uint);

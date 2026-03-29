@@ -7,7 +7,7 @@ namespace JAAvila.FluentOperations.Manager;
 
 /// <summary>
 /// Manager for exception assertions on asynchronous actions (Func&lt;Task&gt; delegates).
-/// Supports ThrowAsync&lt;T&gt;() and NotThrowAsync().
+/// Supports ThrowAsync&lt;T&gt;() And NotThrowAsync().
 /// </summary>
 public class AsyncActionOperationsManager
 {
@@ -28,14 +28,16 @@ public class AsyncActionOperationsManager
 
     private void EnsureActionNotNull(string operationName)
     {
-        if (_asyncAction is null)
+        if (_asyncAction is not null)
         {
-            var template = new TemplateHandler()
-                .WithSubject(_callerName)
-                .WithFail($"The {operationName} operation failed because the action was null.")
-                .Result;
-            ExceptionHandler.Handle(template);
+            return;
         }
+
+        var template = new TemplateHandler()
+            .WithSubject(_callerName)
+            .WithFail($"The {operationName} operation failed because the action was null.")
+            .Result;
+        ExceptionHandler.Handle(template);
     }
 
     /// <summary>
@@ -91,12 +93,12 @@ public class AsyncActionOperationsManager
             return null!;
         }
 
-        var capture = new ExceptionCapture<TException>(typed, _callerName, false);
+        var capture = new ExceptionCapture<TException>(typed, _callerName);
         return new ExceptionAssertionConnector<TException>(capture);
     }
 
     /// <summary>
-    /// Asserts that the async action throws an exception of exactly <typeparamref name="TException"/>
+    /// Asserts that the async action throws an exception to exactly <typeparamref name="TException"/>
     /// (not a derived type).
     /// </summary>
     /// <typeparam name="TException">The exact expected exception type.</typeparam>
@@ -252,7 +254,9 @@ public class AsyncActionOperationsManager
         {
             var template = new TemplateHandler()
                 .WithSubject(_callerName)
-                .WithFail($"The {nameof(NotThrowAfterAsync)} operation failed because the timeout must be positive.")
+                .WithFail(
+                    $"The {nameof(NotThrowAfterAsync)} operation failed because the timeout must be positive."
+                )
                 .Result;
             ExceptionHandler.Handle(template);
         }
@@ -261,7 +265,9 @@ public class AsyncActionOperationsManager
         {
             var template = new TemplateHandler()
                 .WithSubject(_callerName)
-                .WithFail($"The {nameof(NotThrowAfterAsync)} operation failed because the poll interval must be positive.")
+                .WithFail(
+                    $"The {nameof(NotThrowAfterAsync)} operation failed because the poll interval must be positive."
+                )
                 .Result;
             ExceptionHandler.Handle(template);
         }
@@ -331,7 +337,9 @@ public class AsyncActionOperationsManager
         {
             var template = new TemplateHandler()
                 .WithSubject(_callerName)
-                .WithFail($"The {nameof(CompleteWithinAsync)} operation failed because the timeout must be positive.")
+                .WithFail(
+                    $"The {nameof(CompleteWithinAsync)} operation failed because the timeout must be positive."
+                )
                 .Result;
             ExceptionHandler.Handle(template);
         }

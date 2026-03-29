@@ -5,6 +5,7 @@ using JAAvila.FluentOperations.Formatters;
 using JAAvila.FluentOperations.Model;
 using JAAvila.FluentOperations.Utils;
 using JAAvila.FluentOperations.Validators;
+using JAAvila.SafeTypes.Extension;
 
 namespace JAAvila.FluentOperations.Manager;
 
@@ -50,7 +51,8 @@ public class ByteOperationsManager : ITestManager<ByteOperationsManager, byte>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -81,7 +83,11 @@ public class ByteOperationsManager : ITestManager<ByteOperationsManager, byte>
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.MessageKey, operation.ResultValidation, BaseFormatter.Format(expected))
+                        .WithResult(
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            BaseFormatter.Format(expected)
+                        )
                         .WithReason(reason?.ToString())
             )
             .Execute();
@@ -109,7 +115,8 @@ public class ByteOperationsManager : ITestManager<ByteOperationsManager, byte>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -139,7 +146,8 @@ public class ByteOperationsManager : ITestManager<ByteOperationsManager, byte>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -170,7 +178,8 @@ public class ByteOperationsManager : ITestManager<ByteOperationsManager, byte>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -202,7 +211,8 @@ public class ByteOperationsManager : ITestManager<ByteOperationsManager, byte>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -234,7 +244,8 @@ public class ByteOperationsManager : ITestManager<ByteOperationsManager, byte>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -266,7 +277,8 @@ public class ByteOperationsManager : ITestManager<ByteOperationsManager, byte>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -302,7 +314,8 @@ public class ByteOperationsManager : ITestManager<ByteOperationsManager, byte>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(min),
                             BaseFormatter.Format(max),
                             BaseFormatter.Format(PrincipalChain.GetValue())
@@ -348,7 +361,8 @@ public class ByteOperationsManager : ITestManager<ByteOperationsManager, byte>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(min),
                             BaseFormatter.Format(max),
                             BaseFormatter.Format(PrincipalChain.GetValue())
@@ -393,8 +407,9 @@ public class ByteOperationsManager : ITestManager<ByteOperationsManager, byte>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
-                            string.Join(", ", expected.Select(e => BaseFormatter.Format(e))),
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            string.Join(", ", expected.Select(BaseFormatter.Format)),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -402,7 +417,7 @@ public class ByteOperationsManager : ITestManager<ByteOperationsManager, byte>
             .FailIf(
                 _ =>
                     (
-                        expected is null || expected.Length == 0,
+                        expected.IsNullOrEmpty(),
                         Fail.New(
                             $"The {nameof(BeOneOf)} operation failed because you have not provided any values."
                         )
@@ -437,8 +452,9 @@ public class ByteOperationsManager : ITestManager<ByteOperationsManager, byte>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
-                            string.Join(", ", expected.Select(e => BaseFormatter.Format(e))),
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            string.Join(", ", expected.Select(BaseFormatter.Format)),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -446,7 +462,7 @@ public class ByteOperationsManager : ITestManager<ByteOperationsManager, byte>
             .FailIf(
                 _ =>
                     (
-                        expected is null || expected.Length == 0,
+                        expected.IsNullOrEmpty(),
                         Fail.New(
                             $"The {nameof(NotBeOneOf)} operation failed because you have not provided any values."
                         )
@@ -481,7 +497,8 @@ public class ByteOperationsManager : ITestManager<ByteOperationsManager, byte>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(divisor),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -521,7 +538,8 @@ public class ByteOperationsManager : ITestManager<ByteOperationsManager, byte>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -551,7 +569,8 @@ public class ByteOperationsManager : ITestManager<ByteOperationsManager, byte>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -621,7 +640,9 @@ public class ByteOperationsManager : ITestManager<ByteOperationsManager, byte>
                 _ =>
                     (
                         type is null,
-                        Fail.New($"The {nameof(BeOfType)} operation failed because the expected type was <null>.")
+                        Fail.New(
+                            $"The {nameof(BeOfType)} operation failed because the expected type was <null>."
+                        )
                     )
             )
             .Execute();
@@ -643,7 +664,9 @@ public class ByteOperationsManager : ITestManager<ByteOperationsManager, byte>
                 _ =>
                     (
                         type is null,
-                        Fail.New($"The {nameof(NotBeOfType)} operation failed because the expected type was <null>.")
+                        Fail.New(
+                            $"The {nameof(NotBeOfType)} operation failed because the expected type was <null>."
+                        )
                     )
             )
             .Execute();

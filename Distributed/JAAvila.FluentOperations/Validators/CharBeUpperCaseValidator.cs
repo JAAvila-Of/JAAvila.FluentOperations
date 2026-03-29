@@ -9,8 +9,8 @@ internal class CharBeUpperCaseValidator(PrincipalChain<char> chain) : IValidator
 {
     public static CharBeUpperCaseValidator New(PrincipalChain<char> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Char.BeUpperCase";
     string IRuleDescriptor.OperationName => "BeUpperCase";
     Type IRuleDescriptor.SubjectType => typeof(char);
@@ -24,7 +24,8 @@ internal class CharBeUpperCaseValidator(PrincipalChain<char> chain) : IValidator
             return true;
         }
 
-        ResultValidation = "The resulting value was expected to be an uppercase letter, but {0} was found.";
+        ResultValidation =
+            "The resulting value was expected to be an uppercase letter, but {0} was found.";
         return false;
     }
 

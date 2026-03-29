@@ -9,8 +9,8 @@ internal class ULongBeZeroValidator(PrincipalChain<ulong> chain) : IValidator, I
 {
     public static ULongBeZeroValidator New(PrincipalChain<ulong> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "ULong.BeZero";
     string IRuleDescriptor.OperationName => "BeZero";
     Type IRuleDescriptor.SubjectType => typeof(ulong);

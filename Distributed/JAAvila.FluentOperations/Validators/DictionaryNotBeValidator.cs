@@ -16,8 +16,8 @@ internal class DictionaryNotBeValidator<TKey, TValue>(
         IDictionary<TKey, TValue> expected
     ) => new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Dictionary.NotBe";
     string IRuleDescriptor.OperationName => "NotBe";
     Type IRuleDescriptor.SubjectType => typeof(IDictionary<,>);

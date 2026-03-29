@@ -5,18 +5,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the collection has the expected length (element count).
 /// </summary>
-internal class CollectionHaveLengthValidator<T>(
-    PrincipalChain<IEnumerable<T>> chain,
-    int expected
-) : IValidator, IRuleDescriptor
+internal class CollectionHaveLengthValidator<T>(PrincipalChain<IEnumerable<T>> chain, int expected)
+    : IValidator,
+        IRuleDescriptor
 {
     public static CollectionHaveLengthValidator<T> New(
         PrincipalChain<IEnumerable<T>> chain,
         int expected
     ) => new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Collection.HaveLength";
     string IRuleDescriptor.OperationName => "HaveLength";
     Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);

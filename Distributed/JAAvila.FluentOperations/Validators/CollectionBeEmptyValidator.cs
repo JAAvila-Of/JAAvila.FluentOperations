@@ -5,13 +5,15 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the collection is empty.
 /// </summary>
-internal class CollectionBeEmptyValidator<T>(PrincipalChain<IEnumerable<T>> chain) : IValidator, IRuleDescriptor
+internal class CollectionBeEmptyValidator<T>(PrincipalChain<IEnumerable<T>> chain)
+    : IValidator,
+        IRuleDescriptor
 {
     public static CollectionBeEmptyValidator<T> New(PrincipalChain<IEnumerable<T>> chain) =>
         new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Collection.BeEmpty";
     string IRuleDescriptor.OperationName => "BeEmpty";
     Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);
@@ -25,7 +27,8 @@ internal class CollectionBeEmptyValidator<T>(PrincipalChain<IEnumerable<T>> chai
             return true;
         }
 
-        ResultValidation = "The resulting collection was expected to be empty, but it contained {0} element(s).";
+        ResultValidation =
+            "The resulting collection was expected to be empty, but it contained {0} element(s).";
         return false;
     }
 

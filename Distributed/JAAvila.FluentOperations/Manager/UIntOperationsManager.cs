@@ -5,6 +5,7 @@ using JAAvila.FluentOperations.Formatters;
 using JAAvila.FluentOperations.Model;
 using JAAvila.FluentOperations.Utils;
 using JAAvila.FluentOperations.Validators;
+using JAAvila.SafeTypes.Extension;
 
 namespace JAAvila.FluentOperations.Manager;
 
@@ -50,7 +51,8 @@ public class UIntOperationsManager : ITestManager<UIntOperationsManager, uint>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -81,7 +83,11 @@ public class UIntOperationsManager : ITestManager<UIntOperationsManager, uint>
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.MessageKey, operation.ResultValidation, BaseFormatter.Format(expected))
+                        .WithResult(
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            BaseFormatter.Format(expected)
+                        )
                         .WithReason(reason?.ToString())
             )
             .Execute();
@@ -109,7 +115,8 @@ public class UIntOperationsManager : ITestManager<UIntOperationsManager, uint>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -139,7 +146,8 @@ public class UIntOperationsManager : ITestManager<UIntOperationsManager, uint>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -170,7 +178,8 @@ public class UIntOperationsManager : ITestManager<UIntOperationsManager, uint>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -202,7 +211,8 @@ public class UIntOperationsManager : ITestManager<UIntOperationsManager, uint>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -234,7 +244,8 @@ public class UIntOperationsManager : ITestManager<UIntOperationsManager, uint>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -266,7 +277,8 @@ public class UIntOperationsManager : ITestManager<UIntOperationsManager, uint>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -302,7 +314,8 @@ public class UIntOperationsManager : ITestManager<UIntOperationsManager, uint>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(min),
                             BaseFormatter.Format(max),
                             BaseFormatter.Format(PrincipalChain.GetValue())
@@ -348,7 +361,8 @@ public class UIntOperationsManager : ITestManager<UIntOperationsManager, uint>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(min),
                             BaseFormatter.Format(max),
                             BaseFormatter.Format(PrincipalChain.GetValue())
@@ -393,8 +407,9 @@ public class UIntOperationsManager : ITestManager<UIntOperationsManager, uint>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
-                            string.Join(", ", expected.Select(e => BaseFormatter.Format(e))),
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            string.Join(", ", expected.Select(BaseFormatter.Format)),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -402,7 +417,7 @@ public class UIntOperationsManager : ITestManager<UIntOperationsManager, uint>
             .FailIf(
                 _ =>
                     (
-                        expected is null || expected.Length == 0,
+                        expected.IsNullOrEmpty(),
                         Fail.New(
                             $"The {nameof(BeOneOf)} operation failed because you have not provided any values."
                         )
@@ -437,8 +452,9 @@ public class UIntOperationsManager : ITestManager<UIntOperationsManager, uint>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
-                            string.Join(", ", expected.Select(e => BaseFormatter.Format(e))),
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            string.Join(", ", expected.Select(BaseFormatter.Format)),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -446,7 +462,7 @@ public class UIntOperationsManager : ITestManager<UIntOperationsManager, uint>
             .FailIf(
                 _ =>
                     (
-                        expected is null || expected.Length == 0,
+                        expected.IsNullOrEmpty(),
                         Fail.New(
                             $"The {nameof(NotBeOneOf)} operation failed because you have not provided any values."
                         )
@@ -481,7 +497,8 @@ public class UIntOperationsManager : ITestManager<UIntOperationsManager, uint>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(divisor),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -521,7 +538,8 @@ public class UIntOperationsManager : ITestManager<UIntOperationsManager, uint>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -551,7 +569,8 @@ public class UIntOperationsManager : ITestManager<UIntOperationsManager, uint>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -567,7 +586,10 @@ public class UIntOperationsManager : ITestManager<UIntOperationsManager, uint>
     public UIntOperationsManager BeOfType<TType>(Reason? reason = null)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Common.BeOfType))
+        {
             return this;
+        }
+
         ValidateBeOfTypeOperation(reason, typeof(TType));
         return this;
     }
@@ -578,7 +600,10 @@ public class UIntOperationsManager : ITestManager<UIntOperationsManager, uint>
     public UIntOperationsManager BeOfType(Type expected, Reason? reason = null)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Common.BeOfType))
+        {
             return this;
+        }
+
         ValidateBeOfTypeOperation(reason, expected);
         return this;
     }
@@ -589,7 +614,10 @@ public class UIntOperationsManager : ITestManager<UIntOperationsManager, uint>
     public UIntOperationsManager NotBeOfType<TType>(Reason? reason = null)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Common.NotBeOfType))
+        {
             return this;
+        }
+
         ValidateNotBeOfTypeOperation(reason, typeof(TType));
         return this;
     }
@@ -600,7 +628,10 @@ public class UIntOperationsManager : ITestManager<UIntOperationsManager, uint>
     public UIntOperationsManager NotBeOfType(Type expected, Reason? reason = null)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Common.NotBeOfType))
+        {
             return this;
+        }
+
         ValidateNotBeOfTypeOperation(reason, expected);
         return this;
     }
@@ -621,7 +652,9 @@ public class UIntOperationsManager : ITestManager<UIntOperationsManager, uint>
                 _ =>
                     (
                         type is null,
-                        Fail.New($"The {nameof(BeOfType)} operation failed because the expected type was <null>.")
+                        Fail.New(
+                            $"The {nameof(BeOfType)} operation failed because the expected type was <null>."
+                        )
                     )
             )
             .Execute();
@@ -643,7 +676,9 @@ public class UIntOperationsManager : ITestManager<UIntOperationsManager, uint>
                 _ =>
                     (
                         type is null,
-                        Fail.New($"The {nameof(NotBeOfType)} operation failed because the expected type was <null>.")
+                        Fail.New(
+                            $"The {nameof(NotBeOfType)} operation failed because the expected type was <null>."
+                        )
                     )
             )
             .Execute();

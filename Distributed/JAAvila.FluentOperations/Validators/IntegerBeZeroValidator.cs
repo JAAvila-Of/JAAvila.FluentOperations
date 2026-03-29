@@ -9,8 +9,8 @@ internal class IntegerBeZeroValidator(PrincipalChain<int> chain) : IValidator, I
 {
     public static IntegerBeZeroValidator New(PrincipalChain<int> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Integer.BeZero";
     string IRuleDescriptor.OperationName => "BeZero";
     Type IRuleDescriptor.SubjectType => typeof(int);

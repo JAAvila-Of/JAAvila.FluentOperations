@@ -5,13 +5,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the ushort value is less than or equal to the expected value.
 /// </summary>
-internal class UShortBeLessThanOrEqualToValidator(PrincipalChain<ushort> chain, ushort expected) : IValidator, IRuleDescriptor
+internal class UShortBeLessThanOrEqualToValidator(PrincipalChain<ushort> chain, ushort expected)
+    : IValidator,
+        IRuleDescriptor
 {
-    public static UShortBeLessThanOrEqualToValidator New(PrincipalChain<ushort> chain, ushort expected) =>
-        new(chain, expected);
+    public static UShortBeLessThanOrEqualToValidator New(
+        PrincipalChain<ushort> chain,
+        ushort expected
+    ) => new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "UShort.BeLessThanOrEqualTo";
     string IRuleDescriptor.OperationName => "BeLessThanOrEqualTo";
     Type IRuleDescriptor.SubjectType => typeof(ushort);
@@ -25,7 +29,8 @@ internal class UShortBeLessThanOrEqualToValidator(PrincipalChain<ushort> chain, 
             return true;
         }
 
-        ResultValidation = "The resulting value was expected to be less than or equal to {0}, but {1} was found.";
+        ResultValidation =
+            "The resulting value was expected to be less than or equal to {0}, but {1} was found.";
         return false;
     }
 

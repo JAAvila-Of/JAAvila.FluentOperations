@@ -19,8 +19,8 @@ internal class NullableDecimalHaveScaledPrecisionValidator(
         int maxTotalDigits
     ) => new(chain, expectedDecimals, maxTotalDigits);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableDecimal.HaveScaledPrecision";
     string IRuleDescriptor.OperationName => "HaveScaledPrecision";
     Type IRuleDescriptor.SubjectType => typeof(decimal?);
@@ -46,7 +46,8 @@ internal class NullableDecimalHaveScaledPrecisionValidator(
 
         var absValue = Math.Abs(value);
         var integerPart = decimal.Truncate(absValue);
-        var integerDigits = integerPart == 0m ? 1 : (int)Math.Floor(Math.Log10((double)integerPart)) + 1;
+        var integerDigits =
+            integerPart == 0m ? 1 : (int)Math.Floor(Math.Log10((double)integerPart)) + 1;
         var totalDigits = integerDigits + scale;
 
         if (totalDigits > maxTotalDigits)

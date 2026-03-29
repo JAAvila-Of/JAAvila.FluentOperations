@@ -16,8 +16,8 @@ internal class DictionaryBeValidator<TKey, TValue>(
         IDictionary<TKey, TValue> expected
     ) => new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Dictionary.Be";
     string IRuleDescriptor.OperationName => "Be";
     Type IRuleDescriptor.SubjectType => typeof(IDictionary<,>);

@@ -6,12 +6,14 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the string is not entirely lower case.
 /// </summary>
-internal class StringNotBeLowerCasedValidator(PrincipalChain<string?> chain) : IValidator, IRuleDescriptor
+internal class StringNotBeLowerCasedValidator(PrincipalChain<string?> chain)
+    : IValidator,
+        IRuleDescriptor
 {
     public static StringNotBeLowerCasedValidator New(PrincipalChain<string?> chain) => new(chain);
 
     public string Expected => "Not uppercase text.";
-    public string ResultValidation { get; set; }
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "String.NotBeLowerCased";
     string IRuleDescriptor.OperationName => "NotBeLowerCased";
     Type IRuleDescriptor.SubjectType => typeof(string);

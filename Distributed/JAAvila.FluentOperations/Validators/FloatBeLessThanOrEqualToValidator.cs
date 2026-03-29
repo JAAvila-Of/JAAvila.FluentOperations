@@ -5,13 +5,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the float value is less than or equal to the expected value.
 /// </summary>
-internal class FloatBeLessThanOrEqualToValidator(PrincipalChain<float> chain, float expected) : IValidator, IRuleDescriptor
+internal class FloatBeLessThanOrEqualToValidator(PrincipalChain<float> chain, float expected)
+    : IValidator,
+        IRuleDescriptor
 {
-    public static FloatBeLessThanOrEqualToValidator New(PrincipalChain<float> chain, float expected) =>
-        new(chain, expected);
+    public static FloatBeLessThanOrEqualToValidator New(
+        PrincipalChain<float> chain,
+        float expected
+    ) => new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Float.BeLessThanOrEqualTo";
     string IRuleDescriptor.OperationName => "BeLessThanOrEqualTo";
     Type IRuleDescriptor.SubjectType => typeof(float);
@@ -25,7 +29,8 @@ internal class FloatBeLessThanOrEqualToValidator(PrincipalChain<float> chain, fl
             return true;
         }
 
-        ResultValidation = "The resulting value was expected to be less than or equal to {0}, but {1} was found.";
+        ResultValidation =
+            "The resulting value was expected to be less than or equal to {0}, but {1} was found.";
         return false;
     }
 

@@ -7,11 +7,10 @@ namespace JAAvila.FluentOperations.Validators;
 /// </summary>
 internal class TimeSpanBeZeroValidator(PrincipalChain<TimeSpan> chain) : IValidator, IRuleDescriptor
 {
-    public static TimeSpanBeZeroValidator New(PrincipalChain<TimeSpan> chain) =>
-        new(chain);
+    public static TimeSpanBeZeroValidator New(PrincipalChain<TimeSpan> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "TimeSpan.BeZero";
     string IRuleDescriptor.OperationName => "BeZero";
     Type IRuleDescriptor.SubjectType => typeof(TimeSpan);

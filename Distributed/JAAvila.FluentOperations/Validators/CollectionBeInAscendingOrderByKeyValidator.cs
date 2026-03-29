@@ -17,8 +17,8 @@ internal class CollectionBeInAscendingOrderByKeyValidator<T, TKey>(
         Func<T, TKey> keySelector
     ) => new(chain, keySelector);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Collection.BeInAscendingOrderByKey";
     string IRuleDescriptor.OperationName => "BeInAscendingOrderByKey";
     Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);

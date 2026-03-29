@@ -35,7 +35,7 @@ public class StringOperationsManager
     {
         PrincipalChain = PrincipalChain<string?>.Get(value, caller);
         GlobalConfig.Initialize();
-        SetManager(this);
+        base.SetManager(this);
     }
 
     /// <summary>
@@ -161,9 +161,9 @@ public class StringOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeEmpty)} operation failed because the parent value was <null>, {{0}}.",
                             $"it is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -203,9 +203,9 @@ public class StringOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(NotBeEmpty)} operation failed because the parent value was <null>, {{0}}.",
                             $"it is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -330,9 +330,9 @@ public class StringOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(HaveLength)} operation failed because the parent value was <null>, {{0}}.",
                             $"it is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -380,9 +380,9 @@ public class StringOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeUpperCased)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -390,9 +390,9 @@ public class StringOperationsManager
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue()!.Trim() == "",
+                        m.PrincipalChain.GetValue()!.Trim() == "",
                         Fail.New(
                             $"The {nameof(BeUpperCased)} operation failed because no characters were found to evaluate. {{0}}.",
                             $"It is recommended to validate that the string is not empty with {nameof(NotBeEmpty)} operation first to cover all possible scenarios"
@@ -431,9 +431,9 @@ public class StringOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(NotBeUpperCased)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -441,9 +441,9 @@ public class StringOperationsManager
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue()!.Trim() == "",
+                        m.PrincipalChain.GetValue()!.Trim() == "",
                         Fail.New(
                             $"The {nameof(NotBeUpperCased)} operation failed because no characters were found to evaluate. {{0}}.",
                             $"It is recommended to validate that the string is not empty with {nameof(NotBeEmpty)} operation first to cover all possible scenarios"
@@ -482,9 +482,9 @@ public class StringOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeLowerCased)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -492,9 +492,9 @@ public class StringOperationsManager
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue()!.Trim() == "",
+                        m.PrincipalChain.GetValue()!.Trim() == "",
                         Fail.New(
                             $"The {nameof(BeLowerCased)} operation failed because no characters were found to evaluate. {{0}}.",
                             $"It is recommended to validate that the string is not empty with {nameof(NotBeEmpty)} operation first to cover all possible scenarios"
@@ -533,9 +533,9 @@ public class StringOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(NotBeLowerCased)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -543,9 +543,9 @@ public class StringOperationsManager
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue()!.Trim() == "",
+                        m.PrincipalChain.GetValue()!.Trim() == "",
                         Fail.New(
                             $"The {nameof(NotBeLowerCased)} operation failed because no characters were found to evaluate. {{0}}.",
                             $"It is recommended to validate that the string is not empty with {nameof(NotBeEmpty)} operation first to cover all possible scenarios"
@@ -581,13 +581,17 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithValue(StringFormatter.Format(PrincipalChain.GetValueAsString()))
-                        .WithResult(operation.MessageKey, operation.ResultValidation, StringFormatter.Format(expected))
+                        .WithResult(
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            StringFormatter.Format(expected)
+                        )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(Contain)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -646,13 +650,17 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithValue(StringFormatter.Format(PrincipalChain.GetValueAsString()))
-                        .WithResult(operation.MessageKey, operation.ResultValidation, StringFormatter.Format(expected))
+                        .WithResult(
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            StringFormatter.Format(expected)
+                        )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(Contain)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -706,13 +714,17 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithValue(StringFormatter.Format(PrincipalChain.GetValueAsString()))
-                        .WithResult(operation.MessageKey, operation.ResultValidation, StringFormatter.Format(expected))
+                        .WithResult(
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            StringFormatter.Format(expected)
+                        )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(NotContain)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -771,13 +783,17 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithValue(StringFormatter.Format(PrincipalChain.GetValueAsString()))
-                        .WithResult(operation.MessageKey, operation.ResultValidation, StringFormatter.Format(expected))
+                        .WithResult(
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            StringFormatter.Format(expected)
+                        )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(NotContain)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -833,9 +849,9 @@ public class StringOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeEmail)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -843,9 +859,9 @@ public class StringOperationsManager
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue()?.Length == 0,
+                        m.PrincipalChain.GetValue()?.Length == 0,
                         Fail.New(
                             $"The {nameof(BeEmail)} operation failed because the value was empty. {{0}}.",
                             $"It is recommended to validate that the string is not empty first"
@@ -883,9 +899,9 @@ public class StringOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeUrl)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -893,9 +909,9 @@ public class StringOperationsManager
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue()?.Length == 0,
+                        m.PrincipalChain.GetValue()?.Length == 0,
                         Fail.New(
                             $"The {nameof(BeUrl)} operation failed because the value was empty. {{0}}.",
                             $"It is recommended to validate that the string is not empty first"
@@ -933,9 +949,9 @@ public class StringOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BePhoneNumber)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -943,9 +959,9 @@ public class StringOperationsManager
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue()?.Length == 0,
+                        m.PrincipalChain.GetValue()?.Length == 0,
                         Fail.New(
                             $"The {nameof(BePhoneNumber)} operation failed because the value was empty. {{0}}.",
                             $"It is recommended to validate that the string is not empty first"
@@ -983,9 +999,9 @@ public class StringOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeGuid)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -993,9 +1009,9 @@ public class StringOperationsManager
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue()?.Length == 0,
+                        m.PrincipalChain.GetValue()?.Length == 0,
                         Fail.New(
                             $"The {nameof(BeGuid)} operation failed because the value was empty. {{0}}.",
                             $"It is recommended to validate that the string is not empty first"
@@ -1033,9 +1049,9 @@ public class StringOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeJson)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -1043,9 +1059,9 @@ public class StringOperationsManager
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue()?.Length == 0,
+                        m.PrincipalChain.GetValue()?.Length == 0,
                         Fail.New(
                             $"The {nameof(BeJson)} operation failed because the value was empty. {{0}}.",
                             $"It is recommended to validate that the string is not empty first"
@@ -1083,9 +1099,9 @@ public class StringOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeXml)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -1093,9 +1109,9 @@ public class StringOperationsManager
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue()?.Length == 0,
+                        m.PrincipalChain.GetValue()?.Length == 0,
                         Fail.New(
                             $"The {nameof(BeXml)} operation failed because the value was empty. {{0}}.",
                             $"It is recommended to validate that the string is not empty first"
@@ -1135,9 +1151,9 @@ public class StringOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(Match)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -1182,13 +1198,13 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.MessageKey, operation.ResultValidation, regex.ToString())
+                        .WithResult(operation.MessageKey, operation.ResultValidation, regex)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(Match)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -1237,9 +1253,9 @@ public class StringOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(NotMatch)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -1284,13 +1300,13 @@ public class StringOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.MessageKey, operation.ResultValidation, regex.ToString())
+                        .WithResult(operation.MessageKey, operation.ResultValidation, regex)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(NotMatch)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -1336,9 +1352,9 @@ public class StringOperationsManager
                         .WithResult(operation.MessageKey, operation.ResultValidation)
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(MatchAny)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -1385,9 +1401,9 @@ public class StringOperationsManager
                         .WithResult(operation.MessageKey, operation.ResultValidation)
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(MatchAny)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -1436,9 +1452,9 @@ public class StringOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(MatchAny)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -1460,7 +1476,7 @@ public class StringOperationsManager
     }
 
     /// <summary>
-    /// Asserts that the string matches all of the specified regular expression patterns.
+    /// Asserts that the string matches all the specified regular expression patterns.
     /// </summary>
     /// <param name="patterns">The regex patterns that must all match the string.</param>
     /// <returns>The current instance of <see cref="StringOperationsManager"/> for method chaining.</returns>
@@ -1484,9 +1500,9 @@ public class StringOperationsManager
                         .WithResult(operation.MessageKey, operation.ResultValidation)
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(MatchAll)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -1508,7 +1524,7 @@ public class StringOperationsManager
     }
 
     /// <summary>
-    /// Asserts that the string matches all of the specified precompiled regular expressions.
+    /// Asserts that the string matches all the specified precompiled regular expressions.
     /// </summary>
     /// <param name="patterns">The precompiled regular expressions that must all match the string.</param>
     /// <returns>The current instance of <see cref="StringOperationsManager"/> for method chaining.</returns>
@@ -1533,9 +1549,9 @@ public class StringOperationsManager
                         .WithResult(operation.MessageKey, operation.ResultValidation)
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(MatchAll)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -1557,7 +1573,7 @@ public class StringOperationsManager
     }
 
     /// <summary>
-    /// Asserts that the string matches all of the specified precompiled regular expressions.
+    /// Asserts that the string matches all the specified precompiled regular expressions.
     /// </summary>
     /// <param name="reason">An optional reason to provide context for the operation.</param>
     /// <param name="patterns">The precompiled regular expressions that must all match the string.</param>
@@ -1584,9 +1600,9 @@ public class StringOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(MatchAll)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -1608,7 +1624,7 @@ public class StringOperationsManager
     }
 
     /// <summary>
-    /// Asserts that the string consists entirely of letter characters (A–Z, a–z, and Unicode letters).
+    /// Asserts that the string consists entirely of letter characters (A - Z, a - z, and Unicode letters).
     /// </summary>
     /// <param name="reason">An optional reason to provide context for the operation.</param>
     /// <returns>The current instance of <see cref="StringOperationsManager"/> for method chaining.</returns>
@@ -1633,9 +1649,9 @@ public class StringOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeAlphabetic)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -1643,9 +1659,9 @@ public class StringOperationsManager
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue()?.Length == 0,
+                        m.PrincipalChain.GetValue()?.Length == 0,
                         Fail.New(
                             $"The {nameof(BeAlphabetic)} operation failed because the value was empty. {{0}}.",
                             $"It is recommended to validate that the string is not empty first"
@@ -1683,9 +1699,9 @@ public class StringOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeAlphanumeric)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -1693,9 +1709,9 @@ public class StringOperationsManager
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue()?.Length == 0,
+                        m.PrincipalChain.GetValue()?.Length == 0,
                         Fail.New(
                             $"The {nameof(BeAlphanumeric)} operation failed because the value was empty. {{0}}.",
                             $"It is recommended to validate that the string is not empty first"
@@ -1733,9 +1749,9 @@ public class StringOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeNumeric)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -1743,9 +1759,9 @@ public class StringOperationsManager
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue()?.Length == 0,
+                        m.PrincipalChain.GetValue()?.Length == 0,
                         Fail.New(
                             $"The {nameof(BeNumeric)} operation failed because the value was empty. {{0}}.",
                             $"It is recommended to validate that the string is not empty first"
@@ -1758,7 +1774,7 @@ public class StringOperationsManager
     }
 
     /// <summary>
-    /// Asserts that the string consists entirely of hexadecimal characters (0–9, A–F, a–f).
+    /// Asserts that the string consists entirely of hexadecimal characters (0–9, A - F, a - f).
     /// </summary>
     /// <param name="reason">An optional reason to provide context for the operation.</param>
     /// <returns>The current instance of <see cref="StringOperationsManager"/> for method chaining.</returns>
@@ -1783,9 +1799,9 @@ public class StringOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeHex)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -1793,9 +1809,9 @@ public class StringOperationsManager
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue()?.Length == 0,
+                        m.PrincipalChain.GetValue()?.Length == 0,
                         Fail.New(
                             $"The {nameof(BeHex)} operation failed because the value was empty. {{0}}.",
                             $"It is recommended to validate that the string is not empty first"
@@ -1833,9 +1849,9 @@ public class StringOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(ContainOnlyDigits)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -1843,9 +1859,9 @@ public class StringOperationsManager
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue()?.Length == 0,
+                        m.PrincipalChain.GetValue()?.Length == 0,
                         Fail.New(
                             $"The {nameof(ContainOnlyDigits)} operation failed because the value was empty. {{0}}.",
                             $"It is recommended to validate that the string is not empty first"
@@ -1883,9 +1899,9 @@ public class StringOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(ContainOnlyLetters)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -1893,9 +1909,9 @@ public class StringOperationsManager
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue()?.Length == 0,
+                        m.PrincipalChain.GetValue()?.Length == 0,
                         Fail.New(
                             $"The {nameof(ContainOnlyLetters)} operation failed because the value was empty. {{0}}.",
                             $"It is recommended to validate that the string is not empty first"
@@ -1933,9 +1949,9 @@ public class StringOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(ContainNoWhitespace)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -1971,16 +1987,17 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             min.ToString(),
                             PrincipalChain.GetValue()!.Length.ToString()
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(HaveMinLength)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -2025,16 +2042,17 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             max.ToString(),
                             PrincipalChain.GetValue()!.Length.ToString()
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(HaveMaxLength)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -2081,7 +2099,8 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             min.ToString(),
                             max.ToString(),
                             PrincipalChain.GetValue()!.Length.ToString()
@@ -2089,9 +2108,9 @@ public class StringOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(HaveLengthBetween)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -2136,16 +2155,17 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             expected.ToString(),
                             PrincipalChain.GetValue()!.Length.ToString()
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(HaveLengthGreaterThan)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -2190,16 +2210,17 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             expected.ToString(),
                             PrincipalChain.GetValue()!.Length.ToString()
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(HaveLengthLessThan)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -2243,9 +2264,10 @@ public class StringOperationsManager
                 (template, operation) =>
                 {
                     var actual = PrincipalChain.GetValue();
-                    var actualPrefix = actual is not null && actual.Length >= prefix.Length
-                        ? actual[..prefix.Length]
-                        : actual;
+                    var actualPrefix =
+                        actual is not null && actual.Length >= prefix.Length
+                            ? actual[..prefix.Length]
+                            : actual;
                     return template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(operation.MessageKey, operation.ResultValidation, prefix)
@@ -2254,9 +2276,9 @@ public class StringOperationsManager
                 }
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(StartWith)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -2305,22 +2327,27 @@ public class StringOperationsManager
                 (template, operation) =>
                 {
                     var actual = PrincipalChain.GetValue();
-                    var actualPrefix = actual is not null && actual.Length >= prefix.Length
-                        ? actual[..prefix.Length]
-                        : actual;
+                    var actualPrefix =
+                        actual is not null && actual.Length >= prefix.Length
+                            ? actual[..prefix.Length]
+                            : actual;
                     var diff = comparison == StringComparison.Ordinal ? actualPrefix : null;
                     return template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithValue(StringFormatter.Format(PrincipalChain.GetValueAsString()))
-                        .WithResult(operation.MessageKey, operation.ResultValidation, StringFormatter.Format(prefix))
+                        .WithResult(
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            StringFormatter.Format(prefix)
+                        )
                         .WithStringDiff(prefix, diff)
                         .WithReason(reason?.ToString());
                 }
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(StartWith)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -2368,9 +2395,9 @@ public class StringOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(NotStartWith)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -2414,9 +2441,10 @@ public class StringOperationsManager
                 (template, operation) =>
                 {
                     var actual = PrincipalChain.GetValue();
-                    var actualSuffix = actual is not null && actual.Length >= suffix.Length
-                        ? actual[^suffix.Length..]
-                        : actual;
+                    var actualSuffix =
+                        actual is not null && actual.Length >= suffix.Length
+                            ? actual[^suffix.Length..]
+                            : actual;
                     return template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(operation.MessageKey, operation.ResultValidation, suffix)
@@ -2425,9 +2453,9 @@ public class StringOperationsManager
                 }
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(EndWith)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -2476,22 +2504,27 @@ public class StringOperationsManager
                 (template, operation) =>
                 {
                     var actual = PrincipalChain.GetValue();
-                    var actualSuffix = actual is not null && actual.Length >= suffix.Length
-                        ? actual[^suffix.Length..]
-                        : actual;
+                    var actualSuffix =
+                        actual is not null && actual.Length >= suffix.Length
+                            ? actual[^suffix.Length..]
+                            : actual;
                     var diff = comparison == StringComparison.Ordinal ? actualSuffix : null;
                     return template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithValue(StringFormatter.Format(PrincipalChain.GetValueAsString()))
-                        .WithResult(operation.MessageKey, operation.ResultValidation, StringFormatter.Format(suffix))
+                        .WithResult(
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            StringFormatter.Format(suffix)
+                        )
                         .WithStringDiff(suffix, diff)
                         .WithReason(reason?.ToString());
                 }
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(EndWith)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -2539,9 +2572,9 @@ public class StringOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(NotEndWith)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -2594,13 +2627,17 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithValue(StringFormatter.Format(PrincipalChain.GetValueAsString()))
-                        .WithResult(operation.MessageKey, operation.ResultValidation, StringFormatter.Format(expected))
+                        .WithResult(
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            StringFormatter.Format(expected)
+                        )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(Contain)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -2661,7 +2698,7 @@ public class StringOperationsManager
     }
 
     /// <summary>
-    /// Asserts that the string contains all of the specified substrings (ordinal comparison).
+    /// Asserts that the string contains all the specified substrings (ordinal comparison).
     /// </summary>
     /// <param name="substrings">The substrings that must all be present in the string.</param>
     /// <returns>The current instance of <see cref="StringOperationsManager"/> for method chaining.</returns>
@@ -2674,7 +2711,7 @@ public class StringOperationsManager
     }
 
     /// <summary>
-    /// Asserts that the string contains all of the specified substrings using the given string comparison mode.
+    /// Asserts that the string contains all the specified substrings using the given string comparison mode.
     /// </summary>
     /// <param name="comparison">The <see cref="StringComparison"/> mode to use.</param>
     /// <param name="substrings">The substrings that must all be present in the string.</param>
@@ -2691,7 +2728,7 @@ public class StringOperationsManager
     }
 
     /// <summary>
-    /// Asserts that the string contains all of the specified substrings (ordinal comparison).
+    /// Asserts that the string contains all the specified substrings (ordinal comparison).
     /// </summary>
     /// <param name="reason">An optional reason to provide context for the operation.</param>
     /// <param name="substrings">The substrings that must all be present in the string.</param>
@@ -2726,9 +2763,9 @@ public class StringOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(ContainAll)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -2806,9 +2843,9 @@ public class StringOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(ContainAny)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -2844,16 +2881,17 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             pattern,
                             PrincipalChain.GetValue() ?? "<null>"
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(MatchWildcard)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -2894,16 +2932,17 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             pattern,
                             PrincipalChain.GetValue() ?? "<null>"
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(MatchWildcard)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -2936,7 +2975,8 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             pattern,
                             PrincipalChain.GetValue() ?? "<null>"
                         )
@@ -2973,7 +3013,8 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             pattern,
                             PrincipalChain.GetValue() ?? "<null>"
                         )
@@ -3010,9 +3051,9 @@ public class StringOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeCreditCard)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -3020,9 +3061,9 @@ public class StringOperationsManager
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue()?.Length == 0,
+                        m.PrincipalChain.GetValue()?.Length == 0,
                         Fail.New(
                             $"The {nameof(BeCreditCard)} operation failed because the value was empty. {{0}}.",
                             $"It is recommended to validate that the string is not empty first"
@@ -3060,9 +3101,9 @@ public class StringOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeBase64)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -3070,9 +3111,9 @@ public class StringOperationsManager
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue()?.Length == 0,
+                        m.PrincipalChain.GetValue()?.Length == 0,
                         Fail.New(
                             $"The {nameof(BeBase64)} operation failed because the value was empty. {{0}}.",
                             $"It is recommended to validate that the string is not empty first"
@@ -3110,9 +3151,9 @@ public class StringOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeSemVer)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -3120,9 +3161,9 @@ public class StringOperationsManager
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue()?.Length == 0,
+                        m.PrincipalChain.GetValue()?.Length == 0,
                         Fail.New(
                             $"The {nameof(BeSemVer)} operation failed because the value was empty. {{0}}.",
                             $"It is recommended to validate that the string is not empty first"
@@ -3160,9 +3201,9 @@ public class StringOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeIPAddress)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -3170,9 +3211,9 @@ public class StringOperationsManager
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue()?.Length == 0,
+                        m.PrincipalChain.GetValue()?.Length == 0,
                         Fail.New(
                             $"The {nameof(BeIPAddress)} operation failed because the value was empty. {{0}}.",
                             $"It is recommended to validate that the string is not empty first"
@@ -3210,9 +3251,9 @@ public class StringOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeIPv4)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -3220,9 +3261,9 @@ public class StringOperationsManager
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue()?.Length == 0,
+                        m.PrincipalChain.GetValue()?.Length == 0,
                         Fail.New(
                             $"The {nameof(BeIPv4)} operation failed because the value was empty. {{0}}.",
                             $"It is recommended to validate that the string is not empty first"
@@ -3260,9 +3301,9 @@ public class StringOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeIPv6)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -3270,9 +3311,9 @@ public class StringOperationsManager
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue()?.Length == 0,
+                        m.PrincipalChain.GetValue()?.Length == 0,
                         Fail.New(
                             $"The {nameof(BeIPv6)} operation failed because the value was empty. {{0}}.",
                             $"It is recommended to validate that the string is not empty first"
@@ -3310,10 +3351,7 @@ public class StringOperationsManager
     /// <remarks>
     /// Fails immediately if <paramref name="expected"/> is null or empty, or if the string is <c>null</c>.
     /// </remarks>
-    public StringOperationsManager BeOneOf(
-        StringComparison comparison,
-        params string?[] expected
-    )
+    public StringOperationsManager BeOneOf(StringComparison comparison, params string?[] expected)
     {
         return BeOneOfCore(comparison, null, expected);
     }
@@ -3370,25 +3408,28 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
-                            string.Join(", ", expected.Select(e => e is null ? "<null>" : $"\"{e}\"")),
-                            PrincipalChain.GetValue() is null ? "<null>" : $"\"{PrincipalChain.GetValue()}\""
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            string.Join(", ", expected.Select(BaseFormatter.Format)),
+                            PrincipalChain.GetValue() is null
+                                ? "<null>"
+                                : $"\"{PrincipalChain.GetValue()}\""
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
                 _ =>
                     (
-                        expected is null || expected.Length == 0,
+                        expected.IsNullOrEmpty(),
                         Fail.New(
                             $"The {nameof(BeOneOf)} operation failed because you have not provided any values."
                         )
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeOneOf)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"
@@ -3482,25 +3523,31 @@ public class StringOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
-                            string.Join(", ", expected.Select(e => e is null ? "<null>" : $"\"{e}\"")),
-                            PrincipalChain.GetValue() is null ? "<null>" : $"\"{PrincipalChain.GetValue()}\""
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            string.Join(
+                                ", ",
+                                expected.Select(e => e is null ? "<null>" : $"\"{e}\"")
+                            ),
+                            PrincipalChain.GetValue() is null
+                                ? "<null>"
+                                : $"\"{PrincipalChain.GetValue()}\""
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
                 _ =>
                     (
-                        expected is null || expected.Length == 0,
+                        expected.IsNullOrEmpty(),
                         Fail.New(
                             $"The {nameof(NotBeOneOf)} operation failed because you have not provided any values."
                         )
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(NotBeOneOf)} operation failed because the parent value was <null>. {{0}}.",
                             $"It is recommended to run the {nameof(NotBeNull)} operation first to cover all possible scenarios"

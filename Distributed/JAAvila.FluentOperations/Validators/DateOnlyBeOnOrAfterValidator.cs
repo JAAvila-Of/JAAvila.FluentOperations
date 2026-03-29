@@ -5,13 +5,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the dateonly value is on or after the expected value.
 /// </summary>
-internal class DateOnlyBeOnOrAfterValidator(PrincipalChain<DateOnly> chain, DateOnly expected) : IValidator, IRuleDescriptor
+internal class DateOnlyBeOnOrAfterValidator(PrincipalChain<DateOnly> chain, DateOnly expected)
+    : IValidator,
+        IRuleDescriptor
 {
-    public static DateOnlyBeOnOrAfterValidator New(PrincipalChain<DateOnly> chain, DateOnly expected) =>
-        new(chain, expected);
+    public static DateOnlyBeOnOrAfterValidator New(
+        PrincipalChain<DateOnly> chain,
+        DateOnly expected
+    ) => new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "DateOnly.BeOnOrAfter";
     string IRuleDescriptor.OperationName => "BeOnOrAfter";
     Type IRuleDescriptor.SubjectType => typeof(DateOnly);
@@ -25,7 +29,8 @@ internal class DateOnlyBeOnOrAfterValidator(PrincipalChain<DateOnly> chain, Date
             return true;
         }
 
-        ResultValidation = "The resulting value was expected to be on or after {0}, but {1} was found.";
+        ResultValidation =
+            "The resulting value was expected to be on or after {0}, but {1} was found.";
         return false;
     }
 

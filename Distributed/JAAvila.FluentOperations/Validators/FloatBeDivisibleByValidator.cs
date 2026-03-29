@@ -5,13 +5,15 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the float value is evenly divisible by the specified divisor.
 /// </summary>
-internal class FloatBeDivisibleByValidator(PrincipalChain<float> chain, float divisor) : IValidator, IRuleDescriptor
+internal class FloatBeDivisibleByValidator(PrincipalChain<float> chain, float divisor)
+    : IValidator,
+        IRuleDescriptor
 {
     public static FloatBeDivisibleByValidator New(PrincipalChain<float> chain, float divisor) =>
         new(chain, divisor);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Float.BeDivisibleBy";
     string IRuleDescriptor.OperationName => "BeDivisibleBy";
     Type IRuleDescriptor.SubjectType => typeof(float);

@@ -5,13 +5,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable datetime value has the expected day of the month.
 /// </summary>
-internal class NullableDateTimeHaveDayValidator(PrincipalChain<DateTime?> chain, int expectedDay) : IValidator, IRuleDescriptor
+internal class NullableDateTimeHaveDayValidator(PrincipalChain<DateTime?> chain, int expectedDay)
+    : IValidator,
+        IRuleDescriptor
 {
-    public static NullableDateTimeHaveDayValidator New(PrincipalChain<DateTime?> chain, int expectedDay) =>
-        new(chain, expectedDay);
+    public static NullableDateTimeHaveDayValidator New(
+        PrincipalChain<DateTime?> chain,
+        int expectedDay
+    ) => new(chain, expectedDay);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableDateTime.HaveDay";
     string IRuleDescriptor.OperationName => "HaveDay";
     Type IRuleDescriptor.SubjectType => typeof(DateTime?);

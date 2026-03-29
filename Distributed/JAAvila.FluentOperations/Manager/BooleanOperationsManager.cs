@@ -54,7 +54,8 @@ public class BooleanOperationsManager : ITestManager<BooleanOperationsManager, b
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BooleanFormatter.Format(PrincipalChain.GetValue()),
                             BooleanFormatter.Format(expected)
                         )
@@ -85,7 +86,11 @@ public class BooleanOperationsManager : ITestManager<BooleanOperationsManager, b
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.MessageKey, operation.ResultValidation, BooleanFormatter.Format(expected))
+                        .WithResult(
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            BooleanFormatter.Format(expected)
+                        )
                         .WithReason(reason?.ToString())
             )
             .Execute();
@@ -134,7 +139,7 @@ public class BooleanOperationsManager : ITestManager<BooleanOperationsManager, b
     }
 
     /// <summary>
-    /// Asserts that all of the provided <paramref name="booleans"/> are <c>true</c>.
+    /// Asserts that all the provided <paramref name="booleans"/> are <c>true</c>.
     /// </summary>
     /// <param name="booleans">The boolean values to check.</param>
     /// <returns>The current manager instance for method chaining.</returns>
@@ -181,7 +186,7 @@ public class BooleanOperationsManager : ITestManager<BooleanOperationsManager, b
     }
 
     /// <summary>
-    /// Asserts that all of the provided <paramref name="booleans"/> are <c>false</c>.
+    /// Asserts that all the provided <paramref name="booleans"/> are <c>false</c>.
     /// </summary>
     /// <param name="booleans">The boolean values to check.</param>
     /// <returns>The current manager instance for method chaining.</returns>
@@ -316,7 +321,9 @@ public class BooleanOperationsManager : ITestManager<BooleanOperationsManager, b
                 _ =>
                     (
                         type is null,
-                        Fail.New($"The {nameof(BeOfType)} operation failed because the expected type was <null>.")
+                        Fail.New(
+                            $"The {nameof(BeOfType)} operation failed because the expected type was <null>."
+                        )
                     )
             )
             .Execute();
@@ -338,7 +345,9 @@ public class BooleanOperationsManager : ITestManager<BooleanOperationsManager, b
                 _ =>
                     (
                         type is null,
-                        Fail.New($"The {nameof(NotBeOfType)} operation failed because the expected type was <null>.")
+                        Fail.New(
+                            $"The {nameof(NotBeOfType)} operation failed because the expected type was <null>."
+                        )
                     )
             )
             .Execute();

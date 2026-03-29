@@ -7,15 +7,16 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the nullable sbyte value is not one of the specified disallowed values.
 /// </summary>
 internal class NullableSByteNotBeOneOfValidator(PrincipalChain<sbyte?> chain, sbyte[] values)
-    : IValidator, IRuleDescriptor
+    : IValidator,
+        IRuleDescriptor
 {
     public static NullableSByteNotBeOneOfValidator New(
         PrincipalChain<sbyte?> chain,
         sbyte[] values
     ) => new(chain, values);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableSByte.NotBeOneOf";
     string IRuleDescriptor.OperationName => "NotBeOneOf";
     Type IRuleDescriptor.SubjectType => typeof(sbyte?);

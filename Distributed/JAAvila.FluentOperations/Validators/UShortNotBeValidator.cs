@@ -5,13 +5,15 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the ushort value does not equal the expected value.
 /// </summary>
-internal class UShortNotBeValidator(PrincipalChain<ushort> chain, ushort expected) : IValidator, IRuleDescriptor
+internal class UShortNotBeValidator(PrincipalChain<ushort> chain, ushort expected)
+    : IValidator,
+        IRuleDescriptor
 {
     public static UShortNotBeValidator New(PrincipalChain<ushort> chain, ushort expected) =>
         new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "UShort.NotBe";
     string IRuleDescriptor.OperationName => "NotBe";
     Type IRuleDescriptor.SubjectType => typeof(ushort);

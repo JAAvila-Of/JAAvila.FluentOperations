@@ -7,11 +7,10 @@ namespace JAAvila.FluentOperations.Validators;
 /// </summary>
 internal class LongBeNegativeValidator(PrincipalChain<long> chain) : IValidator, IRuleDescriptor
 {
-    public static LongBeNegativeValidator New(PrincipalChain<long> chain) =>
-        new(chain);
+    public static LongBeNegativeValidator New(PrincipalChain<long> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Long.BeNegative";
     string IRuleDescriptor.OperationName => "BeNegative";
     Type IRuleDescriptor.SubjectType => typeof(long);
