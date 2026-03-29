@@ -248,6 +248,16 @@ internal class PropertyProxy<TProp, TManager>(
             return (TManager)(object)new UriOperationsManager(null, propertyName);
         }
 
+        if (typeof(TManager) == typeof(TypeOperationsManager))
+        {
+            return (TManager)(object)new TypeOperationsManager(null, propertyName);
+        }
+
+        if (typeof(TManager) == typeof(AssemblyOperationsManager))
+        {
+            return (TManager)(object)new AssemblyOperationsManager(null, propertyName);
+        }
+
         if (typeof(TManager) == typeof(DateTimeOffsetOperationsManager))
         {
             return (TManager)(object)new DateTimeOffsetOperationsManager(default, propertyName);

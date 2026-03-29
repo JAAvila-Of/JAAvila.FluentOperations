@@ -20,6 +20,7 @@ A fluent validation and testing library for .NET that unifies inline assertions 
 | `JAAvila.FluentOperations.OpenApi` | Swashbuckle schema filter that enriches OpenAPI schemas with blueprint constraints |
 | `JAAvila.FluentOperations.Grpc` | gRPC server interceptor for automatic request validation |
 | `JAAvila.FluentOperations.DataAnnotations` | DataAnnotations bridge — generate blueprint rules from attributes |
+| `JAAvila.FluentOperations.Architecture` | Deep dependency detection via Mono.Cecil (opt-in IL-level scanning for architecture tests) |
 
 ```bash
 dotnet add package JAAvila.FluentOperations
@@ -96,6 +97,8 @@ if (!report.IsValid)
 | **Special** | `Guid`, `Guid?`, `Enum<T>`, `Uri?` | Be, BeEmpty, BeDefined, HaveFlag, HaveScheme, BeAbsolute... |
 | **Object** | `object?` | BeNull, NotBeNull, BeSameAs, BeOfType, BeAssignableTo, BeEquivalentTo (with builder options) |
 | **Action** | `Action`, `Func<Task>` | Throw, ThrowExactly, NotThrow, NotThrowAfter, CompleteWithinAsync |
+| **Type** | `Type` | 77 ops: BeClass, BeInterface, BeAbstract, BeSealed, BeStatic, BePublic, BeInternal, BeGeneric, BeRecord, BeValueType, BeEnum, BeNested, BeImmutable, BeInNamespace, ImplementInterface, DeriveFrom, HaveAttribute, HaveConstructorWithParameters, HavePropertyOfType, HaveMethodReturning, HaveMethodOverride, HaveMaxPublicMethods, HaveMaxFields, NotHaveAsyncVoidMethods, HaveDependencyOn, OnlyHaveDependenciesOn, HaveDependencyOnType, MatchName, MatchNamespace... |
+| **Assembly** | `Assembly` | 8 ops: ContainType, ContainTypeMatching, ReferenceAssembly, NotReferenceAssembly, HaveVersion, HaveMinimumVersion, HavePublicKey |
 
 ## Blueprint Features
 
@@ -375,6 +378,92 @@ using (new AssertionScope())
 var report = blueprint.Check(user);
 ```
 
+## Architecture Testing
+
+Validate code structure, naming conventions, dependency rules, and design constraints at test time.
+
+### Type Assertions
+
+```csharp
+using JAAvila.FluentOperations;
+
+// Structural rules
+typeof(MyService).Test()
+    .BeClass()
+    .BePublic()
+    .NotBeAbstract()
+    .ImplementInterface<IMyService>()
+    .NotHaveAsyncVoidMethods();
+
+// Naming conventions
+typeof(UserRepository).Test()
+    .HaveNameEndingWith("Repository")
+    .BeInNamespaceStartingWith("MyApp.Infrastructure");
+
+// Dependency rules
+typeof(DomainEntity).Test()
+    .NotHaveDependencyOn("MyApp.Infrastructure")
+    .NotHaveDependencyOn("Microsoft.EntityFrameworkCore")
+    .OnlyHaveDependenciesOn("MyApp.Domain", "MyApp.Shared");
+
+// Constructor and member rules
+typeof(MyController).Test()
+    .HavePublicConstructor()
+    .HaveMaxPublicMethods(10)
+    .HaveMaxFields(5);
+```
+
+### Assembly Assertions
+
+```csharp
+typeof(MyService).Assembly.Test()
+    .ContainType<MyService>()
+    .ContainTypeMatching(@".*Controller$")
+    .NotReferenceAssembly("Newtonsoft.Json")
+    .HaveMinimumVersion(new Version(1, 0));
+```
+
+### Batch Type Selection
+
+Use the `Types` utility to select and filter types, then validate each one:
+
+```csharp
+using JAAvila.FluentOperations.Architecture;
+
+// All services in an assembly must implement their interface
+var serviceTypes = Types.InAssembly(typeof(MyService).Assembly)
+    .That(t => t.IsClass && t.Name.EndsWith("Service"));
+
+foreach (var type in serviceTypes)
+    type.Test().ImplementInterface<IService>();
+
+// Domain types must not depend on infrastructure
+var domainTypes = Types.InNamespace("MyApp.Domain");
+
+foreach (var type in domainTypes)
+    type.Test().NotHaveDependencyOn("MyApp.Infrastructure");
+```
+
+### Deep Dependency Scanning (Optional)
+
+For IL-level dependency detection (method bodies, lambdas, async state machines), install the optional package:
+
+```bash
+dotnet add package JAAvila.FluentOperations.Architecture
+```
+
+```csharp
+using JAAvila.FluentOperations.Architecture;
+
+[OneTimeSetUp]
+public void SetUp() => ArchitectureScannerConfig.UseCecilDependencyScanning();
+
+[OneTimeTearDown]
+public void TearDown() => ArchitectureScannerConfig.Reset();
+```
+
+See [API Reference — Architecture Testing](./docs/API.md#architecture-testing) for the complete list of 85+ operations.
+
 ## Framework Integration
 
 ### ASP.NET Core
@@ -593,9 +682,9 @@ FluentOperationsConfig.Configure(c =>
 ## Project Stats
 
 - **6528+ tests** across NUnit test projects
-- **730+ validators** covering 20+ data types
-- **37+ operation managers** with fluent chaining
-- **9 NuGet packages** (core + integrations + analyzers + tooling)
+- **800+ validators** covering 20+ data types including architecture testing
+- **39+ operation managers** with fluent chaining
+- **10 NuGet packages** (core + integrations + analyzers + architecture + tooling)
 - **Performance optimized** with lazy initialization, caching, and zero-allocation patterns
 
 ## License
