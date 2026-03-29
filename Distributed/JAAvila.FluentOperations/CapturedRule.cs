@@ -20,7 +20,7 @@ internal class CapturedRule(
 ) : IQualityRule, IModelAwareRule
 {
     /// <summary>Transient model reference — set per-Check() call, never persisted across evaluations.</summary>
-    private object? _currentModel;
+    private readonly AsyncLocal<object?> _currentModel = new();
 
     /// <summary>Gets the name of the model property this rule is bound to.</summary>
     public string PropertyName { get; } = propertyName;
@@ -39,7 +39,7 @@ internal class CapturedRule(
 
     void IModelAwareRule.SetModelInstance(object model)
     {
-        _currentModel = model;
+        _currentModel.Value = model;
 
         // Propagate to the inner rule if it also requires model access
         if (Inner is IModelAwareRule modelAware)
@@ -63,9 +63,9 @@ internal class CapturedRule(
     public string? GetCustomMessage()
     {
         // Priority: MessageFactory > CustomMessage > Inner.GetCustomMessage()
-        if (Config?.MessageFactory is { } factory && _currentModel is not null)
+        if (Config?.MessageFactory is { } factory && _currentModel.Value is not null)
         {
-            return factory(_currentModel);
+            return factory(_currentModel.Value);
         }
 
         return Config?.CustomMessage ?? Inner.GetCustomMessage();

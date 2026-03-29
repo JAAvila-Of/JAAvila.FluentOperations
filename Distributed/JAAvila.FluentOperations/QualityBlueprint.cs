@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Linq.Expressions;
 using JAAvila.FluentOperations.Common;
 using JAAvila.FluentOperations.Config;
@@ -89,7 +90,6 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
     private readonly Dictionary<string, Func<object, bool>?> _forEachFilters = new();
 
     private readonly List<IQualityRule> _capturedDuringDefinition = [];
-    private readonly List<object> _conditionGroups = []; // ConditionGroup<T> instances for reset
     private Type? _currentScenario;
     private string? _currentRuleSet;
 
@@ -305,17 +305,6 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
         }
     }
 
-    private void ResetConditionGroups()
-    {
-        foreach (var groupObj in _conditionGroups)
-        {
-            if (groupObj is ConditionGroup<T> group)
-            {
-                group.Reset();
-            }
-        }
-    }
-
     /// <summary>
     /// Returns <see langword="true"/> when the definition should be skipped given the active
     /// scenario and the requested rule sets.
@@ -443,7 +432,7 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
             var innerRule = rule is CapturedRule cr ? cr.Inner : rule;
 
             // Inject a root model for model-aware rules (dynamic messages via MessageFactory,
-            // cross-property conditions, etc.). CapturedRule.SetModelInstance propagates to inner.
+            // cross-property conditions, etc.). CapturedRule.SetModelInstance propagates to the inner.
             if (rule is IModelAwareRule modelAware)
             {
                 modelAware.SetModelInstance(instance);
@@ -552,7 +541,7 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
             var innerRule = rule is CapturedRule cr ? cr.Inner : rule;
 
             // Inject a root model for model-aware rules (dynamic messages via MessageFactory,
-            // cross-property conditions, etc.). CapturedRule.SetModelInstance propagates to inner.
+            // cross-property conditions, etc.). CapturedRule.SetModelInstance propagates to the inner.
             if (rule is IModelAwareRule modelAware)
             {
                 modelAware.SetModelInstance(instance);
@@ -733,7 +722,8 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
             telemetryEnabled && telemetryConfig!.TrackBlueprintExecutionTime
         );
 
-        ResetConditionGroups();
+        ConditionCacheContext.Current = new ConcurrentDictionary<object, bool>();
+        ConditionCacheContext.ModelInstance = instance;
         var report = new QualityReport();
 
         using (
@@ -1187,7 +1177,8 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
             telemetryEnabled && telemetryConfig!.TrackBlueprintExecutionTime
         );
 
-        ResetConditionGroups();
+        ConditionCacheContext.Current = new ConcurrentDictionary<object, bool>();
+        ConditionCacheContext.ModelInstance = instance;
         var report = new QualityReport();
 
         using (
