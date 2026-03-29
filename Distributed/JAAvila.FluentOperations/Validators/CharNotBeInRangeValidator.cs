@@ -6,13 +6,14 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the char value is outside the specified inclusive range.
 /// </summary>
 internal class CharNotBeInRangeValidator(PrincipalChain<char> chain, char min, char max)
-    : IValidator, IRuleDescriptor
+    : IValidator,
+        IRuleDescriptor
 {
     public static CharNotBeInRangeValidator New(PrincipalChain<char> chain, char min, char max) =>
         new(chain, min, max);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Char.NotBeInRange";
     string IRuleDescriptor.OperationName => "NotBeInRange";
     Type IRuleDescriptor.SubjectType => typeof(char);

@@ -7,11 +7,10 @@ namespace JAAvila.FluentOperations.Validators;
 /// </summary>
 internal class ByteBeEvenValidator(PrincipalChain<byte> chain) : IValidator, IRuleDescriptor
 {
-    public static ByteBeEvenValidator New(PrincipalChain<byte> chain) =>
-        new(chain);
+    public static ByteBeEvenValidator New(PrincipalChain<byte> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Byte.BeEven";
     string IRuleDescriptor.OperationName => "BeEven";
     Type IRuleDescriptor.SubjectType => typeof(byte);

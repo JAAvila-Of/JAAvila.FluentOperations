@@ -5,13 +5,18 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the action completed in less than the specified duration.
 /// </summary>
-internal class ActionStatsTakeShorterThanValidator(PrincipalChain<Model.ActionStats?> chain, TimeSpan maxDuration) : IValidator, IRuleDescriptor
+internal class ActionStatsTakeShorterThanValidator(
+    PrincipalChain<Model.ActionStats?> chain,
+    TimeSpan maxDuration
+) : IValidator, IRuleDescriptor
 {
-    public static ActionStatsTakeShorterThanValidator New(PrincipalChain<Model.ActionStats?> chain, TimeSpan maxDuration) =>
-        new(chain, maxDuration);
+    public static ActionStatsTakeShorterThanValidator New(
+        PrincipalChain<Model.ActionStats?> chain,
+        TimeSpan maxDuration
+    ) => new(chain, maxDuration);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "ActionStats.TakeShorterThan";
     string IRuleDescriptor.OperationName => "TakeShorterThan";
     Type IRuleDescriptor.SubjectType => typeof(Model.ActionStats);

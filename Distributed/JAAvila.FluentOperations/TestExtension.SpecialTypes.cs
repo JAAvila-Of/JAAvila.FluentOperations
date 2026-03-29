@@ -1,4 +1,5 @@
 using System.Diagnostics.Contracts;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using JAAvila.FluentOperations.Manager;
 
@@ -65,8 +66,8 @@ public static partial class TestExtension
     /// </param>
     /// <returns>An <see cref="EnumOperationsManager{T}"/> for chaining enum-specific assertions.</returns>
     /// <remarks>
-    /// Use <c>TestEnum&lt;T&gt;()</c> instead of <c>Test()</c> for enum values to avoid ambiguity
-    /// with the <c>object?</c> overload.
+    /// Use <c>TestEnum&lt;T&gt;()</c> Instead of <c>Test()</c> for enum values to avoid ambiguity
+    /// with the <c>object?</c> Overload.
     /// </remarks>
     /// <example>
     /// <code>
@@ -126,5 +127,53 @@ public static partial class TestExtension
     )
     {
         return new UriOperationsManager(value, callerName);
+    }
+
+    /// <summary>
+    /// Begins a fluent assertion chain for the specified <see cref="Type"/> value.
+    /// </summary>
+    /// <param name="value">The Type value to test. Can be null.</param>
+    /// <param name="callerName">
+    /// Automatically captured expression name of the variable being tested.
+    /// Used in failure messages for contextual reporting.
+    /// </param>
+    /// <returns>A <see cref="TypeOperationsManager"/> for chaining Type-specific assertions.</returns>
+    /// <example>
+    /// <code>
+    /// typeof(MyService).Test().BeClass().BeSealed().BePublic();
+    /// </code>
+    /// </example>
+    [Pure]
+    public static TypeOperationsManager Test(
+        this Type? value,
+        [CallerArgumentExpression("value")] string callerName = ""
+    )
+    {
+        return new TypeOperationsManager(value, callerName);
+    }
+
+    /// <summary>
+    /// Begins a fluent assertion chain for the specified <see cref="Assembly"/> value.
+    /// </summary>
+    /// <param name="value">The Assembly value to test. Can be null.</param>
+    /// <param name="callerName">
+    /// Automatically captured expression name of the variable being tested.
+    /// Used in failure messages for contextual reporting.
+    /// </param>
+    /// <returns>An <see cref="AssemblyOperationsManager"/> for chaining Assembly-specific assertions.</returns>
+    /// <example>
+    /// <code>
+    /// typeof(MyService).Assembly.Test()
+    ///     .ContainType&lt;MyService&gt;()
+    ///     .NotReferenceAssembly("Newtonsoft.Json");
+    /// </code>
+    /// </example>
+    [Pure]
+    public static AssemblyOperationsManager Test(
+        this Assembly? value,
+        [CallerArgumentExpression("value")] string callerName = ""
+    )
+    {
+        return new AssemblyOperationsManager(value, callerName);
     }
 }

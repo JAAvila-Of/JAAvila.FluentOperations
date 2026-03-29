@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <PackageIcon>icon.png</PackageIcon>
+    <Authors>JAAvila</Authors>
+    <Description>Mono.Cecil-powered IL-level dependency scanning for JAAvila.FluentOperations architecture testing. Enhances HaveDependencyOn and OnlyHaveDependenciesOn with deep method body analysis: local variables, new calls, typeof(), casts, method calls, field access, and exception handlers.</Description>
+    <PackageId>JAAvila.FluentOperations.Architecture</PackageId>
+    <PackageTags>FluentOperations;Architecture;ArchitectureTests;Mono.Cecil;IL;DependencyScanning</PackageTags>
+    <PackageProjectUrl>https://github.com/JAAvila-Of/JAAvila.FluentOperations</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/JAAvila-Of/JAAvila.FluentOperations</RepositoryUrl>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Copyright>Copyright (C) $([System.DateTime]::Now.Year) JAAvila</Copyright>
+    <MinVerTagPrefix>arch-</MinVerTagPrefix>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Mono.Cecil" Version="0.11.6" />
+    <PackageReference Include="MinVer" Version="6.0.0" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\JAAvila.FluentOperations\JAAvila.FluentOperations.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="../../icon.png" Pack="true" Visible="false" PackagePath="" />
+    <None Include="README.md" Pack="true" PackagePath=""/>
+  </ItemGroup>
+
+  <Target Name="SetAssemblyVersion" AfterTargets="MinVer">
+    <PropertyGroup>
+      <AssemblyVersion>$(MinVerMajor).$(MinVerMinor).$(MinVerPatch)</AssemblyVersion>
+    </PropertyGroup>
+  </Target>
+
+</Project>

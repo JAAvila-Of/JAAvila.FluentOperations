@@ -14,7 +14,7 @@ namespace JAAvila.FluentOperations.Contract;
 public interface IRuleDescriptor
 {
     /// <summary>
-    /// The operation name as registered in the blueprint introspection API.
+    /// The operation name is registered in the blueprint introspection API.
     /// Examples: <c>"NotBeNull"</c>, <c>"HaveMinLength"</c>, <c>"BeEmail"</c>.
     /// </summary>
     string OperationName { get; }

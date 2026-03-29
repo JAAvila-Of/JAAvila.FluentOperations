@@ -9,8 +9,8 @@ internal class NullableUIntBeOddValidator(PrincipalChain<uint?> chain) : IValida
 {
     public static NullableUIntBeOddValidator New(PrincipalChain<uint?> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableUInt.BeOdd";
     string IRuleDescriptor.OperationName => "BeOdd";
     Type IRuleDescriptor.SubjectType => typeof(uint?);

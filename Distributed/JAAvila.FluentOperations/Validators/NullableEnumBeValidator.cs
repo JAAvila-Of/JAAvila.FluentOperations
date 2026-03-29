@@ -5,19 +5,21 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable enum value equals the expected value.
 /// </summary>
-internal class NullableEnumBeValidator<T>(PrincipalChain<T?> chain, T? expected) : IValidator, IRuleDescriptor
+internal class NullableEnumBeValidator<T>(PrincipalChain<T?> chain, T? expected)
+    : IValidator,
+        IRuleDescriptor
     where T : struct, Enum
 {
     public static NullableEnumBeValidator<T> New(PrincipalChain<T?> chain, T? expected) =>
         new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableEnum.Be";
     string IRuleDescriptor.OperationName => "Be";
     Type IRuleDescriptor.SubjectType => typeof(T?);
     IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
-        new Dictionary<string, object> { ["value"] = expected };
+        new Dictionary<string, object> { ["value"] = expected! };
 
     public bool Validate()
     {

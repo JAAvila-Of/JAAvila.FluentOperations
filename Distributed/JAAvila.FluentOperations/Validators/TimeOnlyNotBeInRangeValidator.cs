@@ -5,13 +5,20 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the timeonly value is outside the specified inclusive range.
 /// </summary>
-internal class TimeOnlyNotBeInRangeValidator(PrincipalChain<TimeOnly> chain, TimeOnly min, TimeOnly max) : IValidator, IRuleDescriptor
+internal class TimeOnlyNotBeInRangeValidator(
+    PrincipalChain<TimeOnly> chain,
+    TimeOnly min,
+    TimeOnly max
+) : IValidator, IRuleDescriptor
 {
-    public static TimeOnlyNotBeInRangeValidator New(PrincipalChain<TimeOnly> chain, TimeOnly min, TimeOnly max) =>
-        new(chain, min, max);
+    public static TimeOnlyNotBeInRangeValidator New(
+        PrincipalChain<TimeOnly> chain,
+        TimeOnly min,
+        TimeOnly max
+    ) => new(chain, min, max);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "TimeOnly.NotBeInRange";
     string IRuleDescriptor.OperationName => "NotBeInRange";
     Type IRuleDescriptor.SubjectType => typeof(TimeOnly);
@@ -25,7 +32,8 @@ internal class TimeOnlyNotBeInRangeValidator(PrincipalChain<TimeOnly> chain, Tim
             return true;
         }
 
-        ResultValidation = "The resulting value was expected not to be in range [{0}, {1}], but {2} was found.";
+        ResultValidation =
+            "The resulting value was expected not to be in range [{0}, {1}], but {2} was found.";
         return false;
     }
 

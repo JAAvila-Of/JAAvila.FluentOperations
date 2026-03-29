@@ -16,8 +16,8 @@ internal class CollectionNotContainAnyValidator<T>(
         params T[] expected
     ) => new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Collection.NotContainAny";
     string IRuleDescriptor.OperationName => "NotContainAny";
     Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);

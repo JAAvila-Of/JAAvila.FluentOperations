@@ -15,16 +15,16 @@ internal class CollectionContainWithOccurrenceValidator<T>(
     public static CollectionContainWithOccurrenceValidator<T> New(
         PrincipalChain<IEnumerable<T>> chain,
         T item,
-        OccurrenceConstraint constraint) =>
-        new(chain, item, constraint);
+        OccurrenceConstraint constraint
+    ) => new(chain, item, constraint);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Collection.Contain";
     string IRuleDescriptor.OperationName => "Contain";
     Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);
     IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
-        new Dictionary<string, object> { ["value"] = item };
+        new Dictionary<string, object> { ["value"] = item! };
 
     public bool Validate()
     {

@@ -5,12 +5,14 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the string contains only alphabetic characters.
 /// </summary>
-internal class StringBeAlphabeticValidator(PrincipalChain<string?> chain) : IValidator, IRuleDescriptor
+internal class StringBeAlphabeticValidator(PrincipalChain<string?> chain)
+    : IValidator,
+        IRuleDescriptor
 {
     public static StringBeAlphabeticValidator New(PrincipalChain<string?> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "String.BeAlphabetic";
     string IRuleDescriptor.OperationName => "BeAlphabetic";
     Type IRuleDescriptor.SubjectType => typeof(string);

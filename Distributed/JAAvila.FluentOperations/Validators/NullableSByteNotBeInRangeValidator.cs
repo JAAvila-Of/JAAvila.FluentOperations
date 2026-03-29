@@ -5,8 +5,11 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable sbyte value is outside the specified inclusive range.
 /// </summary>
-internal class NullableSByteNotBeInRangeValidator(PrincipalChain<sbyte?> chain, sbyte min, sbyte max)
-    : IValidator, IRuleDescriptor
+internal class NullableSByteNotBeInRangeValidator(
+    PrincipalChain<sbyte?> chain,
+    sbyte min,
+    sbyte max
+) : IValidator, IRuleDescriptor
 {
     public static NullableSByteNotBeInRangeValidator New(
         PrincipalChain<sbyte?> chain,
@@ -14,8 +17,8 @@ internal class NullableSByteNotBeInRangeValidator(PrincipalChain<sbyte?> chain, 
         sbyte max
     ) => new(chain, min, max);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableSByte.NotBeInRange";
     string IRuleDescriptor.OperationName => "NotBeInRange";
     Type IRuleDescriptor.SubjectType => typeof(sbyte?);

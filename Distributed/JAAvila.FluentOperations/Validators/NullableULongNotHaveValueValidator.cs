@@ -5,13 +5,15 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable ulong does not have a value (is null).
 /// </summary>
-internal class NullableULongNotHaveValueValidator(PrincipalChain<ulong?> chain) : IValidator, IRuleDescriptor
+internal class NullableULongNotHaveValueValidator(PrincipalChain<ulong?> chain)
+    : IValidator,
+        IRuleDescriptor
 {
     public static NullableULongNotHaveValueValidator New(PrincipalChain<ulong?> chain) =>
         new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableULong.NotHaveValue";
     string IRuleDescriptor.OperationName => "NotHaveValue";
     Type IRuleDescriptor.SubjectType => typeof(ulong?);

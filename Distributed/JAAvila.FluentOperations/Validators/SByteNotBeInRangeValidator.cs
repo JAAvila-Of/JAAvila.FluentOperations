@@ -6,13 +6,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the sbyte value is outside the specified inclusive range.
 /// </summary>
 internal class SByteNotBeInRangeValidator(PrincipalChain<sbyte> chain, sbyte min, sbyte max)
-    : IValidator, IRuleDescriptor
+    : IValidator,
+        IRuleDescriptor
 {
-    public static SByteNotBeInRangeValidator New(PrincipalChain<sbyte> chain, sbyte min, sbyte max) =>
-        new(chain, min, max);
+    public static SByteNotBeInRangeValidator New(
+        PrincipalChain<sbyte> chain,
+        sbyte min,
+        sbyte max
+    ) => new(chain, min, max);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "SByte.NotBeInRange";
     string IRuleDescriptor.OperationName => "NotBeInRange";
     Type IRuleDescriptor.SubjectType => typeof(sbyte);

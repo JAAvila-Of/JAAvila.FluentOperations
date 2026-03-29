@@ -5,13 +5,15 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the float value does not equal the expected value.
 /// </summary>
-internal class FloatNotBeValidator(PrincipalChain<float> chain, float expected) : IValidator, IRuleDescriptor
+internal class FloatNotBeValidator(PrincipalChain<float> chain, float expected)
+    : IValidator,
+        IRuleDescriptor
 {
     public static FloatNotBeValidator New(PrincipalChain<float> chain, float expected) =>
         new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Float.NotBe";
     string IRuleDescriptor.OperationName => "NotBe";
     Type IRuleDescriptor.SubjectType => typeof(float);

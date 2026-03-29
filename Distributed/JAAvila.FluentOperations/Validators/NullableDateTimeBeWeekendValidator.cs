@@ -5,13 +5,15 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable datetime value falls on a weekend (Saturday or Sunday).
 /// </summary>
-internal class NullableDateTimeBeWeekendValidator(PrincipalChain<DateTime?> chain) : IValidator, IRuleDescriptor
+internal class NullableDateTimeBeWeekendValidator(PrincipalChain<DateTime?> chain)
+    : IValidator,
+        IRuleDescriptor
 {
     public static NullableDateTimeBeWeekendValidator New(PrincipalChain<DateTime?> chain) =>
         new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableDateTime.BeWeekend";
     string IRuleDescriptor.OperationName => "BeWeekend";
     Type IRuleDescriptor.SubjectType => typeof(DateTime?);
@@ -27,7 +29,8 @@ internal class NullableDateTimeBeWeekendValidator(PrincipalChain<DateTime?> chai
             return true;
         }
 
-        ResultValidation = "The resulting value was expected to be a weekend day, but {0} was found.";
+        ResultValidation =
+            "The resulting value was expected to be a weekend day, but {0} was found.";
         return false;
     }
 

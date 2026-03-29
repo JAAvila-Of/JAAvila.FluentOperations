@@ -6,7 +6,8 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the nullable long value is within the specified inclusive range.
 /// </summary>
 internal class NullableLongBeInRangeValidator(PrincipalChain<long?> chain, long min, long max)
-    : IValidator, IRuleDescriptor
+    : IValidator,
+        IRuleDescriptor
 {
     public static NullableLongBeInRangeValidator New(
         PrincipalChain<long?> chain,
@@ -14,8 +15,8 @@ internal class NullableLongBeInRangeValidator(PrincipalChain<long?> chain, long 
         long max
     ) => new(chain, min, max);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableLong.BeInRange";
     string IRuleDescriptor.OperationName => "BeInRange";
     Type IRuleDescriptor.SubjectType => typeof(long?);

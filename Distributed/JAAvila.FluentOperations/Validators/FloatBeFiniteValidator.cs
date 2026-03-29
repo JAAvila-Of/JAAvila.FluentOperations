@@ -9,8 +9,8 @@ internal class FloatBeFiniteValidator(PrincipalChain<float> chain) : IValidator,
 {
     public static FloatBeFiniteValidator New(PrincipalChain<float> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Float.BeFinite";
     string IRuleDescriptor.OperationName => "BeFinite";
     Type IRuleDescriptor.SubjectType => typeof(float);

@@ -10,7 +10,7 @@ using JAAvila.FluentOperations.Model;
 namespace JAAvila.FluentOperations.Handler;
 
 /// <summary>
-/// Builds structured failure message strings by accumulating labelled template parts
+/// Builds structured failure message strings by accumulating labeled template parts
 /// (subject, expected value, actual result, failure reason, rule name, severity, error code, etc.)
 /// and concatenating them into a single formatted string via the <see cref="Result"/> property.
 /// When a <see cref="TransactionalOperations"/> scope is active, the transaction name is
@@ -20,7 +20,7 @@ internal class TemplateHandler
 {
     //private const string Result = "";
     private readonly List<KeyValuePair<string, Template>> _templates = [];
-    private readonly string _default = "the operation has failed";
+    //private readonly string _default = "the operation has failed";
 
     /// <summary>
     /// Appends a reason part to the message. No-ops when <paramref name="reason"/> is <c>null</c>.
@@ -196,6 +196,7 @@ internal class TemplateHandler
                 new KeyValuePair<string, Template>(TemplatePart.ErrorCode, Template.New(errorCode))
             );
         }
+        
         return this;
     }
 
@@ -210,19 +211,26 @@ internal class TemplateHandler
                 )
             );
         }
+        
         return this;
     }
 
     public TemplateHandler WithStringDiff(string? expected, string? actual)
     {
         var config = GlobalConfig.GetStringConfig();
-        if (!config.EnableStringDiff) return this;
+        
+        if (!config.EnableStringDiff)
+        {
+            return this;
+        }
 
         var diff = StringDiffFormatter.FormatDiff(expected, actual, config.StringDiffContextChars, config.StringDiffMaxLength);
+        
         if (diff is not null)
         {
             _templates.Add(new KeyValuePair<string, Template>(TemplatePart.Diff, Template.New(diff)));
         }
+        
         return this;
     }
 

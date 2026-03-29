@@ -7,11 +7,10 @@ namespace JAAvila.FluentOperations.Validators;
 /// </summary>
 internal class ShortBeNegativeValidator(PrincipalChain<short> chain) : IValidator, IRuleDescriptor
 {
-    public static ShortBeNegativeValidator New(PrincipalChain<short> chain) =>
-        new(chain);
+    public static ShortBeNegativeValidator New(PrincipalChain<short> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Short.BeNegative";
     string IRuleDescriptor.OperationName => "BeNegative";
     Type IRuleDescriptor.SubjectType => typeof(short);

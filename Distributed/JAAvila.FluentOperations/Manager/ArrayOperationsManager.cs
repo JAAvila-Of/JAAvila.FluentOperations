@@ -20,7 +20,8 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
 {
     /// <inheritdoc />
     public PrincipalChain<IEnumerable<T>> PrincipalChain { get; }
-    private readonly T[]? _array;
+
+    //private readonly T[]? _array;
 
     /// <summary>
     /// Initializes a new instance for testing the specified array.
@@ -29,8 +30,8 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
     /// <param name="caller">The caller expression name, captured automatically.</param>
     public ArrayOperationsManager(T[] value, string caller)
     {
-        _array = value;
-        PrincipalChain = PrincipalChain<IEnumerable<T>>.Get(_array, caller);
+        //_array = value;
+        PrincipalChain = PrincipalChain<IEnumerable<T>>.Get(value, caller);
         GlobalConfig.Initialize();
     }
 
@@ -54,7 +55,8 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -112,18 +114,17 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expected)
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
-                        Fail.New(
-                            $"The {nameof(Be)} operation failed because the array was null."
-                        )
+                        m.PrincipalChain.GetValue().IsNull(),
+                        Fail.New($"The {nameof(Be)} operation failed because the array was null.")
                     )
             )
             .Execute();
@@ -132,7 +133,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
     }
 
     /// <summary>
-    /// Asserts that the array is not the same reference as <paramref name="expected"/>.
+    /// Asserts that the array is different reference as <paramref name="expected"/>.
     /// </summary>
     /// <param name="expected">The collection reference that should not match.</param>
     /// <param name="reason">An optional reason providing context for the assertion.</param>
@@ -152,15 +153,16 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expected)
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(NotBe)} operation failed because the array was null."
                         )
@@ -259,22 +261,23 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
 
         ExecutionEngine<ArrayOperationsManager<T>, IEnumerable<T>>
             .New(this)
-            .WithOperation(ArrayHaveLengthValidator<T>.New(PrincipalChain, _array, expected))
+            .WithOperation(ArrayHaveLengthValidator<T>.New(PrincipalChain, expected))
             .WithTemplate(
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             expected.ToString(),
-                            _array?.Length.ToString() ?? "null"
+                            PrincipalChain.GetValue().Count().ToString()
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(HaveLength)} operation failed because the array was null."
                         )
@@ -312,24 +315,23 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
 
         ExecutionEngine<ArrayOperationsManager<T>, IEnumerable<T>>
             .New(this)
-            .WithOperation(
-                ArrayHaveLengthGreaterThanValidator<T>.New(PrincipalChain, _array, expected)
-            )
+            .WithOperation(ArrayHaveLengthGreaterThanValidator<T>.New(PrincipalChain, expected))
             .WithTemplate(
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             expected.ToString(),
-                            _array?.Length.ToString() ?? "null"
+                            PrincipalChain.GetValue().Count().ToString()
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(HaveLengthGreaterThan)} operation failed because the array was null."
                         )
@@ -367,24 +369,23 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
 
         ExecutionEngine<ArrayOperationsManager<T>, IEnumerable<T>>
             .New(this)
-            .WithOperation(
-                ArrayHaveLengthLessThanValidator<T>.New(PrincipalChain, _array, expected)
-            )
+            .WithOperation(ArrayHaveLengthLessThanValidator<T>.New(PrincipalChain, expected))
             .WithTemplate(
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             expected.ToString(),
-                            _array?.Length.ToString() ?? "null"
+                            PrincipalChain.GetValue().Count().ToString()
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(HaveLengthLessThan)} operation failed because the array was null."
                         )
@@ -424,7 +425,8 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             PrincipalChain.GetValue().IsNull() ? "null" : "empty"
                         )
                         .WithReason(reason?.ToString())
@@ -456,13 +458,17 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.MessageKey, operation.ResultValidation, _array?.Length.ToString() ?? "null")
+                        .WithResult(
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            PrincipalChain.GetValue().Count().ToString()
+                        )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(BeEmpty)} operation failed because the array was null."
                         )
@@ -499,9 +505,9 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(NotBeEmpty)} operation failed because the array was null."
                         )
@@ -536,16 +542,17 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             expected.ToString(),
-                            _array?.Length.ToString() ?? "null"
+                            PrincipalChain.GetValue().Count().ToString()
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(HaveCount)} operation failed because the array was null."
                         )
@@ -589,16 +596,17 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             expected.ToString(),
-                            _array?.Length.ToString() ?? "null"
+                            PrincipalChain.GetValue().Count().ToString()
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(HaveCountGreaterThan)} operation failed because the array was null."
                         )
@@ -642,16 +650,17 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             expected.ToString(),
-                            _array?.Length.ToString() ?? "null"
+                            PrincipalChain.GetValue().Count().ToString()
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(HaveCountLessThan)} operation failed because the array was null."
                         )
@@ -694,13 +703,17 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.MessageKey, operation.ResultValidation, BaseFormatter.Format(item))
+                        .WithResult(
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            BaseFormatter.Format(item)
+                        )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(Contain)} operation failed because the array was null."
                         )
@@ -741,13 +754,17 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.MessageKey, operation.ResultValidation, BaseFormatter.Format(item))
+                        .WithResult(
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            BaseFormatter.Format(item)
+                        )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(Contain)} operation failed because the array was null."
                         )
@@ -791,9 +808,9 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(Contain)} operation failed because the array was null."
                         )
@@ -836,13 +853,17 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.MessageKey, operation.ResultValidation, BaseFormatter.Format(item))
+                        .WithResult(
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            BaseFormatter.Format(item)
+                        )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(NotContain)} operation failed because the array was null."
                         )
@@ -880,9 +901,9 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(NotContain)} operation failed because the array was null."
                         )
@@ -924,13 +945,17 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.MessageKey, operation.ResultValidation, _array?.Length.ToString() ?? "null")
+                        .WithResult(
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            PrincipalChain.GetValue().Count().ToString()
+                        )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(ContainSingle)} operation failed because the array was null."
                         )
@@ -956,21 +981,24 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
 
         ExecutionEngine<ArrayOperationsManager<T>, IEnumerable<T>>
             .New(this)
-            .WithOperation(CollectionContainSinglePredicateValidator<T>.New(PrincipalChain, predicate))
+            .WithOperation(
+                CollectionContainSinglePredicateValidator<T>.New(PrincipalChain, predicate)
+            )
             .WithTemplate(
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
-                            _array?.Count(predicate).ToString() ?? "0"
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            PrincipalChain.GetValue().Count(predicate).ToString()
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(ContainSingle)} operation failed because the array was null."
                         )
@@ -1000,38 +1028,45 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
     {
         T extractedValue = default!;
 
-        if (OperationUtils.CheckOperationAllowed(Operations.Collection.ExtractSingle))
+        if (!OperationUtils.CheckOperationAllowed(Operations.Collection.ExtractSingle))
         {
-            var validator = CollectionExtractSingleValidator<T>.New(PrincipalChain);
+            return new AndWhichConnector<ArrayOperationsManager<T>, T>(
+                this,
+                extractedValue,
+                PrincipalChain.GetSubject()
+            );
+        }
 
-            ExecutionEngine<ArrayOperationsManager<T>, IEnumerable<T>>
-                .New(this)
-                .WithOperation(validator)
-                .WithTemplate(
-                    (template, operation) =>
-                        template
-                            .WithSubject(PrincipalChain.GetSubject())
-                            .WithResult(
-                                operation.MessageKey, operation.ResultValidation,
-                                PrincipalChain.GetValue()?.Count().ToString() ?? "0"
-                            )
-                            .WithReason(reason?.ToString())
-                )
-                .FailIf(
-                    manager =>
-                        (
-                            manager.PrincipalChain.GetValue().IsNull(),
-                            Fail.New(
-                                $"The {nameof(ExtractSingle)} operation failed because the array was null."
-                            )
+        var validator = CollectionExtractSingleValidator<T>.New(PrincipalChain);
+
+        ExecutionEngine<ArrayOperationsManager<T>, IEnumerable<T>>
+            .New(this)
+            .WithOperation(validator)
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            PrincipalChain.GetValue().Count().ToString()
                         )
-                )
-                .Execute();
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                m =>
+                    (
+                        m.PrincipalChain.GetValue().IsNull(),
+                        Fail.New(
+                            $"The {nameof(ExtractSingle)} operation failed because the array was null."
+                        )
+                    )
+            )
+            .Execute();
 
-            if (validator.ExtractedValue is not null)
-            {
-                extractedValue = validator.ExtractedValue;
-            }
+        if (validator.ExtractedValue is not null)
+        {
+            extractedValue = validator.ExtractedValue;
         }
 
         return new AndWhichConnector<ArrayOperationsManager<T>, T>(
@@ -1054,47 +1089,54 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
     {
         T extractedValue = default!;
 
-        if (OperationUtils.CheckOperationAllowed(Operations.Collection.ExtractSingleMatch))
+        if (!OperationUtils.CheckOperationAllowed(Operations.Collection.ExtractSingleMatch))
         {
-            var validator = CollectionExtractSinglePredicateValidator<T>.New(PrincipalChain, predicate);
+            return new AndWhichConnector<ArrayOperationsManager<T>, T>(
+                this,
+                extractedValue,
+                PrincipalChain.GetSubject()
+            );
+        }
 
-            ExecutionEngine<ArrayOperationsManager<T>, IEnumerable<T>>
-                .New(this)
-                .WithOperation(validator)
-                .WithTemplate(
-                    (template, operation) =>
-                        template
-                            .WithSubject(PrincipalChain.GetSubject())
-                            .WithResult(
-                                operation.MessageKey, operation.ResultValidation,
-                                PrincipalChain.GetValue()?.Count(predicate).ToString() ?? "0"
-                            )
-                            .WithReason(reason?.ToString())
-                )
-                .FailIf(
-                    manager =>
-                        (
-                            manager.PrincipalChain.GetValue().IsNull(),
-                            Fail.New(
-                                $"The {nameof(ExtractSingle)} operation failed because the array was null."
-                            )
-                        )
-                )
-                .FailIf(
-                    _ =>
-                        (
-                            predicate is null,
-                            Fail.New(
-                                $"The {nameof(ExtractSingle)} operation failed because the predicate cannot be null."
-                            )
-                        )
-                )
-                .Execute();
+        var validator = CollectionExtractSinglePredicateValidator<T>.New(PrincipalChain, predicate);
 
-            if (validator.ExtractedValue is not null)
-            {
-                extractedValue = validator.ExtractedValue;
-            }
+        ExecutionEngine<ArrayOperationsManager<T>, IEnumerable<T>>
+            .New(this)
+            .WithOperation(validator)
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            PrincipalChain.GetValue().Count(predicate).ToString()
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                m =>
+                    (
+                        m.PrincipalChain.GetValue().IsNull(),
+                        Fail.New(
+                            $"The {nameof(ExtractSingle)} operation failed because the array was null."
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        predicate.IsNull(),
+                        Fail.New(
+                            $"The {nameof(ExtractSingle)} operation failed because the predicate cannot be null."
+                        )
+                    )
+            )
+            .Execute();
+
+        if (validator.ExtractedValue is not null)
+        {
+            extractedValue = validator.ExtractedValue;
         }
 
         return new AndWhichConnector<ArrayOperationsManager<T>, T>(
@@ -1138,15 +1180,16 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
-                            string.Join(", ", items.Select(i => BaseFormatter.Format(i)))
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            string.Join(", ", items.Select(BaseFormatter.Format))
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(ContainAll)} operation failed because the array was null."
                         )
@@ -1200,15 +1243,16 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             string.Join(", ", items.Select(BaseFormatter.Format))
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(ContainAny)} operation failed because the array was null."
                         )
@@ -1263,15 +1307,16 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             string.Join(", ", items.Select(BaseFormatter.Format))
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(NotContainAny)} operation failed because the array was null."
                         )
@@ -1292,7 +1337,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
     }
 
     /// <summary>
-    /// Asserts that the array does not contain all of the specified items simultaneously.
+    /// Asserts that the array does not contain all the specified items simultaneously.
     /// </summary>
     /// <param name="items">The items that must not all be present in the array.</param>
     /// <returns>The current manager instance for method chaining.</returns>
@@ -1302,7 +1347,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
     }
 
     /// <summary>
-    /// Asserts that the array does not contain all of the specified items simultaneously.
+    /// Asserts that the array does not contain all the specified items simultaneously.
     /// At least one of the specified items must be absent from the array.
     /// </summary>
     /// <param name="reason">An optional reason providing context for the assertion.</param>
@@ -1326,15 +1371,16 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             string.Join(", ", items.Select(BaseFormatter.Format))
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(NotContainAll)} operation failed because the array was null."
                         )
@@ -1370,23 +1416,26 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
             return this;
         }
 
+        var s = superset.ToList();
+
         ExecutionEngine<ArrayOperationsManager<T>, IEnumerable<T>>
             .New(this)
-            .WithOperation(CollectionBeSubsetOfValidator<T>.New(PrincipalChain, superset))
+            .WithOperation(CollectionBeSubsetOfValidator<T>.New(PrincipalChain, s))
             .WithTemplate(
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
-                            string.Join(", ", superset.Select(BaseFormatter.Format))
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            string.Join(", ", s.Select(BaseFormatter.Format))
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(BeSubsetOf)} operation failed because the array was null."
                         )
@@ -1422,23 +1471,26 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
             return this;
         }
 
+        var s = superset.ToList();
+
         ExecutionEngine<ArrayOperationsManager<T>, IEnumerable<T>>
             .New(this)
-            .WithOperation(CollectionNotBeSubsetOfValidator<T>.New(PrincipalChain, superset))
+            .WithOperation(CollectionNotBeSubsetOfValidator<T>.New(PrincipalChain, s))
             .WithTemplate(
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
-                            string.Join(", ", superset.Select(BaseFormatter.Format))
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            string.Join(", ", s.Select(BaseFormatter.Format))
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(NotBeSubsetOf)} operation failed because the array was null."
                         )
@@ -1474,23 +1526,26 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
             return this;
         }
 
+        var o = other.ToList();
+
         ExecutionEngine<ArrayOperationsManager<T>, IEnumerable<T>>
             .New(this)
-            .WithOperation(CollectionIntersectWithValidator<T>.New(PrincipalChain, other))
+            .WithOperation(CollectionIntersectWithValidator<T>.New(PrincipalChain, o))
             .WithTemplate(
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
-                            string.Join(", ", other.Select(BaseFormatter.Format))
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            string.Join(", ", o.Select(BaseFormatter.Format))
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(IntersectWith)} operation failed because the array was null."
                         )
@@ -1526,23 +1581,26 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
             return this;
         }
 
+        var o = other.ToList();
+
         ExecutionEngine<ArrayOperationsManager<T>, IEnumerable<T>>
             .New(this)
-            .WithOperation(CollectionNotIntersectWithValidator<T>.New(PrincipalChain, other))
+            .WithOperation(CollectionNotIntersectWithValidator<T>.New(PrincipalChain, o))
             .WithTemplate(
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
-                            string.Join(", ", other.Select(BaseFormatter.Format))
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            string.Join(", ", o.Select(BaseFormatter.Format))
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(NotIntersectWith)} operation failed because the array was null."
                         )
@@ -1589,9 +1647,9 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(BeInAscendingOrder)} operation failed because the array was null."
                         )
@@ -1629,9 +1687,9 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(BeInDescendingOrder)} operation failed because the array was null."
                         )
@@ -1653,7 +1711,8 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
     public ArrayOperationsManager<T> BeInAscendingOrder<TKey>(
         Func<T, TKey> keySelector,
         Reason? reason = null
-    ) where TKey : IComparable<TKey>
+    )
+        where TKey : IComparable<TKey>
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Collection.BeInAscendingOrder))
         {
@@ -1673,9 +1732,9 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(BeInAscendingOrder)} operation failed because the array was null."
                         )
@@ -1684,7 +1743,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
             .FailIf(
                 _ =>
                     (
-                        keySelector is null,
+                        keySelector.IsNull(),
                         Fail.New(
                             $"The {nameof(BeInAscendingOrder)} operation failed because the key selector cannot be null."
                         )
@@ -1706,7 +1765,8 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
     public ArrayOperationsManager<T> BeInDescendingOrder<TKey>(
         Func<T, TKey> keySelector,
         Reason? reason = null
-    ) where TKey : IComparable<TKey>
+    )
+        where TKey : IComparable<TKey>
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Collection.BeInDescendingOrder))
         {
@@ -1716,7 +1776,10 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
         ExecutionEngine<ArrayOperationsManager<T>, IEnumerable<T>>
             .New(this)
             .WithOperation(
-                CollectionBeInDescendingOrderByKeyValidator<T, TKey>.New(PrincipalChain, keySelector)
+                CollectionBeInDescendingOrderByKeyValidator<T, TKey>.New(
+                    PrincipalChain,
+                    keySelector
+                )
             )
             .WithTemplate(
                 (template, operation) =>
@@ -1726,9 +1789,9 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(BeInDescendingOrder)} operation failed because the array was null."
                         )
@@ -1737,7 +1800,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
             .FailIf(
                 _ =>
                     (
-                        keySelector is null,
+                        keySelector.IsNull(),
                         Fail.New(
                             $"The {nameof(BeInDescendingOrder)} operation failed because the key selector cannot be null."
                         )
@@ -1775,9 +1838,9 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(AllSatisfy)} operation failed because the array was null."
                         )
@@ -1825,9 +1888,9 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(OnlyContain)} operation failed because the array was null."
                         )
@@ -1875,9 +1938,9 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(Inspect)} operation failed because the array was null."
                         )
@@ -1886,7 +1949,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
             .FailIf(
                 _ =>
                     (
-                        inspector is null,
+                        inspector.IsNull(),
                         Fail.New(
                             $"The {nameof(Inspect)} operation failed because the inspector cannot be null."
                         )
@@ -1938,9 +2001,9 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(AnySatisfy)} operation failed because the array was null."
                         )
@@ -1986,9 +2049,9 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(BeUnique)} operation failed because the array was null."
                         )
@@ -2025,9 +2088,9 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(ContainDuplicates)} operation failed because the array was null."
                         )
@@ -2062,7 +2125,8 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(item),
                             FormatterPipeline.Format(
                                 PrincipalChain.GetValue() is { } aFirst
@@ -2074,9 +2138,9 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(StartWith)} operation failed because the array was null."
                         )
@@ -2111,7 +2175,8 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(item),
                             FormatterPipeline.Format(
                                 PrincipalChain.GetValue() is { } aLast
@@ -2123,9 +2188,9 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(EndWith)} operation failed because the array was null."
                         )
@@ -2161,20 +2226,21 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             index.ToString(),
                             FormatterPipeline.Format(
-                                _array != null ? _array.ElementAtOrDefault(index) : null,
+                                PrincipalChain.GetValue().ElementAtOrDefault(index),
                                 typeof(T)
                             )
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                _ =>
+                m =>
                     (
-                        _array.IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(HaveElementAt)} operation failed because the array was null."
                         )
@@ -2195,7 +2261,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
     }
 
     /// <summary>
-    /// Asserts that the array contains all of the specified items in the given relative order.
+    /// Asserts that the array contains all the specified items in the given relative order.
     /// </summary>
     /// <param name="items">The items expected to appear in the array in the specified order.</param>
     /// <returns>The current manager instance for method chaining.</returns>
@@ -2205,7 +2271,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
     }
 
     /// <summary>
-    /// Asserts that the array contains all of the specified items in the given relative order.
+    /// Asserts that the array contains all the specified items in the given relative order.
     /// </summary>
     /// <param name="reason">An optional reason providing context for the assertion.</param>
     /// <param name="items">The items expected to appear in the array in the specified order.</param>
@@ -2228,15 +2294,16 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             string.Join(", ", items.Select(BaseFormatter.Format))
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(ContainInOrder)} operation failed because the array was null."
                         )
@@ -2296,25 +2363,27 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
-                            _array?.Length.ToString() ?? "null",
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            PrincipalChain.GetValue().Count().ToString(),
                             predicates.Length.ToString()
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(SatisfyRespectively)} operation failed because the array was null."
                         )
                     )
             )
             .FailIf(
-                _ =>
+                m =>
                     (
-                        predicates.IsNull() || (predicates.Length == 0 && _array?.Length > 0),
+                        predicates.IsNull()
+                            || (predicates.Length == 0 && m.PrincipalChain.GetValue().Any()),
                         Fail.New(
                             $"The {nameof(SatisfyRespectively)} operation failed because no predicates were provided."
                         )
@@ -2349,16 +2418,17 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             min.ToString(),
-                            _array?.Length.ToString() ?? "null"
+                            PrincipalChain.GetValue().Count().ToString()
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(HaveMinCount)} operation failed because the array was null."
                         )
@@ -2402,16 +2472,17 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             max.ToString(),
-                            _array?.Length.ToString() ?? "null"
+                            PrincipalChain.GetValue().Count().ToString()
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(HaveMaxCount)} operation failed because the array was null."
                         )
@@ -2440,42 +2511,9 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
     /// <remarks>
     /// This operation fails immediately if the array is <c>null</c> and <paramref name="expected"/> is not <c>null</c>.
     /// </remarks>
-    public ArrayOperationsManager<T> BeEquivalentTo(
-        IEnumerable<T> expected,
-        Reason? reason = null
-    )
+    public ArrayOperationsManager<T> BeEquivalentTo(IEnumerable<T> expected, Reason? reason = null)
     {
-        if (!OperationUtils.CheckOperationAllowed(Operations.Collection.BeEquivalentTo))
-        {
-            return this;
-        }
-
-        ExecutionEngine<ArrayOperationsManager<T>, IEnumerable<T>>
-            .New(this)
-            .WithOperation(CollectionBeEquivalentToValidator<T>.New(PrincipalChain, expected))
-            .WithTemplate(
-                (template, operation) =>
-                    template
-                        .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
-                            expected.Count().ToString(),
-                            _array?.Length.ToString() ?? "null"
-                        )
-                        .WithReason(reason?.ToString())
-            )
-            .FailIf(
-                manager =>
-                    (
-                        manager.PrincipalChain.GetValue().IsNull() && !expected.IsNull(),
-                        Fail.New(
-                            $"The {nameof(BeEquivalentTo)} operation failed because the array was null."
-                        )
-                    )
-            )
-            .Execute();
-
-        return this;
+        return BeEquivalentTo(expected, (ComparisonOptions?)null, reason);
     }
 
     /// <summary>
@@ -2492,33 +2530,51 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
         Reason? reason = null
     )
     {
+        var builder = new ComparisonOptionsBuilder();
+        configure(builder);
+        return BeEquivalentTo(expected, builder.Build(), reason);
+    }
+
+    /// <summary>
+    /// Asserts that the array contains the same elements as the expected collection
+    /// (order-independent), using the specified <paramref name="options"/>.
+    /// </summary>
+    /// <param name="expected">The expected collection to compare against.</param>
+    /// <param name="options">Options controlling the comparison behavior.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public ArrayOperationsManager<T> BeEquivalentTo(
+        IEnumerable<T> expected,
+        ComparisonOptions? options,
+        Reason? reason = null
+    )
+    {
         if (!OperationUtils.CheckOperationAllowed(Operations.Collection.BeEquivalentTo))
         {
             return this;
         }
 
-        var builder = new ComparisonOptionsBuilder();
-        configure(builder);
-        var options = builder.Build();
-
         ExecutionEngine<ArrayOperationsManager<T>, IEnumerable<T>>
             .New(this)
-            .WithOperation(CollectionBeEquivalentToValidator<T>.New(PrincipalChain, expected))
+            .WithOperation(
+                CollectionBeEquivalentToValidator<T>.New(PrincipalChain, expected, options)
+            )
             .WithTemplate(
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             expected.Count().ToString(),
-                            _array?.Length.ToString() ?? "null"
+                            PrincipalChain.GetValue().Count().ToString()
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull() && !expected.IsNull(),
+                        m.PrincipalChain.GetValue().IsNull() && !expected.IsNull(),
                         Fail.New(
                             $"The {nameof(BeEquivalentTo)} operation failed because the array was null."
                         )
@@ -2552,15 +2608,13 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(
-                            operation.MessageKey, operation.ResultValidation
-                        )
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull() && expected.IsNull(),
+                        m.PrincipalChain.GetValue().IsNull() && expected.IsNull(),
                         Fail.New(
                             $"The {nameof(NotBeEquivalentTo)} operation failed because both collections are null and therefore equivalent."
                         )
@@ -2598,16 +2652,17 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             expected.Count().ToString(),
-                            _array?.Length.ToString() ?? "null"
+                            PrincipalChain.GetValue().Count().ToString()
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull() && !expected.IsNull(),
+                        m.PrincipalChain.GetValue().IsNull() && !expected.IsNull(),
                         Fail.New(
                             $"The {nameof(BeSequenceEqualTo)} operation failed because the array was null."
                         )
@@ -2641,15 +2696,13 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(
-                            operation.MessageKey, operation.ResultValidation
-                        )
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull() && expected.IsNull(),
+                        m.PrincipalChain.GetValue().IsNull() && expected.IsNull(),
                         Fail.New(
                             $"The {nameof(NotBeSequenceEqualTo)} operation failed because both collections are null and therefore sequence-equal."
                         )
@@ -2706,7 +2759,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
     /// </summary>
     /// <typeparam name="TExpected">The type of the expected template object.</typeparam>
     /// <param name="expected">The template object to compare against each element.</param>
-    /// <param name="options">Options controlling the comparison behaviour.</param>
+    /// <param name="options">Options controlling the comparison behavior.</param>
     /// <param name="reason">An optional reason providing context for the assertion.</param>
     /// <returns>The current manager instance for method chaining.</returns>
     public ArrayOperationsManager<T> ContainEquivalentOf<TExpected>(
@@ -2734,15 +2787,16 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expected)
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(ContainEquivalentOf)} operation failed because the array was null."
                         )
@@ -2799,7 +2853,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
     /// </summary>
     /// <typeparam name="TExpected">The type of the expected template object.</typeparam>
     /// <param name="expected">The template object to compare against each element.</param>
-    /// <param name="options">Options controlling the comparison behaviour.</param>
+    /// <param name="options">Options controlling the comparison behavior.</param>
     /// <param name="reason">An optional reason providing context for the assertion.</param>
     /// <returns>The current manager instance for method chaining.</returns>
     public ArrayOperationsManager<T> NotContainEquivalentOf<TExpected>(
@@ -2827,15 +2881,16 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expected)
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(NotContainEquivalentOf)} operation failed because the array was null."
                         )
@@ -2894,9 +2949,9 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(BeOfType)} operation failed because the array was <null>."
                         )
@@ -2909,9 +2964,7 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
     {
         ExecutionEngine<ArrayOperationsManager<T>, IEnumerable<T>>
             .New(this)
-            .WithOperation(
-                ReferenceNotBeOfTypeValidator<IEnumerable<T>>.New(PrincipalChain, type!)
-            )
+            .WithOperation(ReferenceNotBeOfTypeValidator<IEnumerable<T>>.New(PrincipalChain, type!))
             .WithTemplate(
                 (template, operation) =>
                     template
@@ -2929,9 +2982,9 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(NotBeOfType)} operation failed because the array was <null>."
                         )

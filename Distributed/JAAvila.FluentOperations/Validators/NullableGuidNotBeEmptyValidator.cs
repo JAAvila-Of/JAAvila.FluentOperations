@@ -5,12 +5,14 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable guid value is not empty.
 /// </summary>
-internal class NullableGuidNotBeEmptyValidator(PrincipalChain<Guid?> chain) : IValidator, IRuleDescriptor
+internal class NullableGuidNotBeEmptyValidator(PrincipalChain<Guid?> chain)
+    : IValidator,
+        IRuleDescriptor
 {
     public static NullableGuidNotBeEmptyValidator New(PrincipalChain<Guid?> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableGuid.NotBeEmpty";
     string IRuleDescriptor.OperationName => "NotBeEmpty";
     Type IRuleDescriptor.SubjectType => typeof(Guid?);

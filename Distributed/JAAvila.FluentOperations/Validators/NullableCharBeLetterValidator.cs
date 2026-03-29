@@ -5,12 +5,14 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable char value is a letter.
 /// </summary>
-internal class NullableCharBeLetterValidator(PrincipalChain<char?> chain) : IValidator, IRuleDescriptor
+internal class NullableCharBeLetterValidator(PrincipalChain<char?> chain)
+    : IValidator,
+        IRuleDescriptor
 {
     public static NullableCharBeLetterValidator New(PrincipalChain<char?> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableChar.BeLetter";
     string IRuleDescriptor.OperationName => "BeLetter";
     Type IRuleDescriptor.SubjectType => typeof(char?);
@@ -26,8 +28,7 @@ internal class NullableCharBeLetterValidator(PrincipalChain<char?> chain) : IVal
             return true;
         }
 
-        ResultValidation =
-            "The resulting value was expected to be a letter, but it was not.";
+        ResultValidation = "The resulting value was expected to be a letter, but it was not.";
         return false;
     }
 

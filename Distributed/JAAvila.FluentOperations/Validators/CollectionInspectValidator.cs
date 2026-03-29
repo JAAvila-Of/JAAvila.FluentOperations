@@ -20,8 +20,8 @@ internal class CollectionInspectValidator<T>(
         Action<T, int> inspector
     ) => new(chain, inspector);
 
-    public string Expected { get; } = string.Empty;
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Collection.Inspect";
     string IRuleDescriptor.OperationName => "Inspect";
     Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);
@@ -34,6 +34,7 @@ internal class CollectionInspectValidator<T>(
         var allFailures = new List<(int Index, IReadOnlyList<string> Failures)>();
 
         var index = 0;
+
         foreach (var element in collection)
         {
             using var elementScope = new TransactionalOperations(
@@ -79,13 +80,14 @@ internal class CollectionInspectValidator<T>(
         var sb = new StringBuilder();
         sb.Append(
             $"The collection was expected to have all elements pass inspection, "
-            + $"but {allFailures.Count} element(s) failed:"
+                + $"but {allFailures.Count} element(s) failed:"
         );
 
         foreach (var (failIndex, failures) in allFailures)
         {
             sb.AppendLine();
             sb.Append($"  Element[{failIndex}]:");
+
             foreach (var failure in failures)
             {
                 sb.AppendLine();

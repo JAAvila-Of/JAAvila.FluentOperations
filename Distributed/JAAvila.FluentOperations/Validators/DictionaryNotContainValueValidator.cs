@@ -8,20 +8,21 @@ namespace JAAvila.FluentOperations.Validators;
 internal class DictionaryNotContainValueValidator<TKey, TValue>(
     PrincipalChain<IDictionary<TKey, TValue>> chain,
     TValue value
-) : IValidator, IRuleDescriptor where TKey : notnull
+) : IValidator, IRuleDescriptor
+    where TKey : notnull
 {
     public static DictionaryNotContainValueValidator<TKey, TValue> New(
         PrincipalChain<IDictionary<TKey, TValue>> chain,
         TValue value
     ) => new(chain, value);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Dictionary.NotContainValue";
     string IRuleDescriptor.OperationName => "NotContainValue";
     Type IRuleDescriptor.SubjectType => typeof(IDictionary<,>);
     IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
-        new Dictionary<string, object> { ["value"] = value };
+        new Dictionary<string, object> { ["value"] = value! };
 
     public bool Validate()
     {
@@ -30,7 +31,8 @@ internal class DictionaryNotContainValueValidator<TKey, TValue>(
             return true;
         }
 
-        ResultValidation = "The resulting dictionary was expected to not contain value {0}, but it did.";
+        ResultValidation =
+            "The resulting dictionary was expected to not contain value {0}, but it did.";
         return false;
     }
 

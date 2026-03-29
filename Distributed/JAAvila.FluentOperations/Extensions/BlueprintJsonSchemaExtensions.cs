@@ -1,7 +1,7 @@
 using System.Text.Json;
 using JAAvila.FluentOperations.Schema;
 
-namespace JAAvila.FluentOperations;
+namespace JAAvila.FluentOperations.Extensions;
 
 /// <summary>
 /// Provides JSON Schema generation extension methods for <see cref="QualityBlueprint{T}"/>.
@@ -19,7 +19,7 @@ public static class BlueprintJsonSchemaExtensions
     /// </param>
     /// <returns>
     /// A <see cref="JsonDocument"/> representing the JSON Schema. The caller is responsible
-    /// for disposing the returned document.
+    /// for disposing of the returned document.
     /// </returns>
     public static JsonDocument ToJsonSchema<T>(
         this QualityBlueprint<T> blueprint,
@@ -52,7 +52,7 @@ public static class BlueprintJsonSchemaExtensions
         var resolvedOptions = options ?? JsonSchemaOptions.Default;
 
         using var doc = blueprint.ToJsonSchema(resolvedOptions);
-        using var stream = new System.IO.MemoryStream();
+        using var stream = new MemoryStream();
         using var writer = new Utf8JsonWriter(stream, new JsonWriterOptions { Indented = resolvedOptions.WriteIndented });
         doc.WriteTo(writer);
         writer.Flush();

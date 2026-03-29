@@ -17,16 +17,20 @@ internal class StringNotContainValidator(
     public static StringNotContainValidator New(
         string expected,
         PrincipalChain<string?> chain,
-        StringComparison comparison) =>
-        new(expected, chain, comparison);
+        StringComparison comparison
+    ) => new(expected, chain, comparison);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "String.NotContain";
     string IRuleDescriptor.OperationName => "NotContain";
     Type IRuleDescriptor.SubjectType => typeof(string);
     IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
-        new Dictionary<string, object> { ["value"] = expected, ["comparison"] = StringComparison.Ordinal.ToString() };
+        new Dictionary<string, object>
+        {
+            ["value"] = expected,
+            ["comparison"] = nameof(StringComparison.Ordinal)
+        };
 
     public bool Validate()
     {

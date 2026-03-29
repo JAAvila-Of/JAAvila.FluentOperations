@@ -22,7 +22,7 @@ public static class MediatRExtensions
     }
 
     /// <summary>
-    /// Adds a strongly-typed blueprint behavior for a request type.
+    /// Adds a strongly typed blueprint behavior for a request type.
     /// The blueprint MUST validate the request type directly
     /// (<typeparamref name="TBlueprint"/> must inherit <c>QualityBlueprint&lt;TRequest&gt;</c>).
     /// </summary>
@@ -30,16 +30,16 @@ public static class MediatRExtensions
     /// <para>
     /// Use this overload when you have a blueprint that models the request directly, e.g.:
     /// <code>
-    /// // Blueprint: public class CreateOrderBlueprint : QualityBlueprint&lt;CreateOrderCommand&gt;
-    /// services.AddBlueprintBehavior&lt;CreateOrderCommand, OrderResult, CreateOrderBlueprint&gt;();
+    /// // Blueprint: public class CreateOrderBlueprint: QualityBlueprint&lt;CreateOrderCommand&gt;
+    /// services.AddBlueprintBehavior&lt;CreateOrderCommand, OrderResult, CreateOrderBlueprint&gt;()
     /// </code>
     /// </para>
     /// <para>
     /// If your blueprint validates a base model and the request derives from it, use the
     /// 4-generic overload <see cref="AddBlueprintBehavior{TRequest, TResponse, TModel, TBlueprint}"/> instead:
     /// <code>
-    /// // Blueprint: public class UserBlueprint : QualityBlueprint&lt;User&gt;
-    /// // Request:   public class CreateUserCommand : User, IRequest&lt;string&gt;
+    /// // Blueprint: public class UserBlueprint: QualityBlueprint&lt;User&gt;
+    /// // Request:   public class CreateUserCommand: User, IRequest&lt;string&gt;
     /// services.AddBlueprintBehavior&lt;CreateUserCommand, string, User, UserBlueprint&gt;();
     /// </code>
     /// </para>
@@ -59,7 +59,10 @@ public static class MediatRExtensions
         where TRequest : notnull
         where TBlueprint : QualityBlueprint<TRequest>
     {
-        services.AddTransient<IPipelineBehavior<TRequest, TResponse>, MediatRBlueprintBehavior<TRequest, TResponse, TBlueprint>>();
+        services.AddTransient<
+            IPipelineBehavior<TRequest, TResponse>,
+            MediatRBlueprintBehavior<TRequest, TResponse, TBlueprint>
+        >();
         return services;
     }
 
@@ -80,10 +83,16 @@ public static class MediatRExtensions
     )
         where TRequest : class, TModel
         where TBlueprint : QualityBlueprint<TModel>
+        where TModel : notnull
     {
         services.AddSingleton<QualityBlueprint<TModel>, TBlueprint>();
-        services.AddSingleton<IBlueprintValidator>(sp => (IBlueprintValidator)sp.GetRequiredService<QualityBlueprint<TModel>>());
-        services.AddTransient<IPipelineBehavior<TRequest, TResponse>, MediatRBlueprintBehavior<TRequest, TResponse>>();
+        services.AddSingleton<IBlueprintValidator>(
+            sp => sp.GetRequiredService<QualityBlueprint<TModel>>()
+        );
+        services.AddTransient<
+            IPipelineBehavior<TRequest, TResponse>,
+            MediatRBlueprintBehavior<TRequest, TResponse>
+        >();
         return services;
     }
 }

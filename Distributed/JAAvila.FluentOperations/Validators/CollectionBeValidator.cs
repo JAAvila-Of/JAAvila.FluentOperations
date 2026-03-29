@@ -5,16 +5,18 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the collection reference equals the expected reference (reference equality).
 /// </summary>
-internal class CollectionBeValidator<T>(PrincipalChain<IEnumerable<T>> chain, IEnumerable<T> expected)
-    : IValidator, IRuleDescriptor
+internal class CollectionBeValidator<T>(
+    PrincipalChain<IEnumerable<T>> chain,
+    IEnumerable<T> expected
+) : IValidator, IRuleDescriptor
 {
     public static CollectionBeValidator<T> New(
         PrincipalChain<IEnumerable<T>> chain,
         IEnumerable<T> expected
     ) => new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Collection.Be";
     string IRuleDescriptor.OperationName => "Be";
     Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);

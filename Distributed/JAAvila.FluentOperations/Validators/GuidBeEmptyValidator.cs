@@ -7,11 +7,10 @@ namespace JAAvila.FluentOperations.Validators;
 /// </summary>
 internal class GuidBeEmptyValidator(PrincipalChain<Guid> chain) : IValidator, IRuleDescriptor
 {
-    public static GuidBeEmptyValidator New(PrincipalChain<Guid> chain) =>
-        new(chain);
+    public static GuidBeEmptyValidator New(PrincipalChain<Guid> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Guid.BeEmpty";
     string IRuleDescriptor.OperationName => "BeEmpty";
     Type IRuleDescriptor.SubjectType => typeof(Guid);
@@ -25,7 +24,8 @@ internal class GuidBeEmptyValidator(PrincipalChain<Guid> chain) : IValidator, IR
             return true;
         }
 
-        ResultValidation = "The resulting value was expected to be an empty GUID, but {0} was found.";
+        ResultValidation =
+            "The resulting value was expected to be an empty GUID, but {0} was found.";
         return false;
     }
 

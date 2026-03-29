@@ -4,7 +4,7 @@ using JAAvila.SafeTypes.Extension;
 namespace JAAvila.FluentOperations.Utils;
 
 /// <summary>
-/// Provides utility methods for determining the type of given subject
+/// Provides utility methods for determining the type of a given subject
 /// based on its characteristics, such as whether it represents a boolean,
 /// number, string literal, variable, function, or expression.
 /// </summary>

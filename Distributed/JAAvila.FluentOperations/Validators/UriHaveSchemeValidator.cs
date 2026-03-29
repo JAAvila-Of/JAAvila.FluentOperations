@@ -5,13 +5,15 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the uri URI has the expected scheme.
 /// </summary>
-internal class UriHaveSchemeValidator(PrincipalChain<Uri?> chain, string scheme) : IValidator, IRuleDescriptor
+internal class UriHaveSchemeValidator(PrincipalChain<Uri?> chain, string scheme)
+    : IValidator,
+        IRuleDescriptor
 {
     public static UriHaveSchemeValidator New(PrincipalChain<Uri?> chain, string scheme) =>
         new(chain, scheme);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Uri.HaveScheme";
     string IRuleDescriptor.OperationName => "HaveScheme";
     Type IRuleDescriptor.SubjectType => typeof(Uri);

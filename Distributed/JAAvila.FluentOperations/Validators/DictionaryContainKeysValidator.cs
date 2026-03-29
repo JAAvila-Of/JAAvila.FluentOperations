@@ -1,23 +1,23 @@
 using JAAvila.FluentOperations.Contract;
-using JAAvila.FluentOperations.Formatters;
 
 namespace JAAvila.FluentOperations.Validators;
 
 /// <summary>
-/// Validates that the dictionary contains all of the specified keys.
+/// Validates that the dictionary contains all the specified keys.
 /// </summary>
 internal class DictionaryContainKeysValidator<TKey, TValue>(
     PrincipalChain<IDictionary<TKey, TValue>> chain,
     TKey[] keys
-) : IValidator, IRuleDescriptor where TKey : notnull
+) : IValidator, IRuleDescriptor
+    where TKey : notnull
 {
     public static DictionaryContainKeysValidator<TKey, TValue> New(
         PrincipalChain<IDictionary<TKey, TValue>> chain,
         TKey[] keys
     ) => new(chain, keys);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Dictionary.ContainKeys";
     string IRuleDescriptor.OperationName => "ContainKeys";
     Type IRuleDescriptor.SubjectType => typeof(IDictionary<,>);

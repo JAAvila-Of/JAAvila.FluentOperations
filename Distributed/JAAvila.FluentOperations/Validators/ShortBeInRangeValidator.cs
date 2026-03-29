@@ -5,13 +5,15 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the short value is within the specified inclusive range.
 /// </summary>
-internal class ShortBeInRangeValidator(PrincipalChain<short> chain, short min, short max) : IValidator, IRuleDescriptor
+internal class ShortBeInRangeValidator(PrincipalChain<short> chain, short min, short max)
+    : IValidator,
+        IRuleDescriptor
 {
     public static ShortBeInRangeValidator New(PrincipalChain<short> chain, short min, short max) =>
         new(chain, min, max);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Short.BeInRange";
     string IRuleDescriptor.OperationName => "BeInRange";
     Type IRuleDescriptor.SubjectType => typeof(short);

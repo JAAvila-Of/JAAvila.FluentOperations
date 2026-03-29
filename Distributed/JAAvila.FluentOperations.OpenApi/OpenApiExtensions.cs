@@ -32,7 +32,8 @@ public static class OpenApiExtensions
     /// </example>
     public static SwaggerGenOptions AddFluentOperationsValidation(
         this SwaggerGenOptions options,
-        IEnumerable<IBlueprintValidator> validators)
+        IEnumerable<IBlueprintValidator> validators
+    )
     {
         ArgumentNullException.ThrowIfNull(options);
         ArgumentNullException.ThrowIfNull(validators);

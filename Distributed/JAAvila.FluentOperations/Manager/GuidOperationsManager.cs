@@ -55,7 +55,8 @@ public class GuidOperationsManager : ITestManager<GuidOperationsManager, Guid>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -86,7 +87,11 @@ public class GuidOperationsManager : ITestManager<GuidOperationsManager, Guid>
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.MessageKey, operation.ResultValidation, BaseFormatter.Format(expected))
+                        .WithResult(
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            BaseFormatter.Format(expected)
+                        )
                         .WithReason(reason?.ToString())
             )
             .Execute();
@@ -114,7 +119,8 @@ public class GuidOperationsManager : ITestManager<GuidOperationsManager, Guid>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -185,8 +191,9 @@ public class GuidOperationsManager : ITestManager<GuidOperationsManager, Guid>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
-                            string.Join(", ", expected.Select(g => BaseFormatter.Format(g))),
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            string.Join(", ", expected.Select(BaseFormatter.Format)),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -239,8 +246,9 @@ public class GuidOperationsManager : ITestManager<GuidOperationsManager, Guid>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
-                            string.Join(", ", expected.Select(g => BaseFormatter.Format(g)))
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            string.Join(", ", expected.Select(BaseFormatter.Format))
                         )
                         .WithReason(reason?.ToString())
             )
@@ -264,7 +272,10 @@ public class GuidOperationsManager : ITestManager<GuidOperationsManager, Guid>
     public GuidOperationsManager BeOfType<TType>(Reason? reason = null)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Common.BeOfType))
+        {
             return this;
+        }
+
         ValidateBeOfTypeOperation(reason, typeof(TType));
         return this;
     }
@@ -275,7 +286,10 @@ public class GuidOperationsManager : ITestManager<GuidOperationsManager, Guid>
     public GuidOperationsManager BeOfType(Type expected, Reason? reason = null)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Common.BeOfType))
+        {
             return this;
+        }
+
         ValidateBeOfTypeOperation(reason, expected);
         return this;
     }
@@ -286,7 +300,10 @@ public class GuidOperationsManager : ITestManager<GuidOperationsManager, Guid>
     public GuidOperationsManager NotBeOfType<TType>(Reason? reason = null)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Common.NotBeOfType))
+        {
             return this;
+        }
+
         ValidateNotBeOfTypeOperation(reason, typeof(TType));
         return this;
     }
@@ -297,7 +314,10 @@ public class GuidOperationsManager : ITestManager<GuidOperationsManager, Guid>
     public GuidOperationsManager NotBeOfType(Type expected, Reason? reason = null)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Common.NotBeOfType))
+        {
             return this;
+        }
+
         ValidateNotBeOfTypeOperation(reason, expected);
         return this;
     }
@@ -318,7 +338,9 @@ public class GuidOperationsManager : ITestManager<GuidOperationsManager, Guid>
                 _ =>
                     (
                         type is null,
-                        Fail.New($"The {nameof(BeOfType)} operation failed because the expected type was <null>.")
+                        Fail.New(
+                            $"The {nameof(BeOfType)} operation failed because the expected type was <null>."
+                        )
                     )
             )
             .Execute();
@@ -340,7 +362,9 @@ public class GuidOperationsManager : ITestManager<GuidOperationsManager, Guid>
                 _ =>
                     (
                         type is null,
-                        Fail.New($"The {nameof(NotBeOfType)} operation failed because the expected type was <null>.")
+                        Fail.New(
+                            $"The {nameof(NotBeOfType)} operation failed because the expected type was <null>."
+                        )
                     )
             )
             .Execute();

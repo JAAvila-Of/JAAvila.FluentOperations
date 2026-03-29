@@ -28,7 +28,7 @@ public class NullableDoubleOperationsManager
     {
         PrincipalChain = PrincipalChain<double?>.Get(value, caller);
         GlobalConfig.Initialize();
-        SetManager(this);
+        base.SetManager(this);
     }
 
     /// <summary>
@@ -106,7 +106,8 @@ public class NullableDoubleOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue()),
                             BaseFormatter.Format(expected)
                         )
@@ -137,7 +138,11 @@ public class NullableDoubleOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.MessageKey, operation.ResultValidation, BaseFormatter.Format(expected))
+                        .WithResult(
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            BaseFormatter.Format(expected)
+                        )
                         .WithReason(reason?.ToString())
             )
             .Execute();
@@ -171,22 +176,22 @@ public class NullableDoubleOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BePositive)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is not null
-                            && double.IsNaN(manager.PrincipalChain.GetValue()!.Value),
+                        m.PrincipalChain.GetValue() is not null
+                            && double.IsNaN(m.PrincipalChain.GetValue()!.Value),
                         Fail.New(
                             $"The {nameof(BePositive)} operation failed because the value was NaN. "
-                            + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
+                                + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
                         )
                     )
             )
@@ -221,22 +226,22 @@ public class NullableDoubleOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeNegative)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is not null
-                            && double.IsNaN(manager.PrincipalChain.GetValue()!.Value),
+                        m.PrincipalChain.GetValue() is not null
+                            && double.IsNaN(m.PrincipalChain.GetValue()!.Value),
                         Fail.New(
                             $"The {nameof(BeNegative)} operation failed because the value was NaN. "
-                            + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
+                                + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
                         )
                     )
             )
@@ -271,22 +276,22 @@ public class NullableDoubleOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeZero)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is not null
-                            && double.IsNaN(manager.PrincipalChain.GetValue()!.Value),
+                        m.PrincipalChain.GetValue() is not null
+                            && double.IsNaN(m.PrincipalChain.GetValue()!.Value),
                         Fail.New(
                             $"The {nameof(BeZero)} operation failed because the value was NaN. "
-                            + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
+                                + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
                         )
                     )
             )
@@ -322,22 +327,22 @@ public class NullableDoubleOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeGreaterThan)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is not null
-                            && double.IsNaN(manager.PrincipalChain.GetValue()!.Value),
+                        m.PrincipalChain.GetValue() is not null
+                            && double.IsNaN(m.PrincipalChain.GetValue()!.Value),
                         Fail.New(
                             $"The {nameof(BeGreaterThan)} operation failed because the value was NaN. "
-                            + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
+                                + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
                         )
                     )
             )
@@ -376,22 +381,22 @@ public class NullableDoubleOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeGreaterThanOrEqualTo)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is not null
-                            && double.IsNaN(manager.PrincipalChain.GetValue()!.Value),
+                        m.PrincipalChain.GetValue() is not null
+                            && double.IsNaN(m.PrincipalChain.GetValue()!.Value),
                         Fail.New(
                             $"The {nameof(BeGreaterThanOrEqualTo)} operation failed because the value was NaN. "
-                            + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
+                                + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
                         )
                     )
             )
@@ -427,22 +432,22 @@ public class NullableDoubleOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeLessThan)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is not null
-                            && double.IsNaN(manager.PrincipalChain.GetValue()!.Value),
+                        m.PrincipalChain.GetValue() is not null
+                            && double.IsNaN(m.PrincipalChain.GetValue()!.Value),
                         Fail.New(
                             $"The {nameof(BeLessThan)} operation failed because the value was NaN. "
-                            + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
+                                + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
                         )
                     )
             )
@@ -478,22 +483,22 @@ public class NullableDoubleOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeLessThanOrEqualTo)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is not null
-                            && double.IsNaN(manager.PrincipalChain.GetValue()!.Value),
+                        m.PrincipalChain.GetValue() is not null
+                            && double.IsNaN(m.PrincipalChain.GetValue()!.Value),
                         Fail.New(
                             $"The {nameof(BeLessThanOrEqualTo)} operation failed because the value was NaN. "
-                            + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
+                                + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
                         )
                     )
             )
@@ -531,22 +536,22 @@ public class NullableDoubleOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeInRange)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is not null
-                            && double.IsNaN(manager.PrincipalChain.GetValue()!.Value),
+                        m.PrincipalChain.GetValue() is not null
+                            && double.IsNaN(m.PrincipalChain.GetValue()!.Value),
                         Fail.New(
                             $"The {nameof(BeInRange)} operation failed because the value was NaN. "
-                            + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
+                                + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
                         )
                     )
             )
@@ -597,22 +602,22 @@ public class NullableDoubleOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(NotBeInRange)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is not null
-                            && double.IsNaN(manager.PrincipalChain.GetValue()!.Value),
+                        m.PrincipalChain.GetValue() is not null
+                            && double.IsNaN(m.PrincipalChain.GetValue()!.Value),
                         Fail.New(
                             $"The {nameof(NotBeInRange)} operation failed because the value was NaN. "
-                            + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
+                                + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
                         )
                     )
             )
@@ -656,9 +661,9 @@ public class NullableDoubleOperationsManager
                         .WithResult(operation.MessageKey, operation.ResultValidation)
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeOneOf)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -704,9 +709,9 @@ public class NullableDoubleOperationsManager
                         .WithResult(operation.MessageKey, operation.ResultValidation)
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(NotBeOneOf)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -754,22 +759,22 @@ public class NullableDoubleOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeDivisibleBy)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is not null
-                            && double.IsNaN(manager.PrincipalChain.GetValue()!.Value),
+                        m.PrincipalChain.GetValue() is not null
+                            && double.IsNaN(m.PrincipalChain.GetValue()!.Value),
                         Fail.New(
                             $"The {nameof(BeDivisibleBy)} operation failed because the value was NaN. "
-                            + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
+                                + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
                         )
                     )
             )
@@ -819,22 +824,22 @@ public class NullableDoubleOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(HavePrecision)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is not null
-                            && double.IsNaN(manager.PrincipalChain.GetValue()!.Value),
+                        m.PrincipalChain.GetValue() is not null
+                            && double.IsNaN(m.PrincipalChain.GetValue()!.Value),
                         Fail.New(
                             $"The {nameof(HavePrecision)} operation failed because the value was NaN. "
-                            + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
+                                + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
                         )
                     )
             )
@@ -868,7 +873,11 @@ public class NullableDoubleOperationsManager
         ExecutionEngine<NullableDoubleOperationsManager, double?>
             .New(this)
             .WithOperation(
-                NullableDoubleHaveScaledPrecisionValidator.New(PrincipalChain, expectedDecimals, maxTotalDigits)
+                NullableDoubleHaveScaledPrecisionValidator.New(
+                    PrincipalChain,
+                    expectedDecimals,
+                    maxTotalDigits
+                )
             )
             .WithTemplate(
                 (template, operation) =>
@@ -878,22 +887,22 @@ public class NullableDoubleOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(HaveScaledPrecision)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is not null
-                            && double.IsNaN(manager.PrincipalChain.GetValue()!.Value),
+                        m.PrincipalChain.GetValue() is not null
+                            && double.IsNaN(m.PrincipalChain.GetValue()!.Value),
                         Fail.New(
                             $"The {nameof(HaveScaledPrecision)} operation failed because the value was NaN. "
-                            + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
+                                + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
                         )
                     )
             )
@@ -931,7 +940,7 @@ public class NullableDoubleOperationsManager
 
     /// <summary>
     /// Asserts that the value is rounded to <paramref name="decimals"/> decimal places
-    /// (i.e. has at most that many significant decimal digits).
+    /// (i.e., has at most that many significant decimal digits).
     /// </summary>
     /// <param name="decimals">The maximum number of decimal places allowed.</param>
     /// <param name="reason">An optional reason providing context for the assertion.</param>
@@ -957,22 +966,22 @@ public class NullableDoubleOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeRoundedTo)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is not null
-                            && double.IsNaN(manager.PrincipalChain.GetValue()!.Value),
+                        m.PrincipalChain.GetValue() is not null
+                            && double.IsNaN(m.PrincipalChain.GetValue()!.Value),
                         Fail.New(
                             $"The {nameof(BeRoundedTo)} operation failed because the value was NaN. "
-                            + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
+                                + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
                         )
                     )
             )
@@ -1015,22 +1024,22 @@ public class NullableDoubleOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeApproximately)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is not null
-                            && double.IsNaN(manager.PrincipalChain.GetValue()!.Value),
+                        m.PrincipalChain.GetValue() is not null
+                            && double.IsNaN(m.PrincipalChain.GetValue()!.Value),
                         Fail.New(
                             $"The {nameof(BeApproximately)} operation failed because the value was NaN. "
-                            + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
+                                + $"Use {nameof(BeNaN)} or {nameof(NotBeNaN)} to validate NaN values."
                         )
                     )
             )
@@ -1065,9 +1074,9 @@ public class NullableDoubleOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeNaN)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -1104,9 +1113,9 @@ public class NullableDoubleOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(NotBeNaN)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -1143,9 +1152,9 @@ public class NullableDoubleOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BePositiveInfinity)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -1182,9 +1191,9 @@ public class NullableDoubleOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeNegativeInfinity)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -1221,9 +1230,9 @@ public class NullableDoubleOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeFinite)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -1240,7 +1249,10 @@ public class NullableDoubleOperationsManager
     public NullableDoubleOperationsManager BeOfType<TType>(Reason? reason = null)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Common.BeOfType))
+        {
             return this;
+        }
+
         ValidateBeOfTypeOperation(reason, typeof(TType));
         return this;
     }
@@ -1251,7 +1263,10 @@ public class NullableDoubleOperationsManager
     public NullableDoubleOperationsManager BeOfType(Type expected, Reason? reason = null)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Common.BeOfType))
+        {
             return this;
+        }
+
         ValidateBeOfTypeOperation(reason, expected);
         return this;
     }
@@ -1262,7 +1277,10 @@ public class NullableDoubleOperationsManager
     public NullableDoubleOperationsManager NotBeOfType<TType>(Reason? reason = null)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Common.NotBeOfType))
+        {
             return this;
+        }
+
         ValidateNotBeOfTypeOperation(reason, typeof(TType));
         return this;
     }
@@ -1273,7 +1291,10 @@ public class NullableDoubleOperationsManager
     public NullableDoubleOperationsManager NotBeOfType(Type expected, Reason? reason = null)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Common.NotBeOfType))
+        {
             return this;
+        }
+
         ValidateNotBeOfTypeOperation(reason, expected);
         return this;
     }
@@ -1294,14 +1315,18 @@ public class NullableDoubleOperationsManager
                 _ =>
                     (
                         type is null,
-                        Fail.New($"The {nameof(BeOfType)} operation failed because the expected type was <null>.")
+                        Fail.New(
+                            $"The {nameof(BeOfType)} operation failed because the expected type was <null>."
+                        )
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
-                        Fail.New($"The {nameof(BeOfType)} operation failed because the value was <null>.")
+                        m.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(BeOfType)} operation failed because the value was <null>."
+                        )
                     )
             )
             .Execute();
@@ -1323,14 +1348,18 @@ public class NullableDoubleOperationsManager
                 _ =>
                     (
                         type is null,
-                        Fail.New($"The {nameof(NotBeOfType)} operation failed because the expected type was <null>.")
+                        Fail.New(
+                            $"The {nameof(NotBeOfType)} operation failed because the expected type was <null>."
+                        )
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
-                        Fail.New($"The {nameof(NotBeOfType)} operation failed because the value was <null>.")
+                        m.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(NotBeOfType)} operation failed because the value was <null>."
+                        )
                     )
             )
             .Execute();

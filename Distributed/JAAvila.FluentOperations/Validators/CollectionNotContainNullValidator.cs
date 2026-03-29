@@ -6,14 +6,15 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the collection contains no null elements.
 /// Reports the count and indexes of null elements found.
 /// </summary>
-internal class CollectionNotContainNullValidator<T>(PrincipalChain<IEnumerable<T>> chain) : IValidator, IRuleDescriptor
+internal class CollectionNotContainNullValidator<T>(PrincipalChain<IEnumerable<T>> chain)
+    : IValidator,
+        IRuleDescriptor
 {
-    public static CollectionNotContainNullValidator<T> New(
-        PrincipalChain<IEnumerable<T>> chain
-    ) => new(chain);
+    public static CollectionNotContainNullValidator<T> New(PrincipalChain<IEnumerable<T>> chain) =>
+        new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Collection.NotContainNull";
     string IRuleDescriptor.OperationName => "NotContainNull";
     Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);
@@ -42,8 +43,8 @@ internal class CollectionNotContainNullValidator<T>(PrincipalChain<IEnumerable<T
 
         var indexList = string.Join(", ", nullIndexes);
         ResultValidation =
-            $"The collection was expected to contain no null elements, " +
-            $"but found {nullIndexes.Count} null element(s) at index(es): {indexList}.";
+            $"The collection was expected to contain no null elements, "
+            + $"but found {nullIndexes.Count} null element(s) at index(es): {indexList}.";
         return false;
     }
 

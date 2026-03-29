@@ -6,16 +6,18 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the value cannot be cast to the specified type.
 /// </summary>
-internal class ReferenceNotBeCastToValidator<TSubject>(PrincipalChain<TSubject> chain, Type expected)
-    : IValidator, IRuleDescriptor
+internal class ReferenceNotBeCastToValidator<TSubject>(
+    PrincipalChain<TSubject> chain,
+    Type expected
+) : IValidator, IRuleDescriptor
 {
     public static ReferenceNotBeCastToValidator<TSubject> New(
         PrincipalChain<TSubject> chain,
         Type expected
     ) => new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Reference.NotBeCastTo";
     string IRuleDescriptor.OperationName => "NotBeCastTo";
     Type IRuleDescriptor.SubjectType => typeof(TSubject);

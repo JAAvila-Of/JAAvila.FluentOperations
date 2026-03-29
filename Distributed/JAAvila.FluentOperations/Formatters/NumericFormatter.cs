@@ -5,7 +5,7 @@ namespace JAAvila.FluentOperations.Formatters;
 
 /// <summary>
 /// Formatter for numeric types: int, long, decimal, double, float, and their nullable counterparts.
-/// Supports configurable decimal places, thousands separator, and culture.
+/// Supports configurable decimal places, thousands of separators, and culture.
 /// </summary>
 internal class NumericFormatter : IValueFormatter
 {

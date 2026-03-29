@@ -17,13 +17,13 @@ internal class CollectionHaveElementAtValidator<T>(
         T expected
     ) => new(chain, index, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Collection.HaveElementAt";
     string IRuleDescriptor.OperationName => "HaveElementAt";
     Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);
     IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
-        new Dictionary<string, object> { ["index"] = index, ["value"] = expected };
+        new Dictionary<string, object> { ["index"] = index, ["value"] = expected! };
 
     public bool Validate()
     {

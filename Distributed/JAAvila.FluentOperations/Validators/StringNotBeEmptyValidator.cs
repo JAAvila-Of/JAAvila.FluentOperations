@@ -5,7 +5,9 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the string is not empty.
 /// </summary>
-internal class StringNotBeEmptyValidator(PrincipalChain<string?> chain) : IValidator, IRuleDescriptor
+internal class StringNotBeEmptyValidator(PrincipalChain<string?> chain)
+    : IValidator,
+        IRuleDescriptor
 {
     public static StringNotBeEmptyValidator New(PrincipalChain<string?> chain) => new(chain);
 
@@ -13,7 +15,7 @@ internal class StringNotBeEmptyValidator(PrincipalChain<string?> chain) : IValid
     public string Expected => "Not be empty - \"\"";
 
     /// <inheritdoc />
-    public string ResultValidation { get; set; }
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "String.NotBeEmpty";
 
     string IRuleDescriptor.OperationName => "NotBeEmpty";
