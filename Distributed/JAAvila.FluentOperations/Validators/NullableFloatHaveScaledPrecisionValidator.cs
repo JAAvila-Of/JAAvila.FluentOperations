@@ -19,8 +19,8 @@ internal class NullableFloatHaveScaledPrecisionValidator(
         int maxTotalDigits
     ) => new(chain, expectedDecimals, maxTotalDigits);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableFloat.HaveScaledPrecision";
     string IRuleDescriptor.OperationName => "HaveScaledPrecision";
     Type IRuleDescriptor.SubjectType => typeof(float?);
@@ -37,6 +37,7 @@ internal class NullableFloatHaveScaledPrecisionValidator(
 
         // Scale check
         var rounded = (float)Math.Round(value, expectedDecimals);
+
         if (Math.Abs(rounded - value) >= float.Epsilon)
         {
             ResultValidation =

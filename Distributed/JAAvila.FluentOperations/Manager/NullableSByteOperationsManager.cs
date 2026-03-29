@@ -9,7 +9,7 @@ using JAAvila.FluentOperations.Validators;
 namespace JAAvila.FluentOperations.Manager;
 
 /// <summary>
-/// Provides fluent validation operations for <c>sbyte?</c> values.
+/// Provides fluent validation operations for <c>sbyte?</c> Values.
 /// Supports value presence, equality, comparison, range, divisibility, parity, sign, and membership validations.
 /// Unlike <c>byte?</c>, <c>BeNegative()</c> is included because <c>sbyte</c> is signed (-128 to 127).
 /// </summary>
@@ -29,7 +29,7 @@ public class NullableSByteOperationsManager
     {
         PrincipalChain = PrincipalChain<sbyte?>.Get(value, caller);
         GlobalConfig.Initialize();
-        SetManager(this);
+        base.SetManager(this);
     }
 
     /// <summary>
@@ -107,7 +107,8 @@ public class NullableSByteOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue()),
                             BaseFormatter.Format(expected)
                         )
@@ -138,7 +139,11 @@ public class NullableSByteOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.MessageKey, operation.ResultValidation, BaseFormatter.Format(expected))
+                        .WithResult(
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            BaseFormatter.Format(expected)
+                        )
                         .WithReason(reason?.ToString())
             )
             .Execute();
@@ -169,9 +174,9 @@ public class NullableSByteOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BePositive)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -205,9 +210,9 @@ public class NullableSByteOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeNegative)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -252,9 +257,9 @@ public class NullableSByteOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeGreaterThan)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -280,9 +285,7 @@ public class NullableSByteOperationsManager
 
         ExecutionEngine<NullableSByteOperationsManager, sbyte?>
             .New(this)
-            .WithOperation(
-                NullableSByteBeGreaterThanOrEqualToValidator.New(PrincipalChain, value)
-            )
+            .WithOperation(NullableSByteBeGreaterThanOrEqualToValidator.New(PrincipalChain, value))
             .WithTemplate(
                 (template, operation) =>
                     template
@@ -291,9 +294,9 @@ public class NullableSByteOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeGreaterThanOrEqualTo)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -328,9 +331,9 @@ public class NullableSByteOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeLessThan)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -365,9 +368,9 @@ public class NullableSByteOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeLessThanOrEqualTo)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -403,9 +406,9 @@ public class NullableSByteOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeInRange)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -450,9 +453,9 @@ public class NullableSByteOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(NotBeInRange)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -494,9 +497,9 @@ public class NullableSByteOperationsManager
                         .WithResult(operation.MessageKey, operation.ResultValidation)
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeOneOf)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -538,9 +541,9 @@ public class NullableSByteOperationsManager
                         .WithResult(operation.MessageKey, operation.ResultValidation)
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(NotBeOneOf)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -584,9 +587,9 @@ public class NullableSByteOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeDivisibleBy)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -639,9 +642,9 @@ public class NullableSByteOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeOdd)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -658,7 +661,10 @@ public class NullableSByteOperationsManager
     public NullableSByteOperationsManager BeOfType<TType>(Reason? reason = null)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Common.BeOfType))
+        {
             return this;
+        }
+
         ValidateBeOfTypeOperation(reason, typeof(TType));
         return this;
     }
@@ -669,7 +675,10 @@ public class NullableSByteOperationsManager
     public NullableSByteOperationsManager BeOfType(Type expected, Reason? reason = null)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Common.BeOfType))
+        {
             return this;
+        }
+
         ValidateBeOfTypeOperation(reason, expected);
         return this;
     }
@@ -680,7 +689,10 @@ public class NullableSByteOperationsManager
     public NullableSByteOperationsManager NotBeOfType<TType>(Reason? reason = null)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Common.NotBeOfType))
+        {
             return this;
+        }
+
         ValidateNotBeOfTypeOperation(reason, typeof(TType));
         return this;
     }
@@ -691,7 +703,10 @@ public class NullableSByteOperationsManager
     public NullableSByteOperationsManager NotBeOfType(Type expected, Reason? reason = null)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Common.NotBeOfType))
+        {
             return this;
+        }
+
         ValidateNotBeOfTypeOperation(reason, expected);
         return this;
     }
@@ -712,14 +727,18 @@ public class NullableSByteOperationsManager
                 _ =>
                     (
                         type is null,
-                        Fail.New($"The {nameof(BeOfType)} operation failed because the expected type was <null>.")
+                        Fail.New(
+                            $"The {nameof(BeOfType)} operation failed because the expected type was <null>."
+                        )
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
-                        Fail.New($"The {nameof(BeOfType)} operation failed because the value was <null>.")
+                        m.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(BeOfType)} operation failed because the value was <null>."
+                        )
                     )
             )
             .Execute();
@@ -741,14 +760,18 @@ public class NullableSByteOperationsManager
                 _ =>
                     (
                         type is null,
-                        Fail.New($"The {nameof(NotBeOfType)} operation failed because the expected type was <null>.")
+                        Fail.New(
+                            $"The {nameof(NotBeOfType)} operation failed because the expected type was <null>."
+                        )
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
-                        Fail.New($"The {nameof(NotBeOfType)} operation failed because the value was <null>.")
+                        m.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(NotBeOfType)} operation failed because the value was <null>."
+                        )
                     )
             )
             .Execute();

@@ -5,12 +5,14 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the char value is a letter or digit.
 /// </summary>
-internal class CharBeLetterOrDigitValidator(PrincipalChain<char> chain) : IValidator, IRuleDescriptor
+internal class CharBeLetterOrDigitValidator(PrincipalChain<char> chain)
+    : IValidator,
+        IRuleDescriptor
 {
     public static CharBeLetterOrDigitValidator New(PrincipalChain<char> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Char.BeLetterOrDigit";
     string IRuleDescriptor.OperationName => "BeLetterOrDigit";
     Type IRuleDescriptor.SubjectType => typeof(char);
@@ -24,7 +26,8 @@ internal class CharBeLetterOrDigitValidator(PrincipalChain<char> chain) : IValid
             return true;
         }
 
-        ResultValidation = "The resulting value was expected to be a letter or digit, but {0} was found.";
+        ResultValidation =
+            "The resulting value was expected to be a letter or digit, but {0} was found.";
         return false;
     }
 

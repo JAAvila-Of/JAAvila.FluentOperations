@@ -9,8 +9,8 @@ internal class StringBeGuidValidator(PrincipalChain<string?> chain) : IValidator
 {
     public static StringBeGuidValidator New(PrincipalChain<string?> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "String.BeGuid";
     string IRuleDescriptor.OperationName => "BeGuid";
     Type IRuleDescriptor.SubjectType => typeof(string);

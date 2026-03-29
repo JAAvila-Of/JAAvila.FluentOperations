@@ -90,10 +90,7 @@ public class PrincipalChain<T> : IDisposable
     {
         Contexts.Value ??= new ConcurrentDictionary<Guid, Stack<BaseChain<T>>>();
 
-        var chain = BaseChain<T>.Create(
-            BaseValue<T>.Create(value),
-            GetSubjectSafe()
-        );
+        var chain = BaseChain<T>.Create(BaseValue<T>.Create(value), GetSubjectSafe());
 
         // Always create a fresh single-element stack for this chain ID.
         // This is safe in concurrent scenarios because each async context has its own
@@ -106,7 +103,7 @@ public class PrincipalChain<T> : IDisposable
 
     /// <summary>
     /// Reads the current value from the top of the chain stack.
-    /// Validators call this to obtain the value they should validate.
+    /// Validators call this to get the value they should validate.
     /// </summary>
     /// <returns>The current value under test.</returns>
     public T GetValue()

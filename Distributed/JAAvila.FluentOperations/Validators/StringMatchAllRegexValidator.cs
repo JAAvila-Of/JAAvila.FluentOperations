@@ -4,16 +4,19 @@ using JAAvila.FluentOperations.Contract;
 namespace JAAvila.FluentOperations.Validators;
 
 /// <summary>
-/// Validates that the string matches all of the specified precompiled regular expressions.
+/// Validates that the string matches all the specified precompiled regular expressions.
 /// </summary>
 internal class StringMatchAllRegexValidator(Regex[] patterns, PrincipalChain<string?> chain)
-    : IValidator, IRuleDescriptor
+    : IValidator,
+        IRuleDescriptor
 {
-    public static StringMatchAllRegexValidator New(Regex[] patterns, PrincipalChain<string?> chain) =>
-        new(patterns, chain);
+    public static StringMatchAllRegexValidator New(
+        Regex[] patterns,
+        PrincipalChain<string?> chain
+    ) => new(patterns, chain);
 
     public string Expected => "Match all of the provided patterns";
-    public string ResultValidation { get; set; }
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "String.MatchAllRegex";
     string IRuleDescriptor.OperationName => "MatchAllRegex";
     Type IRuleDescriptor.SubjectType => typeof(string);

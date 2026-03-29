@@ -5,13 +5,18 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable datetime value has the expected month.
 /// </summary>
-internal class NullableDateTimeHaveMonthValidator(PrincipalChain<DateTime?> chain, int expectedMonth) : IValidator, IRuleDescriptor
+internal class NullableDateTimeHaveMonthValidator(
+    PrincipalChain<DateTime?> chain,
+    int expectedMonth
+) : IValidator, IRuleDescriptor
 {
-    public static NullableDateTimeHaveMonthValidator New(PrincipalChain<DateTime?> chain, int expectedMonth) =>
-        new(chain, expectedMonth);
+    public static NullableDateTimeHaveMonthValidator New(
+        PrincipalChain<DateTime?> chain,
+        int expectedMonth
+    ) => new(chain, expectedMonth);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableDateTime.HaveMonth";
     string IRuleDescriptor.OperationName => "HaveMonth";
     Type IRuleDescriptor.SubjectType => typeof(DateTime?);

@@ -16,8 +16,8 @@ internal class ReferenceEvaluateActionValidator<TSubject, TType>(
         Action<TType> action
     ) => new(chain, action);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Reference.EvaluateAction";
     string IRuleDescriptor.OperationName => "EvaluateAction";
     Type IRuleDescriptor.SubjectType => typeof(TSubject);

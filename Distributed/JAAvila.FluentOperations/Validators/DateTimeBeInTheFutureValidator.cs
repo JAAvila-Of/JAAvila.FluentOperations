@@ -5,13 +5,14 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the datetime value is in the future.
 /// </summary>
-internal class DateTimeBeInTheFutureValidator(PrincipalChain<DateTime> chain) : IValidator, IRuleDescriptor
+internal class DateTimeBeInTheFutureValidator(PrincipalChain<DateTime> chain)
+    : IValidator,
+        IRuleDescriptor
 {
-    public static DateTimeBeInTheFutureValidator New(PrincipalChain<DateTime> chain) =>
-        new(chain);
+    public static DateTimeBeInTheFutureValidator New(PrincipalChain<DateTime> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "DateTime.BeInTheFuture";
     string IRuleDescriptor.OperationName => "BeInTheFuture";
     Type IRuleDescriptor.SubjectType => typeof(DateTime);
@@ -25,7 +26,8 @@ internal class DateTimeBeInTheFutureValidator(PrincipalChain<DateTime> chain) : 
             return true;
         }
 
-        ResultValidation = "The resulting value was expected to be in the future, but {0} was found.";
+        ResultValidation =
+            "The resulting value was expected to be in the future, but {0} was found.";
         return false;
     }
 

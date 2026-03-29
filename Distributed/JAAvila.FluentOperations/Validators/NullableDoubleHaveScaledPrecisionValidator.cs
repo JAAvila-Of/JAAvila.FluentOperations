@@ -19,8 +19,8 @@ internal class NullableDoubleHaveScaledPrecisionValidator(
         int maxTotalDigits
     ) => new(chain, expectedDecimals, maxTotalDigits);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableDouble.HaveScaledPrecision";
     string IRuleDescriptor.OperationName => "HaveScaledPrecision";
     Type IRuleDescriptor.SubjectType => typeof(double?);
@@ -37,6 +37,7 @@ internal class NullableDoubleHaveScaledPrecisionValidator(
 
         // Scale check
         var rounded = Math.Round(value, expectedDecimals);
+
         if (Math.Abs(rounded - value) >= double.Epsilon)
         {
             ResultValidation =

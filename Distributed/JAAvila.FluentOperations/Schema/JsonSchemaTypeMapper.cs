@@ -20,6 +20,7 @@ internal static class JsonSchemaTypeMapper
     {
         // Unwrap Nullable<T>
         var underlying = Nullable.GetUnderlyingType(type);
+
         if (underlying is not null)
         {
             WriteNullableTypeProperties(writer, underlying);
@@ -42,7 +43,7 @@ internal static class JsonSchemaTypeMapper
 
     private static void WriteNullableTypeProperties(Utf8JsonWriter writer, Type underlyingType)
     {
-        // Collect what the type would be without null
+        // Collect what the type would be without a null
         var (jsonType, format) = GetTypeAndFormat(underlyingType);
 
         writer.WritePropertyName("type");
@@ -86,20 +87,70 @@ internal static class JsonSchemaTypeMapper
     /// </summary>
     private static (string JsonType, string? Format) GetTypeAndFormat(Type type)
     {
-        if (type == typeof(string)) return ("string", null);
-        if (type == typeof(bool)) return ("boolean", null);
-        if (type == typeof(int)) return ("integer", "int32");
-        if (type == typeof(long)) return ("integer", "int64");
-        if (type == typeof(float)) return ("number", "float");
-        if (type == typeof(double)) return ("number", "double");
-        if (type == typeof(decimal)) return ("number", "decimal");
-        if (type == typeof(DateTime)) return ("string", "date-time");
-        if (type == typeof(DateTimeOffset)) return ("string", "date-time");
-        if (type == typeof(DateOnly)) return ("string", "date");
-        if (type == typeof(TimeOnly)) return ("string", "time");
-        if (type == typeof(Guid)) return ("string", "uuid");
-        if (type == typeof(Uri)) return ("string", "uri");
-        if (type.IsEnum) return ("string", null);
+        if (type == typeof(string))
+        {
+            return ("string", null);
+        }
+
+        if (type == typeof(bool))
+        {
+            return ("boolean", null);
+        }
+
+        if (type == typeof(int))
+        {
+            return ("integer", "int32");
+        }
+
+        if (type == typeof(long))
+        {
+            return ("integer", "int64");
+        }
+
+        if (type == typeof(float))
+        {
+            return ("number", "float");
+        }
+
+        if (type == typeof(double))
+        {
+            return ("number", "double");
+        }
+
+        if (type == typeof(decimal))
+        {
+            return ("number", "decimal");
+        }
+
+        if (type == typeof(DateTime) || type == typeof(DateTimeOffset))
+        {
+            return ("string", "date-time");
+        }
+
+        if (type == typeof(DateOnly))
+        {
+            return ("string", "date");
+        }
+
+        if (type == typeof(TimeOnly))
+        {
+            return ("string", "time");
+        }
+
+        if (type == typeof(Guid))
+        {
+            return ("string", "uuid");
+        }
+
+        if (type == typeof(Uri))
+        {
+            return ("string", "uri");
+        }
+
+        if (type.IsEnum)
+        {
+            return ("string", null);
+        }
 
         return ("object", null);
     }
@@ -108,10 +159,12 @@ internal static class JsonSchemaTypeMapper
     {
         writer.WritePropertyName("enum");
         writer.WriteStartArray();
+
         foreach (var name in Enum.GetNames(enumType))
         {
             writer.WriteStringValue(name);
         }
+
         writer.WriteEndArray();
     }
 
@@ -127,11 +180,13 @@ internal static class JsonSchemaTypeMapper
         // IEnumerable<T> or any interface/class implementing it
         foreach (var iface in type.GetInterfaces())
         {
-            if (iface.IsGenericType && iface.GetGenericTypeDefinition() == typeof(IEnumerable<>))
+            if (!iface.IsGenericType || iface.GetGenericTypeDefinition() != typeof(IEnumerable<>))
             {
-                elementType = iface.GetGenericArguments()[0];
-                return true;
+                continue;
             }
+
+            elementType = iface.GetGenericArguments()[0];
+            return true;
         }
 
         elementType = null;

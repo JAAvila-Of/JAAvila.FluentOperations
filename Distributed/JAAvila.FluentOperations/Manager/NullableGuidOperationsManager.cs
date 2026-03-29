@@ -9,7 +9,7 @@ using JAAvila.FluentOperations.Validators;
 namespace JAAvila.FluentOperations.Manager;
 
 /// <summary>
-/// Provides fluent validation operations for <c>Guid?</c> values.
+/// Provides fluent validation operations for <c>Guid?</c> Values.
 /// Supports value presence, null-checking, and inherited nullable operations.
 /// </summary>
 public class NullableGuidOperationsManager
@@ -28,7 +28,7 @@ public class NullableGuidOperationsManager
     {
         PrincipalChain = PrincipalChain<Guid?>.Get(value, caller);
         GlobalConfig.Initialize();
-        SetManager(this);
+        base.SetManager(this);
     }
 
     /// <summary>
@@ -78,7 +78,8 @@ public class NullableGuidOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             PrincipalChain.GetValue()?.ToString() ?? "<null>"
                         )
                         .WithReason(reason?.ToString())
@@ -109,7 +110,8 @@ public class NullableGuidOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue()),
                             BaseFormatter.Format(expected)
                         )
@@ -140,7 +142,11 @@ public class NullableGuidOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.MessageKey, operation.ResultValidation, BaseFormatter.Format(expected))
+                        .WithResult(
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            BaseFormatter.Format(expected)
+                        )
                         .WithReason(reason?.ToString())
             )
             .Execute();
@@ -168,15 +174,16 @@ public class NullableGuidOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeEmpty)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -210,9 +217,9 @@ public class NullableGuidOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(NotBeEmpty)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -258,7 +265,8 @@ public class NullableGuidOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             string.Join(", ", expected.Select(g => BaseFormatter.Format(g))),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -274,9 +282,9 @@ public class NullableGuidOperationsManager
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeOneOf)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -322,7 +330,8 @@ public class NullableGuidOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             string.Join(", ", expected.Select(g => BaseFormatter.Format(g)))
                         )
                         .WithReason(reason?.ToString())
@@ -337,9 +346,9 @@ public class NullableGuidOperationsManager
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(NotBeOneOf)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -356,7 +365,10 @@ public class NullableGuidOperationsManager
     public NullableGuidOperationsManager BeOfType<TType>(Reason? reason = null)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Common.BeOfType))
+        {
             return this;
+        }
+
         ValidateBeOfTypeOperation(reason, typeof(TType));
         return this;
     }
@@ -367,7 +379,10 @@ public class NullableGuidOperationsManager
     public NullableGuidOperationsManager BeOfType(Type expected, Reason? reason = null)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Common.BeOfType))
+        {
             return this;
+        }
+
         ValidateBeOfTypeOperation(reason, expected);
         return this;
     }
@@ -378,7 +393,10 @@ public class NullableGuidOperationsManager
     public NullableGuidOperationsManager NotBeOfType<TType>(Reason? reason = null)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Common.NotBeOfType))
+        {
             return this;
+        }
+
         ValidateNotBeOfTypeOperation(reason, typeof(TType));
         return this;
     }
@@ -389,7 +407,10 @@ public class NullableGuidOperationsManager
     public NullableGuidOperationsManager NotBeOfType(Type expected, Reason? reason = null)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Common.NotBeOfType))
+        {
             return this;
+        }
+
         ValidateNotBeOfTypeOperation(reason, expected);
         return this;
     }
@@ -410,14 +431,18 @@ public class NullableGuidOperationsManager
                 _ =>
                     (
                         type is null,
-                        Fail.New($"The {nameof(BeOfType)} operation failed because the expected type was <null>.")
+                        Fail.New(
+                            $"The {nameof(BeOfType)} operation failed because the expected type was <null>."
+                        )
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
-                        Fail.New($"The {nameof(BeOfType)} operation failed because the value was <null>.")
+                        m.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(BeOfType)} operation failed because the value was <null>."
+                        )
                     )
             )
             .Execute();
@@ -439,14 +464,18 @@ public class NullableGuidOperationsManager
                 _ =>
                     (
                         type is null,
-                        Fail.New($"The {nameof(NotBeOfType)} operation failed because the expected type was <null>.")
+                        Fail.New(
+                            $"The {nameof(NotBeOfType)} operation failed because the expected type was <null>."
+                        )
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
-                        Fail.New($"The {nameof(NotBeOfType)} operation failed because the value was <null>.")
+                        m.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(NotBeOfType)} operation failed because the value was <null>."
+                        )
                     )
             )
             .Execute();

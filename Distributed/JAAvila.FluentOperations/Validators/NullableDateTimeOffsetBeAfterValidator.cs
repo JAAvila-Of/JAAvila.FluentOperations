@@ -5,13 +5,18 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable datetimeoffset value is strictly after the expected value.
 /// </summary>
-internal class NullableDateTimeOffsetBeAfterValidator(PrincipalChain<DateTimeOffset?> chain, DateTimeOffset expected) : IValidator, IRuleDescriptor
+internal class NullableDateTimeOffsetBeAfterValidator(
+    PrincipalChain<DateTimeOffset?> chain,
+    DateTimeOffset expected
+) : IValidator, IRuleDescriptor
 {
-    public static NullableDateTimeOffsetBeAfterValidator New(PrincipalChain<DateTimeOffset?> chain, DateTimeOffset expected) =>
-        new(chain, expected);
+    public static NullableDateTimeOffsetBeAfterValidator New(
+        PrincipalChain<DateTimeOffset?> chain,
+        DateTimeOffset expected
+    ) => new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableDateTimeOffset.BeAfter";
     string IRuleDescriptor.OperationName => "BeAfter";
     Type IRuleDescriptor.SubjectType => typeof(DateTimeOffset?);

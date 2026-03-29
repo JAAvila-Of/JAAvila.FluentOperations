@@ -35,8 +35,8 @@ internal static class WildcardMatcher
 
         var currentIndex = 0;
 
-        // If a pattern doesn't start with '*', the first segment must be at start
-        if (!pattern.StartsWith("*"))
+        // If a pattern doesn't start with '*', the first segment must be at the start
+        if (!pattern.StartsWith('*'))
         {
             if (!value.StartsWith(segments[0], comparison))
             {
@@ -59,8 +59,8 @@ internal static class WildcardMatcher
             currentIndex = foundIndex + segment.Length;
         }
 
-        // If pattern doesn't end with '*', last segment must be at end
-        if (!pattern.EndsWith("*") && segments.Length > 0)
+        // If a pattern doesn't end with '*', the last segment must be at the end
+        if (!pattern.EndsWith('*') && segments.Length > 0)
         {
             var lastSegment = segments[^1];
             return value.EndsWith(lastSegment, comparison);

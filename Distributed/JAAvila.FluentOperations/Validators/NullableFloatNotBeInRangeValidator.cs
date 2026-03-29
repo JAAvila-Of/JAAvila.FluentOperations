@@ -17,8 +17,8 @@ internal class NullableFloatNotBeInRangeValidator(
         float max
     ) => new(chain, min, max);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableFloat.NotBeInRange";
     string IRuleDescriptor.OperationName => "NotBeInRange";
     Type IRuleDescriptor.SubjectType => typeof(float?);

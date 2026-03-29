@@ -3,15 +3,14 @@ using JAAvila.FluentOperations.Contract;
 namespace JAAvila.FluentOperations.Validators;
 
 /// <summary>
-/// Validates that the uri URI has the expected fragment.
+/// Validates that the uri has the expected fragment.
 /// </summary>
 internal class UriHaveFragmentValidator(PrincipalChain<Uri?> chain) : IValidator, IRuleDescriptor
 {
-    public static UriHaveFragmentValidator New(PrincipalChain<Uri?> chain) =>
-        new(chain);
+    public static UriHaveFragmentValidator New(PrincipalChain<Uri?> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Uri.HaveFragment";
     string IRuleDescriptor.OperationName => "HaveFragment";
     Type IRuleDescriptor.SubjectType => typeof(Uri);

@@ -47,7 +47,7 @@ internal class StringComparator : IComparator<string?>
     /// <summary>
     /// Compares two strings using the specified StringComparison.
     /// For Ordinal comparison, delegates to the detailed char-by-char comparison.
-    /// For other comparisons, uses string.Equals() directly.
+    /// For other comparisons, use string.Equals() directly.
     /// </summary>
     public static (bool, string?) CompareWith(
         string? actualValue,
@@ -82,7 +82,10 @@ internal class StringComparator : IComparator<string?>
         string? expected,
         ComparisonOptions options)
     {
-        var (areEqual, diffDesc) = CompareWith(actual, expected, options.StringComparison);
+        var normalizedActual = actual is not null ? NormalizeString(actual, options) : null;
+        var normalizedExpected = expected is not null ? NormalizeString(expected, options) : null;
+
+        var (areEqual, diffDesc) = CompareWith(normalizedActual, normalizedExpected, options.StringComparison);
         return areEqual
             ? ComparisonResult.Equal
             : ComparisonResult.NotEqual(diffDesc ?? string.Empty);
@@ -90,6 +93,29 @@ internal class StringComparator : IComparator<string?>
 
     private static string Format(string? value)
         => value is null ? "<null>" : $"\"{value}\"";
+
+    /// <summary>
+    /// Applies whitespace and newline normalization to a string based on comparison options.
+    /// </summary>
+    private static string NormalizeString(string value, ComparisonOptions options)
+    {
+        if (options.IgnoreNewLineStyle)
+        {
+            value = value.Replace("\r\n", "\n").Replace("\r", "\n");
+        }
+
+        if (options.IgnoreLeadingWhitespace)
+        {
+            value = value.TrimStart();
+        }
+
+        if (options.IgnoreTrailingWhitespace)
+        {
+            value = value.TrimEnd();
+        }
+
+        return value;
+    }
 
     #region PRIVATE METHODS
 

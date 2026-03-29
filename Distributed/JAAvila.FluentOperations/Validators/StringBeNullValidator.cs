@@ -19,7 +19,7 @@ internal class StringBeNullValidator(PrincipalChain<string?> chain) : IValidator
     public string Expected => "Be Null - <null>";
 
     /// <inheritdoc />
-    public string ResultValidation { get; set; }
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "String.BeNull";
     string IRuleDescriptor.OperationName => "BeNull";
     Type IRuleDescriptor.SubjectType => typeof(string);

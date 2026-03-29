@@ -5,18 +5,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the value's runtime type is NOT assignable to the expected type.
 /// </summary>
-internal class ReferenceNotBeAssignableToValidator(
-    PrincipalChain<object?> chain,
-    Type expected
-) : IValidator, IRuleDescriptor
+internal class ReferenceNotBeAssignableToValidator(PrincipalChain<object?> chain, Type expected)
+    : IValidator,
+        IRuleDescriptor
 {
     public static ReferenceNotBeAssignableToValidator New(
         PrincipalChain<object?> chain,
         Type expected
     ) => new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Reference.NotBeAssignableTo";
     string IRuleDescriptor.OperationName => "NotBeAssignableTo";
     Type IRuleDescriptor.SubjectType => typeof(object);

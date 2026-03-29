@@ -5,13 +5,14 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the double value is negative infinity.
 /// </summary>
-internal class DoubleBeNegativeInfinityValidator(PrincipalChain<double> chain) : IValidator, IRuleDescriptor
+internal class DoubleBeNegativeInfinityValidator(PrincipalChain<double> chain)
+    : IValidator,
+        IRuleDescriptor
 {
-    public static DoubleBeNegativeInfinityValidator New(PrincipalChain<double> chain) =>
-        new(chain);
+    public static DoubleBeNegativeInfinityValidator New(PrincipalChain<double> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Double.BeNegativeInfinity";
     string IRuleDescriptor.OperationName => "BeNegativeInfinity";
     Type IRuleDescriptor.SubjectType => typeof(double);
@@ -25,7 +26,8 @@ internal class DoubleBeNegativeInfinityValidator(PrincipalChain<double> chain) :
             return true;
         }
 
-        ResultValidation = "The resulting value was expected to be negative infinity, but {0} was found.";
+        ResultValidation =
+            "The resulting value was expected to be negative infinity, but {0} was found.";
         return false;
     }
 

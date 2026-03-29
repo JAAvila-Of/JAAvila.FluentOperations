@@ -17,8 +17,9 @@ internal class StringBeOneOfValidator(
         StringComparison? comparison = null
     ) => new(chain, expected, comparison);
 
-    public string Expected { get; } = string.Join(", ", expected.Select(e => e is null ? "<null>" : $"\"{e}\""));
-    public string ResultValidation { get; set; }
+    public string Expected { get; } =
+        string.Join(", ", expected.Select(e => e is null ? "<null>" : $"\"{e}\""));
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "String.BeOneOf";
 
     string IRuleDescriptor.OperationName => "BeOneOf";

@@ -7,15 +7,16 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the nullable float value is not one of the specified disallowed values.
 /// </summary>
 internal class NullableFloatNotBeOneOfValidator(PrincipalChain<float?> chain, float[] expected)
-    : IValidator, IRuleDescriptor
+    : IValidator,
+        IRuleDescriptor
 {
     public static NullableFloatNotBeOneOfValidator New(
         PrincipalChain<float?> chain,
         float[] expected
     ) => new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableFloat.NotBeOneOf";
     string IRuleDescriptor.OperationName => "NotBeOneOf";
     Type IRuleDescriptor.SubjectType => typeof(float?);

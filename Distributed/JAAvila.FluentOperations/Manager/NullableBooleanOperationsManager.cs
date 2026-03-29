@@ -9,7 +9,7 @@ using JAAvila.FluentOperations.Validators;
 namespace JAAvila.FluentOperations.Manager;
 
 /// <summary>
-/// Provides fluent validation operations for <c>bool?</c> values.
+/// Provides fluent validation operations for <c>bool?</c> Values.
 /// Supports equality, value presence, collective truth, and logical implication validations.
 /// </summary>
 public class NullableBooleanOperationsManager
@@ -28,7 +28,7 @@ public class NullableBooleanOperationsManager
     {
         PrincipalChain = PrincipalChain<bool?>.Get(value, caller);
         GlobalConfig.Initialize();
-        SetManager(this);
+        base.SetManager(this);
     }
 
     /// <summary>
@@ -106,7 +106,8 @@ public class NullableBooleanOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BooleanFormatter.Format(PrincipalChain.GetValue()),
                             BooleanFormatter.Format(expected)
                         )
@@ -137,7 +138,11 @@ public class NullableBooleanOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.MessageKey, operation.ResultValidation, BooleanFormatter.Format(expected))
+                        .WithResult(
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            BooleanFormatter.Format(expected)
+                        )
                         .WithReason(reason?.ToString())
             )
             .Execute();
@@ -186,7 +191,7 @@ public class NullableBooleanOperationsManager
     }
 
     /// <summary>
-    /// Asserts that all of the provided <paramref name="booleans"/> are <c>true</c>.
+    /// Asserts that all the provided <paramref name="booleans"/> are <c>true</c>.
     /// </summary>
     /// <param name="booleans">The boolean values to check.</param>
     /// <returns>The current manager instance for method chaining.</returns>
@@ -210,9 +215,9 @@ public class NullableBooleanOperationsManager
                         .WithResult(operation.MessageKey, operation.ResultValidation)
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeAllTrue)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -242,7 +247,7 @@ public class NullableBooleanOperationsManager
     }
 
     /// <summary>
-    /// Asserts that all of the provided <paramref name="booleans"/> are <c>false</c>.
+    /// Asserts that all the provided <paramref name="booleans"/> are <c>false</c>.
     /// </summary>
     /// <param name="booleans">The boolean values to check.</param>
     /// <returns>The current manager instance for method chaining.</returns>
@@ -266,9 +271,9 @@ public class NullableBooleanOperationsManager
                         .WithResult(operation.MessageKey, operation.ResultValidation)
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeAllFalse)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -303,7 +308,10 @@ public class NullableBooleanOperationsManager
     public NullableBooleanOperationsManager BeOfType<TType>(Reason? reason = null)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Common.BeOfType))
+        {
             return this;
+        }
+
         ValidateBeOfTypeOperation(reason, typeof(TType));
         return this;
     }
@@ -314,7 +322,10 @@ public class NullableBooleanOperationsManager
     public NullableBooleanOperationsManager BeOfType(Type expected, Reason? reason = null)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Common.BeOfType))
+        {
             return this;
+        }
+
         ValidateBeOfTypeOperation(reason, expected);
         return this;
     }
@@ -325,7 +336,10 @@ public class NullableBooleanOperationsManager
     public NullableBooleanOperationsManager NotBeOfType<TType>(Reason? reason = null)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Common.NotBeOfType))
+        {
             return this;
+        }
+
         ValidateNotBeOfTypeOperation(reason, typeof(TType));
         return this;
     }
@@ -336,7 +350,10 @@ public class NullableBooleanOperationsManager
     public NullableBooleanOperationsManager NotBeOfType(Type expected, Reason? reason = null)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Common.NotBeOfType))
+        {
             return this;
+        }
+
         ValidateNotBeOfTypeOperation(reason, expected);
         return this;
     }
@@ -357,14 +374,18 @@ public class NullableBooleanOperationsManager
                 _ =>
                     (
                         type is null,
-                        Fail.New($"The {nameof(BeOfType)} operation failed because the expected type was <null>.")
+                        Fail.New(
+                            $"The {nameof(BeOfType)} operation failed because the expected type was <null>."
+                        )
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
-                        Fail.New($"The {nameof(BeOfType)} operation failed because the value was <null>.")
+                        m.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(BeOfType)} operation failed because the value was <null>."
+                        )
                     )
             )
             .Execute();
@@ -386,14 +407,18 @@ public class NullableBooleanOperationsManager
                 _ =>
                     (
                         type is null,
-                        Fail.New($"The {nameof(NotBeOfType)} operation failed because the expected type was <null>.")
+                        Fail.New(
+                            $"The {nameof(NotBeOfType)} operation failed because the expected type was <null>."
+                        )
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
-                        Fail.New($"The {nameof(NotBeOfType)} operation failed because the value was <null>.")
+                        m.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(NotBeOfType)} operation failed because the value was <null>."
+                        )
                     )
             )
             .Execute();

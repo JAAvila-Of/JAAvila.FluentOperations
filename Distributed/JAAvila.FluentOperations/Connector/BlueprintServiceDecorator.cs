@@ -11,11 +11,19 @@ namespace JAAvila.FluentOperations.Connector;
 /// <typeparam name="TModel">The model type to validate</typeparam>
 /// <typeparam name="TBlueprint">The blueprint type for validation</typeparam>
 public class BlueprintServiceDecorator<TService, TModel, TBlueprint>
-    where TBlueprint : QualityBlueprint<TModel>, new()
+    where TBlueprint : QualityBlueprint<TModel>, new() where TModel : notnull
 {
     private readonly TService _inner;
     private readonly TBlueprint _blueprint;
 
+    /// <summary>
+    /// A decorator designed to automatically validate parameters of service methods using a specified quality blueprint.
+    /// Uses Scrutor's decoration capabilities to intercept and validate service calls.
+    /// </summary>
+    /// <typeparam name="TService">The type of the service interface being decorated</typeparam>
+    /// <typeparam name="TModel">The type of the model to be validated</typeparam>
+    /// <typeparam name="TBlueprint">The type of the quality blueprint used for validation</typeparam>
+    /// <exception cref="ArgumentNullException">Thrown if the injected service instance is null</exception>
     protected BlueprintServiceDecorator(TService inner)
     {
         _inner = inner ?? throw new ArgumentNullException(nameof(inner));

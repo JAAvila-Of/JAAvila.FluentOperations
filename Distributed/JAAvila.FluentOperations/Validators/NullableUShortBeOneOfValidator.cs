@@ -7,13 +7,16 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the nullable ushort value is one of the specified allowed values.
 /// </summary>
 internal class NullableUShortBeOneOfValidator(PrincipalChain<ushort?> chain, ushort[] values)
-    : IValidator, IRuleDescriptor
+    : IValidator,
+        IRuleDescriptor
 {
-    public static NullableUShortBeOneOfValidator New(PrincipalChain<ushort?> chain, ushort[] values) =>
-        new(chain, values);
+    public static NullableUShortBeOneOfValidator New(
+        PrincipalChain<ushort?> chain,
+        ushort[] values
+    ) => new(chain, values);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableUShort.BeOneOf";
     string IRuleDescriptor.OperationName => "BeOneOf";
     Type IRuleDescriptor.SubjectType => typeof(ushort?);

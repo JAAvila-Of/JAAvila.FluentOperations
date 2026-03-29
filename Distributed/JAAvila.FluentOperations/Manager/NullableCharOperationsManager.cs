@@ -9,7 +9,7 @@ using JAAvila.FluentOperations.Validators;
 namespace JAAvila.FluentOperations.Manager;
 
 /// <summary>
-/// Provides fluent validation operations for <c>char?</c> values.
+/// Provides fluent validation operations for <c>char?</c> Values.
 /// Supports value presence, equality, comparison, range, membership, and character classification validations.
 /// </summary>
 public class NullableCharOperationsManager
@@ -28,7 +28,7 @@ public class NullableCharOperationsManager
     {
         PrincipalChain = PrincipalChain<char?>.Get(value, caller);
         GlobalConfig.Initialize();
-        SetManager(this);
+        base.SetManager(this);
     }
 
     /// <summary>
@@ -106,7 +106,8 @@ public class NullableCharOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue()),
                             BaseFormatter.Format(expected)
                         )
@@ -137,7 +138,11 @@ public class NullableCharOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.MessageKey, operation.ResultValidation, BaseFormatter.Format(expected))
+                        .WithResult(
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            BaseFormatter.Format(expected)
+                        )
                         .WithReason(reason?.ToString())
             )
             .Execute();
@@ -169,9 +174,9 @@ public class NullableCharOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeGreaterThan)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -197,9 +202,7 @@ public class NullableCharOperationsManager
 
         ExecutionEngine<NullableCharOperationsManager, char?>
             .New(this)
-            .WithOperation(
-                NullableCharBeGreaterThanOrEqualToValidator.New(PrincipalChain, value)
-            )
+            .WithOperation(NullableCharBeGreaterThanOrEqualToValidator.New(PrincipalChain, value))
             .WithTemplate(
                 (template, operation) =>
                     template
@@ -208,9 +211,9 @@ public class NullableCharOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeGreaterThanOrEqualTo)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -245,9 +248,9 @@ public class NullableCharOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeLessThan)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -282,9 +285,9 @@ public class NullableCharOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeLessThanOrEqualTo)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -320,9 +323,9 @@ public class NullableCharOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeInRange)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -367,9 +370,9 @@ public class NullableCharOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(NotBeInRange)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -411,9 +414,9 @@ public class NullableCharOperationsManager
                         .WithResult(operation.MessageKey, operation.ResultValidation)
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeOneOf)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -455,9 +458,9 @@ public class NullableCharOperationsManager
                         .WithResult(operation.MessageKey, operation.ResultValidation)
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(NotBeOneOf)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -500,9 +503,9 @@ public class NullableCharOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeUpperCase)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -536,9 +539,9 @@ public class NullableCharOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeLowerCase)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -572,9 +575,9 @@ public class NullableCharOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeDigit)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -608,9 +611,9 @@ public class NullableCharOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeLetter)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -644,9 +647,9 @@ public class NullableCharOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeLetterOrDigit)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -680,9 +683,9 @@ public class NullableCharOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeWhiteSpace)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -716,9 +719,9 @@ public class NullableCharOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BePunctuation)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -752,9 +755,9 @@ public class NullableCharOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeControl)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -788,9 +791,9 @@ public class NullableCharOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeAscii)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -824,9 +827,9 @@ public class NullableCharOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeSurrogate)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -843,7 +846,10 @@ public class NullableCharOperationsManager
     public NullableCharOperationsManager BeOfType<TType>(Reason? reason = null)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Common.BeOfType))
+        {
             return this;
+        }
+
         ValidateBeOfTypeOperation(reason, typeof(TType));
         return this;
     }
@@ -854,7 +860,10 @@ public class NullableCharOperationsManager
     public NullableCharOperationsManager BeOfType(Type expected, Reason? reason = null)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Common.BeOfType))
+        {
             return this;
+        }
+
         ValidateBeOfTypeOperation(reason, expected);
         return this;
     }
@@ -865,7 +874,10 @@ public class NullableCharOperationsManager
     public NullableCharOperationsManager NotBeOfType<TType>(Reason? reason = null)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Common.NotBeOfType))
+        {
             return this;
+        }
+
         ValidateNotBeOfTypeOperation(reason, typeof(TType));
         return this;
     }
@@ -876,7 +888,10 @@ public class NullableCharOperationsManager
     public NullableCharOperationsManager NotBeOfType(Type expected, Reason? reason = null)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Common.NotBeOfType))
+        {
             return this;
+        }
+
         ValidateNotBeOfTypeOperation(reason, expected);
         return this;
     }
@@ -897,14 +912,18 @@ public class NullableCharOperationsManager
                 _ =>
                     (
                         type is null,
-                        Fail.New($"The {nameof(BeOfType)} operation failed because the expected type was <null>.")
+                        Fail.New(
+                            $"The {nameof(BeOfType)} operation failed because the expected type was <null>."
+                        )
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
-                        Fail.New($"The {nameof(BeOfType)} operation failed because the value was <null>.")
+                        m.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(BeOfType)} operation failed because the value was <null>."
+                        )
                     )
             )
             .Execute();
@@ -926,14 +945,18 @@ public class NullableCharOperationsManager
                 _ =>
                     (
                         type is null,
-                        Fail.New($"The {nameof(NotBeOfType)} operation failed because the expected type was <null>.")
+                        Fail.New(
+                            $"The {nameof(NotBeOfType)} operation failed because the expected type was <null>."
+                        )
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
-                        Fail.New($"The {nameof(NotBeOfType)} operation failed because the value was <null>.")
+                        m.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(NotBeOfType)} operation failed because the value was <null>."
+                        )
                     )
             )
             .Execute();

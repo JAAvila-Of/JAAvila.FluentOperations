@@ -5,13 +5,15 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable datetime value falls on a weekday (Monday through Friday).
 /// </summary>
-internal class NullableDateTimeBeWeekdayValidator(PrincipalChain<DateTime?> chain) : IValidator, IRuleDescriptor
+internal class NullableDateTimeBeWeekdayValidator(PrincipalChain<DateTime?> chain)
+    : IValidator,
+        IRuleDescriptor
 {
     public static NullableDateTimeBeWeekdayValidator New(PrincipalChain<DateTime?> chain) =>
         new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableDateTime.BeWeekday";
     string IRuleDescriptor.OperationName => "BeWeekday";
     Type IRuleDescriptor.SubjectType => typeof(DateTime?);

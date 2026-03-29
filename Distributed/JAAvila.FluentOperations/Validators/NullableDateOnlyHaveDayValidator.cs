@@ -5,13 +5,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable dateonly value has the expected day of the month.
 /// </summary>
-internal class NullableDateOnlyHaveDayValidator(PrincipalChain<DateOnly?> chain, int expectedDay) : IValidator, IRuleDescriptor
+internal class NullableDateOnlyHaveDayValidator(PrincipalChain<DateOnly?> chain, int expectedDay)
+    : IValidator,
+        IRuleDescriptor
 {
-    public static NullableDateOnlyHaveDayValidator New(PrincipalChain<DateOnly?> chain, int expectedDay) =>
-        new(chain, expectedDay);
+    public static NullableDateOnlyHaveDayValidator New(
+        PrincipalChain<DateOnly?> chain,
+        int expectedDay
+    ) => new(chain, expectedDay);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableDateOnly.HaveDay";
     string IRuleDescriptor.OperationName => "HaveDay";
     Type IRuleDescriptor.SubjectType => typeof(DateOnly?);

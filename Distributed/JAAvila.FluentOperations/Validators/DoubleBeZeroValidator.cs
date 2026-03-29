@@ -7,11 +7,10 @@ namespace JAAvila.FluentOperations.Validators;
 /// </summary>
 internal class DoubleBeZeroValidator(PrincipalChain<double> chain) : IValidator, IRuleDescriptor
 {
-    public static DoubleBeZeroValidator New(PrincipalChain<double> chain) =>
-        new(chain);
+    public static DoubleBeZeroValidator New(PrincipalChain<double> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Double.BeZero";
     string IRuleDescriptor.OperationName => "BeZero";
     Type IRuleDescriptor.SubjectType => typeof(double);

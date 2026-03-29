@@ -1,4 +1,3 @@
-using JAAvila.FluentOperations.Contract;
 using JAAvila.FluentOperations.Manager;
 using JAAvila.FluentOperations.Model;
 
@@ -75,7 +74,7 @@ public abstract partial class QualityBlueprint<T>
 
     /// <summary>
     /// Defines a synchronous model-level validation rule using a predicate over the entire root object.
-    /// Use this for cross-property business invariants (e.g., total must equal sum of items).
+    /// Use this for cross-property business invariants (e.g., total must equal a sum of items).
     /// Failures are reported with <see cref="RootPropertyName"/> as the property name.
     /// </summary>
     /// <param name="predicate">A function that receives the model and returns <c>true</c> if validation passes.</param>
@@ -88,7 +87,9 @@ public abstract partial class QualityBlueprint<T>
         var currentScenario = _currentScenario;
         var currentRuleSet = _currentRuleSet;
         var rule = new ModelPredicateRule<T>(predicate, failureMessage);
-        _capturedDuringDefinition.Add(new CapturedRule(propertyName, rule, currentScenario, null, currentRuleSet));
+        _capturedDuringDefinition.Add(
+            new CapturedRule(propertyName, rule, currentScenario, null, currentRuleSet)
+        );
     }
 
     /// <summary>
@@ -99,10 +100,7 @@ public abstract partial class QualityBlueprint<T>
     /// <param name="predicate">A function that receives the model and returns <c>true</c> if validation passes.</param>
     /// <param name="failureMessage">The message to include in the report when the predicate returns <c>false</c>.</param>
     /// <param name="config">Configuration for this rule (severity, error code, cascade mode).</param>
-    protected void ForSelf(
-        Func<T, bool> predicate,
-        string failureMessage,
-        RuleConfig config)
+    protected void ForSelf(Func<T, bool> predicate, string failureMessage, RuleConfig config)
     {
         const string propertyName = RootPropertyName;
         _extractors[propertyName] = x => x;
@@ -110,12 +108,14 @@ public abstract partial class QualityBlueprint<T>
         var currentScenario = _currentScenario;
         var currentRuleSet = _currentRuleSet;
         var rule = new ModelPredicateRule<T>(predicate, failureMessage, config);
-        _capturedDuringDefinition.Add(new CapturedRule(propertyName, rule, currentScenario, config, currentRuleSet));
+        _capturedDuringDefinition.Add(
+            new CapturedRule(propertyName, rule, currentScenario, config, currentRuleSet)
+        );
     }
 
     /// <summary>
     /// Defines an asynchronous model-level validation rule using a predicate over the entire root object.
-    /// Use <see cref="CheckAsync(T)"/> to execute blueprints containing async self rules.
+    /// Use <see cref="CheckAsync(T)"/> to execute blueprints containing async self-rules.
     /// Failures are reported with <see cref="RootPropertyName"/> as the property name.
     /// </summary>
     /// <param name="predicate">An async function that receives the model and returns <c>true</c> if validation passes.</param>
@@ -128,13 +128,15 @@ public abstract partial class QualityBlueprint<T>
         var currentScenario = _currentScenario;
         var currentRuleSet = _currentRuleSet;
         var rule = new AsyncModelPredicateRule<T>(predicate, failureMessage);
-        _capturedDuringDefinition.Add(new CapturedRule(propertyName, rule, currentScenario, null, currentRuleSet));
+        _capturedDuringDefinition.Add(
+            new CapturedRule(propertyName, rule, currentScenario, null, currentRuleSet)
+        );
     }
 
     /// <summary>
     /// Defines an asynchronous model-level validation rule using a predicate over the entire root object,
     /// with a <see cref="RuleConfig"/> that controls severity, error code, and cascade behavior.
-    /// Use <see cref="CheckAsync(T)"/> to execute blueprints containing async self rules.
+    /// Use <see cref="CheckAsync(T)"/> to execute blueprints containing async self-rules.
     /// Failures are reported with <see cref="RootPropertyName"/> as the property name.
     /// </summary>
     /// <param name="predicate">An async function that receives the model and returns <c>true</c> if validation passes.</param>
@@ -143,7 +145,8 @@ public abstract partial class QualityBlueprint<T>
     protected void ForSelfAsync(
         Func<T, Task<bool>> predicate,
         string failureMessage,
-        RuleConfig config)
+        RuleConfig config
+    )
     {
         const string propertyName = RootPropertyName;
         _extractors[propertyName] = x => x;
@@ -151,6 +154,8 @@ public abstract partial class QualityBlueprint<T>
         var currentScenario = _currentScenario;
         var currentRuleSet = _currentRuleSet;
         var rule = new AsyncModelPredicateRule<T>(predicate, failureMessage, config);
-        _capturedDuringDefinition.Add(new CapturedRule(propertyName, rule, currentScenario, config, currentRuleSet));
+        _capturedDuringDefinition.Add(
+            new CapturedRule(propertyName, rule, currentScenario, config, currentRuleSet)
+        );
     }
 }

@@ -11,12 +11,13 @@ internal static class SnapshotSerializer
 {
     private const int CurrentVersion = 1;
 
-    private static readonly JsonSerializerOptions JsonOptions = new()
-    {
-        WriteIndented = true,
-        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-        Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) },
-    };
+    private static readonly JsonSerializerOptions JsonOptions =
+        new()
+        {
+            WriteIndented = true,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) },
+        };
 
     // -------------------------------------------------------------------------
     // Internal models
@@ -58,20 +59,23 @@ internal static class SnapshotSerializer
     /// </summary>
     internal static string Serialize(QualityReport report, SnapshotOptions options)
     {
-        var failures = report.Failures
-            .OrderBy(f => f.PropertyName, StringComparer.Ordinal)
+        var failures = report
+            .Failures.OrderBy(f => f.PropertyName, StringComparer.Ordinal)
             .ThenBy(f => f.Severity.ToString(), StringComparer.Ordinal)
             .ThenBy(f => f.Message, StringComparer.Ordinal)
-            .Select(f => new SnapshotFailure
-            {
-                PropertyName = f.PropertyName,
-                Message = options.IncludeMessages ? f.Message : null,
-                Severity = f.Severity.ToString(),
-                ErrorCode = f.ErrorCode,
-                AttemptedValue = options.IncludeAttemptedValues
-                    ? f.AttemptedValue?.ToString()
-                    : null,
-            })
+            .Select(
+                f =>
+                    new SnapshotFailure
+                    {
+                        PropertyName = f.PropertyName,
+                        Message = options.IncludeMessages ? f.Message : null,
+                        Severity = f.Severity.ToString(),
+                        ErrorCode = f.ErrorCode,
+                        AttemptedValue = options.IncludeAttemptedValues
+                            ? f.AttemptedValue?.ToString()
+                            : null,
+                    }
+            )
             .ToList();
 
         var data = new SnapshotData
@@ -91,15 +95,19 @@ internal static class SnapshotSerializer
     /// </summary>
     internal static SnapshotData Deserialize(string json)
     {
-        var data = JsonSerializer.Deserialize<SnapshotData>(json, JsonOptions)
-            ?? throw new InvalidOperationException("Failed to deserialize snapshot: the JSON content is null or empty.");
+        var data =
+            JsonSerializer.Deserialize<SnapshotData>(json, JsonOptions)
+            ?? throw new InvalidOperationException(
+                "Failed to deserialize snapshot: the JSON content is null or empty."
+            );
 
         if (data.SnapshotVersion != CurrentVersion)
         {
             throw new InvalidOperationException(
-                $"Unsupported snapshot version '{data.SnapshotVersion}'. " +
-                $"The current supported version is {CurrentVersion}. " +
-                "Regenerate the snapshot file by calling UpdateSnapshot().");
+                $"Unsupported snapshot version '{data.SnapshotVersion}'. "
+                    + $"The current supported version is {CurrentVersion}. "
+                    + "Regenerate the snapshot file by calling UpdateSnapshot()."
+            );
         }
 
         return data;
