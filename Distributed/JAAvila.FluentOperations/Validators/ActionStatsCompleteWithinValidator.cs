@@ -5,13 +5,18 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the action completed within the specified maximum duration.
 /// </summary>
-internal class ActionStatsCompleteWithinValidator(PrincipalChain<Model.ActionStats?> chain, TimeSpan maxDuration) : IValidator, IRuleDescriptor
+internal class ActionStatsCompleteWithinValidator(
+    PrincipalChain<Model.ActionStats?> chain,
+    TimeSpan maxDuration
+) : IValidator, IRuleDescriptor
 {
-    public static ActionStatsCompleteWithinValidator New(PrincipalChain<Model.ActionStats?> chain, TimeSpan maxDuration) =>
-        new(chain, maxDuration);
+    public static ActionStatsCompleteWithinValidator New(
+        PrincipalChain<Model.ActionStats?> chain,
+        TimeSpan maxDuration
+    ) => new(chain, maxDuration);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected => null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "ActionStats.CompleteWithin";
     string IRuleDescriptor.OperationName => "CompleteWithin";
     Type IRuleDescriptor.SubjectType => typeof(Model.ActionStats);

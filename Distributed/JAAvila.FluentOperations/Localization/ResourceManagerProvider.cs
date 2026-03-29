@@ -6,7 +6,7 @@ namespace JAAvila.FluentOperations.Localization;
 
 /// <summary>
 /// An <see cref="IMessageProvider"/> backed by a <see cref="ResourceManager"/>.
-/// Resource keys are derived from message keys by replacing dots with underscores,
+/// Resource keys are derived from message keys by replacing dots with underscores
 /// because .resx resource names cannot contain dots.
 /// </summary>
 /// <remarks>
@@ -17,7 +17,7 @@ public class ResourceManagerProvider(ResourceManager resourceManager) : IMessage
     /// <inheritdoc />
     public string? GetMessage(string messageKey, CultureInfo culture)
     {
-        // .resx resource names cannot contain dots, so replace with underscores.
+        // .resx resource names cannot contain dots, so replace it with underscores.
         var resourceName = messageKey.Replace('.', '_');
         return resourceManager.GetString(resourceName, culture);
     }

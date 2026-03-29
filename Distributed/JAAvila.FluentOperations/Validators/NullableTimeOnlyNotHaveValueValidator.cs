@@ -5,13 +5,15 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable timeonly does not have a value (is null).
 /// </summary>
-internal class NullableTimeOnlyNotHaveValueValidator(PrincipalChain<TimeOnly?> chain) : IValidator, IRuleDescriptor
+internal class NullableTimeOnlyNotHaveValueValidator(PrincipalChain<TimeOnly?> chain)
+    : IValidator,
+        IRuleDescriptor
 {
     public static NullableTimeOnlyNotHaveValueValidator New(PrincipalChain<TimeOnly?> chain) =>
         new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableTimeOnly.NotHaveValue";
     string IRuleDescriptor.OperationName => "NotHaveValue";
     Type IRuleDescriptor.SubjectType => typeof(TimeOnly?);

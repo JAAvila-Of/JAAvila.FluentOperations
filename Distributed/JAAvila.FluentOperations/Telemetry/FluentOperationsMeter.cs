@@ -14,18 +14,28 @@ internal static class FluentOperationsMeter
     private static readonly Meter Meter = new("JAAvila.FluentOperations", "1.0.0");
 
     // Counters
-    private static readonly Counter<long> RulesEvaluated =
-        Meter.CreateCounter<long>("fo.rules.evaluated", description: "Total number of rules evaluated.");
+    private static readonly Counter<long> RulesEvaluated = Meter.CreateCounter<long>(
+        "fo.rules.evaluated",
+        description: "Total number of rules evaluated."
+    );
 
-    private static readonly Counter<long> RulesFailed =
-        Meter.CreateCounter<long>("fo.rules.failed", description: "Total number of rules that failed.");
+    private static readonly Counter<long> RulesFailed = Meter.CreateCounter<long>(
+        "fo.rules.failed",
+        description: "Total number of rules that failed."
+    );
 
     // Histograms
-    private static readonly Histogram<double> RuleDuration =
-        Meter.CreateHistogram<double>("fo.rule.duration", unit: "ms", description: "Duration of individual rule execution in milliseconds.");
+    private static readonly Histogram<double> RuleDuration = Meter.CreateHistogram<double>(
+        "fo.rule.duration",
+        unit: "ms",
+        description: "Duration of individual rule execution in milliseconds."
+    );
 
-    private static readonly Histogram<double> BlueprintDuration =
-        Meter.CreateHistogram<double>("fo.blueprint.duration", unit: "ms", description: "Duration of a full blueprint Check() / CheckAsync() call in milliseconds.");
+    private static readonly Histogram<double> BlueprintDuration = Meter.CreateHistogram<double>(
+        "fo.blueprint.duration",
+        unit: "ms",
+        description: "Duration of a full blueprint Check() / CheckAsync() call in milliseconds."
+    );
 
     /// <summary>
     /// Records metrics for a completed blueprint <c>Check</c> / <c>CheckAsync</c> call.
@@ -37,9 +47,11 @@ internal static class FluentOperationsMeter
         bool isValid,
         int rulesEvaluated,
         int rulesFailed,
-        double elapsedMs)
+        double elapsedMs
+    )
     {
         var config = GlobalConfig.GetTelemetryConfig();
+
         if (config is not { Enabled: true })
         {
             return;
@@ -72,6 +84,7 @@ internal static class FluentOperationsMeter
     internal static void RecordEagerRuleExecution(bool passed, string severity, double elapsedMs)
     {
         var config = GlobalConfig.GetTelemetryConfig();
+
         if (config is not { Enabled: true })
         {
             return;

@@ -5,13 +5,15 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the action completed without throwing an exception.
 /// </summary>
-internal class ActionStatsSucceedValidator(PrincipalChain<Model.ActionStats?> chain) : IValidator, IRuleDescriptor
+internal class ActionStatsSucceedValidator(PrincipalChain<Model.ActionStats?> chain)
+    : IValidator,
+        IRuleDescriptor
 {
     public static ActionStatsSucceedValidator New(PrincipalChain<Model.ActionStats?> chain) =>
         new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "ActionStats.Succeed";
     string IRuleDescriptor.OperationName => "Succeed";
     Type IRuleDescriptor.SubjectType => typeof(Model.ActionStats);

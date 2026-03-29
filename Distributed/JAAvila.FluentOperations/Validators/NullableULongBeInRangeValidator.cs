@@ -6,7 +6,8 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the nullable ulong value is within the specified inclusive range.
 /// </summary>
 internal class NullableULongBeInRangeValidator(PrincipalChain<ulong?> chain, ulong min, ulong max)
-    : IValidator, IRuleDescriptor
+    : IValidator,
+        IRuleDescriptor
 {
     public static NullableULongBeInRangeValidator New(
         PrincipalChain<ulong?> chain,
@@ -14,8 +15,8 @@ internal class NullableULongBeInRangeValidator(PrincipalChain<ulong?> chain, ulo
         ulong max
     ) => new(chain, min, max);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableULong.BeInRange";
     string IRuleDescriptor.OperationName => "BeInRange";
     Type IRuleDescriptor.SubjectType => typeof(ulong?);

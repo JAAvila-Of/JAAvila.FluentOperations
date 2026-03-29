@@ -3,13 +3,13 @@
 /// <summary>
 /// Represents an interface for managing tests with the associated principal chain and test list.
 /// </summary>
-public interface ITestManager<out TManager, TS> : ITestManager
-    where TManager : ITestManager<TManager, TS>
+public interface ITestManager<out TManager, Ts> : ITestManager
+    where TManager : ITestManager<TManager, Ts>
 {
     /// <summary>
     /// The principal chain that carries the subject value and its name through the assertion chain.
     /// </summary>
-    PrincipalChain<TS> PrincipalChain { get; }
+    PrincipalChain<Ts> PrincipalChain { get; }
 }
 
 /// <summary>

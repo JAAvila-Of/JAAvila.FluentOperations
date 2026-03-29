@@ -5,13 +5,15 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the ushort value equals the expected value.
 /// </summary>
-internal class UShortBeValidator(PrincipalChain<ushort> chain, ushort expected) : IValidator, IRuleDescriptor
+internal class UShortBeValidator(PrincipalChain<ushort> chain, ushort expected)
+    : IValidator,
+        IRuleDescriptor
 {
     public static UShortBeValidator New(PrincipalChain<ushort> chain, ushort expected) =>
         new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "UShort.Be";
     string IRuleDescriptor.OperationName => "Be";
     Type IRuleDescriptor.SubjectType => typeof(ushort);

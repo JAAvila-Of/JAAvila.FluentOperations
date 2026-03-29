@@ -6,12 +6,14 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the string is a valid phone number.
 /// </summary>
-internal class StringBePhoneNumberValidator(PrincipalChain<string?> chain) : IValidator, IRuleDescriptor
+internal class StringBePhoneNumberValidator(PrincipalChain<string?> chain)
+    : IValidator,
+        IRuleDescriptor
 {
     public static StringBePhoneNumberValidator New(PrincipalChain<string?> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "String.BePhoneNumber";
     string IRuleDescriptor.OperationName => "BePhoneNumber";
     Type IRuleDescriptor.SubjectType => typeof(string);

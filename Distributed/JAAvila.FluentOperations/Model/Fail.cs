@@ -9,9 +9,7 @@ namespace JAAvila.FluentOperations.Model;
 /// <param name="Because">A composite-format string describing why the assertion is expected to fail.
 /// Supports <see cref="string.Format(string,object[])"/> placeholders such as <c>{0}</c>.</param>
 /// <param name="Arguments">Optional arguments substituted into the <paramref name="Because"/> format string.</param>
-public record Fail(
-    [StringSyntax("CompositeFormat")] string Because = "",
-    params object[] Arguments)
+public record Fail([StringSyntax("CompositeFormat")] string Because = "", params object[] Arguments)
 {
     /// <summary>
     /// Creates a new <see cref="Fail"/> instance with the given format string and arguments.
@@ -23,7 +21,11 @@ public record Fail(
         [StringSyntax("CompositeFormat")] string because = "",
         params object[] arguments
     ) => new(because, arguments);
-    
+
+    /// <summary>
+    /// Returns a string representation of the current <see cref="Fail"/> instance.
+    /// </summary>
+    /// <returns>A formatted string combining the <see cref="Because"/> message and its <see cref="Arguments"/>, if any, or the raw <see cref="Because"/> message when no arguments are specified.</returns>
     public override string ToString()
     {
         return HasArguments ? string.Format(Because, Arguments) : Because;

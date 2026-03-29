@@ -1,12 +1,12 @@
-using System.Diagnostics;
-using System.Linq;
 using System.Linq.Expressions;
 using JAAvila.FluentOperations.Common;
 using JAAvila.FluentOperations.Config;
 using JAAvila.FluentOperations.Contract;
+using JAAvila.FluentOperations.Handler;
 using JAAvila.FluentOperations.Manager;
 using JAAvila.FluentOperations.Model;
 using JAAvila.FluentOperations.Telemetry;
+using JAAvila.SafeTypes.Extension;
 
 // ReSharper disable once RedundantUsingDirective (kept for clarity with System.DateTime/TimeSpan overloads)
 
@@ -24,7 +24,7 @@ namespace JAAvila.FluentOperations;
 /// </remarks>
 /// <example>
 /// <code>
-/// public class UserBlueprint : QualityBlueprint&lt;User&gt;
+/// public class UserBlueprint: QualityBlueprint&lt;User&gt;
 /// {
 ///     public UserBlueprint()
 ///     {
@@ -180,11 +180,17 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
     protected void RuleSet(string name, Action rules)
     {
         if (string.IsNullOrWhiteSpace(name))
+        {
             throw new ArgumentException("RuleSet name cannot be null or empty.", nameof(name));
+        }
+
         if (name.Equals(DefaultRuleSet, StringComparison.OrdinalIgnoreCase))
+        {
             throw new ArgumentException(
                 $"'{DefaultRuleSet}' is reserved. Do not wrap rules in RuleSet(\"{DefaultRuleSet}\", ...).",
-                nameof(name));
+                nameof(name)
+            );
+        }
 
         var previousRuleSet = _currentRuleSet;
         _currentRuleSet = name;
@@ -225,7 +231,15 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
 
             var groupedRules = _owner
                 ._capturedDuringDefinition.OfType<CapturedRule>()
-                .GroupBy(cr => new { cr.PropertyName, cr.Scenario, cr.RuleSet });
+                .GroupBy(
+                    cr =>
+                        new
+                        {
+                            cr.PropertyName,
+                            cr.Scenario,
+                            cr.RuleSet
+                        }
+                );
 
             foreach (var group in groupedRules)
             {
@@ -310,13 +324,16 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
         Type? defScenario,
         string? defRuleSet,
         Type? activeScenario,
-        HashSet<string>? activeRuleSets)
+        HashSet<string>? activeRuleSets
+    )
     {
         // --- Scenario filter ---
         if (defScenario != null)
         {
             if (activeScenario == null || defScenario != activeScenario)
+            {
                 return true;
+            }
         }
 
         // --- RuleSet filter ---
@@ -343,8 +360,10 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
     /// </summary>
     private static HashSet<string>? NormalizeRuleSets(string[] ruleSets)
     {
-        if (ruleSets == null || ruleSets.Length == 0)
+        if (ruleSets.IsNullOrEmpty())
+        {
             return null;
+        }
 
         return new HashSet<string>(ruleSets, StringComparer.OrdinalIgnoreCase);
     }
@@ -355,12 +374,17 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
     /// </summary>
     private Type? DetectScenario(T instance)
     {
-        if (instance == null) return null;
+        if (instance.IsNull())
+        {
+            return null;
+        }
 
-        var registeredScenarios = _ruleDefinitions.Select(d => d.Scenario)
+        var registeredScenarios = _ruleDefinitions
+            .Select(d => d.Scenario)
             .Concat(_forEachDefinitions.Select(d => d.Scenario))
             .Concat(_nestedDefinitions.Select(d => d.Scenario))
-            .Where(s => s != null).Distinct();
+            .Where(s => s != null)
+            .Distinct();
 
         var instanceType = instance.GetType();
         return registeredScenarios.FirstOrDefault(s => s!.IsAssignableFrom(instanceType));
@@ -375,7 +399,7 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
     /// <param name="value">The value to validate (currentValue for properties, item for ForEach).</param>
     /// <param name="instance">The full model instance. Used only when <paramref name="isPropertyMode"/> is true.</param>
     /// <param name="isPropertyMode">
-    ///   When <c>true</c>, activates property-mode behaviour:
+    ///   When <c>true</c>, activates property-mode behavior:
     ///   (a) injects <paramref name="instance"/> into <see cref="IModelAwareRule"/> rules via SetModelInstance, and
     ///   (b) passes <paramref name="instance"/> as the value for <see cref="ICrossPropertyRule"/> rules instead of <paramref name="value"/>.
     ///   When <c>false</c> (ForEach mode), <paramref name="value"/> is always passed directly.
@@ -391,7 +415,8 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
         bool isPropertyMode,
         CascadeMode effectiveCascade,
         CascadeSeverityMode effectiveSeverityMode,
-        QualityReport report)
+        QualityReport report
+    )
     {
         Severity? stoppedAtSeverity = null;
 
@@ -409,7 +434,7 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
                 }
                 else
                 {
-                    // ErrorOnly or AllFailures: hard stop on all subsequent rules
+                    // ErrorOnly or AllFailures: hard stop on all later rules
                     break;
                 }
             }
@@ -417,16 +442,20 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
             // --- Block B: Rule preparation ---
             var innerRule = rule is CapturedRule cr ? cr.Inner : rule;
 
-            // Inject root model for model-aware rules (dynamic messages via MessageFactory,
+            // Inject a root model for model-aware rules (dynamic messages via MessageFactory,
             // cross-property conditions, etc.). CapturedRule.SetModelInstance propagates to inner.
             if (rule is IModelAwareRule modelAware)
+            {
                 modelAware.SetModelInstance(instance);
+            }
 
             if (isPropertyMode)
             {
-                // Inject model instance for inner conditional rules not yet covered by the above
+                // Inject a model instance for inner conditional rules not yet covered by the above
                 if (innerRule is IModelAwareRule innerModelAware && rule is not IModelAwareRule)
+                {
                     innerModelAware.SetModelInstance(instance);
+                }
 
                 // For cross-property rules, pass the full model instance
                 rule.SetValue(innerRule is ICrossPropertyRule ? instance : value);
@@ -439,23 +468,27 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
 
             // --- Block C: Sync dispatch ---
             if (rule.Validate())
+            {
                 continue;
+            }
 
             // --- Block D: Create QualityFailure ---
             // Thread-safe message resolution: invoke MessageFactory with the in-scope instance
             // directly rather than relying on _currentModel stored on CapturedRule (which would
             // be a mutable instance field subject to data races under concurrent Check() calls).
-            string? customMessage = rule is CapturedRule capturedForMsg && capturedForMsg.Config?.MessageFactory is { } factoryForMsg
+            var customMessage = rule is CapturedRule { Config.MessageFactory: { } factoryForMsg }
                 ? factoryForMsg(instance)
                 : rule.GetCustomMessage();
-            report.Failures.Add(new QualityFailure
-            {
-                PropertyName = propertyName,
-                Message = customMessage ?? rule.GetReport(),
-                AttemptedValue = value,
-                Severity = rule.GetSeverity(),
-                ErrorCode = rule.GetErrorCode(),
-            });
+            report.Failures.Add(
+                new QualityFailure
+                {
+                    PropertyName = propertyName,
+                    Message = customMessage ?? rule.GetReport(),
+                    AttemptedValue = value,
+                    Severity = rule.GetSeverity(),
+                    ErrorCode = rule.GetErrorCode(),
+                }
+            );
 
             // --- Block E: Cascade stop ---
             if (effectiveCascade == CascadeMode.StopOnFirstFailure)
@@ -491,7 +524,8 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
         bool isPropertyMode,
         CascadeMode effectiveCascade,
         CascadeSeverityMode effectiveSeverityMode,
-        QualityReport report)
+        QualityReport report
+    )
     {
         Severity? stoppedAtSeverity = null;
 
@@ -509,7 +543,7 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
                 }
                 else
                 {
-                    // ErrorOnly or AllFailures: hard stop on all subsequent rules
+                    // ErrorOnly or AllFailures: hard stop on all later rules
                     break;
                 }
             }
@@ -517,16 +551,20 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
             // --- Block B: Rule preparation ---
             var innerRule = rule is CapturedRule cr ? cr.Inner : rule;
 
-            // Inject root model for model-aware rules (dynamic messages via MessageFactory,
+            // Inject a root model for model-aware rules (dynamic messages via MessageFactory,
             // cross-property conditions, etc.). CapturedRule.SetModelInstance propagates to inner.
             if (rule is IModelAwareRule modelAware)
+            {
                 modelAware.SetModelInstance(instance);
+            }
 
             if (isPropertyMode)
             {
-                // Inject model instance for inner conditional rules not yet covered by the above
+                // Inject a model instance for inner conditional rules not yet covered by the above
                 if (innerRule is IModelAwareRule innerModelAware && rule is not IModelAwareRule)
+                {
                     innerModelAware.SetModelInstance(instance);
+                }
 
                 // For cross-property rules, pass the full model instance
                 rule.SetValue(innerRule is ICrossPropertyRule ? instance : value);
@@ -539,29 +577,39 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
 
             // --- Block C: Async/sync dispatch ---
             bool isValid;
+
             if (innerRule is IAsyncQualityRule)
+            {
                 isValid = await rule.ValidateAsync();
+            }
             else
+            {
+                // ReSharper disable once MethodHasAsyncOverload
                 isValid = rule.Validate();
+            }
 
             if (isValid)
+            {
                 continue;
+            }
 
             // --- Block D: Create QualityFailure ---
             // Thread-safe message resolution: invoke MessageFactory with the in-scope instance
             // directly rather than relying on _currentModel stored on CapturedRule (which would
             // be a mutable instance field subject to data races under concurrent CheckAsync() calls).
-            string? customMessage = rule is CapturedRule capturedForMsg && capturedForMsg.Config?.MessageFactory is { } factoryForMsg
+            var customMessage = rule is CapturedRule { Config.MessageFactory: { } factoryForMsg }
                 ? factoryForMsg(instance)
                 : rule.GetCustomMessage();
-            report.Failures.Add(new QualityFailure
-            {
-                PropertyName = propertyName,
-                Message = customMessage ?? rule.GetReport(),
-                AttemptedValue = value,
-                Severity = rule.GetSeverity(),
-                ErrorCode = rule.GetErrorCode(),
-            });
+            report.Failures.Add(
+                new QualityFailure
+                {
+                    PropertyName = propertyName,
+                    Message = customMessage ?? rule.GetReport(),
+                    AttemptedValue = value,
+                    Severity = rule.GetSeverity(),
+                    ErrorCode = rule.GetErrorCode(),
+                }
+            );
 
             // --- Block E: Cascade stop ---
             if (effectiveCascade == CascadeMode.StopOnFirstFailure)
@@ -594,7 +642,7 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
     /// <returns>A <see cref="QualityReport"/> containing validation results and any failures.</returns>
     public async Task<QualityReport> CheckAsync(T instance)
     {
-        if (instance == null)
+        if (instance.IsNull())
         {
             return new QualityReport();
         }
@@ -610,7 +658,7 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
     /// <returns>A <see cref="QualityReport"/> containing validation results and any failures.</returns>
     public async Task<QualityReport> CheckAsync(T instance, Type? activeScenario)
     {
-        if (instance == null)
+        if (instance.IsNull())
         {
             return new QualityReport();
         }
@@ -630,12 +678,16 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
     /// <returns>A <see cref="QualityReport"/> containing validation results and any failures.</returns>
     public async Task<QualityReport> CheckRuleSetsAsync(T instance, params string[] ruleSets)
     {
-        if (instance == null)
+        if (instance.IsNull())
         {
             return new QualityReport();
         }
 
-        return await CheckAsyncInternal(instance, DetectScenario(instance), NormalizeRuleSets(ruleSets));
+        return await CheckAsyncInternal(
+            instance,
+            DetectScenario(instance),
+            NormalizeRuleSets(ruleSets)
+        );
     }
 
     /// <summary>
@@ -647,9 +699,13 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
     /// The rule set names to activate. Pass <see cref="DefaultRuleSet"/> to include unconditional rules.
     /// </param>
     /// <returns>A <see cref="QualityReport"/> containing validation results and any failures.</returns>
-    public async Task<QualityReport> CheckRuleSetsAsync(T instance, Type? activeScenario, params string[] ruleSets)
+    public async Task<QualityReport> CheckRuleSetsAsync(
+        T instance,
+        Type? activeScenario,
+        params string[] ruleSets
+    )
     {
-        if (instance == null)
+        if (instance.IsNull())
         {
             return new QualityReport();
         }
@@ -660,18 +716,22 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
     private async Task<QualityReport> CheckAsyncInternal(
         T instance,
         Type? activeScenario,
-        HashSet<string>? activeRuleSets)
+        HashSet<string>? activeRuleSets
+    )
     {
         if (ParallelExecution && CascadeMode == CascadeMode.StopOnFirstFailure)
         {
             throw new InvalidOperationException(
-                "ParallelExecution is incompatible with blueprint-level CascadeMode.StopOnFirstFailure. " +
-                "Use per-property RuleConfig.CascadeMode instead, or disable ParallelExecution.");
+                "ParallelExecution is incompatible with blueprint-level CascadeMode.StopOnFirstFailure. "
+                    + "Use per-property RuleConfig.CascadeMode instead, or disable ParallelExecution."
+            );
         }
 
         var telemetryConfig = GlobalConfig.GetTelemetryConfig();
         var telemetryEnabled = telemetryConfig is { Enabled: true };
-        var sw = FluentOperationsMeter.StartTimingIfEnabled(telemetryEnabled && telemetryConfig!.TrackBlueprintExecutionTime);
+        var sw = FluentOperationsMeter.StartTimingIfEnabled(
+            telemetryEnabled && telemetryConfig!.TrackBlueprintExecutionTime
+        );
 
         ResetConditionGroups();
         var report = new QualityReport();
@@ -685,17 +745,27 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
         {
             if (ParallelExecution)
             {
-                await ExecuteParallelAsync(instance, activeScenario, activeRuleSets, report).ConfigureAwait(false);
+                await ExecuteParallelAsync(instance, activeScenario, activeRuleSets, report)
+                    .ConfigureAwait(false);
             }
             else
             {
-                // Sequential path — behaviour identical to before refactoring
+                // Sequential path — behavior identical to before refactoring
 
                 // Normal property definitions
                 foreach (var def in _ruleDefinitions)
                 {
-                    if (ShouldSkipDefinition(def.Scenario, def.RuleSet, activeScenario, activeRuleSets))
+                    if (
+                        ShouldSkipDefinition(
+                            def.Scenario,
+                            def.RuleSet,
+                            activeScenario,
+                            activeRuleSets
+                        )
+                    )
+                    {
                         continue;
+                    }
 
                     report.RulesEvaluated++;
 
@@ -709,14 +779,24 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
                         isPropertyMode: true,
                         def.Config?.CascadeMode ?? CascadeMode,
                         def.Config?.CascadeSeverityMode ?? CascadeSeverityMode,
-                        report);
+                        report
+                    );
                 }
 
                 // ForEach definitions
                 foreach (var def in _forEachDefinitions)
                 {
-                    if (ShouldSkipDefinition(def.Scenario, def.RuleSet, activeScenario, activeRuleSets))
+                    if (
+                        ShouldSkipDefinition(
+                            def.Scenario,
+                            def.RuleSet,
+                            activeScenario,
+                            activeRuleSets
+                        )
+                    )
+                    {
                         continue;
+                    }
 
                     var collection = def.CollectionExtractor(instance);
 
@@ -726,7 +806,8 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
                     }
 
                     var effectiveCascade = def.Config?.CascadeMode ?? CascadeMode;
-                    var effectiveSeverityMode = def.Config?.CascadeSeverityMode ?? CascadeSeverityMode;
+                    var effectiveSeverityMode =
+                        def.Config?.CascadeSeverityMode ?? CascadeSeverityMode;
                     var index = 0;
 
                     foreach (var item in collection)
@@ -743,7 +824,10 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
                         if (def.SubBlueprint != null)
                         {
                             // Sub-blueprint variant: validate item asynchronously
-                            var failures = await def.SubBlueprint.GetFailuresAsync(item, indexedName);
+                            var failures = await def.SubBlueprint.GetFailuresAsync(
+                                item,
+                                indexedName
+                            );
                             report.Failures.AddRange(failures);
                             report.RulesEvaluated++;
                         }
@@ -759,7 +843,8 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
                                 isPropertyMode: false,
                                 effectiveCascade,
                                 effectiveSeverityMode,
-                                report);
+                                report
+                            );
                         }
 
                         index++;
@@ -769,8 +854,17 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
                 // Nested definitions (single child object)
                 foreach (var def in _nestedDefinitions)
                 {
-                    if (ShouldSkipDefinition(def.Scenario, def.RuleSet, activeScenario, activeRuleSets))
+                    if (
+                        ShouldSkipDefinition(
+                            def.Scenario,
+                            def.RuleSet,
+                            activeScenario,
+                            activeRuleSets
+                        )
+                    )
+                    {
                         continue;
+                    }
 
                     var childValue = def.ChildExtractor(instance);
 
@@ -798,7 +892,8 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
                 report.IsValid,
                 report.RulesEvaluated,
                 report.Errors.Count,
-                sw?.Elapsed.TotalMilliseconds ?? 0);
+                sw?.Elapsed.TotalMilliseconds ?? 0
+            );
         }
 
         return report;
@@ -818,7 +913,8 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
         T instance,
         Type? activeScenario,
         HashSet<string>? activeRuleSets,
-        QualityReport report)
+        QualityReport report
+    )
     {
         var tasks = new List<Task<(List<QualityFailure> Failures, int RulesEvaluated)>>();
 
@@ -826,7 +922,10 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
         foreach (var def in _ruleDefinitions)
         {
             if (ShouldSkipDefinition(def.Scenario, def.RuleSet, activeScenario, activeRuleSets))
+            {
                 continue;
+            }
+
             tasks.Add(EvaluateRuleDefinitionParallelAsync(def, instance));
         }
 
@@ -834,7 +933,10 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
         foreach (var def in _forEachDefinitions)
         {
             if (ShouldSkipDefinition(def.Scenario, def.RuleSet, activeScenario, activeRuleSets))
+            {
                 continue;
+            }
+
             tasks.Add(EvaluateForEachDefinitionParallelAsync(def, instance));
         }
 
@@ -842,7 +944,10 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
         foreach (var def in _nestedDefinitions)
         {
             if (ShouldSkipDefinition(def.Scenario, def.RuleSet, activeScenario, activeRuleSets))
+            {
                 continue;
+            }
+
             tasks.Add(EvaluateNestedDefinitionParallelAsync(def, instance));
         }
 
@@ -860,27 +965,33 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
     /// Evaluates a single <see cref="RuleDefinition"/> in isolation, accumulating failures into a
     /// task-local list. The caller is responsible for merging the result into the main report.
     /// </summary>
-    private async Task<(List<QualityFailure> Failures, int RulesEvaluated)> EvaluateRuleDefinitionParallelAsync(
-        RuleDefinition def,
-        T instance)
+    private async Task<(
+        List<QualityFailure> Failures,
+        int RulesEvaluated
+    )> EvaluateRuleDefinitionParallelAsync(RuleDefinition def, T instance)
     {
         var localReport = new QualityReport();
 
-        using (new TransactionalOperations(
-            $"Parallel-{def.PropertyName}",
-            TransactionalMode.AccumulateFailsAndDisposeThis))
+        using (
+            new TransactionalOperations(
+                $"Parallel-{def.PropertyName}",
+                TransactionalMode.AccumulateFailsAndDisposeThis
+            )
+        )
         {
             var currentValue = def.ValueExtractor(instance);
 
             await EvaluateRulesAsync(
-                def.Rules,
-                def.PropertyName,
-                currentValue,
-                instance,
-                isPropertyMode: true,
-                def.Config?.CascadeMode ?? CascadeMode,
-                def.Config?.CascadeSeverityMode ?? CascadeSeverityMode,
-                localReport).ConfigureAwait(false);
+                    def.Rules,
+                    def.PropertyName,
+                    currentValue,
+                    instance,
+                    isPropertyMode: true,
+                    def.Config?.CascadeMode ?? CascadeMode,
+                    def.Config?.CascadeSeverityMode ?? CascadeSeverityMode,
+                    localReport
+                )
+                .ConfigureAwait(false);
         }
 
         return (localReport.Failures, 1);
@@ -890,20 +1001,26 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
     /// Evaluates a single <see cref="ForEachDefinition"/> in isolation (all items sequentially),
     /// accumulating failures into a task-local list.
     /// </summary>
-    private async Task<(List<QualityFailure> Failures, int RulesEvaluated)> EvaluateForEachDefinitionParallelAsync(
-        ForEachDefinition def,
-        T instance)
+    private async Task<(
+        List<QualityFailure> Failures,
+        int RulesEvaluated
+    )> EvaluateForEachDefinitionParallelAsync(ForEachDefinition def, T instance)
     {
         var localReport = new QualityReport();
 
-        using (new TransactionalOperations(
-            $"Parallel-{def.PropertyName}",
-            TransactionalMode.AccumulateFailsAndDisposeThis))
+        using (
+            new TransactionalOperations(
+                $"Parallel-{def.PropertyName}",
+                TransactionalMode.AccumulateFailsAndDisposeThis
+            )
+        )
         {
             var collection = def.CollectionExtractor(instance);
 
             if (collection == null)
+            {
                 return (localReport.Failures, 0);
+            }
 
             var effectiveCascade = def.Config?.CascadeMode ?? CascadeMode;
             var effectiveSeverityMode = def.Config?.CascadeSeverityMode ?? CascadeSeverityMode;
@@ -923,7 +1040,8 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
                 if (def.SubBlueprint != null)
                 {
                     // Sub-blueprint variant: validate item asynchronously
-                    var failures = await def.SubBlueprint.GetFailuresAsync(item, indexedName).ConfigureAwait(false);
+                    var failures = await def.SubBlueprint.GetFailuresAsync(item, indexedName)
+                        .ConfigureAwait(false);
                     localReport.Failures.AddRange(failures);
                     localReport.RulesEvaluated++;
                 }
@@ -932,14 +1050,16 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
                     // Captured-rules variant: apply each rule to the item
                     localReport.RulesEvaluated++;
                     await EvaluateRulesAsync(
-                        def.Rules,
-                        indexedName,
-                        item,
-                        instance,
-                        isPropertyMode: false,
-                        effectiveCascade,
-                        effectiveSeverityMode,
-                        localReport).ConfigureAwait(false);
+                            def.Rules,
+                            indexedName,
+                            item,
+                            instance,
+                            isPropertyMode: false,
+                            effectiveCascade,
+                            effectiveSeverityMode,
+                            localReport
+                        )
+                        .ConfigureAwait(false);
                 }
 
                 index++;
@@ -953,24 +1073,29 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
     /// Evaluates a single <see cref="NestedDefinition"/> in isolation, accumulating failures into
     /// a task-local list.
     /// </summary>
-    private async Task<(List<QualityFailure> Failures, int RulesEvaluated)> EvaluateNestedDefinitionParallelAsync(
-        NestedDefinition def,
-        T instance)
+    private async Task<(
+        List<QualityFailure> Failures,
+        int RulesEvaluated
+    )> EvaluateNestedDefinitionParallelAsync(NestedDefinition def, T instance)
     {
         var localReport = new QualityReport();
 
-        using (new TransactionalOperations(
-            $"Parallel-{def.PropertyName}",
-            TransactionalMode.AccumulateFailsAndDisposeThis))
+        using (
+            new TransactionalOperations(
+                $"Parallel-{def.PropertyName}",
+                TransactionalMode.AccumulateFailsAndDisposeThis
+            )
+        )
         {
             var childValue = def.ChildExtractor(instance);
 
             if (childValue == null)
+            {
                 return (localReport.Failures, 0);
+            }
 
-            var failures = await def.ChildBlueprint.GetFailuresAsync(
-                childValue,
-                def.PropertyName).ConfigureAwait(false);
+            var failures = await def.ChildBlueprint.GetFailuresAsync(childValue, def.PropertyName)
+                .ConfigureAwait(false);
 
             localReport.Failures.AddRange(failures);
         }
@@ -987,7 +1112,7 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
     /// <returns>A <see cref="QualityReport"/> containing validation results and any failures.</returns>
     public QualityReport Check(T instance)
     {
-        if (instance == null)
+        if (instance.IsNull())
         {
             return new QualityReport();
         }
@@ -1003,7 +1128,7 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
     /// <returns>A <see cref="QualityReport"/> containing validation results and any failures.</returns>
     public QualityReport Check(T instance, Type? activeScenario)
     {
-        if (instance == null)
+        if (instance.IsNull())
         {
             return new QualityReport();
         }
@@ -1023,7 +1148,7 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
     /// <returns>A <see cref="QualityReport"/> containing validation results and any failures.</returns>
     public QualityReport CheckRuleSets(T instance, params string[] ruleSets)
     {
-        if (instance == null)
+        if (instance.IsNull())
         {
             return new QualityReport();
         }
@@ -1042,7 +1167,7 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
     /// <returns>A <see cref="QualityReport"/> containing validation results and any failures.</returns>
     public QualityReport CheckRuleSets(T instance, Type? activeScenario, params string[] ruleSets)
     {
-        if (instance == null)
+        if (instance.IsNull())
         {
             return new QualityReport();
         }
@@ -1053,11 +1178,14 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
     private QualityReport CheckInternal(
         T instance,
         Type? activeScenario,
-        HashSet<string>? activeRuleSets)
+        HashSet<string>? activeRuleSets
+    )
     {
         var telemetryConfig = GlobalConfig.GetTelemetryConfig();
         var telemetryEnabled = telemetryConfig is { Enabled: true };
-        var sw = FluentOperationsMeter.StartTimingIfEnabled(telemetryEnabled && telemetryConfig!.TrackBlueprintExecutionTime);
+        var sw = FluentOperationsMeter.StartTimingIfEnabled(
+            telemetryEnabled && telemetryConfig!.TrackBlueprintExecutionTime
+        );
 
         ResetConditionGroups();
         var report = new QualityReport();
@@ -1073,7 +1201,9 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
             foreach (var def in _ruleDefinitions)
             {
                 if (ShouldSkipDefinition(def.Scenario, def.RuleSet, activeScenario, activeRuleSets))
+                {
                     continue;
+                }
 
                 report.RulesEvaluated++;
 
@@ -1087,14 +1217,17 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
                     isPropertyMode: true,
                     def.Config?.CascadeMode ?? CascadeMode,
                     def.Config?.CascadeSeverityMode ?? CascadeSeverityMode,
-                    report);
+                    report
+                );
             }
 
             // ForEach definitions
             foreach (var def in _forEachDefinitions)
             {
                 if (ShouldSkipDefinition(def.Scenario, def.RuleSet, activeScenario, activeRuleSets))
+                {
                     continue;
+                }
 
                 var collection = def.CollectionExtractor(instance);
 
@@ -1137,7 +1270,8 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
                             isPropertyMode: false,
                             effectiveCascade,
                             effectiveSeverityMode,
-                            report);
+                            report
+                        );
                     }
 
                     index++;
@@ -1148,7 +1282,9 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
             foreach (var def in _nestedDefinitions)
             {
                 if (ShouldSkipDefinition(def.Scenario, def.RuleSet, activeScenario, activeRuleSets))
+                {
                     continue;
+                }
 
                 var childValue = def.ChildExtractor(instance);
 
@@ -1172,7 +1308,8 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
                 report.IsValid,
                 report.RulesEvaluated,
                 report.Errors.Count,
-                sw?.Elapsed.TotalMilliseconds ?? 0);
+                sw?.Elapsed.TotalMilliseconds ?? 0
+            );
         }
 
         return report;
@@ -1197,8 +1334,13 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
     public void Assert(T instance)
     {
         var report = Check(instance);
-        if (report.IsValid) return;
-        Handler.ExceptionHandler.Handle(FormatAssertMessage(report));
+
+        if (report.IsValid)
+        {
+            return;
+        }
+
+        ExceptionHandler.Handle(FormatAssertMessage(report));
     }
 
     /// <summary>
@@ -1214,8 +1356,13 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
     public void Assert(T instance, Type? activeScenario)
     {
         var report = Check(instance, activeScenario);
-        if (report.IsValid) return;
-        Handler.ExceptionHandler.Handle(FormatAssertMessage(report));
+
+        if (report.IsValid)
+        {
+            return;
+        }
+
+        ExceptionHandler.Handle(FormatAssertMessage(report));
     }
 
     /// <summary>
@@ -1231,8 +1378,13 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
     public void AssertRuleSets(T instance, params string[] ruleSets)
     {
         var report = CheckRuleSets(instance, ruleSets);
-        if (report.IsValid) return;
-        Handler.ExceptionHandler.Handle(FormatAssertMessage(report));
+
+        if (report.IsValid)
+        {
+            return;
+        }
+
+        ExceptionHandler.Handle(FormatAssertMessage(report));
     }
 
     /// <summary>
@@ -1249,8 +1401,13 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
     public void AssertRuleSets(T instance, Type? activeScenario, params string[] ruleSets)
     {
         var report = CheckRuleSets(instance, activeScenario, ruleSets);
-        if (report.IsValid) return;
-        Handler.ExceptionHandler.Handle(FormatAssertMessage(report));
+
+        if (report.IsValid)
+        {
+            return;
+        }
+
+        ExceptionHandler.Handle(FormatAssertMessage(report));
     }
 
     /// <summary>
@@ -1270,8 +1427,13 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
     public async Task AssertAsync(T instance)
     {
         var report = await CheckAsync(instance);
-        if (report.IsValid) return;
-        Handler.ExceptionHandler.Handle(FormatAssertMessage(report));
+
+        if (report.IsValid)
+        {
+            return;
+        }
+
+        ExceptionHandler.Handle(FormatAssertMessage(report));
     }
 
     /// <summary>
@@ -1287,8 +1449,13 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
     public async Task AssertAsync(T instance, Type? activeScenario)
     {
         var report = await CheckAsync(instance, activeScenario);
-        if (report.IsValid) return;
-        Handler.ExceptionHandler.Handle(FormatAssertMessage(report));
+
+        if (report.IsValid)
+        {
+            return;
+        }
+
+        ExceptionHandler.Handle(FormatAssertMessage(report));
     }
 
     /// <summary>
@@ -1304,8 +1471,13 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
     public async Task AssertRuleSetsAsync(T instance, params string[] ruleSets)
     {
         var report = await CheckRuleSetsAsync(instance, ruleSets);
-        if (report.IsValid) return;
-        Handler.ExceptionHandler.Handle(FormatAssertMessage(report));
+
+        if (report.IsValid)
+        {
+            return;
+        }
+
+        ExceptionHandler.Handle(FormatAssertMessage(report));
     }
 
     /// <summary>
@@ -1319,11 +1491,20 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
     /// Thrown (or the active test framework's assertion exception) when validation produces Error-level failures
     /// and no <see cref="AssertionScope"/> is active.
     /// </exception>
-    public async Task AssertRuleSetsAsync(T instance, Type? activeScenario, params string[] ruleSets)
+    public async Task AssertRuleSetsAsync(
+        T instance,
+        Type? activeScenario,
+        params string[] ruleSets
+    )
     {
         var report = await CheckRuleSetsAsync(instance, activeScenario, ruleSets);
-        if (report.IsValid) return;
-        Handler.ExceptionHandler.Handle(FormatAssertMessage(report));
+
+        if (report.IsValid)
+        {
+            return;
+        }
+
+        ExceptionHandler.Handle(FormatAssertMessage(report));
     }
 
     /// <summary>
@@ -1363,7 +1544,10 @@ public abstract partial class QualityBlueprint<T> : IBlueprintValidator
         return CheckRuleSets((T)instance, ruleSets);
     }
 
-    async Task<QualityReport> IBlueprintValidator.ValidateAsync(object instance, params string[] ruleSets)
+    async Task<QualityReport> IBlueprintValidator.ValidateAsync(
+        object instance,
+        params string[] ruleSets
+    )
     {
         ArgumentNullException.ThrowIfNull(instance);
         return await CheckRuleSetsAsync((T)instance, ruleSets);

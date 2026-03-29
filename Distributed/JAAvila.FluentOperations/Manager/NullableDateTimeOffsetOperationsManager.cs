@@ -9,7 +9,7 @@ using JAAvila.FluentOperations.Validators;
 namespace JAAvila.FluentOperations.Manager;
 
 /// <summary>
-/// Provides fluent validation operations for <c>DateTimeOffset?</c> values.
+/// Provides fluent validation operations for <c>DateTimeOffset?</c> Values.
 /// Supports value presence, null-checking, and inherited nullable operations.
 /// </summary>
 public class NullableDateTimeOffsetOperationsManager
@@ -28,7 +28,7 @@ public class NullableDateTimeOffsetOperationsManager
     {
         PrincipalChain = PrincipalChain<DateTimeOffset?>.Get(value, caller);
         GlobalConfig.Initialize();
-        SetManager(this);
+        base.SetManager(this);
     }
 
     /// <summary>
@@ -91,7 +91,10 @@ public class NullableDateTimeOffsetOperationsManager
     /// <param name="expected">The expected value to compare against.</param>
     /// <param name="reason">An optional reason providing context for the assertion.</param>
     /// <returns>The current manager instance for method chaining.</returns>
-    public NullableDateTimeOffsetOperationsManager Be(DateTimeOffset? expected, Reason? reason = null)
+    public NullableDateTimeOffsetOperationsManager Be(
+        DateTimeOffset? expected,
+        Reason? reason = null
+    )
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.DateTimeOffset.Be))
         {
@@ -106,7 +109,8 @@ public class NullableDateTimeOffsetOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue()),
                             BaseFormatter.Format(expected)
                         )
@@ -123,7 +127,10 @@ public class NullableDateTimeOffsetOperationsManager
     /// <param name="expected">The value that should not match.</param>
     /// <param name="reason">An optional reason providing context for the assertion.</param>
     /// <returns>The current manager instance for method chaining.</returns>
-    public NullableDateTimeOffsetOperationsManager NotBe(DateTimeOffset? expected, Reason? reason = null)
+    public NullableDateTimeOffsetOperationsManager NotBe(
+        DateTimeOffset? expected,
+        Reason? reason = null
+    )
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.DateTimeOffset.NotBe))
         {
@@ -137,7 +144,11 @@ public class NullableDateTimeOffsetOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.MessageKey, operation.ResultValidation, BaseFormatter.Format(expected))
+                        .WithResult(
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            BaseFormatter.Format(expected)
+                        )
                         .WithReason(reason?.ToString())
             )
             .Execute();
@@ -156,7 +167,11 @@ public class NullableDateTimeOffsetOperationsManager
     /// Throws immediately if the value is <c>null</c> (null guard).
     /// Also throws immediately if <paramref name="min"/> is greater than <paramref name="max"/> (inverted range guard).
     /// </remarks>
-    public NullableDateTimeOffsetOperationsManager BeInRange(DateTimeOffset min, DateTimeOffset max, Reason? reason = null)
+    public NullableDateTimeOffsetOperationsManager BeInRange(
+        DateTimeOffset min,
+        DateTimeOffset max,
+        Reason? reason = null
+    )
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.DateTimeOffset.BeInRange))
         {
@@ -174,9 +189,9 @@ public class NullableDateTimeOffsetOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeInRange)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -207,7 +222,11 @@ public class NullableDateTimeOffsetOperationsManager
     /// Throws immediately if the value is <c>null</c> (null guard).
     /// Also throws immediately if <paramref name="min"/> is greater than <paramref name="max"/> (inverted range guard).
     /// </remarks>
-    public NullableDateTimeOffsetOperationsManager NotBeInRange(DateTimeOffset min, DateTimeOffset max, Reason? reason = null)
+    public NullableDateTimeOffsetOperationsManager NotBeInRange(
+        DateTimeOffset min,
+        DateTimeOffset max,
+        Reason? reason = null
+    )
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.DateTimeOffset.NotBeInRange))
         {
@@ -216,7 +235,9 @@ public class NullableDateTimeOffsetOperationsManager
 
         ExecutionEngine<NullableDateTimeOffsetOperationsManager, DateTimeOffset?>
             .New(this)
-            .WithOperation(NullableDateTimeOffsetNotBeInRangeValidator.New(PrincipalChain, min, max))
+            .WithOperation(
+                NullableDateTimeOffsetNotBeInRangeValidator.New(PrincipalChain, min, max)
+            )
             .WithTemplate(
                 (template, operation) =>
                     template
@@ -225,9 +246,9 @@ public class NullableDateTimeOffsetOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(NotBeInRange)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -270,13 +291,16 @@ public class NullableDateTimeOffsetOperationsManager
 
         ExecutionEngine<NullableDateTimeOffsetOperationsManager, DateTimeOffset?>
             .New(this)
-            .WithOperation(NullableDateTimeOffsetBeCloseToValidator.New(PrincipalChain, expected, tolerance))
+            .WithOperation(
+                NullableDateTimeOffsetBeCloseToValidator.New(PrincipalChain, expected, tolerance)
+            )
             .WithTemplate(
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             expected.ToString("O"),
                             BaseFormatter.Format(tolerance),
                             BaseFormatter.Format(PrincipalChain.GetValue())
@@ -284,9 +308,9 @@ public class NullableDateTimeOffsetOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeCloseTo)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -329,13 +353,16 @@ public class NullableDateTimeOffsetOperationsManager
 
         ExecutionEngine<NullableDateTimeOffsetOperationsManager, DateTimeOffset?>
             .New(this)
-            .WithOperation(NullableDateTimeOffsetNotBeCloseToValidator.New(PrincipalChain, expected, tolerance))
+            .WithOperation(
+                NullableDateTimeOffsetNotBeCloseToValidator.New(PrincipalChain, expected, tolerance)
+            )
             .WithTemplate(
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             expected.ToString("O"),
                             BaseFormatter.Format(tolerance),
                             BaseFormatter.Format(PrincipalChain.GetValue())
@@ -343,9 +370,9 @@ public class NullableDateTimeOffsetOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(NotBeCloseTo)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -372,7 +399,10 @@ public class NullableDateTimeOffsetOperationsManager
     /// <param name="reason">An optional reason providing context for the assertion.</param>
     /// <returns>The current manager instance for method chaining.</returns>
     /// <remarks>Throws immediately if the value is <c>null</c> (null guard).</remarks>
-    public NullableDateTimeOffsetOperationsManager BeAfter(DateTimeOffset expected, Reason? reason = null)
+    public NullableDateTimeOffsetOperationsManager BeAfter(
+        DateTimeOffset expected,
+        Reason? reason = null
+    )
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.DateTimeOffset.BeAfter))
         {
@@ -387,16 +417,17 @@ public class NullableDateTimeOffsetOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeAfter)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -414,7 +445,10 @@ public class NullableDateTimeOffsetOperationsManager
     /// <param name="reason">An optional reason providing context for the assertion.</param>
     /// <returns>The current manager instance for method chaining.</returns>
     /// <remarks>Throws immediately if the value is <c>null</c> (null guard).</remarks>
-    public NullableDateTimeOffsetOperationsManager BeBefore(DateTimeOffset expected, Reason? reason = null)
+    public NullableDateTimeOffsetOperationsManager BeBefore(
+        DateTimeOffset expected,
+        Reason? reason = null
+    )
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.DateTimeOffset.BeBefore))
         {
@@ -429,16 +463,17 @@ public class NullableDateTimeOffsetOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeBefore)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -456,7 +491,10 @@ public class NullableDateTimeOffsetOperationsManager
     /// <param name="reason">An optional reason providing context for the assertion.</param>
     /// <returns>The current manager instance for method chaining.</returns>
     /// <remarks>Throws immediately if the value is <c>null</c> (null guard).</remarks>
-    public NullableDateTimeOffsetOperationsManager BeOnOrAfter(DateTimeOffset expected, Reason? reason = null)
+    public NullableDateTimeOffsetOperationsManager BeOnOrAfter(
+        DateTimeOffset expected,
+        Reason? reason = null
+    )
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.DateTimeOffset.BeOnOrAfter))
         {
@@ -471,16 +509,17 @@ public class NullableDateTimeOffsetOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeOnOrAfter)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -498,7 +537,10 @@ public class NullableDateTimeOffsetOperationsManager
     /// <param name="reason">An optional reason providing context for the assertion.</param>
     /// <returns>The current manager instance for method chaining.</returns>
     /// <remarks>Throws immediately if the value is <c>null</c> (null guard).</remarks>
-    public NullableDateTimeOffsetOperationsManager BeOnOrBefore(DateTimeOffset expected, Reason? reason = null)
+    public NullableDateTimeOffsetOperationsManager BeOnOrBefore(
+        DateTimeOffset expected,
+        Reason? reason = null
+    )
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.DateTimeOffset.BeOnOrBefore))
         {
@@ -507,22 +549,25 @@ public class NullableDateTimeOffsetOperationsManager
 
         ExecutionEngine<NullableDateTimeOffsetOperationsManager, DateTimeOffset?>
             .New(this)
-            .WithOperation(NullableDateTimeOffsetBeOnOrBeforeValidator.New(PrincipalChain, expected))
+            .WithOperation(
+                NullableDateTimeOffsetBeOnOrBeforeValidator.New(PrincipalChain, expected)
+            )
             .WithTemplate(
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeOnOrBefore)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -540,7 +585,10 @@ public class NullableDateTimeOffsetOperationsManager
     /// <param name="reason">An optional reason providing context for the assertion.</param>
     /// <returns>The current manager instance for method chaining.</returns>
     /// <remarks>Throws immediately if the value is <c>null</c> (null guard).</remarks>
-    public NullableDateTimeOffsetOperationsManager BeSameDay(DateTimeOffset expected, Reason? reason = null)
+    public NullableDateTimeOffsetOperationsManager BeSameDay(
+        DateTimeOffset expected,
+        Reason? reason = null
+    )
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.DateTimeOffset.BeSameDay))
         {
@@ -555,16 +603,17 @@ public class NullableDateTimeOffsetOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeSameDay)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -582,7 +631,10 @@ public class NullableDateTimeOffsetOperationsManager
     /// <param name="reason">An optional reason providing context for the assertion.</param>
     /// <returns>The current manager instance for method chaining.</returns>
     /// <remarks>Throws immediately if the value is <c>null</c> (null guard).</remarks>
-    public NullableDateTimeOffsetOperationsManager HaveOffset(TimeSpan expectedOffset, Reason? reason = null)
+    public NullableDateTimeOffsetOperationsManager HaveOffset(
+        TimeSpan expectedOffset,
+        Reason? reason = null
+    )
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.DateTimeOffset.HaveOffset))
         {
@@ -591,22 +643,25 @@ public class NullableDateTimeOffsetOperationsManager
 
         ExecutionEngine<NullableDateTimeOffsetOperationsManager, DateTimeOffset?>
             .New(this)
-            .WithOperation(NullableDateTimeOffsetHaveOffsetValidator.New(PrincipalChain, expectedOffset))
+            .WithOperation(
+                NullableDateTimeOffsetHaveOffsetValidator.New(PrincipalChain, expectedOffset)
+            )
             .WithTemplate(
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expectedOffset),
                             BaseFormatter.Format(PrincipalChain.GetValue()!.Value.Offset)
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(HaveOffset)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -638,15 +693,16 @@ public class NullableDateTimeOffsetOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeInThePast)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -678,15 +734,16 @@ public class NullableDateTimeOffsetOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeInTheFuture)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -713,22 +770,25 @@ public class NullableDateTimeOffsetOperationsManager
 
         ExecutionEngine<NullableDateTimeOffsetOperationsManager, DateTimeOffset?>
             .New(this)
-            .WithOperation(NullableDateTimeOffsetHaveYearValidator.New(PrincipalChain, expectedYear))
+            .WithOperation(
+                NullableDateTimeOffsetHaveYearValidator.New(PrincipalChain, expectedYear)
+            )
             .WithTemplate(
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expectedYear),
                             BaseFormatter.Format(PrincipalChain.GetValue()!.Value.Year)
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(HaveYear)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -746,7 +806,10 @@ public class NullableDateTimeOffsetOperationsManager
     /// <param name="reason">An optional reason providing context for the assertion.</param>
     /// <returns>The current manager instance for method chaining.</returns>
     /// <remarks>Throws immediately if the value is <c>null</c> (null guard).</remarks>
-    public NullableDateTimeOffsetOperationsManager HaveMonth(int expectedMonth, Reason? reason = null)
+    public NullableDateTimeOffsetOperationsManager HaveMonth(
+        int expectedMonth,
+        Reason? reason = null
+    )
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.DateTimeOffset.HaveMonth))
         {
@@ -755,22 +818,25 @@ public class NullableDateTimeOffsetOperationsManager
 
         ExecutionEngine<NullableDateTimeOffsetOperationsManager, DateTimeOffset?>
             .New(this)
-            .WithOperation(NullableDateTimeOffsetHaveMonthValidator.New(PrincipalChain, expectedMonth))
+            .WithOperation(
+                NullableDateTimeOffsetHaveMonthValidator.New(PrincipalChain, expectedMonth)
+            )
             .WithTemplate(
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expectedMonth),
                             BaseFormatter.Format(PrincipalChain.GetValue()!.Value.Month)
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(HaveMonth)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -803,16 +869,17 @@ public class NullableDateTimeOffsetOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expectedDay),
                             BaseFormatter.Format(PrincipalChain.GetValue()!.Value.Day)
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(HaveDay)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -829,7 +896,10 @@ public class NullableDateTimeOffsetOperationsManager
     public NullableDateTimeOffsetOperationsManager BeOfType<TType>(Reason? reason = null)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Common.BeOfType))
+        {
             return this;
+        }
+
         ValidateBeOfTypeOperation(reason, typeof(TType));
         return this;
     }
@@ -840,7 +910,10 @@ public class NullableDateTimeOffsetOperationsManager
     public NullableDateTimeOffsetOperationsManager BeOfType(Type expected, Reason? reason = null)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Common.BeOfType))
+        {
             return this;
+        }
+
         ValidateBeOfTypeOperation(reason, expected);
         return this;
     }
@@ -851,7 +924,10 @@ public class NullableDateTimeOffsetOperationsManager
     public NullableDateTimeOffsetOperationsManager NotBeOfType<TType>(Reason? reason = null)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Common.NotBeOfType))
+        {
             return this;
+        }
+
         ValidateNotBeOfTypeOperation(reason, typeof(TType));
         return this;
     }
@@ -862,7 +938,10 @@ public class NullableDateTimeOffsetOperationsManager
     public NullableDateTimeOffsetOperationsManager NotBeOfType(Type expected, Reason? reason = null)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Common.NotBeOfType))
+        {
             return this;
+        }
+
         ValidateNotBeOfTypeOperation(reason, expected);
         return this;
     }
@@ -883,14 +962,18 @@ public class NullableDateTimeOffsetOperationsManager
                 _ =>
                     (
                         type is null,
-                        Fail.New($"The {nameof(BeOfType)} operation failed because the expected type was <null>.")
+                        Fail.New(
+                            $"The {nameof(BeOfType)} operation failed because the expected type was <null>."
+                        )
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
-                        Fail.New($"The {nameof(BeOfType)} operation failed because the value was <null>.")
+                        m.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(BeOfType)} operation failed because the value was <null>."
+                        )
                     )
             )
             .Execute();
@@ -900,7 +983,9 @@ public class NullableDateTimeOffsetOperationsManager
     {
         ExecutionEngine<NullableDateTimeOffsetOperationsManager, DateTimeOffset?>
             .New(this)
-            .WithOperation(ReferenceNotBeOfTypeValidator<DateTimeOffset?>.New(PrincipalChain, type!))
+            .WithOperation(
+                ReferenceNotBeOfTypeValidator<DateTimeOffset?>.New(PrincipalChain, type!)
+            )
             .WithTemplate(
                 (template, operation) =>
                     template
@@ -912,14 +997,18 @@ public class NullableDateTimeOffsetOperationsManager
                 _ =>
                     (
                         type is null,
-                        Fail.New($"The {nameof(NotBeOfType)} operation failed because the expected type was <null>.")
+                        Fail.New(
+                            $"The {nameof(NotBeOfType)} operation failed because the expected type was <null>."
+                        )
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
-                        Fail.New($"The {nameof(NotBeOfType)} operation failed because the value was <null>.")
+                        m.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(NotBeOfType)} operation failed because the value was <null>."
+                        )
                     )
             )
             .Execute();

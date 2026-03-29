@@ -11,8 +11,8 @@ internal class EnumBeValidator<T>(PrincipalChain<T> chain, T expected) : IValida
     public static EnumBeValidator<T> New(PrincipalChain<T> chain, T expected) =>
         new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Enum.Be";
     string IRuleDescriptor.OperationName => "Be";
     Type IRuleDescriptor.SubjectType => typeof(T);

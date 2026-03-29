@@ -7,11 +7,10 @@ namespace JAAvila.FluentOperations.Validators;
 /// </summary>
 internal class UShortBeEvenValidator(PrincipalChain<ushort> chain) : IValidator, IRuleDescriptor
 {
-    public static UShortBeEvenValidator New(PrincipalChain<ushort> chain) =>
-        new(chain);
+    public static UShortBeEvenValidator New(PrincipalChain<ushort> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "UShort.BeEven";
     string IRuleDescriptor.OperationName => "BeEven";
     Type IRuleDescriptor.SubjectType => typeof(ushort);

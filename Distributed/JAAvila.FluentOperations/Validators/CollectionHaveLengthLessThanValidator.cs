@@ -15,8 +15,8 @@ internal class CollectionHaveLengthLessThanValidator<T>(
         int expected
     ) => new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Collection.HaveLengthLessThan";
     string IRuleDescriptor.OperationName => "HaveLengthLessThan";
     Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);

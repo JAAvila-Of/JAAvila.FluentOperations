@@ -5,13 +5,15 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the byte value is within the specified inclusive range.
 /// </summary>
-internal class ByteBeInRangeValidator(PrincipalChain<byte> chain, byte min, byte max) : IValidator, IRuleDescriptor
+internal class ByteBeInRangeValidator(PrincipalChain<byte> chain, byte min, byte max)
+    : IValidator,
+        IRuleDescriptor
 {
     public static ByteBeInRangeValidator New(PrincipalChain<byte> chain, byte min, byte max) =>
         new(chain, min, max);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Byte.BeInRange";
     string IRuleDescriptor.OperationName => "BeInRange";
     Type IRuleDescriptor.SubjectType => typeof(byte);

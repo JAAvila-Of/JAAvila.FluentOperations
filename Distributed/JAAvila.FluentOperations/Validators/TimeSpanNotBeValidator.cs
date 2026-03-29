@@ -5,13 +5,15 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the timespan value does not equal the expected value.
 /// </summary>
-internal class TimeSpanNotBeValidator(PrincipalChain<TimeSpan> chain, TimeSpan expected) : IValidator, IRuleDescriptor
+internal class TimeSpanNotBeValidator(PrincipalChain<TimeSpan> chain, TimeSpan expected)
+    : IValidator,
+        IRuleDescriptor
 {
     public static TimeSpanNotBeValidator New(PrincipalChain<TimeSpan> chain, TimeSpan expected) =>
         new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "TimeSpan.NotBe";
     string IRuleDescriptor.OperationName => "NotBe";
     Type IRuleDescriptor.SubjectType => typeof(TimeSpan);

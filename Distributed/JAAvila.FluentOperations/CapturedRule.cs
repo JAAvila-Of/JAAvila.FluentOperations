@@ -16,8 +16,8 @@ internal class CapturedRule(
     IQualityRule inner,
     Type? scenario = null,
     RuleConfig? config = null,
-    string? ruleSet = null)
-    : IQualityRule, IModelAwareRule
+    string? ruleSet = null
+) : IQualityRule, IModelAwareRule
 {
     /// <summary>Transient model reference — set per-Check() call, never persisted across evaluations.</summary>
     private object? _currentModel;
@@ -34,15 +34,15 @@ internal class CapturedRule(
     /// <summary>Gets the optional per-rule configuration that overrides severity, error code, and custom message.</summary>
     public RuleConfig? Config { get; } = config;
 
-    /// <summary>Gets the optional rule set name that restricts when this rule is evaluated, or <c>null</c> for default (unconditional) rules.</summary>
+    /// <summary>Gets the optional rule set name that restricts when this rule is evaluated, or <c>null</c> for defaulted (unconditional) rules.</summary>
     public string? RuleSet { get; } = ruleSet;
 
     void IModelAwareRule.SetModelInstance(object model)
     {
         _currentModel = model;
 
-        // Propagate to inner rule if it also requires model access
-        if (inner is IModelAwareRule modelAware)
+        // Propagate to the inner rule if it also requires model access
+        if (Inner is IModelAwareRule modelAware)
         {
             modelAware.SetModelInstance(model);
         }
@@ -57,6 +57,7 @@ internal class CapturedRule(
     public void SetValue(object? value) => Inner.SetValue(value);
 
     public Severity GetSeverity() => Config?.Severity ?? Inner.GetSeverity();
+
     public string? GetErrorCode() => Config?.ErrorCode ?? Inner.GetErrorCode();
 
     public string? GetCustomMessage()

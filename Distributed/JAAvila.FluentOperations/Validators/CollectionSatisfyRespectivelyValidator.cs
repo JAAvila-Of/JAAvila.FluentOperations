@@ -15,8 +15,8 @@ internal class CollectionSatisfyRespectivelyValidator<T>(
         Func<T, bool>[] predicates
     ) => new(chain, predicates);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Collection.SatisfyRespectively";
     string IRuleDescriptor.OperationName => "SatisfyRespectively";
     Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);

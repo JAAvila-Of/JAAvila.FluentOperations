@@ -28,7 +28,7 @@ public class UriOperationsManager
     {
         PrincipalChain = PrincipalChain<Uri?>.Get(value, caller);
         GlobalConfig.Initialize();
-        SetManager(this);
+        base.SetManager(this);
     }
 
     /// <summary>
@@ -55,16 +55,17 @@ public class UriOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(Be)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -98,13 +99,17 @@ public class UriOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.MessageKey, operation.ResultValidation, BaseFormatter.Format(expected))
+                        .WithResult(
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            BaseFormatter.Format(expected)
+                        )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(NotBe)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -139,25 +144,26 @@ public class UriOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             scheme,
                             PrincipalChain.GetValue()!.Scheme
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(HaveScheme)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        !manager.PrincipalChain.GetValue()!.IsAbsoluteUri,
+                        !m.PrincipalChain.GetValue()!.IsAbsoluteUri,
                         Fail.New(
                             $"The {nameof(HaveScheme)} operation failed because the URI is relative, use {nameof(BeAbsolute)} to ensure the URI is absolute first."
                         )
@@ -192,25 +198,26 @@ public class UriOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             host,
                             PrincipalChain.GetValue()!.Host
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(HaveHost)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        !manager.PrincipalChain.GetValue()!.IsAbsoluteUri,
+                        !m.PrincipalChain.GetValue()!.IsAbsoluteUri,
                         Fail.New(
                             $"The {nameof(HaveHost)} operation failed because the URI is relative, use {nameof(BeAbsolute)} to ensure the URI is absolute first."
                         )
@@ -245,25 +252,26 @@ public class UriOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             port.ToString(),
                             PrincipalChain.GetValue()!.Port.ToString()
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(HavePort)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        !manager.PrincipalChain.GetValue()!.IsAbsoluteUri,
+                        !m.PrincipalChain.GetValue()!.IsAbsoluteUri,
                         Fail.New(
                             $"The {nameof(HavePort)} operation failed because the URI is relative, use {nameof(BeAbsolute)} to ensure the URI is absolute first."
                         )
@@ -300,9 +308,9 @@ public class UriOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeAbsolute)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -339,9 +347,9 @@ public class UriOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeRelative)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
@@ -378,18 +386,18 @@ public class UriOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(HaveQuery)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        !manager.PrincipalChain.GetValue()!.IsAbsoluteUri,
+                        !m.PrincipalChain.GetValue()!.IsAbsoluteUri,
                         Fail.New(
                             $"The {nameof(HaveQuery)} operation failed because the URI is relative, use {nameof(BeAbsolute)} to ensure the URI is absolute first."
                         )
@@ -426,18 +434,18 @@ public class UriOperationsManager
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(HaveFragment)} operation failed because the resulting value was <null>, use {nameof(NotBeNull)} to cover all possible scenarios."
                         )
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        !manager.PrincipalChain.GetValue()!.IsAbsoluteUri,
+                        !m.PrincipalChain.GetValue()!.IsAbsoluteUri,
                         Fail.New(
                             $"The {nameof(HaveFragment)} operation failed because the URI is relative, use {nameof(BeAbsolute)} to ensure the URI is absolute first."
                         )

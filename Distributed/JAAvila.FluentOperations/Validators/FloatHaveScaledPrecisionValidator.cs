@@ -18,8 +18,8 @@ internal class FloatHaveScaledPrecisionValidator(
         int maxTotalDigits
     ) => new(chain, expectedDecimals, maxTotalDigits);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Float.HaveScaledPrecision";
     string IRuleDescriptor.OperationName => "HaveScaledPrecision";
     Type IRuleDescriptor.SubjectType => typeof(float);
@@ -36,6 +36,7 @@ internal class FloatHaveScaledPrecisionValidator(
 
         // Scale check: ensure value rounds cleanly to expectedDecimals places
         var rounded = (float)Math.Round(value, expectedDecimals);
+
         if (Math.Abs(rounded - value) >= float.Epsilon)
         {
             ResultValidation =

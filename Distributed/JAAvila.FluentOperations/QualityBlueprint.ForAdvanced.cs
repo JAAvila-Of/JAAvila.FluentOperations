@@ -235,7 +235,9 @@ public abstract partial class QualityBlueprint<T>
 
         var currentScenario = _currentScenario;
         var rule = new CustomValidatorRule<TProp>(validator);
-        _capturedDuringDefinition.Add(new CapturedRule(propertyName, rule, currentScenario, null, _currentRuleSet));
+        _capturedDuringDefinition.Add(
+            new CapturedRule(propertyName, rule, currentScenario, null, _currentRuleSet)
+        );
     }
 
     /// <summary>
@@ -277,7 +279,9 @@ public abstract partial class QualityBlueprint<T>
 
         var currentScenario = _currentScenario;
         var rule = new AsyncCustomValidatorRule<TProp>(validator);
-        _capturedDuringDefinition.Add(new CapturedRule(propertyName, rule, currentScenario, null, _currentRuleSet));
+        _capturedDuringDefinition.Add(
+            new CapturedRule(propertyName, rule, currentScenario, null, _currentRuleSet)
+        );
     }
 
     /// <summary>
@@ -307,7 +311,7 @@ public abstract partial class QualityBlueprint<T>
 
     /// <summary>
     /// Registers an asynchronous validation rule for a property.
-    /// The predicate receives the property value and returns a Task&lt;bool&gt;.
+    /// The predicate receives the property value and returns a Task&lt;bool&gt;
     /// Use CheckAsync() to execute blueprints containing async rules.
     /// </summary>
     protected void ForAsync<TProp>(
@@ -323,7 +327,9 @@ public abstract partial class QualityBlueprint<T>
         var currentScenario = _currentScenario;
 
         var rule = new AsyncPredicateRule<TProp>(predicate, failureMessage);
-        _capturedDuringDefinition.Add(new CapturedRule(propertyName, rule, currentScenario, null, _currentRuleSet));
+        _capturedDuringDefinition.Add(
+            new CapturedRule(propertyName, rule, currentScenario, null, _currentRuleSet)
+        );
     }
 
     /// <summary>
@@ -385,7 +391,9 @@ public abstract partial class QualityBlueprint<T>
         var currentScenario = _currentScenario;
 
         var rule = new ModelAwarePredicateRule<T, TProp>(predicate, failureMessage);
-        _capturedDuringDefinition.Add(new CapturedRule(propertyName, rule, currentScenario, null, _currentRuleSet));
+        _capturedDuringDefinition.Add(
+            new CapturedRule(propertyName, rule, currentScenario, null, _currentRuleSet)
+        );
     }
 
     /// <summary>
@@ -454,7 +462,9 @@ public abstract partial class QualityBlueprint<T>
         var currentScenario = _currentScenario;
 
         var rule = new ModelAwareAsyncPredicateRule<T, TProp>(predicate, failureMessage);
-        _capturedDuringDefinition.Add(new CapturedRule(propertyName, rule, currentScenario, null, _currentRuleSet));
+        _capturedDuringDefinition.Add(
+            new CapturedRule(propertyName, rule, currentScenario, null, _currentRuleSet)
+        );
     }
 
     /// <summary>
@@ -544,7 +554,13 @@ public abstract partial class QualityBlueprint<T>
         var currentScenario = _currentScenario;
 
         _nestedDefinitions.Add(
-            new NestedDefinition(propertyName, x => valueExtractor(x), typedRule, currentScenario, _currentRuleSet)
+            new NestedDefinition(
+                propertyName,
+                x => valueExtractor(x),
+                typedRule,
+                currentScenario,
+                _currentRuleSet
+            )
         );
     }
 
@@ -566,7 +582,13 @@ public abstract partial class QualityBlueprint<T>
         var currentScenario = _currentScenario;
 
         _nestedDefinitions.Add(
-            new NestedDefinition(propertyName, x => valueExtractor(x), typedRule, currentScenario, _currentRuleSet)
+            new NestedDefinition(
+                propertyName,
+                x => valueExtractor(x),
+                typedRule,
+                currentScenario,
+                _currentRuleSet
+            )
         );
     }
 }

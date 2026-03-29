@@ -15,8 +15,8 @@ internal class DateTimeOffsetHaveMonthValidator(
         int expectedMonth
     ) => new(chain, expectedMonth);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "DateTimeOffset.HaveMonth";
     string IRuleDescriptor.OperationName => "HaveMonth";
     Type IRuleDescriptor.SubjectType => typeof(DateTimeOffset);

@@ -20,6 +20,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JAAvila.FluentOperations.Gr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JAAvila.FluentOperations.DataAnnotations", "Distributed\JAAvila.FluentOperations.DataAnnotations\JAAvila.FluentOperations.DataAnnotations.csproj", "{E30EC8CC-41B3-4A46-8F55-01B77DD5BF3F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JAAvila.FluentOperations.Architecture", "Distributed\JAAvila.FluentOperations.Architecture\JAAvila.FluentOperations.Architecture.csproj", "{FA3D63E2-484F-4E4F-8D1E-E63412A47EA5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -138,6 +140,18 @@ Global
 		{E30EC8CC-41B3-4A46-8F55-01B77DD5BF3F}.Release|x64.Build.0 = Release|Any CPU
 		{E30EC8CC-41B3-4A46-8F55-01B77DD5BF3F}.Release|x86.ActiveCfg = Release|Any CPU
 		{E30EC8CC-41B3-4A46-8F55-01B77DD5BF3F}.Release|x86.Build.0 = Release|Any CPU
+		{FA3D63E2-484F-4E4F-8D1E-E63412A47EA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA3D63E2-484F-4E4F-8D1E-E63412A47EA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA3D63E2-484F-4E4F-8D1E-E63412A47EA5}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FA3D63E2-484F-4E4F-8D1E-E63412A47EA5}.Debug|x64.Build.0 = Debug|Any CPU
+		{FA3D63E2-484F-4E4F-8D1E-E63412A47EA5}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FA3D63E2-484F-4E4F-8D1E-E63412A47EA5}.Debug|x86.Build.0 = Debug|Any CPU
+		{FA3D63E2-484F-4E4F-8D1E-E63412A47EA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA3D63E2-484F-4E4F-8D1E-E63412A47EA5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA3D63E2-484F-4E4F-8D1E-E63412A47EA5}.Release|x64.ActiveCfg = Release|Any CPU
+		{FA3D63E2-484F-4E4F-8D1E-E63412A47EA5}.Release|x64.Build.0 = Release|Any CPU
+		{FA3D63E2-484F-4E4F-8D1E-E63412A47EA5}.Release|x86.ActiveCfg = Release|Any CPU
+		{FA3D63E2-484F-4E4F-8D1E-E63412A47EA5}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -152,5 +166,6 @@ Global
 		{E7DF8B17-5526-46C7-AE99-1E8C4E26D727} = {13A139BD-5932-41F1-96B3-EC6BB0C219B9}
 		{856C3FD8-F8C6-4399-9733-8D4089BA60AD} = {13A139BD-5932-41F1-96B3-EC6BB0C219B9}
 		{E30EC8CC-41B3-4A46-8F55-01B77DD5BF3F} = {13A139BD-5932-41F1-96B3-EC6BB0C219B9}
+		{FA3D63E2-484F-4E4F-8D1E-E63412A47EA5} = {13A139BD-5932-41F1-96B3-EC6BB0C219B9}
 	EndGlobalSection
 EndGlobal

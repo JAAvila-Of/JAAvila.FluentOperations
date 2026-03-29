@@ -13,14 +13,14 @@ namespace JAAvila.FluentOperations.Manager;
 public class BaseNullableOperationsManager<TManager, TSubject>
     where TManager : ITestManager<TManager, TSubject>
 {
-    private TManager Manager { get; set; }
+    private TManager Manager { get; set; } = default!;
 
     /// <summary>
     /// Sets the concrete manager instance used for method chaining returns.
     /// Must be called in the constructor of each derived class.
     /// </summary>
     /// <param name="manager">The concrete manager instance.</param>
-    protected void SetManager(TManager manager) => Manager = manager;
+    protected virtual void SetManager(TManager manager) => Manager = manager;
 
     /// <summary>
     /// Asserts that the value is <c>null</c>.
@@ -42,7 +42,8 @@ public class BaseNullableOperationsManager<TManager, TSubject>
                     template
                         .WithSubject(Manager.PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(Manager.PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())

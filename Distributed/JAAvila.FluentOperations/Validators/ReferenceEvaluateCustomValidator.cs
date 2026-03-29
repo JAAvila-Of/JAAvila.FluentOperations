@@ -15,8 +15,8 @@ internal class ReferenceEvaluateCustomValidator<TSubject>(
         ICustomValidator<TSubject> customValidator
     ) => new(chain, customValidator);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Custom.Evaluate";
     string IRuleDescriptor.OperationName => "Evaluate";
     Type IRuleDescriptor.SubjectType => typeof(TSubject);

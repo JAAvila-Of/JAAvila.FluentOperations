@@ -5,27 +5,34 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the array length is greater than the expected value.
 /// </summary>
-internal class ArrayHaveLengthGreaterThanValidator<T>(PrincipalChain<IEnumerable<T>> chain, T[] array, int expected) : IValidator, IRuleDescriptor
+internal class ArrayHaveLengthGreaterThanValidator<T>(
+    PrincipalChain<IEnumerable<T>> chain,
+    int expected
+) : IValidator, IRuleDescriptor
 {
-    public static ArrayHaveLengthGreaterThanValidator<T> New(PrincipalChain<IEnumerable<T>> chain, T[] array, int expected) =>
-        new(chain, array, expected);
+    public static ArrayHaveLengthGreaterThanValidator<T> New(
+        PrincipalChain<IEnumerable<T>> chain,
+        int expected
+    ) => new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
+    private T[] A => chain.GetValue().ToArray();
     public string MessageKey => "Array.HaveLengthGreaterThan";
     string IRuleDescriptor.OperationName => "HaveLengthGreaterThan";
     Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);
     IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
-        new Dictionary<string, object> { ["values"] = array, ["value"] = expected };
+        new Dictionary<string, object> { ["values"] = A, ["value"] = expected };
 
     public bool Validate()
     {
-        if (array.Length > expected)
+        if (A.Length > expected)
         {
             return true;
         }
 
-        ResultValidation = "The resulting array was expected to have length greater than {0}, but it had {1}.";
+        ResultValidation =
+            "The resulting array was expected to have length greater than {0}, but it had {1}.";
         return false;
     }
 

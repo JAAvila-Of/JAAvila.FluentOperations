@@ -1,5 +1,5 @@
-using JAAvila.FluentOperations.Model;
 using System.Text;
+using JAAvila.FluentOperations.Model;
 
 namespace JAAvila.FluentOperations.Snapshot;
 
@@ -51,11 +51,11 @@ internal class SnapshotDiff
     /// Returns <c>true</c> when there are no differences of any kind.
     /// </summary>
     public bool IsMatch =>
-        IsValidChange is null &&
-        RulesEvaluatedChange is null &&
-        AddedFailures.Count == 0 &&
-        RemovedFailures.Count == 0 &&
-        ChangedFailures.Count == 0;
+        IsValidChange is null
+        && RulesEvaluatedChange is null
+        && AddedFailures.Count == 0
+        && RemovedFailures.Count == 0
+        && ChangedFailures.Count == 0;
 
     /// <summary>
     /// Produces a human-readable diff report for use in assertion failure messages.
@@ -68,46 +68,76 @@ internal class SnapshotDiff
 
         if (IsValidChange is not null)
         {
-            sb.AppendLine($"  IsValid changed: expected '{IsValidChange.Expected}', got '{IsValidChange.Actual}'");
+            sb.AppendLine(
+                $"  IsValid changed: expected '{IsValidChange.Expected}', got '{IsValidChange.Actual}'"
+            );
         }
 
         if (RulesEvaluatedChange is not null)
         {
-            sb.AppendLine($"  RulesEvaluated changed: expected '{RulesEvaluatedChange.Expected}', got '{RulesEvaluatedChange.Actual}'");
+            sb.AppendLine(
+                $"  RulesEvaluated changed: expected '{RulesEvaluatedChange.Expected}', got '{RulesEvaluatedChange.Actual}'"
+            );
         }
 
         if (AddedFailures.Count > 0)
         {
             sb.AppendLine($"  Added failures ({AddedFailures.Count}):");
+
             foreach (var f in AddedFailures)
             {
-                sb.AppendLine($"    + [{f.Severity}] {f.PropertyName}: {f.Message}" +
-                    (f.ErrorCode is not null ? $" (Code: {f.ErrorCode})" : ""));
+                sb.AppendLine(
+                    $"    + [{f.Severity}] {f.PropertyName}: {f.Message}"
+                        + (f.ErrorCode is not null ? $" (Code: {f.ErrorCode})" : "")
+                );
             }
         }
 
         if (RemovedFailures.Count > 0)
         {
             sb.AppendLine($"  Removed failures ({RemovedFailures.Count}):");
+
             foreach (var f in RemovedFailures)
             {
-                sb.AppendLine($"    - [{f.Severity}] {f.PropertyName}: {f.Message}" +
-                    (f.ErrorCode is not null ? $" (Code: {f.ErrorCode})" : ""));
+                sb.AppendLine(
+                    $"    - [{f.Severity}] {f.PropertyName}: {f.Message}"
+                        + (f.ErrorCode is not null ? $" (Code: {f.ErrorCode})" : "")
+                );
             }
         }
 
         if (ChangedFailures.Count > 0)
         {
             sb.AppendLine($"  Changed failures ({ChangedFailures.Count}):");
+
             foreach (var c in ChangedFailures)
             {
-                sb.AppendLine($"    ~ {c.PropertyName}" + (c.ErrorCode is not null ? $" (Code: {c.ErrorCode})" : "") + ":");
+                sb.AppendLine(
+                    $"    ~ {c.PropertyName}"
+                        + (c.ErrorCode is not null ? $" (Code: {c.ErrorCode})" : "")
+                        + ":"
+                );
+
                 if (c.SeverityChange is not null)
-                    sb.AppendLine($"        Severity: '{c.SeverityChange.Value.Expected}' → '{c.SeverityChange.Value.Actual}'");
+                {
+                    sb.AppendLine(
+                        $"        Severity: '{c.SeverityChange.Value.Expected}' → '{c.SeverityChange.Value.Actual}'"
+                    );
+                }
+
                 if (c.MessageChange is not null)
-                    sb.AppendLine($"        Message:  '{c.MessageChange.Value.Expected}' → '{c.MessageChange.Value.Actual}'");
+                {
+                    sb.AppendLine(
+                        $"        Message:  '{c.MessageChange.Value.Expected}' → '{c.MessageChange.Value.Actual}'"
+                    );
+                }
+
                 if (c.ErrorCodeChange is not null)
-                    sb.AppendLine($"        ErrorCode: '{c.ErrorCodeChange.Value.Expected}' → '{c.ErrorCodeChange.Value.Actual}'");
+                {
+                    sb.AppendLine(
+                        $"        ErrorCode: '{c.ErrorCodeChange.Value.Expected}' → '{c.ErrorCodeChange.Value.Actual}'"
+                    );
+                }
             }
         }
 

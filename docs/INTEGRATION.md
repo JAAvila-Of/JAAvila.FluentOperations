@@ -12,6 +12,7 @@ Guide for integrating Quality Blueprints with ASP.NET Core and MediatR.
 - [gRPC Integration](#grpc-integration)
 - [OpenAPI Integration](#openapi-integration)
 - [DataAnnotations Bridge](#dataannotations-bridge)
+- [Architecture Testing](#architecture-testing)
 - [Assembly Scanning](#assembly-scanning)
 - [AOT Compatibility](#aot-compatibility)
 - [Combined Example](#combined-example)
@@ -34,6 +35,7 @@ The library is split into focused packages with minimal dependencies:
 | `JAAvila.FluentOperations.OpenApi` | Swashbuckle.AspNetCore.SwaggerGen | Schema filter that enriches OpenAPI schemas from blueprints |
 | `JAAvila.FluentOperations.Grpc` | Grpc.Core.Api, Grpc.AspNetCore | Server interceptor for automatic gRPC request validation |
 | `JAAvila.FluentOperations.DataAnnotations` | (none — ships with core only) | Generate blueprint rules from DataAnnotations attributes |
+| `JAAvila.FluentOperations.Architecture` | Mono.Cecil >= 0.11.6 | IL-level dependency scanning for architecture tests |
 
 > **Note on MediatR version:** The MediatR package is pinned to `[12.4.1, 13.0.0)` because MediatR v13+ changed its license to RPL-1.5, which is incompatible with Apache 2.0.
 
@@ -511,6 +513,124 @@ DataAnnotationsBlueprint<User>.FromAnnotations(new AnnotationOptions
 ```
 
 > **Note on `UseAnnotationErrorMessages`:** When multiple validation attributes are present on a property and more than one has a custom `ErrorMessage`, the first attribute (in declaration order) with a non-empty `ErrorMessage` is used as the `CustomMessage` for all rules on that property. This is a limitation of the engine's single `RuleConfig` per `For()` block design.
+
+---
+
+## Architecture Testing
+
+Architecture testing validates structural rules, naming conventions, dependency boundaries, and design constraints in your codebase at test time.
+
+### Core Package (No Additional Dependencies)
+
+The core `JAAvila.FluentOperations` package includes `TypeOperationsManager`, `AssemblyOperationsManager`, and the `Types` utility class. These use **reflection-based** dependency scanning — sufficient for most architecture tests.
+
+```csharp
+using JAAvila.FluentOperations;
+using JAAvila.FluentOperations.Architecture;
+
+// Type assertions
+typeof(UserService).Test()
+    .BeClass()
+    .BePublic()
+    .ImplementInterface<IUserService>()
+    .HaveNameEndingWith("Service")
+    .NotHaveDependencyOn("MyApp.Infrastructure");
+
+// Assembly assertions
+typeof(UserService).Assembly.Test()
+    .ContainType<UserService>()
+    .NotReferenceAssembly("Newtonsoft.Json");
+
+// Batch validation with Types utility
+var domainTypes = Types.InNamespace("MyApp.Domain");
+foreach (var type in domainTypes)
+    type.Test().NotHaveDependencyOn("MyApp.Infrastructure");
+```
+
+Reflection-based scanning covers: field types, property types, constructor parameters, method parameters, return types, base types, interfaces, generic arguments, and custom attributes.
+
+### IL-Level Scanning (Optional Package)
+
+For deeper dependency detection that inspects method body IL, install the optional package:
+
+```bash
+dotnet add package JAAvila.FluentOperations.Architecture
+```
+
+| | Reflection (default) | Cecil (opt-in) |
+|---|---|---|
+| **Dependencies** | None (core only) | Mono.Cecil >= 0.11.6 |
+| **Scans** | Type signatures, fields, properties, constructors, inheritance, interfaces, attributes | All of reflection + local variables, `new` calls, `typeof()`, casts, method calls, field access, catch blocks, lambdas, async state machines |
+| **Performance** | Fast (metadata only) | Slower (reads IL from disk) |
+| **Use case** | Structural rules, naming, classification | Strict dependency boundary enforcement |
+
+### Setup
+
+Activate Cecil scanning in your test fixture:
+
+```csharp
+using JAAvila.FluentOperations.Architecture;
+
+[OneTimeSetUp]
+public void SetUp() => ArchitectureScannerConfig.UseCecilDependencyScanning();
+
+[OneTimeTearDown]
+public void TearDown() => ArchitectureScannerConfig.Reset();
+```
+
+Once activated, all dependency operations (`HaveDependencyOn`, `NotHaveDependencyOn`, `OnlyHaveDependenciesOn`, `HaveDependencyOnType`, `NotHaveDependencyOnType`, and their `*Any` variants) automatically use IL-level scanning. No code changes needed — the same assertions gain deeper detection.
+
+### Architecture Test Patterns
+
+#### Layer Isolation
+
+```csharp
+// Domain layer must not reference infrastructure
+var domainTypes = Types.InNamespace("MyApp.Domain");
+foreach (var type in domainTypes)
+    type.Test()
+        .NotHaveDependencyOn("MyApp.Infrastructure")
+        .NotHaveDependencyOn("Microsoft.EntityFrameworkCore");
+
+// Controllers must only depend on domain and application layers
+var controllers = Types.InAssembly(assembly)
+    .That(t => t.Name.EndsWith("Controller"));
+foreach (var type in controllers)
+    type.Test()
+        .OnlyHaveDependenciesOn("MyApp.Domain", "MyApp.Application", "Microsoft.AspNetCore");
+```
+
+#### Naming and Structure Conventions
+
+```csharp
+var repos = Types.InAssembly(assembly)
+    .That(t => t.Name.EndsWith("Repository"));
+foreach (var type in repos)
+    type.Test()
+        .BeClass()
+        .NotBeAbstract()
+        .ImplementInterface<IRepository>()
+        .BeInNamespaceStartingWith("MyApp.Infrastructure.Persistence");
+```
+
+#### Design Constraints
+
+```csharp
+// Value objects must be immutable and sealed
+var valueObjects = Types.InNamespace("MyApp.Domain.ValueObjects");
+foreach (var type in valueObjects)
+    type.Test()
+        .BeSealed()
+        .BeImmutable()
+        .NotHavePublicConstructor(); // use factory methods
+
+// No async void anywhere
+var allTypes = Types.InAssembly(assembly);
+foreach (var type in allTypes)
+    type.Test().NotHaveAsyncVoidMethods();
+```
+
+See [API Reference — Architecture Testing](./API.md#architecture-testing) for the complete list of 85+ operations.
 
 ---
 

@@ -5,13 +5,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable dateonly value is strictly before the expected value.
 /// </summary>
-internal class NullableDateOnlyBeBeforeValidator(PrincipalChain<DateOnly?> chain, DateOnly expected) : IValidator, IRuleDescriptor
+internal class NullableDateOnlyBeBeforeValidator(PrincipalChain<DateOnly?> chain, DateOnly expected)
+    : IValidator,
+        IRuleDescriptor
 {
-    public static NullableDateOnlyBeBeforeValidator New(PrincipalChain<DateOnly?> chain, DateOnly expected) =>
-        new(chain, expected);
+    public static NullableDateOnlyBeBeforeValidator New(
+        PrincipalChain<DateOnly?> chain,
+        DateOnly expected
+    ) => new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableDateOnly.BeBefore";
     string IRuleDescriptor.OperationName => "BeBefore";
     Type IRuleDescriptor.SubjectType => typeof(DateOnly?);

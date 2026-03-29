@@ -18,8 +18,8 @@ internal class StringBeSemVerValidator(PrincipalChain<string?> chain) : IValidat
             TimeSpan.FromSeconds(1)
         );
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "String.BeSemVer";
     string IRuleDescriptor.OperationName => "BeSemVer";
     Type IRuleDescriptor.SubjectType => typeof(string);

@@ -5,13 +5,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable guid value is not any of the specified disallowed values.
 /// </summary>
-internal class NullableGuidNotBeOneOfValidator(PrincipalChain<Guid?> chain, params Guid[] expected) : IValidator, IRuleDescriptor
+internal class NullableGuidNotBeOneOfValidator(PrincipalChain<Guid?> chain, params Guid[] expected)
+    : IValidator,
+        IRuleDescriptor
 {
-    public static NullableGuidNotBeOneOfValidator New(PrincipalChain<Guid?> chain, params Guid[] expected) =>
-        new(chain, expected);
+    public static NullableGuidNotBeOneOfValidator New(
+        PrincipalChain<Guid?> chain,
+        params Guid[] expected
+    ) => new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableGuid.NotBeOneOf";
     string IRuleDescriptor.OperationName => "NotBeOneOf";
     Type IRuleDescriptor.SubjectType => typeof(Guid?);
@@ -25,7 +29,8 @@ internal class NullableGuidNotBeOneOfValidator(PrincipalChain<Guid?> chain, para
             return true;
         }
 
-        ResultValidation = "The resulting value was expected to not be one of [{0}], but {1} was found.";
+        ResultValidation =
+            "The resulting value was expected to not be one of [{0}], but {1} was found.";
         return false;
     }
 

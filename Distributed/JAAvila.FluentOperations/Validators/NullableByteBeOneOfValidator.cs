@@ -7,13 +7,14 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the nullable byte value is one of the specified allowed values.
 /// </summary>
 internal class NullableByteBeOneOfValidator(PrincipalChain<byte?> chain, byte[] values)
-    : IValidator, IRuleDescriptor
+    : IValidator,
+        IRuleDescriptor
 {
     public static NullableByteBeOneOfValidator New(PrincipalChain<byte?> chain, byte[] values) =>
         new(chain, values);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableByte.BeOneOf";
     string IRuleDescriptor.OperationName => "BeOneOf";
     Type IRuleDescriptor.SubjectType => typeof(byte?);

@@ -5,13 +5,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable timeonly value has the expected minute.
 /// </summary>
-internal class NullableTimeOnlyHaveMinuteValidator(PrincipalChain<TimeOnly?> chain, int minute) : IValidator, IRuleDescriptor
+internal class NullableTimeOnlyHaveMinuteValidator(PrincipalChain<TimeOnly?> chain, int minute)
+    : IValidator,
+        IRuleDescriptor
 {
-    public static NullableTimeOnlyHaveMinuteValidator New(PrincipalChain<TimeOnly?> chain, int minute) =>
-        new(chain, minute);
+    public static NullableTimeOnlyHaveMinuteValidator New(
+        PrincipalChain<TimeOnly?> chain,
+        int minute
+    ) => new(chain, minute);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableTimeOnly.HaveMinute";
     string IRuleDescriptor.OperationName => "HaveMinute";
     Type IRuleDescriptor.SubjectType => typeof(TimeOnly?);
@@ -25,7 +29,8 @@ internal class NullableTimeOnlyHaveMinuteValidator(PrincipalChain<TimeOnly?> cha
             return true;
         }
 
-        ResultValidation = "The resulting value was expected to have minute {0}, but {1} was found.";
+        ResultValidation =
+            "The resulting value was expected to have minute {0}, but {1} was found.";
         return false;
     }
 

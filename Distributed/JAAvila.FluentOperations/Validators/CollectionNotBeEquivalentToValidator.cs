@@ -16,8 +16,8 @@ internal class CollectionNotBeEquivalentToValidator<T>(
         IEnumerable<T> expected
     ) => new(chain, expected);
 
-    public string Expected { get; } = string.Empty;
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Collection.NotBeEquivalentTo";
     string IRuleDescriptor.OperationName => "NotBeEquivalentTo";
     Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);
@@ -29,7 +29,7 @@ internal class CollectionNotBeEquivalentToValidator<T>(
         var actual = chain.GetValue();
 
         // If actual is null but expected is not, they are NOT equivalent => pass
-        if (actual is null)
+        if (actual.IsNull())
         {
             return true;
         }

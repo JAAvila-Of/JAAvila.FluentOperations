@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using System.Reflection;
 using JAAvila.FluentOperations.Manager;
 using JAAvila.FluentOperations.Model;
 
@@ -1087,6 +1088,56 @@ public abstract partial class QualityBlueprint<T>
         Expression<Func<T, Uri?>> propertyExpression,
         RuleConfig config
     ) => For<Uri?, UriOperationsManager>(propertyExpression, config);
+
+    /// <summary>
+    /// Defines a validation rule for a <see cref="Type"/> property of the model.
+    /// Call <see cref="IPropertyProxy{TManager}.Test"/> on the result to access Type assertions.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the Type property to validate (e.g., <c>x =&gt; x.ServiceType</c>).
+    /// </param>
+    /// <returns>A property proxy that exposes <see cref="TypeOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<TypeOperationsManager> For(
+        Expression<Func<T, Type?>> propertyExpression
+    ) => For<Type?, TypeOperationsManager>(propertyExpression);
+
+    /// <summary>
+    /// Defines a validation rule for a <see cref="Type"/> property of the model, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the Type property to validate (e.g., <c>x =&gt; x.ServiceType</c>).
+    /// </param>
+    /// <param name="config">Configuration for this rule (severity, error code, cascade mode).</param>
+    /// <returns>A property proxy that exposes <see cref="TypeOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<TypeOperationsManager> For(
+        Expression<Func<T, Type?>> propertyExpression,
+        RuleConfig config
+    ) => For<Type?, TypeOperationsManager>(propertyExpression, config);
+
+    /// <summary>
+    /// Defines a validation rule for an <see cref="Assembly"/> property of the model.
+    /// Call <see cref="IPropertyProxy{TManager}.Test"/> on the result to access Assembly assertions.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the Assembly property to validate (e.g., <c>x =&gt; x.TargetAssembly</c>).
+    /// </param>
+    /// <returns>A property proxy that exposes <see cref="AssemblyOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<AssemblyOperationsManager> For(
+        Expression<Func<T, Assembly?>> propertyExpression
+    ) => For<Assembly?, AssemblyOperationsManager>(propertyExpression);
+
+    /// <summary>
+    /// Defines a validation rule for an <see cref="Assembly"/> property of the model, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    /// <param name="propertyExpression">
+    /// An expression selecting the Assembly property to validate (e.g., <c>x =&gt; x.TargetAssembly</c>).
+    /// </param>
+    /// <param name="config">Configuration for this rule (severity, error code, cascade mode).</param>
+    /// <returns>A property proxy that exposes <see cref="AssemblyOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<AssemblyOperationsManager> For(
+        Expression<Func<T, Assembly?>> propertyExpression,
+        RuleConfig config
+    ) => For<Assembly?, AssemblyOperationsManager>(propertyExpression, config);
 
     /// <summary>
     /// Defines a validation rule for a <see cref="DateTimeOffset"/> property of the model.
