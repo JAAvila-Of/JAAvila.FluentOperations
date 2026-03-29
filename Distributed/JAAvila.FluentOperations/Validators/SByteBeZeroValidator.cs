@@ -9,8 +9,8 @@ internal class SByteBeZeroValidator(PrincipalChain<sbyte> chain) : IValidator, I
 {
     public static SByteBeZeroValidator New(PrincipalChain<sbyte> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "SByte.BeZero";
     string IRuleDescriptor.OperationName => "BeZero";
     Type IRuleDescriptor.SubjectType => typeof(sbyte);

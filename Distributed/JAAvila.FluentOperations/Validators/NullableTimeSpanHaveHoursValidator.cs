@@ -5,13 +5,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable timespan value has the expected hours component.
 /// </summary>
-internal class NullableTimeSpanHaveHoursValidator(PrincipalChain<TimeSpan?> chain, int hours) : IValidator, IRuleDescriptor
+internal class NullableTimeSpanHaveHoursValidator(PrincipalChain<TimeSpan?> chain, int hours)
+    : IValidator,
+        IRuleDescriptor
 {
-    public static NullableTimeSpanHaveHoursValidator New(PrincipalChain<TimeSpan?> chain, int hours) =>
-        new(chain, hours);
+    public static NullableTimeSpanHaveHoursValidator New(
+        PrincipalChain<TimeSpan?> chain,
+        int hours
+    ) => new(chain, hours);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableTimeSpan.HaveHours";
     string IRuleDescriptor.OperationName => "HaveHours";
     Type IRuleDescriptor.SubjectType => typeof(TimeSpan?);
@@ -25,7 +29,8 @@ internal class NullableTimeSpanHaveHoursValidator(PrincipalChain<TimeSpan?> chai
             return true;
         }
 
-        ResultValidation = "The resulting value was expected to have {0} hours component, but {1} was found.";
+        ResultValidation =
+            "The resulting value was expected to have {0} hours component, but {1} was found.";
         return false;
     }
 

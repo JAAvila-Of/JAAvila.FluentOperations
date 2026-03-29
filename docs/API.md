@@ -30,6 +30,9 @@ Complete API documentation for JAAvila.FluentOperations.
   - [Custom Validator Operations](#custom-validator-operations)
   - [Action / Async Action](#action-validations)
   - [ActionStats (Execution Statistics)](#actionstats-execution-statistics)
+  - [Type (Architecture Testing)](#type-validations)
+  - [Assembly (Architecture Testing)](#assembly-validations)
+- [Types Utility (Type Selection)](#types-utility-type-selection)
 - [Reusable Rule Builders](#reusable-rule-builders)
 - [Quality Blueprints](#quality-blueprints)
   - [QualityBlueprint&lt;T&gt;](#qualityblueprintt)
@@ -1057,6 +1060,227 @@ asyncStats.Test().CompleteWithinMilliseconds(500);
 var info = action.Stats();
 Console.WriteLine($"Took {info.ElapsedMilliseconds}ms, Memory: {info.MemoryDelta} bytes");
 ```
+
+---
+
+## Architecture Testing
+
+FluentOperations supports architecture-level assertions on `Type` and `Assembly` values, plus a `Types` utility for selecting and filtering types from assemblies and namespaces.
+
+### Type Validations
+
+Manager: `TypeOperationsManager` (via `.Test()` on `Type`)
+
+All methods support an optional `Reason? reason` parameter and return `TypeOperationsManager` for chaining.
+
+#### Type Classification
+
+| Method | Description |
+|--------|-------------|
+| `BeClass()` | The type is a class (not interface, not value type) |
+| `NotBeClass()` | The type is not a class |
+| `BeInterface()` | The type is an interface |
+| `NotBeInterface()` | The type is not an interface |
+| `BeAbstract()` | The type is abstract (excludes interfaces) |
+| `NotBeAbstract()` | The type is not abstract |
+| `BeSealed()` | The type is sealed |
+| `NotBeSealed()` | The type is not sealed |
+| `BeStatic()` | The type is static (abstract + sealed) |
+| `NotBeStatic()` | The type is not static |
+| `BePublic()` | The type is public |
+| `NotBePublic()` | The type is not public |
+| `BeInternal()` | The type is internal (not public) |
+| `NotBeInternal()` | The type is not internal |
+| `BeGeneric()` | The type is a generic type definition |
+| `NotBeGeneric()` | The type is not generic |
+| `BeRecord()` | The type is a record (class or struct) |
+| `BeValueType()` | The type is a value type (struct or enum) |
+| `BeEnum()` | The type is an enum |
+| `BeNested()` | The type is nested inside another type |
+| `BeImmutable()` | The type has no public settable properties and no public mutable fields |
+| `NotBeImmutable()` | The type is not immutable |
+
+#### Namespace and Naming
+
+| Method | Description |
+|--------|-------------|
+| `BeInNamespace(string)` | The type resides in the exact namespace |
+| `NotBeInNamespace(string)` | The type does not reside in the namespace |
+| `BeInNamespaceStartingWith(string)` | The type's namespace starts with the prefix (matches exact and child namespaces) |
+| `HaveName(string)` | The type has the exact name |
+| `NotHaveName(string)` | The type does not have the name |
+| `HaveNameEndingWith(string)` | The type name ends with the suffix |
+| `NotHaveNameEndingWith(string)` | The type name does not end with the suffix |
+| `HaveNameStartingWith(string)` | The type name starts with the prefix |
+| `NotHaveNameStartingWith(string)` | The type name does not start with the prefix |
+| `MatchName(string)` | The type name matches the regex pattern |
+| `MatchNamespace(string)` | The type namespace matches the regex pattern |
+
+#### Inheritance and Interfaces
+
+| Method | Description |
+|--------|-------------|
+| `ImplementInterface<T>()` | The type implements the specified interface |
+| `ImplementInterface(Type)` | The type implements the specified interface |
+| `NotImplementInterface<T>()` | The type does not implement the interface |
+| `NotImplementInterface(Type)` | The type does not implement the interface |
+| `DeriveFrom<T>()` | The type derives from the base type |
+| `DeriveFrom(Type)` | The type derives from the base type |
+| `NotDeriveFrom<T>()` | The type does not derive from the base type |
+| `NotDeriveFrom(Type)` | The type does not derive from the base type |
+
+#### Attributes
+
+| Method | Description |
+|--------|-------------|
+| `HaveAttribute<T>()` | The type has the specified custom attribute |
+| `HaveAttribute(Type)` | The type has the specified custom attribute |
+| `NotHaveAttribute<T>()` | The type does not have the attribute |
+| `NotHaveAttribute(Type)` | The type does not have the attribute |
+
+#### Constructors
+
+| Method | Description |
+|--------|-------------|
+| `HavePublicConstructor()` | The type has at least one public constructor |
+| `NotHavePublicConstructor()` | The type has no public constructors |
+| `HaveConstructorWithParameters(params Type[])` | The type has a public constructor with the specified parameter types |
+| `HaveConstructorWithParameters(Reason?, params Type[])` | Same, with reason |
+| `HavePrivateConstructorWithParameters(params Type[])` | The type has a private/internal constructor with the specified parameter types |
+| `HavePrivateConstructorWithParameters(Reason?, params Type[])` | Same, with reason |
+
+#### Members
+
+| Method | Description |
+|--------|-------------|
+| `HavePropertyOfType<T>(string)` | The type has a public property with the given name and type |
+| `HavePropertyOfType(string, Type)` | The type has a public property with the given name and type |
+| `HaveMethodReturning<T>(string)` | The type has a public method with the given name and return type |
+| `HaveMethodReturning(string, Type)` | The type has a public method with the given name and return type |
+| `HaveMethodOverride(string)` | The type overrides a method from its base type |
+| `NotHaveMethodOverride(string)` | The type does not override the method |
+| `HaveProtectedMembers()` | The type has at least one protected/protected internal member |
+| `NotHaveProtectedMembers()` | The type has no protected members |
+| `HaveMaxPublicMethods(int)` | The type has at most N public methods (god class detection) |
+| `HaveMaxFields(int)` | The type has at most N fields (excludes compiler-generated backing fields) |
+
+#### Method Body Analysis
+
+| Method | Description |
+|--------|-------------|
+| `HaveAsyncVoidMethods()` | The type has at least one `async void` method |
+| `NotHaveAsyncVoidMethods()` | The type has no `async void` methods (fire-and-forget antipattern detection) |
+| `ReturnTypesFromNamespace(string)` | At least one public method returns a type from the namespace |
+| `NotReturnTypesFromNamespace(string)` | No public methods return types from the namespace (leaky abstraction detection) |
+
+#### Dependency Analysis
+
+Dependency operations scan field types, property types, constructor parameters, method parameters, return types, base types, interfaces, generic arguments, and attributes. With the optional `JAAvila.FluentOperations.Architecture` package, they also scan IL method bodies (local variables, `new` calls, `typeof()`, casts, method calls, field access, catch blocks).
+
+| Method | Description |
+|--------|-------------|
+| `HaveDependencyOn(string)` | The type depends on the namespace (prefix match) |
+| `NotHaveDependencyOn(string)` | The type does not depend on the namespace |
+| `HaveDependencyOnAny(params string[])` | The type depends on at least one of the namespaces (OR) |
+| `HaveDependencyOnAny(Reason?, params string[])` | Same, with reason |
+| `NotHaveDependencyOnAny(params string[])` | The type does not depend on any of the namespaces |
+| `NotHaveDependencyOnAny(Reason?, params string[])` | Same, with reason |
+| `OnlyHaveDependenciesOn(params string[])` | All non-BCL dependencies are within the whitelist (`System.*` and `Microsoft.*` are implicitly allowed) |
+| `OnlyHaveDependenciesOn(Reason?, params string[])` | Same, with reason |
+| `HaveDependencyOnType<T>()` | The type depends on the specific type |
+| `HaveDependencyOnType(string)` | The type depends on the fully qualified type name |
+| `NotHaveDependencyOnType<T>()` | The type does not depend on the specific type |
+| `NotHaveDependencyOnType(string)` | The type does not depend on the fully qualified type name |
+
+### Assembly Validations
+
+Manager: `AssemblyOperationsManager` (via `.Test()` on `Assembly`)
+
+All methods support an optional `Reason? reason` parameter and return `AssemblyOperationsManager` for chaining.
+
+| Method | Description |
+|--------|-------------|
+| `ContainType<T>()` | The assembly contains the specified type |
+| `ContainType(Type)` | The assembly contains the specified type |
+| `ContainTypeMatching(string)` | The assembly contains a type whose full name matches the regex pattern |
+| `ReferenceAssembly(string)` | The assembly references the named assembly |
+| `NotReferenceAssembly(string)` | The assembly does not reference the named assembly |
+| `HaveVersion(Version)` | The assembly version matches exactly |
+| `HaveMinimumVersion(Version)` | The assembly version is at least the minimum |
+| `HavePublicKey()` | The assembly is strong-named (has a public key) |
+
+### Types Utility (Type Selection)
+
+The `Types` static class (in `JAAvila.FluentOperations.Architecture` namespace within the core package) provides methods for selecting and filtering types from assemblies and namespaces.
+
+#### Assembly Selection
+
+```csharp
+// All public types in an assembly
+IEnumerable<Type> types = Types.InAssembly(typeof(MyService).Assembly);
+
+// Filtered types
+IEnumerable<Type> services = Types.InAssembly(assembly, t => t.Name.EndsWith("Service"));
+
+// Safe loading (handles ReflectionTypeLoadException)
+IEnumerable<Type> safe = Types.InAssemblySafe(assembly);
+
+// Multiple assemblies
+IEnumerable<Type> all = Types.InAssemblies(assembly1, assembly2);
+IEnumerable<Type> filtered = Types.InAssemblies(new[] { assembly1, assembly2 }, t => t.IsPublic);
+IEnumerable<Type> allSafe = Types.InAssembliesSafe(assembly1, assembly2);
+
+// Shorthand alias
+IEnumerable<Type> types = Types.In(assembly);
+```
+
+#### Namespace and Domain Selection
+
+```csharp
+// All public types in a namespace (across all loaded assemblies)
+IEnumerable<Type> domainTypes = Types.InNamespace("MyApp.Domain");
+
+// Types sharing the same namespace as a given type
+IEnumerable<Type> peers = Types.InNamespaceOf<MyService>();
+
+// All public types in the current AppDomain
+IEnumerable<Type> everything = Types.InCurrentDomain();
+```
+
+#### Fluent Filtering
+
+```csharp
+// Chain .That() for fluent predicate filtering
+Types.InAssembly(assembly)
+    .That(t => t.IsClass && !t.IsAbstract)
+    .ToList()
+    .ForEach(t => t.Test().ImplementInterface<IService>());
+```
+
+### Deep Dependency Scanning (Mono.Cecil)
+
+Install the optional `JAAvila.FluentOperations.Architecture` package for IL-level dependency detection:
+
+```bash
+dotnet add package JAAvila.FluentOperations.Architecture
+```
+
+Activate in test setup:
+
+```csharp
+using JAAvila.FluentOperations.Architecture;
+
+[OneTimeSetUp]
+public void SetUp() => ArchitectureScannerConfig.UseCecilDependencyScanning();
+
+[OneTimeTearDown]
+public void TearDown() => ArchitectureScannerConfig.Reset();
+```
+
+When active, `HaveDependencyOn`, `NotHaveDependencyOn`, `OnlyHaveDependenciesOn`, `HaveDependencyOnType`, and `NotHaveDependencyOnType` detect dependencies inside method bodies:
+- Local variables, `new` calls, `typeof()`, casts, method calls, field access, catch blocks, lambdas, async state machines.
+
+Without this package, these operations use reflection-only scanning (type signatures, fields, properties, constructors, inheritance, interfaces, attributes).
 
 ---
 

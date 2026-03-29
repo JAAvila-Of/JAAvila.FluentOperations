@@ -1,4 +1,3 @@
-using System.IO;
 using System.Reflection;
 using System.Text.Json;
 using JAAvila.FluentOperations.Model;
@@ -24,7 +23,8 @@ internal static class JsonSchemaGenerator
     /// <returns>A <see cref="JsonDocument"/> that the caller is responsible for disposing.</returns>
     internal static JsonDocument Generate<T>(
         IReadOnlyList<BlueprintRuleInfo> descriptors,
-        JsonSchemaOptions options)
+        JsonSchemaOptions options
+    )
         where T : notnull
     {
         var stream = new MemoryStream();
@@ -35,9 +35,10 @@ internal static class JsonSchemaGenerator
             writer.WriteStartObject();
 
             // $schema URI
-            var schemaUri = options.Draft == JsonSchemaDraft.Draft7
-                ? "http://json-schema.org/draft-07/schema#"
-                : "https://json-schema.org/draft/2020-12/schema";
+            var schemaUri =
+                options.Draft == JsonSchemaDraft.Draft7
+                    ? "http://json-schema.org/draft-07/schema#"
+                    : "https://json-schema.org/draft/2020-12/schema";
             writer.WriteString("$schema", schemaUri);
 
             writer.WriteString("type", "object");
@@ -76,13 +77,20 @@ internal static class JsonSchemaGenerator
                     writer.WritePropertyName("if");
                     writer.WriteStartObject();
                     writer.WritePropertyName("description");
-                    writer.WriteStringValue($"Applies when model satisfies scenario: {scenarioType.Name}");
+                    writer.WriteStringValue(
+                        $"Applies when model satisfies scenario: {scenarioType.Name}"
+                    );
                     writer.WriteEndObject();
 
                     // then: the constraints that apply under this scenario
                     writer.WritePropertyName("then");
                     writer.WriteStartObject();
-                    WritePropertiesBlock<T>(writer, scenarioRules, options, out var scenarioRequired);
+                    WritePropertiesBlock<T>(
+                        writer,
+                        scenarioRules,
+                        options,
+                        out var scenarioRequired
+                    );
                     if (scenarioRequired.Count > 0)
                     {
                         WriteRequiredArray(writer, scenarioRequired);
@@ -111,18 +119,18 @@ internal static class JsonSchemaGenerator
         Utf8JsonWriter writer,
         IReadOnlyList<BlueprintRuleInfo> rules,
         JsonSchemaOptions options,
-        out List<string> requiredProperties)
+        out List<string> requiredProperties
+    )
         where T : notnull
     {
         requiredProperties = [];
 
-        var modelProperties = typeof(T)
-            .GetProperties(BindingFlags.Public | BindingFlags.Instance);
+        var modelProperties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
         // Index rules by property name for fast lookup
         var rulesByProperty = rules
             .GroupBy(r => r.PropertyName)
-            .ToDictionary(g => g.Key, g => (IReadOnlyList<BlueprintRuleInfo>)g.ToList());
+            .ToDictionary(g => g.Key, IReadOnlyList<BlueprintRuleInfo> (g) => g.ToList());
 
         writer.WritePropertyName("properties");
         writer.WriteStartObject();
@@ -139,10 +147,17 @@ internal static class JsonSchemaGenerator
 
             // Write validation constraints from matching rules
             // Try both camelCase (JSON convention) and PascalCase (C# property name)
-            if (rulesByProperty.TryGetValue(prop.Name, out var matchingRules)
-                || rulesByProperty.TryGetValue(camelName, out matchingRules))
+            if (
+                rulesByProperty.TryGetValue(prop.Name, out var matchingRules)
+                || rulesByProperty.TryGetValue(camelName, out matchingRules)
+            )
             {
-                var isRequired = JsonSchemaRuleMapper.WriteConstraints(writer, matchingRules, options);
+                var isRequired = JsonSchemaRuleMapper.WriteConstraints(
+                    writer,
+                    matchingRules,
+                    options
+                );
+
                 if (isRequired)
                 {
                     requiredProperties.Add(camelName);
@@ -159,17 +174,21 @@ internal static class JsonSchemaGenerator
     {
         writer.WritePropertyName("required");
         writer.WriteStartArray();
+
         foreach (var name in required)
         {
             writer.WriteStringValue(name);
         }
+
         writer.WriteEndArray();
     }
 
     private static string ToCamelCase(string name)
     {
         if (string.IsNullOrEmpty(name))
+        {
             return name;
+        }
 
         return char.ToLowerInvariant(name[0]) + name[1..];
     }

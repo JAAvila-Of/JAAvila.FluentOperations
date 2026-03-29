@@ -5,21 +5,23 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the value is the same reference as the expected object.
 /// </summary>
-internal class ReferenceBeSameAsValidator<TSubject>(PrincipalChain<TSubject> chain, TSubject expected)
-    : IValidator, IRuleDescriptor
+internal class ReferenceBeSameAsValidator<TSubject>(
+    PrincipalChain<TSubject> chain,
+    TSubject expected
+) : IValidator, IRuleDescriptor
 {
     public static ReferenceBeSameAsValidator<TSubject> New(
         PrincipalChain<TSubject> chain,
         TSubject expected
     ) => new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Reference.BeSameAs";
     string IRuleDescriptor.OperationName => "BeSameAs";
     Type IRuleDescriptor.SubjectType => typeof(TSubject);
     IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
-        new Dictionary<string, object> { ["value"] = expected };
+        new Dictionary<string, object> { ["value"] = expected! };
 
     public bool Validate()
     {

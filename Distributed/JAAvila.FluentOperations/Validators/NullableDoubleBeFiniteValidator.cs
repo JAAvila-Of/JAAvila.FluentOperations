@@ -6,12 +6,14 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable double value is a finite number (not NaN or Infinity).
 /// </summary>
-internal class NullableDoubleBeFiniteValidator(PrincipalChain<double?> chain) : IValidator, IRuleDescriptor
+internal class NullableDoubleBeFiniteValidator(PrincipalChain<double?> chain)
+    : IValidator,
+        IRuleDescriptor
 {
     public static NullableDoubleBeFiniteValidator New(PrincipalChain<double?> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableDouble.BeFinite";
     string IRuleDescriptor.OperationName => "BeFinite";
     Type IRuleDescriptor.SubjectType => typeof(double?);

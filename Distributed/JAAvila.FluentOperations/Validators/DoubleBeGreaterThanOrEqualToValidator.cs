@@ -5,13 +5,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the double value is greater than or equal to the expected value.
 /// </summary>
-internal class DoubleBeGreaterThanOrEqualToValidator(PrincipalChain<double> chain, double expected) : IValidator, IRuleDescriptor
+internal class DoubleBeGreaterThanOrEqualToValidator(PrincipalChain<double> chain, double expected)
+    : IValidator,
+        IRuleDescriptor
 {
-    public static DoubleBeGreaterThanOrEqualToValidator New(PrincipalChain<double> chain, double expected) =>
-        new(chain, expected);
+    public static DoubleBeGreaterThanOrEqualToValidator New(
+        PrincipalChain<double> chain,
+        double expected
+    ) => new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Double.BeGreaterThanOrEqualTo";
     string IRuleDescriptor.OperationName => "BeGreaterThanOrEqualTo";
     Type IRuleDescriptor.SubjectType => typeof(double);
@@ -25,7 +29,8 @@ internal class DoubleBeGreaterThanOrEqualToValidator(PrincipalChain<double> chai
             return true;
         }
 
-        ResultValidation = "The resulting value was expected to be greater than or equal to {0}, but {1} was found.";
+        ResultValidation =
+            "The resulting value was expected to be greater than or equal to {0}, but {1} was found.";
         return false;
     }
 

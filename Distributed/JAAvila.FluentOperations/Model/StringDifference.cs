@@ -54,17 +54,8 @@ internal record StringDifference
         return _type switch
         {
             DifferenceType.None => string.Empty,
-            /*DifferenceType.FoundNull when FoundValue!.Length == 0
-                => $"A {StringFormatter.Format(FoundValue)} string was supposed to be found, but <null> was found.",
-            DifferenceType.FoundNull when FoundValue!.Length <= MaxDisplayLength
-                => $"A string {StringFormatter.Format(FoundValue)} (length {FoundValue.Length}) was supposed to be found, but <null> was found.",*/
             DifferenceType.FoundNull
-                //=> $"A string of length {FoundValue.Length} was supposed to be found, but <null> was found.",
                 => $"Expected to find {StringFormatter.Format(_foundValue)} but <null> was found.",
-            /*DifferenceType.NotFoundNull when ExpectedValue!.Length == 0
-                => $"Expected to find <null> but found a {StringFormatter.Format(ExpectedValue)} string.",
-            DifferenceType.NotFoundNull when ExpectedValue!.Length <= MaxDisplayLength
-                => $"Expected to find <null> but found {StringFormatter.Format(ExpectedValue)} (length {ExpectedValue.Length}).",*/
             DifferenceType.NotFoundNull
                 => $"Expected to find <null> but found {StringFormatter.Format(_expectedValue)}",
             DifferenceType.AdditionalLine

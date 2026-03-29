@@ -15,8 +15,8 @@ internal class DateTimeOffsetHaveYearValidator(
         int expectedYear
     ) => new(chain, expectedYear);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "DateTimeOffset.HaveYear";
     string IRuleDescriptor.OperationName => "HaveYear";
     Type IRuleDescriptor.SubjectType => typeof(DateTimeOffset);

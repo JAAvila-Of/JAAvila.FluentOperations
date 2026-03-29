@@ -51,6 +51,8 @@ public static class QualityReportSnapshotExtensions
                 case SnapshotUpdateMode.AutoUpdate:
                     WriteSnapshot(report, options, dir, filePath);
                     return;
+                default:
+                    return;
             }
         }
 
@@ -112,9 +114,10 @@ public static class QualityReportSnapshotExtensions
     private static (string dir, string filePath) ResolvePaths(
         string snapshotName, SnapshotOptions options, string callerFilePath)
     {
-        // When SnapshotDirectory is an absolute path (e.g. a temp dir in tests), use it directly.
+        // When SnapshotDirectory is an absolute path (e.g., a temp dir in tests), use it directly.
         // Otherwise, resolve relative to the caller's source file directory.
         string dir;
+        
         if (Path.IsPathRooted(options.SnapshotDirectory))
         {
             dir = options.SnapshotDirectory;

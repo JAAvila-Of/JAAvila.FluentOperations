@@ -1,0 +1,674 @@
+# JAAvila.FluentOperations
+
+> JAAvila.FluentOperations is a .NET 8.0 / C# 13.0 fluent validation library licensed under Apache-2.0. It provides two validation approaches: inline assertions via `.Test()` extension methods with fluent chaining that throw on failure, and Quality Blueprints — reusable validation schemas that aggregate failures into `QualityReport` objects with severity levels (Error, Warning, Info).
+
+## Overview
+
+JAAvila.FluentOperations is a NuGet package family of 9 packages. The core library targets .NET 8.0 and C# 13.0.
+
+**Two validation approaches:**
+1. **Inline assertions** — `value.Test().Operation()` chains that throw immediately on failure
+2. **Quality Blueprints** — `QualityBlueprint<T>` subclasses that capture rules in a `Define()` scope and evaluate them via `Check(instance)` returning a `QualityReport`
+
+## Core Contracts (Interfaces)
+
+### IValidator
+Boolean validation logic.
+- Properties: `string Expected`, `string ResultValidation` (set by validator), `string MessageKey`
+- Methods: `bool Validate()`, `Task<bool> ValidateAsync()`
+
+### ITestManager<TManager, TS>
+Manager contract enabling ExecutionEngine integration.
+- Property: `PrincipalChain<TS> PrincipalChain`
+
+### IBlueprintValidator
+AOT-safe non-generic blueprint resolution. Implemented explicitly by `QualityBlueprint<T>`.
+- Methods: `bool CanValidate(Type)`, `QualityReport Validate(object)`, `Task<QualityReport> ValidateAsync(object)`
+- Overloads: `QualityReport Validate(object, params string[] ruleSets)`, `Task<QualityReport> ValidateAsync(object, params string[] ruleSets)`
+
+### IQualityRule
+Captured rule for deferred Blueprint evaluation.
+- Methods: `bool Validate()`, `Task<bool> ValidateAsync()`, `string GetReport()`, `void SetValue(object?)`, `Severity GetSeverity()`, `string? GetErrorCode()`, `string? GetCustomMessage()`
+
+### ICustomValidator<T>
+User-defined synchronous validator.
+- Methods: `bool IsValid(T)`, `string GetFailureMessage(T)`
+
+### IAsyncCustomValidator<T>
+User-defined asynchronous validator.
+- Methods: `Task<bool> IsValidAsync(T)`, `string GetFailureMessage(T)`
+
+### IRuleDescriptor
+Introspection metadata. All 730+ validators implement this.
+- Properties: `string OperationName`, `Type SubjectType`, `IReadOnlyDictionary<string, object> Parameters`
+
+### IMessageProvider
+Pluggable localized message provider.
+- Method: `string? GetMessage(string messageKey, CultureInfo culture)`
+
+### IBlueprintInterceptor
+Blueprint validation interception (synchronous).
+- Methods: `QualityReport? BeforeValidation(BlueprintInterceptionContext)`, `QualityReport AfterValidation(BlueprintInterceptionContext, QualityReport)`
+
+### IAsyncBlueprintInterceptor
+Blueprint validation interception (asynchronous).
+- Methods: `Task<QualityReport?> BeforeValidationAsync(BlueprintInterceptionContext)`, `Task<QualityReport> AfterValidationAsync(BlueprintInterceptionContext, QualityReport)`
+
+### IOrderedBlueprintInterceptor
+Ordering for multiple interceptors.
+- Property: `int Order`
+
+### IModelAwareRule
+Rules that need access to the root model.
+- Method: `void SetModelInstance(object model)`
+
+## Enums
+
+**Severity**: `Error` (0), `Warning` (1), `Info` (2)
+
+**CascadeMode**: `Continue`, `StopOnFirstFailure`
+
+**CascadeSeverityMode**: `ErrorOnly` (default — only Error failures trigger cascade stop), `AllFailures` (any failure stops), `SameOrLowerSeverity` (graduated)
+
+**TestFramework**: `Auto`, `None`, `MSpec`, `NUnit`, `MsTest`, `TUnit`, `XUnit2`, `XUnit3`
+
+**TransactionalMode**: `FirstFailAndDisposeThis`, `FirstFailAndDisposeAll`, `AccumulateFailsAndDisposeThis`, `AccumulateFailsAndDisposeAll`
+
+**TransactionalStatus**: `Success`, `Interrupted`, `Fail`
+
+## Operation Managers — Complete List
+
+Each manager implements `ITestManager<TManager, TValue>`. All operations return the manager for fluent chaining. All managers have a `.Test()` extension method entry point.
+
+### StringOperationsManager (`string?`)
+Operations: `Be()`, `Be(StringComparison)`, `NotBe()`, `BeEmpty()`, `NotBeEmpty()`, `NotBeNullOrEmpty()`, `NotBeNullOrWhiteSpace()`, `BeNullOrWhiteSpace()`, `HaveLength(int)`, `HaveMinLength(int)`, `HaveMaxLength(int)`, `HaveLengthBetween(int,int)`, `HaveLengthGreaterThan(int)`, `HaveLengthLessThan(int)`, `BeUpperCased()`, `NotBeUpperCased()`, `BeLowerCased()`, `NotBeLowerCased()`, `Contain(string)`, `Contain(string,StringComparison)`, `NotContain(string)`, `NotContain(string,StringComparison)`, `Match(string)`, `Match(Regex)`, `NotMatch(string)`, `NotMatch(Regex)`, `MatchAny(params string[])`, `MatchAny(params Regex[])`, `MatchAll(params string[])`, `MatchAll(params Regex[])`, `MatchWildcard(string)`, `NotMatchWildcard(string)`, `BeAlphabetic()`, `BeAlphanumeric()`, `BeNumeric()`, `BeHex()`, `ContainOnlyDigits()`, `ContainOnlyLetters()`, `ContainNoWhitespace()`, `StartWith(string)`, `StartWith(string,StringComparison)`, `NotStartWith(string)`, `EndWith(string)`, `EndWith(string,StringComparison)`, `NotEndWith(string)`, `BeEmail()`, `BeUrl()`, `BePhoneNumber()`, `BeGuid()`, `BeJson()`, `BeXml()`, `BeCreditCard()`, `BeBase64()`, `BeSemVer()`, `BeIPAddress()`, `BeIPv4()`, `BeIPv6()`, `ContainAll(params string[])`, `ContainAny(params string[])`, `BeOneOf(params string?[])`, `NotBeOneOf(params string?[])`
+
+### BooleanOperationsManager (`bool`) / NullableBooleanOperationsManager (`bool?`)
+Operations: `Be(bool?)`, `NotBe(bool?)`, `BeTrue()`, `BeFalse()`, `NotBeTrue()`, `NotBeFalse()`, `BeAllTrue(params bool?[])`, `BeAllFalse(params bool?[])`, `Imply(bool)`, `BeOfType(Type)`, `NotBeOfType(Type)`
+
+Nullable adds: `HaveValue()`, `NotHaveValue()`
+
+### IntegerOperationsManager (`int`) / NullableIntegerOperationsManager (`int?`)
+Operations: `Be(int)`, `NotBe(int)`, `BePositive()`, `BeNegative()`, `BeZero()`, `BeGreaterThan(int)`, `BeGreaterThanOrEqualTo(int)`, `BeLessThan(int)`, `BeLessThanOrEqualTo(int)`, `BeInRange(int,int)`, `NotBeInRange(int,int)`, `BeOneOf(int[])`, `NotBeOneOf(int[])`, `BeDivisibleBy(int)`, `BeEven()`, `BeOdd()`, `BeOfType(Type)`, `NotBeOfType(Type)`
+
+Nullable adds: `HaveValue()`, `NotHaveValue()`
+
+### LongOperationsManager (`long`) / NullableLongOperationsManager (`long?`)
+Same operations as IntegerOperationsManager (with `long` parameters). Nullable adds: `HaveValue()`, `NotHaveValue()`
+
+### DecimalOperationsManager (`decimal`) / NullableDecimalOperationsManager (`decimal?`)
+Same operations as IntegerOperationsManager (with `decimal` parameters). Nullable adds: `HaveValue()`, `NotHaveValue()`
+
+### DoubleOperationsManager (`double`) / NullableDoubleOperationsManager (`double?`)
+Same operations as IntegerOperationsManager (with `double` parameters). Nullable adds: `HaveValue()`, `NotHaveValue()`
+
+### FloatOperationsManager (`float`) / NullableFloatOperationsManager (`float?`)
+Same operations as IntegerOperationsManager (with `float` parameters). Nullable adds: `HaveValue()`, `NotHaveValue()`
+
+### ByteOperationsManager (`byte`) / NullableByteOperationsManager (`byte?`)
+Same operations as IntegerOperationsManager (with `byte` parameters). Nullable adds: `HaveValue()`, `NotHaveValue()`
+
+### SByteOperationsManager (`sbyte`) / NullableSByteOperationsManager (`sbyte?`)
+Same operations as IntegerOperationsManager (with `sbyte` parameters). Nullable adds: `HaveValue()`, `NotHaveValue()`
+
+### ShortOperationsManager (`short`) / NullableShortOperationsManager (`short?`)
+Same operations as IntegerOperationsManager (with `short` parameters). Nullable adds: `HaveValue()`, `NotHaveValue()`
+
+### UIntOperationsManager (`uint`) / NullableUIntOperationsManager (`uint?`)
+Same operations as IntegerOperationsManager (with `uint` parameters). Nullable adds: `HaveValue()`, `NotHaveValue()`
+
+### ULongOperationsManager (`ulong`) / NullableULongOperationsManager (`ulong?`)
+Same operations as IntegerOperationsManager (with `ulong` parameters). Nullable adds: `HaveValue()`, `NotHaveValue()`
+
+### UShortOperationsManager (`ushort`) / NullableUShortOperationsManager (`ushort?`)
+Same operations as IntegerOperationsManager (with `ushort` parameters). Nullable adds: `HaveValue()`, `NotHaveValue()`
+
+### CharOperationsManager (`char`) / NullableCharOperationsManager (`char?`)
+Operations: `Be(char)`, `NotBe(char)`, `BeGreaterThan(char)`, `BeGreaterThanOrEqualTo(char)`, `BeLessThan(char)`, `BeLessThanOrEqualTo(char)`, `BeInRange(char,char)`, `NotBeInRange(char,char)`, `BeAscii()`, `BeControl()`, `BeDigit()`, `BeLetter()`, `BeLetterOrDigit()`, `BeLowerCase()`, `BeUpperCase()`, `BeWhiteSpace()`, `BePunctuation()`, `BeSurrogate()`, `BeOneOf(params char[])`, `NotBeOneOf(params char[])`
+
+Nullable adds: `HaveValue()`, `NotHaveValue()`
+
+### DateTimeOperationsManager (`DateTime`) / NullableDateTimeOperationsManager (`DateTime?`)
+Operations: `Be(DateTime)`, `NotBe(DateTime)`, `BeGreaterThan(DateTime)`, `BeGreaterThanOrEqualTo(DateTime)`, `BeLessThan(DateTime)`, `BeLessThanOrEqualTo(DateTime)`, `BeInRange(DateTime,DateTime)`, `NotBeInRange(DateTime,DateTime)`, `BeToday()`, `BeTomorrow()`, `BeYesterday()`, `BeInPast()`, `BeInFuture()`, `BeUtcNow(TimeSpan)`, `HaveDateComponent(year,month,day)`, `HaveTimeComponent(hour,minute,second)`, `BeOneOf(params DateTime[])`, `NotBeOneOf(params DateTime[])`
+
+Nullable adds: `HaveValue()`, `NotHaveValue()`
+
+### DateOnlyOperationsManager (`DateOnly`) / NullableDateOnlyOperationsManager (`DateOnly?`)
+Same range/comparison/membership pattern as DateTimeOperationsManager (with `DateOnly` parameters). Nullable adds: `HaveValue()`, `NotHaveValue()`
+
+### TimeOnlyOperationsManager (`TimeOnly`) / NullableTimeOnlyOperationsManager (`TimeOnly?`)
+Same range/comparison/membership pattern as DateTimeOperationsManager (with `TimeOnly` parameters). Nullable adds: `HaveValue()`, `NotHaveValue()`
+
+### TimeSpanOperationsManager (`TimeSpan`) / NullableTimeSpanOperationsManager (`TimeSpan?`)
+Same range/comparison/membership pattern as DateTimeOperationsManager (with `TimeSpan` parameters). Nullable adds: `HaveValue()`, `NotHaveValue()`
+
+### DateTimeOffsetOperationsManager (`DateTimeOffset`) / NullableDateTimeOffsetOperationsManager (`DateTimeOffset?`)
+Same range/comparison/membership pattern as DateTimeOperationsManager (with `DateTimeOffset` parameters). Nullable adds: `HaveValue()`, `NotHaveValue()`
+
+### GuidOperationsManager (`Guid`) / NullableGuidOperationsManager (`Guid?`)
+Operations: `Be(Guid)`, `NotBe(Guid)`, `BeEmpty()`, `NotBeEmpty()`, `BeVersion(int)`, `NotBeVersion(int)`, `BeOneOf(params Guid[])`, `NotBeOneOf(params Guid[])`
+
+Nullable adds: `HaveValue()`, `NotHaveValue()`
+
+### UriOperationsManager (`Uri`)
+Operations: `Be(Uri)`, `NotBe(Uri)`, `HaveScheme(string)`, `NotHaveScheme(string)`, `HaveAuthority(string)`, `HaveHost(string)`, `HavePort(int)`, `HavePath(string)`, `HaveQuery(string)`
+
+### EnumOperationsManager<T> (`T where T : Enum`) / NullableEnumOperationsManager<T> (`T?`)
+Operations: `Be(T)`, `NotBe(T)`, `BeOneOf(params T[])`, `NotBeOneOf(params T[])`, `HaveFlag(T)`, `NotHaveFlag(T)`
+
+Nullable adds: `HaveValue()`, `NotHaveValue()`
+
+### CollectionOperationsManager<T> (`IEnumerable<T>`)
+Operations: `Be()`, `NotBe()`, `BeEmpty()`, `NotBeEmpty()`, `NotBeNullOrEmpty()`, `HaveCount(int)`, `HaveCountGreaterThan(int)`, `HaveCountLessThan(int)`, `HaveCountBetween(int,int)`, `HaveMinCount(int)`, `HaveMaxCount(int)`, `HaveLength(int)`, `HaveLengthGreaterThan(int)`, `HaveLengthLessThan(int)`, `Contain(T)`, `ContainAll(params T[])`, `ContainAny(params T[])`, `NotContain(T)`, `NotContainAll()`, `NotContainAny()`, `NotContainNull()`, `ContainDuplicates()`, `BeUnique()`, `ContainPredicate(Func<T,bool>)`, `NotContainPredicate(Func<T,bool>)`, `AllSatisfy(Func<T,bool>)`, `AnySatisfy(Func<T,bool>)`, `ContainSingle()`, `ContainSinglePredicate(Func<T,bool>)`, `ExtractSingle()`, `ExtractSinglePredicate(Func<T,bool>)`, `BeInAscendingOrder()`, `BeInDescendingOrder()`, `BeInAscendingOrderByKey(Func<T,IComparable>)`, `BeInDescendingOrderByKey(Func<T,IComparable>)`, `BeEquivalentTo(IEnumerable<T>)`, `NotBeEquivalentTo()`, `BeSequenceEqualTo()`, `NotBeSequenceEqualTo()`, `BeSubsetOf(IEnumerable<T>)`, `NotBeSubsetOf()`, `IntersectWith(IEnumerable<T>)`, `StartWith(T)`, `EndWith(T)`, `HaveElementAt(int,T)`, `ContainInOrder(params T[])`, `Inspect(Action<T>)`
+
+### ArrayOperationsManager<T> (`T[]`)
+Same operations as CollectionOperationsManager plus length-specific operations.
+
+### DictionaryOperationsManager<TKey,TValue> (`IDictionary<TKey,TValue>`)
+Operations: `Be()`, `NotBe()`, `BeEmpty()`, `NotBeEmpty()`, `HaveCount(int)`, `HaveCountGreaterThan(int)`, `HaveCountLessThan(int)`, `HaveKey(TKey)`, `HaveValue(TValue)`, `NotHaveKey()`, `NotHaveValue()`, `HaveEntry(TKey,TValue)`, `NotHaveEntry()`, `AllKeysSatisfy()`, `AllValuesSatisfy()`
+
+### ObjectOperationsManager (`object?`)
+Operations: `Be()`, `NotBe()`, `BeNull()`, `NotBeNull()`, `BeOfType(Type)`, `NotBeOfType(Type)`
+
+### ActionOperationsManager (`Action`)
+Operations: `BeRunnable()`, `ThrowException()`, `ThrowException(Type)`, `ThrowException(Predicate<Exception>)`
+
+### AsyncActionOperationsManager (`Func<Task>`)
+Async variants of ActionOperationsManager operations.
+
+### ActionStatsOperationsManager (`ActionStats?`)
+Operations: `TakeLongerThan(TimeSpan)`, `TakeShorterThan(TimeSpan)`, `HaveElapsedTimeBetween(TimeSpan,TimeSpan)`, `CompleteWithin(TimeSpan)`, `Succeed()`, `NotSucceed()`, `HaveException()`, `HaveException(Type)`, `ConsumeMemoryGreaterThan(long)`, `ConsumeMemoryLessThan(long)`
+
+### CrossPropertyOperationsManager<T>
+Used for cross-property validation within blueprints.
+
+## Test Extension Methods
+
+All types expose a `.Test()` extension method that returns the corresponding manager.
+
+**Primitives:** `string?.Test()`, `bool.Test()`, `bool?.Test()`, `object?.Test()`
+
+**Signed integers:** `int.Test()`, `int?.Test()`, `long.Test()`, `long?.Test()`, `short.Test()`, `short?.Test()`, `sbyte.Test()`, `sbyte?.Test()`
+
+**Unsigned integers:** `uint.Test()`, `uint?.Test()`, `ulong.Test()`, `ulong?.Test()`, `ushort.Test()`, `ushort?.Test()`, `byte.Test()`, `byte?.Test()`
+
+**Floating point:** `decimal.Test()`, `decimal?.Test()`, `double.Test()`, `double?.Test()`, `float.Test()`, `float?.Test()`
+
+**Characters:** `char.Test()`, `char?.Test()`
+
+**Date/Time:** `DateTime.Test()`, `DateTime?.Test()`, `DateOnly.Test()`, `DateOnly?.Test()`, `TimeOnly.Test()`, `TimeOnly?.Test()`, `TimeSpan.Test()`, `TimeSpan?.Test()`, `DateTimeOffset.Test()`, `DateTimeOffset?.Test()`
+
+**Other:** `Guid.Test()`, `Guid?.Test()`, `Uri.Test()`, `Action.Test()`, `Func<Task>.Test()`, `ActionStats?.Test()`
+
+**Collections:** `IEnumerable<T>.Test()`, `T[].Test()`, `IDictionary<TKey,TValue>.Test()`
+
+## Key Classes
+
+### PrincipalChain<T>
+Carries the typed value and subject name through the validation chain. Thread-safe via `AsyncLocal`.
+- Static factory: `PrincipalChain<T> Get(T value, string caller)`
+- Instance methods: `SetValue(T)`, `T GetValue()`, `string GetSubject()`, `string? GetValueAsString()`, `void ReInitialize(T value)`, `void Dispose()`
+
+### ExecutionEngine<T, TS>
+Orchestrates validator execution, template building, FailIf preconditions, and error handling. Supports both eager (inline) and lazy (blueprint) modes.
+- `static ExecutionEngine<T,TS> New(T manager)`
+- `.WithOperation<TOperation>(TOperation)` — attach validator instance
+- `.WithTemplate(Func<TemplateHandler, IValidator, TemplateHandler>)` — configure failure message
+- `.FailIf(Func<T, (bool condition, Fail message)>)` — register precondition guard (chainable)
+- `.WithSeverity(Severity)`, `.WithErrorCode(string?)`, `.WithCustomMessage(string?)`
+- `.Execute()`, `.ExecuteAsync()`
+
+### QualityBlueprint<T> (abstract, partial)
+Reusable validation schema. Registered as Singleton in DI.
+- Properties: `CascadeMode`, `CascadeSeverityMode`
+- `IDisposable Define()` — scope for rule definition in constructor
+- `For(x => x.Prop)` — 50+ type-specific overloads for property rule definition
+- `ForCollection<TItem>(expr)`, `ForArray<TItem>(expr)`, `ForDictionary<TKey,TValue>(expr)` — specialized collection overloads
+- `ForEach<TItem>(expr, builder)` — per-item validation across a collection property
+- `ForTransform(expr, transform)` — transform property value before validation (same-type and cross-type)
+- `ForSelf(builder)` — model-level rules (validates the root object itself)
+- `ForNested(expr, blueprint)` — nested object validation using another blueprint
+- `When(condition, builder)`, `Unless(condition, builder)` — conditional rule branches
+- `ForScenario<TScenario>(builder)` — marker interface scoped rules
+- `Check(T instance)` → `QualityReport`, `CheckAsync(T instance)` → `Task<QualityReport>`
+- `CheckRuleSets(T, params string[])`, `CheckRuleSetsAsync(T, params string[])`
+- `Assert(T)`, `AssertAsync(T)`, `AssertRuleSets(T, params string[])`, `AssertRuleSetsAsync(T, params string[])`
+- `GetRules()`, `GetRules(string propertyName)`, `GetRulesForScenario(Type)` — introspection
+
+### CompositeBlueprint<T>
+Composes N blueprints validating the same model type. Merges all `QualityReport` results.
+- `CompositeBlueprint(params QualityBlueprint<T>[] blueprints)`
+- `Check(T)`, `CheckAsync(T)` — execute all blueprints and merge reports
+
+### AssertionScope
+Batches inline assertion failures and throws a combined exception on Dispose.
+- Constructors: `AssertionScope()`, `AssertionScope(string name)`
+- Properties: `bool HasFailures`, `IReadOnlyList<string> FailureMessages`
+- Methods: `FailWith(string)`, `Discard()`, `Dispose()`
+
+### TransactionalOperations
+Scoped context for accumulating failures with configurable abort modes.
+- Constructor accepts `TransactionalMode`
+- Static: `TransactionalOperations? Current`, `bool CanContinue()`
+
+### ActionStats
+Captures action execution statistics: timing, success/failure, exception, and memory delta.
+- Static factory methods: `Capture(Action)`, `Capture<T>(Func<T>)`, `CaptureAsync(Func<Task>)`, `CaptureAsync<T>(Func<Task<T>>)`
+- Properties: `TimeSpan ElapsedTime`, `bool Succeeded`, `Exception? Exception`, `long MemoryDelta`, `object? ReturnValue`
+
+### QualityReport
+Validation result aggregator returned by `QualityBlueprint<T>.Check()`.
+- Properties: `bool IsValid` (no Error-level failures), `List<QualityFailure> Failures`, `int RulesEvaluated`
+- `bool HasErrors`, `bool HasWarnings`, `bool HasInfos`
+- `IReadOnlyList<QualityFailure> Errors`, `IReadOnlyList<QualityFailure> Warnings`, `IReadOnlyList<QualityFailure> Infos`
+- Methods: `FailuresByProperty()`, `FailuresBySeverity()`
+
+### QualityFailure
+Single validation failure entry in a `QualityReport`.
+- Properties: `string PropertyName`, `string Message`, `object? AttemptedValue`, `Severity Severity`, `string? ErrorCode`
+
+## Model Types
+
+**RuleConfig** — Per-rule configuration
+- `Severity Severity` (default: Error)
+- `string? ErrorCode`
+- `CascadeMode CascadeMode`
+- `CascadeSeverityMode CascadeSeverityMode`
+- `string? CustomMessage`
+- `Func<string>? MessageFactory`
+
+**Reason** — Record for contextual failure messages. `Reason.New("because {0}", arg)`
+
+**Fail** — Record for FailIf precondition messages. `Fail.New("because {0}", arg)`
+
+**ErrorCode** — Record with implicit string conversions. `ErrorCode Code`, `string? Description`
+
+**BlueprintInterceptionContext** — Context passed to interceptors: `Instance`, `Type`, `PropertyBag`
+
+**BlueprintRuleInfo** — Rule introspection metadata
+
+**SnapshotOptions** — Snapshot comparison configuration
+
+## Configuration
+
+### FluentOperationsConfig (public API)
+- `Configure(Action<ConfigBuilder>)` — apply global configuration
+- `Scope(Action<ConfigBuilder>)` → `ConfigScope` (IDisposable, restores previous config on dispose)
+- `Reset()` — revert to defaults
+
+### ConfigBuilder Sections
+
+**StringConfig**: `MaxDisplayLength` (30), `EnableStringDiff` (true), `StringDiffContextChars` (20), `StringDiffMaxLength` (1000)
+
+**NumericConfig**: `DecimalPlaces` (-1), `UseThousandsSeparator` (false), `Culture` (Invariant)
+
+**DateTimeConfig**: `Format` ("yyyy-MM-dd HH:mm:ss"), `DateOnlyFormat`, `TimeOnlyFormat`, `TimeSpanFormat`
+
+**FormattingConfig**: `NullDisplay` ("<null>"), `EmptyDisplay`, `MaxCollectionItems` (10), `MaxDepth` (3)
+
+**TestFrameworkConfig**: `Framework` (Auto)
+
+**LocalizationConfig**: `Provider` (IMessageProvider), `Culture`, `EnableCache`
+
+**TelemetryConfig**: `Enabled`, `TrackRuleExecutionTime`, `TrackFailureRates`, `TrackBlueprintExecutionTime`
+
+## Handlers
+
+**ExceptionHandler** — Dispatches failure messages: throws in eager mode, accumulates in `AssertionScope` or `TransactionalOperations`.
+- Method: `Handle(string template)`
+
+**TemplateHandler** — Fluent failure message builder.
+- Methods: `WithSubject()`, `WithValue()`, `WithExpected()`, `WithResult(messageKey, resultValidation, args)`, `WithReason()`, `WithRule()`, `WithFail()`, `WithErrorCode()`, `WithSeverity()`, `WithDifference()`
+
+**TestFrameworkHandler** — Auto-detects the active test framework from loaded assemblies.
+
+## Formatters
+
+`BaseFormatter`, `StringFormatter`, `NumericFormatter`, `DateTimeFormatter`, `BooleanFormatter`, `CollectionFormatter`, `TypeFormatter`, `StringDiffFormatter`, `FormatterPipeline`, `QualityReportFormatter`
+
+## Localization
+
+**ResourceManagerProvider** — `IMessageProvider` backed by a `ResourceManager`
+
+**DictionaryMessageProvider** — `IMessageProvider` backed by a dictionary with `(string key, string culture)` value-tuple keys
+
+## Schema
+
+`JsonSchemaGenerator`, `JsonSchemaRuleMapper`, `JsonSchemaTypeMapper`, `JsonSchemaOptions`, `JsonSchemaDraft` enum
+
+## Snapshot
+
+`SnapshotSerializer`, `SnapshotComparer`, `SnapshotDiff`
+
+## Comparators
+
+`ObjectComparator`, `StringComparator`, `ComparisonResult`, `ComparisonOptions`, `ComparisonOptionsBuilder`
+
+## Constraints (Occurrence)
+
+Used with collection `Contain()` operations.
+- Factory: `Occurrence.Exactly(n)`, `Occurrence.AtLeast(n)`, `Occurrence.AtMost(n)`, `Occurrence.MoreThan(n)`, `Occurrence.LessThan(n)`, `Occurrence.Between(min, max)`
+
+## Exceptions
+
+| Exception | Description |
+|-----------|-------------|
+| `FluentOperationsException` | Base exception type |
+| `BlueprintDefinitionException` | Thrown for invalid blueprint structure |
+| `BlueprintValidationException` | Thrown by `Assert()` on invalid blueprints |
+| `ValidationException` | Thrown by inline assertions on failure |
+| `ConfigurationException` | Thrown for invalid configuration |
+
+## Extensions
+
+**QualityReportExtensions** — Extension methods on `QualityReport`
+
+**BlueprintJsonSchemaExtensions** — JSON schema generation from blueprints
+
+**QualityReportSnapshotExtensions** — Snapshot comparison for quality reports
+
+## Telemetry
+
+`FluentOperationsMeter` — System.Diagnostics.Metrics-based telemetry instruments:
+- `fo.rule.duration` — Histogram (gated by `TrackRuleExecutionTime`)
+- `fo.blueprint.duration` — Histogram (gated by `TrackBlueprintExecutionTime`)
+- `fo.rules.failed` — Counter (gated by `TrackFailureRates`)
+
+## Integration Packages
+
+Each integration package is a separate NuGet package with namespace `JAAvila.FluentOperations.Integration`.
+
+| Package | Purpose | Key Class |
+|---------|---------|-----------|
+| `JAAvila.FluentOperations.AspNetCore` | MVC action filter following RFC 7807 (Problem Details) | `AspNetCoreBlueprintFilter` |
+| `JAAvila.FluentOperations.DependencyInjection` | DI registration + assembly scanning via `AddBlueprint<T>()` and `AddBlueprints(Assembly)` | `FluentOperationsDIExtensions` |
+| `JAAvila.FluentOperations.MediatR` | Pipeline behavior for MediatR 12.x (pinned; v13+ changed to RPL-1.5 license) | `MediatRBlueprintBehavior` |
+| `JAAvila.FluentOperations.MinimalApi` | Minimal API endpoint filter | `MinimalApiBlueprintFilter` |
+| `JAAvila.FluentOperations.Analyzers` | Roslyn analyzers (targets netstandard2.0, analyzer-only package) | — |
+| `JAAvila.FluentOperations.OpenApi` | Swagger/OpenAPI schema generation (Swashbuckle 6.x) | — |
+| `JAAvila.FluentOperations.Grpc` | gRPC server interceptor | `GrpcBlueprintInterceptor` |
+| `JAAvila.FluentOperations.DataAnnotations` | Bridge to `System.ComponentModel.Annotations` | — |
+
+All DI-registered blueprints are automatically registered as both `QualityBlueprint<T>` and `IBlueprintValidator`. Integration filters resolve blueprints via `IEnumerable<IBlueprintValidator>` — no reflection or `MakeGenericType` is used (AOT-safe).
+
+## Usage Examples
+
+### Inline Assertions
+
+```csharp
+// String validation
+"hello@test.com".Test().NotBeNull().BeEmail();
+
+// Numeric validation
+42.Test().BePositive().BeInRange(1, 100);
+
+// Collection validation
+myList.Test().NotBeEmpty().HaveCount(3).Contain(item);
+
+// Date validation
+DateTime.Now.Test().BeInPast();
+
+// Exception assertion
+(() => SomeMethod()).Test().ThrowException<ArgumentNullException>();
+```
+
+### Quality Blueprint
+
+```csharp
+public class UserBlueprint : QualityBlueprint<User>
+{
+    public UserBlueprint()
+    {
+        using (Define())
+        {
+            For(x => x.Name).Test().NotBeNull().HaveMinLength(2);
+            For(x => x.Email).Test().NotBeNull().BeEmail();
+            For(x => x.Age).Test().BeInRange(0, 150);
+        }
+    }
+}
+
+var report = new UserBlueprint().Check(user);
+// report.IsValid       — false if any Error-level rule fails
+// report.Failures      — all failures (errors, warnings, infos)
+// report.HasWarnings   — true if any Warning-level failures
+// report.Errors        — only Error-level failures
+```
+
+### AssertionScope
+
+```csharp
+using (var scope = new AssertionScope("user validation"))
+{
+    user.Name.Test().NotBeNull();
+    user.Email.Test().BeEmail();
+    user.Age.Test().BePositive();
+}
+// All failures are collected; a combined exception is thrown on Dispose
+```
+
+### Scenarios (Marker Interface Pattern)
+
+```csharp
+public interface ICreateUser { }
+public interface IUpdateUser { }
+
+public class UserBlueprint : QualityBlueprint<User>
+{
+    public UserBlueprint()
+    {
+        using (Define())
+        {
+            // Always applied
+            For(x => x.Name).Test().NotBeNull();
+
+            // Only applied when model implements ICreateUser
+            ForScenario<ICreateUser>(() =>
+            {
+                For(x => x.Email).Test().NotBeNull().BeEmail();
+            });
+
+            // Only applied when model implements IUpdateUser
+            ForScenario<IUpdateUser>(() =>
+            {
+                For(x => x.Id).Test().NotBeEmpty();
+            });
+        }
+    }
+}
+
+// Auto-detects scenario from model's implemented interfaces
+var report = new UserBlueprint().Check(createRequest);
+```
+
+### RuleConfig (Severity, ErrorCode, CustomMessage)
+
+```csharp
+public class UserBlueprint : QualityBlueprint<User>
+{
+    public UserBlueprint()
+    {
+        using (Define())
+        {
+            // Warning — does not affect IsValid
+            For(x => x.Nickname, new RuleConfig
+            {
+                Severity = Severity.Warning,
+                ErrorCode = "NICK_001"
+            }).Test().HaveMinLength(3);
+
+            // Custom message override
+            For(x => x.Email, new RuleConfig
+            {
+                CustomMessage = "Please provide a valid email address."
+            }).Test().BeEmail();
+        }
+    }
+}
+```
+
+### CascadeMode
+
+```csharp
+public class UserBlueprint : QualityBlueprint<User>
+{
+    public UserBlueprint()
+    {
+        CascadeMode = CascadeMode.StopOnFirstFailure;
+        // CascadeSeverityMode = CascadeSeverityMode.ErrorOnly; // default
+
+        using (Define())
+        {
+            For(x => x.Email).Test().NotBeNull().NotBeEmpty().BeEmail();
+            // If NotBeNull fails, NotBeEmpty and BeEmail are skipped for this property
+        }
+    }
+}
+```
+
+### ForTransform
+
+```csharp
+using (Define())
+{
+    // Same-type transform: trim before validating
+    ForTransform(x => x.RawInput, v => v.Trim()).Test().NotBeEmpty();
+
+    // Cross-type transform: capture Action stats then validate
+    ForTransform(x => x.Operation, (Action? a) => a?.Stats())
+        .Test().Succeed().CompleteWithin(TimeSpan.FromSeconds(1));
+}
+```
+
+### ActionStats
+
+```csharp
+// Capture and validate
+var stats = ActionStats.Capture(() => MyMethod());
+stats.Test().Succeed().CompleteWithin(TimeSpan.FromSeconds(1));
+
+// Inside blueprint
+ForTransform(x => x.Operation, (Action a) => ActionStats.Capture(a))
+    .Test().Succeed();
+```
+
+### CompositeBlueprint
+
+```csharp
+var composite = new CompositeBlueprint<User>(
+    new UserBasicBlueprint(),
+    new UserContactBlueprint(),
+    new UserSecurityBlueprint()
+);
+var report = composite.Check(user);
+// report merges all failures from all three blueprints
+```
+
+### Localization
+
+```csharp
+FluentOperationsConfig.Configure(cfg =>
+{
+    cfg.Localization.Provider = new DictionaryMessageProvider(new Dictionary<(string, string), string>
+    {
+        [("String.BeEmail", "es")] = "El valor '{0}' no es un correo electrónico válido.",
+        [("Integer.BePositive", "es")] = "El valor '{0}' debe ser positivo."
+    });
+    cfg.Localization.Culture = new CultureInfo("es");
+});
+```
+
+### Telemetry
+
+```csharp
+FluentOperationsConfig.Configure(cfg =>
+{
+    cfg.Telemetry.Enabled = true;
+    cfg.Telemetry.TrackRuleExecutionTime = true;
+    cfg.Telemetry.TrackFailureRates = true;
+    cfg.Telemetry.TrackBlueprintExecutionTime = true;
+});
+
+// Subscribe via System.Diagnostics.Metrics MeterListener
+// Meter name: "JAAvila.FluentOperations"
+// Instruments: fo.rule.duration, fo.blueprint.duration, fo.rules.failed
+```
+
+### DI Registration (AspNetCore)
+
+```csharp
+builder.Services.AddFluentOperations(options =>
+{
+    options.AddBlueprint<UserBlueprint>();
+    // or scan an assembly:
+    options.AddBlueprints(typeof(UserBlueprint).Assembly);
+});
+```
+
+### Blueprint Interceptors
+
+```csharp
+public class LoggingInterceptor : IBlueprintInterceptor, IOrderedBlueprintInterceptor
+{
+    public int Order => 0;
+
+    public QualityReport? BeforeValidation(BlueprintInterceptionContext ctx) => null;
+
+    public QualityReport AfterValidation(BlueprintInterceptionContext ctx, QualityReport report)
+    {
+        if (!report.IsValid)
+            logger.LogWarning("Validation failed for {Type}", ctx.Type.Name);
+        return report;
+    }
+}
+```
+
+## Core Execution Flow
+
+### Inline Assertions
+```
+value.Test()
+  → TestExtension creates OperationsManager with PrincipalChain<T>
+    → manager.Operation()
+      → OperationUtils.CheckOperationAllowed()
+        → ExecutionEngine<T,TS>.New(manager)
+          .WithOperation(Validator)
+          .WithTemplate(handler)
+          .FailIf(condition)        ← null/precondition guards run FIRST
+          .Execute()
+            → IValidator.Validate() ← only runs if FailIf guards pass
+            → TemplateHandler builds formatted message
+            → ExceptionHandler.Handle() throws or accumulates
+```
+
+### Blueprint Evaluation
+```
+QualityBlueprint<T> subclass constructor:
+  using (Define())
+    → RuleCaptureContext activated (intercepts Execute calls)
+    → For(x => x.Prop).Test().Operation() → rule captured as IQualityRule, NOT executed
+
+blueprint.Check(instance):
+  → EvaluateRules(instance)
+    → foreach IQualityRule:
+      → rule.SetValue(propertyValue)   ← PrincipalChain.ReInitialize()
+      → rule.Validate()                ← IValidator.Validate() now runs
+      → if fail: captured in QualityReport with severity/errorCode
+  → return QualityReport
+```
+
+## Architectural Invariants
+
+**Null handling via FailIf — not in validators.** All null/precondition guards belong in `.FailIf()` chains on `ExecutionEngine`. Validators assume they receive valid data.
+
+**Singleton Blueprint Safety.** Blueprints are registered as Singleton. No mutable instance fields. `PrincipalChain.ReInitialize()` must be used in `IQualityRule.SetValue()` (not `SetValue()`).
+
+**Execute/ExecuteAsync parity.** Any change to `Execute()` must be mirrored in `ExecuteAsync()`.
+
+**CascadeSeverityMode.ErrorOnly is the default.** Only `Severity.Error` failures trigger `StopOnFirstFailure` cascade stops. Warning and Info failures do not stop cascade.
+
+**Scenario auto-detection scans all 3 rule lists.** `_ruleDefinitions`, `_forEachDefinitions`, and `_nestedDefinitions` must all be scanned for registered scenarios.
+
+**Localized WithResult pattern.** Manager methods pass `operation.MessageKey` as first argument: `.WithResult(operation.MessageKey, operation.ResultValidation, args)`.
+
+**AOT-safe filters.** All integration filters inject `IEnumerable<IBlueprintValidator>` — no `MakeGenericType` or runtime reflection.

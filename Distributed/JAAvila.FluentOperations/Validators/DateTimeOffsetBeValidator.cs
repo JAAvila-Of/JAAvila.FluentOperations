@@ -5,13 +5,18 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the datetimeoffset value equals the expected value.
 /// </summary>
-internal class DateTimeOffsetBeValidator(PrincipalChain<DateTimeOffset> chain, DateTimeOffset expected) : IValidator, IRuleDescriptor
+internal class DateTimeOffsetBeValidator(
+    PrincipalChain<DateTimeOffset> chain,
+    DateTimeOffset expected
+) : IValidator, IRuleDescriptor
 {
-    public static DateTimeOffsetBeValidator New(PrincipalChain<DateTimeOffset> chain, DateTimeOffset expected) =>
-        new(chain, expected);
+    public static DateTimeOffsetBeValidator New(
+        PrincipalChain<DateTimeOffset> chain,
+        DateTimeOffset expected
+    ) => new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "DateTimeOffset.Be";
     string IRuleDescriptor.OperationName => "Be";
     Type IRuleDescriptor.SubjectType => typeof(DateTimeOffset);

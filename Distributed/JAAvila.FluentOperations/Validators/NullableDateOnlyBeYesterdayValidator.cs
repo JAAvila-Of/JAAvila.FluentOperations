@@ -5,13 +5,15 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable dateonly value represents yesterday's date.
 /// </summary>
-internal class NullableDateOnlyBeYesterdayValidator(PrincipalChain<DateOnly?> chain) : IValidator, IRuleDescriptor
+internal class NullableDateOnlyBeYesterdayValidator(PrincipalChain<DateOnly?> chain)
+    : IValidator,
+        IRuleDescriptor
 {
     public static NullableDateOnlyBeYesterdayValidator New(PrincipalChain<DateOnly?> chain) =>
         new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableDateOnly.BeYesterday";
     string IRuleDescriptor.OperationName => "BeYesterday";
     Type IRuleDescriptor.SubjectType => typeof(DateOnly?);

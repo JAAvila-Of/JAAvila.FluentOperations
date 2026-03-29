@@ -7,11 +7,10 @@ namespace JAAvila.FluentOperations.Validators;
 /// </summary>
 internal class DoubleBeNaNValidator(PrincipalChain<double> chain) : IValidator, IRuleDescriptor
 {
-    public static DoubleBeNaNValidator New(PrincipalChain<double> chain) =>
-        new(chain);
+    public static DoubleBeNaNValidator New(PrincipalChain<double> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Double.BeNaN";
     string IRuleDescriptor.OperationName => "BeNaN";
     Type IRuleDescriptor.SubjectType => typeof(double);

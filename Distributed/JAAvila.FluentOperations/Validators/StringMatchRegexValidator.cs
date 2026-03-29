@@ -6,13 +6,15 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the string matches the specified precompiled regular expression.
 /// </summary>
-internal class StringMatchRegexValidator(Regex regex, PrincipalChain<string?> chain) : IValidator, IRuleDescriptor
+internal class StringMatchRegexValidator(Regex regex, PrincipalChain<string?> chain)
+    : IValidator,
+        IRuleDescriptor
 {
     public static StringMatchRegexValidator New(Regex regex, PrincipalChain<string?> chain) =>
         new(regex, chain);
 
     public string Expected => $"Match pattern \"{regex}\"";
-    public string ResultValidation { get; set; }
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "String.MatchRegex";
 
     string IRuleDescriptor.OperationName => "MatchRegex";

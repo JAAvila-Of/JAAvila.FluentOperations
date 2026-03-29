@@ -9,8 +9,8 @@ internal class CharBeDigitValidator(PrincipalChain<char> chain) : IValidator, IR
 {
     public static CharBeDigitValidator New(PrincipalChain<char> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Char.BeDigit";
     string IRuleDescriptor.OperationName => "BeDigit";
     Type IRuleDescriptor.SubjectType => typeof(char);

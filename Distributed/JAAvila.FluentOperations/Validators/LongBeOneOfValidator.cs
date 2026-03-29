@@ -5,13 +5,15 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the long value is one of the specified allowed values.
 /// </summary>
-internal class LongBeOneOfValidator(PrincipalChain<long> chain, params long[] expected) : IValidator, IRuleDescriptor
+internal class LongBeOneOfValidator(PrincipalChain<long> chain, params long[] expected)
+    : IValidator,
+        IRuleDescriptor
 {
     public static LongBeOneOfValidator New(PrincipalChain<long> chain, params long[] expected) =>
         new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Long.BeOneOf";
     string IRuleDescriptor.OperationName => "BeOneOf";
     Type IRuleDescriptor.SubjectType => typeof(long);
@@ -25,7 +27,8 @@ internal class LongBeOneOfValidator(PrincipalChain<long> chain, params long[] ex
             return true;
         }
 
-        ResultValidation = "The resulting value was expected to be one of [{0}], but {1} was found.";
+        ResultValidation =
+            "The resulting value was expected to be one of [{0}], but {1} was found.";
         return false;
     }
 

@@ -1,4 +1,3 @@
-using System.Reflection;
 using JAAvila.FluentOperations.Common;
 using JAAvila.FluentOperations.Exceptions;
 
@@ -29,12 +28,20 @@ internal class ExceptionHandler
         get
         {
             var cached = _cachedThrowable;
-            if (cached is not null) return cached;
+
+            if (cached is not null)
+            {
+                return cached;
+            }
 
             lock (Lock)
             {
                 cached = _cachedThrowable;
-                if (cached is not null) return cached;
+
+                if (cached is not null)
+                {
+                    return cached;
+                }
 
                 cached = ResolveThrowable();
                 _cachedThrowable = cached;
@@ -47,7 +54,7 @@ internal class ExceptionHandler
     {
         var config = Config.GlobalConfig.GetTestFrameworkConfig();
 
-        Assembly? framework = config.Framework switch
+        var framework = config.Framework switch
         {
             TestFramework.None => null,
             TestFramework.Auto => new TestFrameworkHandler().GetFramework(),
@@ -60,10 +67,7 @@ internal class ExceptionHandler
         }
 
         var enumFramework = TestFrameworkHandler.TestFrameworkAssemblyNames.FirstOrDefault(
-            x => x.ObjectValue.Equals(
-                framework.GetName().Name,
-                StringComparison.OrdinalIgnoreCase
-            )
+            x => x.ObjectValue.Equals(framework.GetName().Name, StringComparison.OrdinalIgnoreCase)
         );
 
         if (enumFramework is null)
@@ -71,9 +75,10 @@ internal class ExceptionHandler
             return message => new FluentOperationsException(message);
         }
 
-        var exceptionNamespace = TestFrameworkHandler.TestFrameworkExceptionNamespace.FirstOrDefault(
-            x => x.Value == enumFramework.Value
-        );
+        var exceptionNamespace =
+            TestFrameworkHandler.TestFrameworkExceptionNamespace.FirstOrDefault(
+                x => x.Value == enumFramework.Value
+            );
 
         if (exceptionNamespace is null)
         {

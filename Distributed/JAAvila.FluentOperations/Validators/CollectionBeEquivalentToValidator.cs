@@ -1,3 +1,4 @@
+using JAAvila.FluentOperations.Comparators;
 using JAAvila.FluentOperations.Contract;
 using JAAvila.SafeTypes.Extension;
 
@@ -8,16 +9,18 @@ namespace JAAvila.FluentOperations.Validators;
 /// </summary>
 internal class CollectionBeEquivalentToValidator<T>(
     PrincipalChain<IEnumerable<T>> chain,
-    IEnumerable<T> expected
+    IEnumerable<T> expected,
+    ComparisonOptions? options = null
 ) : IValidator, IRuleDescriptor
 {
     public static CollectionBeEquivalentToValidator<T> New(
         PrincipalChain<IEnumerable<T>> chain,
-        IEnumerable<T> expected
-    ) => new(chain, expected);
+        IEnumerable<T> expected,
+        ComparisonOptions? options = null
+    ) => new(chain, expected, options);
 
-    public string Expected { get; } = string.Empty;
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Collection.BeEquivalentTo";
     string IRuleDescriptor.OperationName => "BeEquivalentTo";
     Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);
@@ -54,7 +57,7 @@ internal class CollectionBeEquivalentToValidator<T>(
 
         foreach (
             var index in expectedList.Select(
-                item => remainingActual.FindIndex(a => EqualityComparer<T>.Default.Equals(a, item))
+                item => remainingActual.FindIndex(a => AreEqual(a, item))
             )
         )
         {
@@ -72,4 +75,12 @@ internal class CollectionBeEquivalentToValidator<T>(
     }
 
     public Task<bool> ValidateAsync() => Task.FromResult(Validate());
+
+    private bool AreEqual(T? actual, T? item)
+    {
+        if (options is null)
+            return EqualityComparer<T>.Default.Equals(actual, item);
+
+        return ObjectComparator.DeepCompare(actual, item, options).AreEqual;
+    }
 }

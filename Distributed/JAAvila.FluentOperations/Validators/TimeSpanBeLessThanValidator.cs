@@ -5,13 +5,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the timespan value is less than the expected value.
 /// </summary>
-internal class TimeSpanBeLessThanValidator(PrincipalChain<TimeSpan> chain, TimeSpan expected) : IValidator, IRuleDescriptor
+internal class TimeSpanBeLessThanValidator(PrincipalChain<TimeSpan> chain, TimeSpan expected)
+    : IValidator,
+        IRuleDescriptor
 {
-    public static TimeSpanBeLessThanValidator New(PrincipalChain<TimeSpan> chain, TimeSpan expected) =>
-        new(chain, expected);
+    public static TimeSpanBeLessThanValidator New(
+        PrincipalChain<TimeSpan> chain,
+        TimeSpan expected
+    ) => new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "TimeSpan.BeLessThan";
     string IRuleDescriptor.OperationName => "BeLessThan";
     Type IRuleDescriptor.SubjectType => typeof(TimeSpan);
@@ -25,7 +29,8 @@ internal class TimeSpanBeLessThanValidator(PrincipalChain<TimeSpan> chain, TimeS
             return true;
         }
 
-        ResultValidation = "The resulting value was expected to be less than {0}, but {1} was found.";
+        ResultValidation =
+            "The resulting value was expected to be less than {0}, but {1} was found.";
         return false;
     }
 

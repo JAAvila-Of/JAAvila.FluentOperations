@@ -13,6 +13,16 @@ public class AndWhichConnector<TManager, TSubject>
     private readonly TSubject _subject;
     private readonly string _callerName;
 
+    /// <summary>
+    /// Represents an intermediary connector that facilitates method chaining
+    /// between a parent manager and a resulting subject, often used in fluent-style APIs.
+    /// </summary>
+    /// <typeparam name="TManager">
+    /// The type of the parent manager initiating the connector.
+    /// </typeparam>
+    /// <typeparam name="TSubject">
+    /// The type of the subject managed or returned by the connector.
+    /// </typeparam>
     public AndWhichConnector(TManager parentManager, TSubject subject, string callerName)
     {
         _parentManager = parentManager;

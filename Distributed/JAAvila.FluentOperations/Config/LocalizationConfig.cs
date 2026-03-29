@@ -32,7 +32,10 @@ internal class LocalizationConfig
     /// </summary>
     internal string? ResolveMessage(string messageKey)
     {
-        if (Provider is null) return null;
+        if (Provider is null)
+        {
+            return null;
+        }
 
         if (!EnableCache)
         {

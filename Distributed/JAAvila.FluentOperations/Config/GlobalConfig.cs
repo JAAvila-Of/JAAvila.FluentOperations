@@ -14,8 +14,8 @@ internal class GlobalConfig
 
     /// <summary>
     /// Static cache for the default config resolved from [FluentOperationsOptions] attribute
-    /// scanning. Computed once using StackTrace on first Initialize() call, then reused for
-    /// all subsequent calls — eliminating repeated StackTrace allocations.
+    /// scanning. Computed once using StackTrace on the first Initialize() call, then reused for
+    /// all later calls — eliminating repeated StackTrace allocations.
     /// </summary>
     private static readonly Lazy<GlobalConfig> CachedDefault = new(
         ResolveDefault,

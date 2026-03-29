@@ -8,15 +8,16 @@ namespace JAAvila.FluentOperations.Validators;
 internal class DictionaryNotContainKeyValidator<TKey, TValue>(
     PrincipalChain<IDictionary<TKey, TValue>> chain,
     TKey key
-) : IValidator, IRuleDescriptor where TKey : notnull
+) : IValidator, IRuleDescriptor
+    where TKey : notnull
 {
     public static DictionaryNotContainKeyValidator<TKey, TValue> New(
         PrincipalChain<IDictionary<TKey, TValue>> chain,
         TKey key
     ) => new(chain, key);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Dictionary.NotContainKey";
     string IRuleDescriptor.OperationName => "NotContainKey";
     Type IRuleDescriptor.SubjectType => typeof(IDictionary<,>);
@@ -30,7 +31,8 @@ internal class DictionaryNotContainKeyValidator<TKey, TValue>(
             return true;
         }
 
-        ResultValidation = "The resulting dictionary was expected to not contain key {0}, but it did.";
+        ResultValidation =
+            "The resulting dictionary was expected to not contain key {0}, but it did.";
         return false;
     }
 

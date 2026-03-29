@@ -9,8 +9,8 @@ internal class DoubleBeFiniteValidator(PrincipalChain<double> chain) : IValidato
 {
     public static DoubleBeFiniteValidator New(PrincipalChain<double> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Double.BeFinite";
     string IRuleDescriptor.OperationName => "BeFinite";
     Type IRuleDescriptor.SubjectType => typeof(double);

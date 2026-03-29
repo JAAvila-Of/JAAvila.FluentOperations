@@ -23,7 +23,7 @@ internal class ConditionalRuleWrapper<TModel>(
         if (model is TModel typed)
             _modelInstance = typed;
 
-        // Propagate to inner rule if it also requires model access
+        // Propagate to the inner rule if it also requires model access
         if (inner is IModelAwareRule innerModelAware)
             innerModelAware.SetModelInstance(model);
     }

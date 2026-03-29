@@ -7,15 +7,14 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the nullable uint value is not one of the specified disallowed values.
 /// </summary>
 internal class NullableUIntNotBeOneOfValidator(PrincipalChain<uint?> chain, uint[] values)
-    : IValidator, IRuleDescriptor
+    : IValidator,
+        IRuleDescriptor
 {
-    public static NullableUIntNotBeOneOfValidator New(
-        PrincipalChain<uint?> chain,
-        uint[] values
-    ) => new(chain, values);
+    public static NullableUIntNotBeOneOfValidator New(PrincipalChain<uint?> chain, uint[] values) =>
+        new(chain, values);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableUInt.NotBeOneOf";
     string IRuleDescriptor.OperationName => "NotBeOneOf";
     Type IRuleDescriptor.SubjectType => typeof(uint?);

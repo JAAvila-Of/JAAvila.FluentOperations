@@ -5,13 +5,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the ulong value is greater than or equal to the expected value.
 /// </summary>
-internal class ULongBeGreaterThanOrEqualToValidator(PrincipalChain<ulong> chain, ulong expected) : IValidator, IRuleDescriptor
+internal class ULongBeGreaterThanOrEqualToValidator(PrincipalChain<ulong> chain, ulong expected)
+    : IValidator,
+        IRuleDescriptor
 {
-    public static ULongBeGreaterThanOrEqualToValidator New(PrincipalChain<ulong> chain, ulong expected) =>
-        new(chain, expected);
+    public static ULongBeGreaterThanOrEqualToValidator New(
+        PrincipalChain<ulong> chain,
+        ulong expected
+    ) => new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "ULong.BeGreaterThanOrEqualTo";
     string IRuleDescriptor.OperationName => "BeGreaterThanOrEqualTo";
     Type IRuleDescriptor.SubjectType => typeof(ulong);
@@ -25,7 +29,8 @@ internal class ULongBeGreaterThanOrEqualToValidator(PrincipalChain<ulong> chain,
             return true;
         }
 
-        ResultValidation = "The resulting value was expected to be greater than or equal to {0}, but {1} was found.";
+        ResultValidation =
+            "The resulting value was expected to be greater than or equal to {0}, but {1} was found.";
         return false;
     }
 

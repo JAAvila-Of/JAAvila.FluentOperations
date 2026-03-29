@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.Linq.Expressions;
+using System.Reflection;
 using JAAvila.FluentOperations.Manager;
 using JAAvila.FluentOperations.Model;
 
@@ -848,6 +849,58 @@ public abstract partial class QualityBlueprint<T>
         RuleConfig config
     ) => ForTransform<Uri?, UriOperationsManager>(propertyExpression, transform, config);
 
+    // Type? -> Type? transformation
+
+    /// <summary>
+    /// Registers a <see cref="Type"/> property with a same-type transformation applied before validation.
+    /// </summary>
+    /// <param name="propertyExpression">An expression selecting the property to transform and validate.</param>
+    /// <param name="transform">A function that transforms the value before validation.</param>
+    /// <returns>A property proxy that exposes <see cref="TypeOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<TypeOperationsManager> ForTransform(
+        Expression<Func<T, Type?>> propertyExpression,
+        Func<Type?, Type?> transform
+    ) => ForTransform<Type?, TypeOperationsManager>(propertyExpression, transform);
+
+    /// <summary>
+    /// Registers a <see cref="Type"/> property with a same-type transformation applied before validation, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    /// <param name="propertyExpression">An expression selecting the property to transform and validate.</param>
+    /// <param name="transform">A function that transforms the value before validation.</param>
+    /// <param name="config">Configuration for this rule (severity, error code, cascade mode).</param>
+    /// <returns>A property proxy that exposes <see cref="TypeOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<TypeOperationsManager> ForTransform(
+        Expression<Func<T, Type?>> propertyExpression,
+        Func<Type?, Type?> transform,
+        RuleConfig config
+    ) => ForTransform<Type?, TypeOperationsManager>(propertyExpression, transform, config);
+
+    // Assembly? -> Assembly? transformation
+
+    /// <summary>
+    /// Registers an <see cref="Assembly"/> property with a same-type transformation applied before validation.
+    /// </summary>
+    /// <param name="propertyExpression">An expression selecting the property to transform and validate.</param>
+    /// <param name="transform">A function that transforms the value before validation.</param>
+    /// <returns>A property proxy that exposes <see cref="AssemblyOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<AssemblyOperationsManager> ForTransform(
+        Expression<Func<T, Assembly?>> propertyExpression,
+        Func<Assembly?, Assembly?> transform
+    ) => ForTransform<Assembly?, AssemblyOperationsManager>(propertyExpression, transform);
+
+    /// <summary>
+    /// Registers an <see cref="Assembly"/> property with a same-type transformation applied before validation, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    /// <param name="propertyExpression">An expression selecting the property to transform and validate.</param>
+    /// <param name="transform">A function that transforms the value before validation.</param>
+    /// <param name="config">Configuration for this rule (severity, error code, cascade mode).</param>
+    /// <returns>A property proxy that exposes <see cref="AssemblyOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<AssemblyOperationsManager> ForTransform(
+        Expression<Func<T, Assembly?>> propertyExpression,
+        Func<Assembly?, Assembly?> transform,
+        RuleConfig config
+    ) => ForTransform<Assembly?, AssemblyOperationsManager>(propertyExpression, transform, config);
+
     // ActionStats? -> ActionStats? transformation
     /// <summary>
     /// Registers an <see cref="ActionStats"/> property with a same-type transformation applied before validation.
@@ -1543,6 +1596,64 @@ public abstract partial class QualityBlueprint<T>
         Func<TProp, Uri?> transform,
         RuleConfig config
     ) => ForTransform<TProp, Uri?, UriOperationsManager>(propertyExpression, transform, config);
+
+    // any -> Type? cross-type transformation
+
+    /// <summary>
+    /// Registers a property with a cross-type transformation to <see cref="Type"/> applied before validation.
+    /// The source type <typeparamref name="TProp"/> is inferred from the property expression.
+    /// </summary>
+    /// <typeparam name="TProp">The source property type (inferred by the compiler).</typeparam>
+    /// <param name="propertyExpression">An expression selecting the property to transform.</param>
+    /// <param name="transform">A function that maps the property value to <see cref="Type"/>.</param>
+    /// <returns>A property proxy that exposes <see cref="TypeOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<TypeOperationsManager> ForTransform<TProp>(
+        Expression<Func<T, TProp>> propertyExpression,
+        Func<TProp, Type?> transform
+    ) => ForTransform<TProp, Type?, TypeOperationsManager>(propertyExpression, transform);
+
+    /// <summary>
+    /// Registers a property with a cross-type transformation to <see cref="Type"/> applied before validation, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    /// <typeparam name="TProp">The source property type (inferred by the compiler).</typeparam>
+    /// <param name="propertyExpression">An expression selecting the property to transform.</param>
+    /// <param name="transform">A function that maps the property value to <see cref="Type"/>.</param>
+    /// <param name="config">Configuration for this rule (severity, error code, cascade mode).</param>
+    /// <returns>A property proxy that exposes <see cref="TypeOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<TypeOperationsManager> ForTransform<TProp>(
+        Expression<Func<T, TProp>> propertyExpression,
+        Func<TProp, Type?> transform,
+        RuleConfig config
+    ) => ForTransform<TProp, Type?, TypeOperationsManager>(propertyExpression, transform, config);
+
+    // any -> Assembly? cross-type transformation
+
+    /// <summary>
+    /// Registers a property with a cross-type transformation to <see cref="Assembly"/> applied before validation.
+    /// The source type <typeparamref name="TProp"/> is inferred from the property expression.
+    /// </summary>
+    /// <typeparam name="TProp">The source property type (inferred by the compiler).</typeparam>
+    /// <param name="propertyExpression">An expression selecting the property to transform.</param>
+    /// <param name="transform">A function that maps the property value to <see cref="Assembly"/>.</param>
+    /// <returns>A property proxy that exposes <see cref="AssemblyOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<AssemblyOperationsManager> ForTransform<TProp>(
+        Expression<Func<T, TProp>> propertyExpression,
+        Func<TProp, Assembly?> transform
+    ) => ForTransform<TProp, Assembly?, AssemblyOperationsManager>(propertyExpression, transform);
+
+    /// <summary>
+    /// Registers a property with a cross-type transformation to <see cref="Assembly"/> applied before validation, with a <see cref="RuleConfig"/>.
+    /// </summary>
+    /// <typeparam name="TProp">The source property type (inferred by the compiler).</typeparam>
+    /// <param name="propertyExpression">An expression selecting the property to transform.</param>
+    /// <param name="transform">A function that maps the property value to <see cref="Assembly"/>.</param>
+    /// <param name="config">Configuration for this rule (severity, error code, cascade mode).</param>
+    /// <returns>A property proxy that exposes <see cref="AssemblyOperationsManager"/> via <c>.Test()</c>.</returns>
+    protected IPropertyProxy<AssemblyOperationsManager> ForTransform<TProp>(
+        Expression<Func<T, TProp>> propertyExpression,
+        Func<TProp, Assembly?> transform,
+        RuleConfig config
+    ) => ForTransform<TProp, Assembly?, AssemblyOperationsManager>(propertyExpression, transform, config);
 
     // any -> ActionStats? cross-type transformation
     /// <summary>

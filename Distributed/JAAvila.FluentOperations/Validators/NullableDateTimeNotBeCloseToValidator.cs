@@ -17,13 +17,13 @@ internal class NullableDateTimeNotBeCloseToValidator(
         TimeSpan tolerance
     ) => new(chain, expected, tolerance);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableDateTime.NotBeCloseTo";
     string IRuleDescriptor.OperationName => "NotBeCloseTo";
     Type IRuleDescriptor.SubjectType => typeof(DateTime?);
     IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
-        new Dictionary<string, object> { ["value"] = expected, ["value"] = tolerance };
+        new Dictionary<string, object> { ["value_exp"] = expected, ["value_tol"] = tolerance };
 
     public bool Validate()
     {

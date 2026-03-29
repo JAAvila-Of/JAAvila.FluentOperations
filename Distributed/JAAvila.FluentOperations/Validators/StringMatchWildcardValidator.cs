@@ -19,12 +19,16 @@ internal class StringMatchWildcardValidator(
     ) => new(chain, pattern, comparison);
 
     public string Expected => pattern;
-    public string ResultValidation { get; set; }
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "String.MatchWildcard";
     string IRuleDescriptor.OperationName => "MatchWildcard";
     Type IRuleDescriptor.SubjectType => typeof(string);
     IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
-        new Dictionary<string, object> { ["pattern"] = pattern, ["comparison"] = StringComparison.Ordinal.ToString() };
+        new Dictionary<string, object>
+        {
+            ["pattern"] = pattern,
+            ["comparison"] = nameof(StringComparison.Ordinal)
+        };
 
     public bool Validate()
     {

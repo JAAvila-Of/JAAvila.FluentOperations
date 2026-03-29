@@ -9,8 +9,8 @@ internal class StringBeBase64Validator(PrincipalChain<string?> chain) : IValidat
 {
     public static StringBeBase64Validator New(PrincipalChain<string?> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "String.BeBase64";
     string IRuleDescriptor.OperationName => "BeBase64";
     Type IRuleDescriptor.SubjectType => typeof(string);
