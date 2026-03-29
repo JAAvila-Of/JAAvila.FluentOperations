@@ -2965,4 +2965,300 @@ public struct Operations
         [EnumStringValue("consumememorygreaterthan")]
         ConsumeMemoryGreaterThan,
     }
+
+    /// <summary>
+    /// <summary>
+    /// Operations available for <see cref="System.Reflection.Assembly"/> values,
+    /// covering type containment, references, versioning, and strong naming checks.
+    /// </summary>
+    public enum Assembly
+    {
+        /// <summary>Asserts that the assembly contains the specified type.</summary>
+        [EnumStringValue("containtype")]
+        ContainType,
+
+        /// <summary>Asserts that the assembly contains a type whose full name matches the regex pattern.</summary>
+        [EnumStringValue("containtypematching")]
+        ContainTypeMatching,
+
+        /// <summary>Asserts that the assembly has a reference to the named assembly.</summary>
+        [EnumStringValue("referenceassembly")]
+        ReferenceAssembly,
+
+        /// <summary>Asserts that the assembly does not reference the named assembly.</summary>
+        [EnumStringValue("notreferenceassembly")]
+        NotReferenceAssembly,
+
+        /// <summary>Asserts that the assembly version matches the expected version.</summary>
+        [EnumStringValue("haveversion")]
+        HaveVersion,
+
+        /// <summary>Asserts that the assembly version is at least the specified minimum.</summary>
+        [EnumStringValue("haveminimumversion")]
+        HaveMinimumVersion,
+
+        /// <summary>Asserts that the assembly is strong-named (has a public key).</summary>
+        [EnumStringValue("havepublickey")]
+        HavePublicKey,
+    }
+
+    /// <summary>
+    /// Defines a set of reflection-based type operations as enum values.
+    /// Each value represents a specific condition or characteristic related
+    /// to types that can be evaluated, matched, or asserted in the context
+    /// of fluent operations. Enum values are associated with string representations
+    /// via attributes to facilitate easier identification and configuration.
+    /// </summary>
+    public enum ReflectedType
+    {
+        /// <summary>Asserts that the type is abstract (and not an interface).</summary>
+        [EnumStringValue("beabstract")]
+        BeAbstract,
+
+        /// <summary>Asserts that the type is a class (not interface, not value type).</summary>
+        [EnumStringValue("beclass")]
+        BeClass,
+
+        /// <summary>Asserts that the type is an enum.</summary>
+        [EnumStringValue("beenum")]
+        BeEnum,
+
+        /// <summary>Asserts that the type is generic.</summary>
+        [EnumStringValue("begeneric")]
+        BeGeneric,
+
+        /// <summary>Asserts that the type is immutable (no settable public properties, no public mutable fields).</summary>
+        [EnumStringValue("beimmutable")]
+        BeImmutable,
+
+        /// <summary>Asserts that the type resides in the specified namespace.</summary>
+        [EnumStringValue("beinnamespace")]
+        BeInNamespace,
+
+        /// <summary>Asserts that the type resides in a namespace starting with the specified prefix.</summary>
+        [EnumStringValue("beinnamespacestartingwith")]
+        BeInNamespaceStartingWith,
+
+        /// <summary>Asserts that the type is an interface.</summary>
+        [EnumStringValue("beinterface")]
+        BeInterface,
+
+        /// <summary>Asserts that the type is internal (not public).</summary>
+        [EnumStringValue("beinternal")]
+        BeInternal,
+
+        /// <summary>Asserts that the type is nested inside another type.</summary>
+        [EnumStringValue("benested")]
+        BeNested,
+
+        /// <summary>Asserts that the type is public.</summary>
+        [EnumStringValue("bepublic")]
+        BePublic,
+
+        /// <summary>Asserts that the type is a record (class or struct).</summary>
+        [EnumStringValue("berecord")]
+        BeRecord,
+
+        /// <summary>Asserts that the type is sealed.</summary>
+        [EnumStringValue("besealed")]
+        BeSealed,
+
+        /// <summary>Asserts that the type is static (abstract + sealed).</summary>
+        [EnumStringValue("bestatic")]
+        BeStatic,
+
+        /// <summary>Asserts that the type is a value type.</summary>
+        [EnumStringValue("bevaluetype")]
+        BeValueType,
+
+        /// <summary>Asserts that the type derives from the specified base type.</summary>
+        [EnumStringValue("derivefrom")]
+        DeriveFrom,
+
+        /// <summary>Asserts that the type has the specified custom attribute.</summary>
+        [EnumStringValue("haveattribute")]
+        HaveAttribute,
+
+        /// <summary>Asserts that the type has a constructor with the specified parameter types.</summary>
+        [EnumStringValue("haveconstructorwithparameters")]
+        HaveConstructorWithParameters,
+
+        /// <summary>Asserts that the type has a dependency on the specified namespace.</summary>
+        [EnumStringValue("havedependencyon")]
+        HaveDependencyOn,
+
+        /// <summary>Asserts that the type has a method with the specified name and return type.</summary>
+        [EnumStringValue("havemethodreturning")]
+        HaveMethodReturning,
+
+        /// <summary>Asserts that the type has the specified name.</summary>
+        [EnumStringValue("havename")]
+        HaveName,
+
+        /// <summary>Asserts that the type name ends with the specified suffix.</summary>
+        [EnumStringValue("havenameendingwith")]
+        HaveNameEndingWith,
+
+        /// <summary>Asserts that the type name starts with the specified prefix.</summary>
+        [EnumStringValue("havenamestartingwith")]
+        HaveNameStartingWith,
+
+        /// <summary>Asserts that the type has a named property of the specified type.</summary>
+        [EnumStringValue("havepropertyoftype")]
+        HavePropertyOfType,
+
+        /// <summary>Asserts that the type has at least one public constructor.</summary>
+        [EnumStringValue("havepublicconstructor")]
+        HavePublicConstructor,
+
+        /// <summary>Asserts that the type implements the specified interface.</summary>
+        [EnumStringValue("implementinterface")]
+        ImplementInterface,
+
+        /// <summary>Asserts that the type name matches the specified regex pattern.</summary>
+        [EnumStringValue("matchname")]
+        MatchName,
+
+        /// <summary>Asserts that the type namespace matches the specified regex pattern.</summary>
+        [EnumStringValue("matchnamespace")]
+        MatchNamespace,
+
+        // --- Negated operations ---
+
+        /// <summary>Asserts that the type is NOT abstract.</summary>
+        [EnumStringValue("notbeabstract")]
+        NotBeAbstract,
+
+        /// <summary>Asserts that the type is NOT a class.</summary>
+        [EnumStringValue("notbeclass")]
+        NotBeClass,
+
+        /// <summary>Asserts that the type is NOT generic.</summary>
+        [EnumStringValue("notbegeneric")]
+        NotBeGeneric,
+
+        /// <summary>Asserts that the type is NOT immutable.</summary>
+        [EnumStringValue("notbeimmutable")]
+        NotBeImmutable,
+
+        /// <summary>Asserts that the type is NOT in the specified namespace.</summary>
+        [EnumStringValue("notbeinnamespace")]
+        NotBeInNamespace,
+
+        /// <summary>Asserts that the type is NOT internal.</summary>
+        [EnumStringValue("notbeinternal")]
+        NotBeInternal,
+
+        /// <summary>Asserts that the type is NOT an interface.</summary>
+        [EnumStringValue("notbeinterface")]
+        NotBeInterface,
+
+        /// <summary>Asserts that the type is NOT public.</summary>
+        [EnumStringValue("notbepublic")]
+        NotBePublic,
+
+        /// <summary>Asserts that the type is NOT sealed.</summary>
+        [EnumStringValue("notbesealed")]
+        NotBeSealed,
+
+        /// <summary>Asserts that the type is NOT static.</summary>
+        [EnumStringValue("notbestatic")]
+        NotBeStatic,
+
+        /// <summary>Asserts that the type does NOT derive from the specified base type.</summary>
+        [EnumStringValue("notderivefrom")]
+        NotDeriveFrom,
+
+        /// <summary>Asserts that the type does NOT have the specified custom attribute.</summary>
+        [EnumStringValue("nothaveattribute")]
+        NotHaveAttribute,
+
+        /// <summary>Asserts that the type does NOT have a dependency on the specified namespace.</summary>
+        [EnumStringValue("nothavedependencyon")]
+        NotHaveDependencyOn,
+
+        /// <summary>Asserts that the type does NOT have the specified name.</summary>
+        [EnumStringValue("nothavename")]
+        NotHaveName,
+
+        /// <summary>Asserts that the type name does NOT end with the specified suffix.</summary>
+        [EnumStringValue("nothavenameendingwith")]
+        NotHaveNameEndingWith,
+
+        /// <summary>Asserts that the type name does NOT start with the specified prefix.</summary>
+        [EnumStringValue("nothavenamestartingwith")]
+        NotHaveNameStartingWith,
+
+        /// <summary>Asserts that the type does NOT implement the specified interface.</summary>
+        [EnumStringValue("notimplementinterface")]
+        NotImplementInterface,
+
+        /// <summary>Asserts that the type only has dependencies on the allowed namespaces.</summary>
+        [EnumStringValue("onlyhavedependencieson")]
+        OnlyHaveDependenciesOn,
+
+        /// <summary>Asserts that the type has a dependency on at least one of the specified namespaces.</summary>
+        [EnumStringValue("havedependencyonany")]
+        HaveDependencyOnAny,
+
+        /// <summary>Asserts that the type does NOT have a dependency on any of the specified namespaces.</summary>
+        [EnumStringValue("nothavedependencyonany")]
+        NotHaveDependencyOnAny,
+
+        /// <summary>Asserts that the type has NO public constructors.</summary>
+        [EnumStringValue("nothavepublicconstructor")]
+        NotHavePublicConstructor,
+
+        /// <summary>Asserts that the type has at least one async void method.</summary>
+        [EnumStringValue("haveasyncvoidmethods")]
+        HaveAsyncVoidMethods,
+
+        /// <summary>Asserts that the type does NOT have any async void methods.</summary>
+        [EnumStringValue("nothaveasyncvoidmethods")]
+        NotHaveAsyncVoidMethods,
+
+        /// <summary>Asserts that the type overrides the specified method.</summary>
+        [EnumStringValue("havemethodoverride")]
+        HaveMethodOverride,
+
+        /// <summary>Asserts that the type does NOT override the specified method.</summary>
+        [EnumStringValue("nothavemethodoverride")]
+        NotHaveMethodOverride,
+
+        /// <summary>Asserts that the type has at least one protected member.</summary>
+        [EnumStringValue("haveprotectedmembers")]
+        HaveProtectedMembers,
+
+        /// <summary>Asserts that the type does NOT have any protected members.</summary>
+        [EnumStringValue("nothaveprotectedmembers")]
+        NotHaveProtectedMembers,
+
+        /// <summary>Asserts that the type has at most N public methods.</summary>
+        [EnumStringValue("havemaxpublicmethods")]
+        HaveMaxPublicMethods,
+
+        /// <summary>Asserts that the type has at most N fields.</summary>
+        [EnumStringValue("havemaxfields")]
+        HaveMaxFields,
+
+        /// <summary>Asserts that at least one public method returns a type from the specified namespace.</summary>
+        [EnumStringValue("returntypesfromnamespace")]
+        ReturnTypesFromNamespace,
+
+        /// <summary>Asserts that NO public methods return types from the specified namespace.</summary>
+        [EnumStringValue("notreturntypesfromnamespace")]
+        NotReturnTypesFromNamespace,
+
+        /// <summary>Asserts that the type has a private constructor with the specified parameter types.</summary>
+        [EnumStringValue("haveprivateconstructorwithparameters")]
+        HavePrivateConstructorWithParameters,
+
+        /// <summary>Asserts that the type has a dependency on the specified type (by fully qualified name).</summary>
+        [EnumStringValue("havedependencyontype")]
+        HaveDependencyOnType,
+
+        /// <summary>Asserts that the type does NOT have a dependency on the specified type.</summary>
+        [EnumStringValue("nothavedependencyontype")]
+        NotHaveDependencyOnType,
+    }
 }

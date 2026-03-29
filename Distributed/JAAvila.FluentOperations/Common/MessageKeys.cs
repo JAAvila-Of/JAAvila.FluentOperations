@@ -46,6 +46,25 @@ public static class MessageKeys
         public const string HaveLengthLessThan = "Array.HaveLengthLessThan";
     }
 
+    /// <summary>Keys for <c>Assembly</c> (reflection) operations.</summary>
+    public static class Assembly
+    {
+        /// <summary>Asserts that the assembly contains the specified type.</summary>
+        public const string ContainType = "Assembly.ContainType";
+        /// <summary>Asserts that the assembly contains a type matching the regex pattern.</summary>
+        public const string ContainTypeMatching = "Assembly.ContainTypeMatching";
+        /// <summary>Asserts that the assembly version is at least the specified minimum.</summary>
+        public const string HaveMinimumVersion = "Assembly.HaveMinimumVersion";
+        /// <summary>Asserts that the assembly is strong-named (has a public key).</summary>
+        public const string HavePublicKey = "Assembly.HavePublicKey";
+        /// <summary>Asserts that the assembly version matches the expected version.</summary>
+        public const string HaveVersion = "Assembly.HaveVersion";
+        /// <summary>Asserts that the assembly does not reference the named assembly.</summary>
+        public const string NotReferenceAssembly = "Assembly.NotReferenceAssembly";
+        /// <summary>Asserts that the assembly has a reference to the named assembly.</summary>
+        public const string ReferenceAssembly = "Assembly.ReferenceAssembly";
+    }
+
     /// <summary>Keys for <c>Boolean</c> operations.</summary>
     public static class Boolean
     {
@@ -1812,6 +1831,137 @@ public static class MessageKeys
         public const string NotBeInRange = "UShort.NotBeInRange";
         /// <summary>Asserts that the value is none of the specified disallowed values.</summary>
         public const string NotBeOneOf = "UShort.NotBeOneOf";
+    }
+
+    /// <summary>Keys for <c>Type</c> (reflection) operations.</summary>
+    public static class ReflectedType
+    {
+        /// <summary>Asserts that the type is abstract (and not an interface).</summary>
+        public const string BeAbstract = "ReflectedType.BeAbstract";
+        /// <summary>Asserts that the type is a class (not interface, not value type).</summary>
+        public const string BeClass = "ReflectedType.BeClass";
+        /// <summary>Asserts that the type is an enum.</summary>
+        public const string BeEnum = "ReflectedType.BeEnum";
+        /// <summary>Asserts that the type is generic.</summary>
+        public const string BeGeneric = "ReflectedType.BeGeneric";
+        /// <summary>Asserts that the type is immutable.</summary>
+        public const string BeImmutable = "ReflectedType.BeImmutable";
+        /// <summary>Asserts that the type resides in the specified namespace.</summary>
+        public const string BeInNamespace = "ReflectedType.BeInNamespace";
+        /// <summary>Asserts that the type resides in a namespace starting with the specified prefix.</summary>
+        public const string BeInNamespaceStartingWith = "ReflectedType.BeInNamespaceStartingWith";
+        /// <summary>Asserts that the type is an interface.</summary>
+        public const string BeInterface = "ReflectedType.BeInterface";
+        /// <summary>Asserts that the type is internal (not public).</summary>
+        public const string BeInternal = "ReflectedType.BeInternal";
+        /// <summary>Asserts that the type is nested inside another type.</summary>
+        public const string BeNested = "ReflectedType.BeNested";
+        /// <summary>Asserts that the type is public.</summary>
+        public const string BePublic = "ReflectedType.BePublic";
+        /// <summary>Asserts that the type is a record.</summary>
+        public const string BeRecord = "ReflectedType.BeRecord";
+        /// <summary>Asserts that the type is sealed.</summary>
+        public const string BeSealed = "ReflectedType.BeSealed";
+        /// <summary>Asserts that the type is static (abstract + sealed).</summary>
+        public const string BeStatic = "ReflectedType.BeStatic";
+        /// <summary>Asserts that the type is a value type.</summary>
+        public const string BeValueType = "ReflectedType.BeValueType";
+        /// <summary>Asserts that the type derives from the specified base type.</summary>
+        public const string DeriveFrom = "ReflectedType.DeriveFrom";
+        /// <summary>Asserts that the type has the specified custom attribute.</summary>
+        public const string HaveAttribute = "ReflectedType.HaveAttribute";
+        /// <summary>Asserts that the type has a constructor with the specified parameters.</summary>
+        public const string HaveConstructorWithParameters = "ReflectedType.HaveConstructorWithParameters";
+        /// <summary>Asserts that the type has a dependency on the specified namespace.</summary>
+        public const string HaveDependencyOn = "ReflectedType.HaveDependencyOn";
+        /// <summary>Asserts that the type has a method with the specified return type.</summary>
+        public const string HaveMethodReturning = "ReflectedType.HaveMethodReturning";
+        /// <summary>Asserts that the type has the specified name.</summary>
+        public const string HaveName = "ReflectedType.HaveName";
+        /// <summary>Asserts that the type name ends with the specified suffix.</summary>
+        public const string HaveNameEndingWith = "ReflectedType.HaveNameEndingWith";
+        /// <summary>Asserts that the type name starts with the specified prefix.</summary>
+        public const string HaveNameStartingWith = "ReflectedType.HaveNameStartingWith";
+        /// <summary>Asserts that the type has a named property of the specified type.</summary>
+        public const string HavePropertyOfType = "ReflectedType.HavePropertyOfType";
+        /// <summary>Asserts that the type has at least one public constructor.</summary>
+        public const string HavePublicConstructor = "ReflectedType.HavePublicConstructor";
+        /// <summary>Asserts that the type implements the specified interface.</summary>
+        public const string ImplementInterface = "ReflectedType.ImplementInterface";
+        /// <summary>Asserts that the type name matches the specified regex.</summary>
+        public const string MatchName = "ReflectedType.MatchName";
+        /// <summary>Asserts that the type namespace matches the specified regex.</summary>
+        public const string MatchNamespace = "ReflectedType.MatchNamespace";
+
+        // --- Negated ---
+        /// <summary>Asserts that the type is NOT abstract.</summary>
+        public const string NotBeAbstract = "ReflectedType.NotBeAbstract";
+        /// <summary>Asserts that the type is NOT a class.</summary>
+        public const string NotBeClass = "ReflectedType.NotBeClass";
+        /// <summary>Asserts that the type is NOT generic.</summary>
+        public const string NotBeGeneric = "ReflectedType.NotBeGeneric";
+        /// <summary>Asserts that the type is NOT immutable.</summary>
+        public const string NotBeImmutable = "ReflectedType.NotBeImmutable";
+        /// <summary>Asserts that the type is NOT in the specified namespace.</summary>
+        public const string NotBeInNamespace = "ReflectedType.NotBeInNamespace";
+        /// <summary>Asserts that the type is NOT internal.</summary>
+        public const string NotBeInternal = "ReflectedType.NotBeInternal";
+        /// <summary>Asserts that the type is NOT an interface.</summary>
+        public const string NotBeInterface = "ReflectedType.NotBeInterface";
+        /// <summary>Asserts that the type is NOT public.</summary>
+        public const string NotBePublic = "ReflectedType.NotBePublic";
+        /// <summary>Asserts that the type is NOT sealed.</summary>
+        public const string NotBeSealed = "ReflectedType.NotBeSealed";
+        /// <summary>Asserts that the type is NOT static.</summary>
+        public const string NotBeStatic = "ReflectedType.NotBeStatic";
+        /// <summary>Asserts that the type does NOT derive from the specified base type.</summary>
+        public const string NotDeriveFrom = "ReflectedType.NotDeriveFrom";
+        /// <summary>Asserts that the type does NOT have the specified attribute.</summary>
+        public const string NotHaveAttribute = "ReflectedType.NotHaveAttribute";
+        /// <summary>Asserts that the type does NOT have a dependency on the specified namespace.</summary>
+        public const string NotHaveDependencyOn = "ReflectedType.NotHaveDependencyOn";
+        /// <summary>Asserts that the type does NOT have the specified name.</summary>
+        public const string NotHaveName = "ReflectedType.NotHaveName";
+        /// <summary>Asserts that the type name does NOT end with the specified suffix.</summary>
+        public const string NotHaveNameEndingWith = "ReflectedType.NotHaveNameEndingWith";
+        /// <summary>Asserts that the type name does NOT start with the specified prefix.</summary>
+        public const string NotHaveNameStartingWith = "ReflectedType.NotHaveNameStartingWith";
+        /// <summary>Asserts that the type does NOT implement the specified interface.</summary>
+        public const string NotImplementInterface = "ReflectedType.NotImplementInterface";
+        /// <summary>Asserts that the type only has dependencies on the specified namespaces.</summary>
+        public const string OnlyHaveDependenciesOn = "ReflectedType.OnlyHaveDependenciesOn";
+        /// <summary>Asserts that the type has a dependency on at least one of the specified namespaces.</summary>
+        public const string HaveDependencyOnAny = "ReflectedType.HaveDependencyOnAny";
+        /// <summary>Asserts that the type does NOT have a dependency on any of the specified namespaces.</summary>
+        public const string NotHaveDependencyOnAny = "ReflectedType.NotHaveDependencyOnAny";
+        /// <summary>Asserts that the type has no public constructors.</summary>
+        public const string NotHavePublicConstructor = "ReflectedType.NotHavePublicConstructor";
+        /// <summary>Asserts that the type has async void methods.</summary>
+        public const string HaveAsyncVoidMethods = "ReflectedType.HaveAsyncVoidMethods";
+        /// <summary>Asserts that the type does not have async void methods.</summary>
+        public const string NotHaveAsyncVoidMethods = "ReflectedType.NotHaveAsyncVoidMethods";
+        /// <summary>Asserts that the type overrides the specified method.</summary>
+        public const string HaveMethodOverride = "ReflectedType.HaveMethodOverride";
+        /// <summary>Asserts that the type does NOT override the specified method.</summary>
+        public const string NotHaveMethodOverride = "ReflectedType.NotHaveMethodOverride";
+        /// <summary>Asserts that the type has at least one protected member.</summary>
+        public const string HaveProtectedMembers = "ReflectedType.HaveProtectedMembers";
+        /// <summary>Asserts that the type has no protected members.</summary>
+        public const string NotHaveProtectedMembers = "ReflectedType.NotHaveProtectedMembers";
+        /// <summary>Asserts that the type has at most N public methods.</summary>
+        public const string HaveMaxPublicMethods = "ReflectedType.HaveMaxPublicMethods";
+        /// <summary>Asserts that the type has at most N fields.</summary>
+        public const string HaveMaxFields = "ReflectedType.HaveMaxFields";
+        /// <summary>Asserts that at least one public method returns a type from the specified namespace.</summary>
+        public const string ReturnTypesFromNamespace = "ReflectedType.ReturnTypesFromNamespace";
+        /// <summary>Asserts that no public methods return types from the specified namespace.</summary>
+        public const string NotReturnTypesFromNamespace = "ReflectedType.NotReturnTypesFromNamespace";
+        /// <summary>Asserts that the type has a private constructor with specified parameter types.</summary>
+        public const string HavePrivateConstructorWithParameters = "ReflectedType.HavePrivateConstructorWithParameters";
+        /// <summary>Asserts that the type has a dependency on the specified type (by fully qualified name).</summary>
+        public const string HaveDependencyOnType = "ReflectedType.HaveDependencyOnType";
+        /// <summary>Asserts that the type does NOT have a dependency on the specified type.</summary>
+        public const string NotHaveDependencyOnType = "ReflectedType.NotHaveDependencyOnType";
     }
 
     /// <summary>Keys for <c>Uri</c> operations.</summary>
