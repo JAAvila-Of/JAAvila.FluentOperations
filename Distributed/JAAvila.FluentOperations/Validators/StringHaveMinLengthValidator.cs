@@ -6,13 +6,14 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the string has at least the expected length.
 /// </summary>
 internal class StringHaveMinLengthValidator(PrincipalChain<string?> chain, int minLength)
-    : IValidator, IRuleDescriptor
+    : IValidator,
+        IRuleDescriptor
 {
     public static StringHaveMinLengthValidator New(PrincipalChain<string?> chain, int minLength) =>
         new(chain, minLength);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "String.HaveMinLength";
 
     string IRuleDescriptor.OperationName => "HaveMinLength";

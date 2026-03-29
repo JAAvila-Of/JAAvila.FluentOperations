@@ -5,13 +5,15 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the integer value is within the specified inclusive range.
 /// </summary>
-internal class IntegerBeInRangeValidator(PrincipalChain<int> chain, int min, int max) : IValidator, IRuleDescriptor
+internal class IntegerBeInRangeValidator(PrincipalChain<int> chain, int min, int max)
+    : IValidator,
+        IRuleDescriptor
 {
     public static IntegerBeInRangeValidator New(PrincipalChain<int> chain, int min, int max) =>
         new(chain, min, max);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Integer.BeInRange";
     string IRuleDescriptor.OperationName => "BeInRange";
     Type IRuleDescriptor.SubjectType => typeof(int);

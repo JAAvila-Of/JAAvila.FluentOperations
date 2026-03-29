@@ -11,8 +11,8 @@ internal class StringBeIPv4Validator(PrincipalChain<string?> chain) : IValidator
 {
     public static StringBeIPv4Validator New(PrincipalChain<string?> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "String.BeIPv4";
     string IRuleDescriptor.OperationName => "BeIPv4";
     Type IRuleDescriptor.SubjectType => typeof(string);
@@ -23,7 +23,10 @@ internal class StringBeIPv4Validator(PrincipalChain<string?> chain) : IValidator
     {
         var value = chain.GetValue();
 
-        if (!IPAddress.TryParse(value, out var ip) || ip.AddressFamily != AddressFamily.InterNetwork)
+        if (
+            !IPAddress.TryParse(value, out var ip)
+            || ip.AddressFamily != AddressFamily.InterNetwork
+        )
         {
             ResultValidation = "The value was expected to be a valid IPv4 address.";
             return false;

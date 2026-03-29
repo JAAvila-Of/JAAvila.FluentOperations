@@ -7,14 +7,15 @@ namespace JAAvila.FluentOperations.Validators;
 /// </summary>
 internal class DictionaryNotBeEmptyValidator<TKey, TValue>(
     PrincipalChain<IDictionary<TKey, TValue>> chain
-) : IValidator, IRuleDescriptor where TKey : notnull
+) : IValidator, IRuleDescriptor
+    where TKey : notnull
 {
     public static DictionaryNotBeEmptyValidator<TKey, TValue> New(
         PrincipalChain<IDictionary<TKey, TValue>> chain
     ) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Dictionary.NotBeEmpty";
     string IRuleDescriptor.OperationName => "NotBeEmpty";
     Type IRuleDescriptor.SubjectType => typeof(IDictionary<,>);
@@ -28,7 +29,8 @@ internal class DictionaryNotBeEmptyValidator<TKey, TValue>(
             return true;
         }
 
-        ResultValidation = "The resulting dictionary was expected to be non-empty, but it was empty.";
+        ResultValidation =
+            "The resulting dictionary was expected to be non-empty, but it was empty.";
         return false;
     }
 

@@ -15,8 +15,8 @@ internal class CollectionExtractSinglePredicateValidator<T>(
         Func<T, bool> predicate
     ) => new(chain, predicate);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Collection.ExtractSinglePredicate";
     string IRuleDescriptor.OperationName => "ExtractSinglePredicate";
     Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);

@@ -6,7 +6,8 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the string length is within the specified range.
 /// </summary>
 internal class StringHaveLengthBetweenValidator(PrincipalChain<string?> chain, int min, int max)
-    : IValidator, IRuleDescriptor
+    : IValidator,
+        IRuleDescriptor
 {
     public static StringHaveLengthBetweenValidator New(
         PrincipalChain<string?> chain,
@@ -14,8 +15,8 @@ internal class StringHaveLengthBetweenValidator(PrincipalChain<string?> chain, i
         int max
     ) => new(chain, min, max);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "String.HaveLengthBetween";
 
     string IRuleDescriptor.OperationName => "HaveLengthBetween";

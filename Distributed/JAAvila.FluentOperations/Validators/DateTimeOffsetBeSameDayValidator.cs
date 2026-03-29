@@ -15,8 +15,8 @@ internal class DateTimeOffsetBeSameDayValidator(
         DateTimeOffset expected
     ) => new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "DateTimeOffset.BeSameDay";
     string IRuleDescriptor.OperationName => "BeSameDay";
     Type IRuleDescriptor.SubjectType => typeof(DateTimeOffset);

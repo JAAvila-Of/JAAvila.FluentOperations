@@ -7,11 +7,10 @@ namespace JAAvila.FluentOperations.Validators;
 /// </summary>
 internal class UriBeAbsoluteValidator(PrincipalChain<Uri?> chain) : IValidator, IRuleDescriptor
 {
-    public static UriBeAbsoluteValidator New(PrincipalChain<Uri?> chain) =>
-        new(chain);
+    public static UriBeAbsoluteValidator New(PrincipalChain<Uri?> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Uri.BeAbsolute";
     string IRuleDescriptor.OperationName => "BeAbsolute";
     Type IRuleDescriptor.SubjectType => typeof(Uri);

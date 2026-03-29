@@ -10,8 +10,8 @@ internal class StringBeEmailValidator(PrincipalChain<string?> chain) : IValidato
 {
     public static StringBeEmailValidator New(PrincipalChain<string?> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "String.BeEmail";
 
     string IRuleDescriptor.OperationName => "BeEmail";

@@ -7,11 +7,10 @@ namespace JAAvila.FluentOperations.Validators;
 /// </summary>
 internal class FloatBeNaNValidator(PrincipalChain<float> chain) : IValidator, IRuleDescriptor
 {
-    public static FloatBeNaNValidator New(PrincipalChain<float> chain) =>
-        new(chain);
+    public static FloatBeNaNValidator New(PrincipalChain<float> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Float.BeNaN";
     string IRuleDescriptor.OperationName => "BeNaN";
     Type IRuleDescriptor.SubjectType => typeof(float);

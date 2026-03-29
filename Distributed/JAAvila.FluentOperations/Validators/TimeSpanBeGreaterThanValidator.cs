@@ -5,13 +5,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the timespan value is greater than the expected value.
 /// </summary>
-internal class TimeSpanBeGreaterThanValidator(PrincipalChain<TimeSpan> chain, TimeSpan expected) : IValidator, IRuleDescriptor
+internal class TimeSpanBeGreaterThanValidator(PrincipalChain<TimeSpan> chain, TimeSpan expected)
+    : IValidator,
+        IRuleDescriptor
 {
-    public static TimeSpanBeGreaterThanValidator New(PrincipalChain<TimeSpan> chain, TimeSpan expected) =>
-        new(chain, expected);
+    public static TimeSpanBeGreaterThanValidator New(
+        PrincipalChain<TimeSpan> chain,
+        TimeSpan expected
+    ) => new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "TimeSpan.BeGreaterThan";
     string IRuleDescriptor.OperationName => "BeGreaterThan";
     Type IRuleDescriptor.SubjectType => typeof(TimeSpan);
@@ -25,7 +29,8 @@ internal class TimeSpanBeGreaterThanValidator(PrincipalChain<TimeSpan> chain, Ti
             return true;
         }
 
-        ResultValidation = "The resulting value was expected to be greater than {0}, but {1} was found.";
+        ResultValidation =
+            "The resulting value was expected to be greater than {0}, but {1} was found.";
         return false;
     }
 

@@ -9,8 +9,8 @@ internal class UShortBeZeroValidator(PrincipalChain<ushort> chain) : IValidator,
 {
     public static UShortBeZeroValidator New(PrincipalChain<ushort> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "UShort.BeZero";
     string IRuleDescriptor.OperationName => "BeZero";
     Type IRuleDescriptor.SubjectType => typeof(ushort);

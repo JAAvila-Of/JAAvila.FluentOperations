@@ -6,15 +6,16 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the datetime value falls in the same month as the expected value.
 /// </summary>
 internal class DateTimeBeSameMonthValidator(PrincipalChain<DateTime> chain, DateTime expected)
-    : IValidator, IRuleDescriptor
+    : IValidator,
+        IRuleDescriptor
 {
     public static DateTimeBeSameMonthValidator New(
         PrincipalChain<DateTime> chain,
         DateTime expected
     ) => new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "DateTime.BeSameMonth";
     string IRuleDescriptor.OperationName => "BeSameMonth";
     Type IRuleDescriptor.SubjectType => typeof(DateTime);

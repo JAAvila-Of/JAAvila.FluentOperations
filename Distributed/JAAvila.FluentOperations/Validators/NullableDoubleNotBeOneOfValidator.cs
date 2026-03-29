@@ -7,15 +7,16 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the nullable double value is not one of the specified disallowed values.
 /// </summary>
 internal class NullableDoubleNotBeOneOfValidator(PrincipalChain<double?> chain, double[] values)
-    : IValidator, IRuleDescriptor
+    : IValidator,
+        IRuleDescriptor
 {
     public static NullableDoubleNotBeOneOfValidator New(
         PrincipalChain<double?> chain,
         double[] values
     ) => new(chain, values);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableDouble.NotBeOneOf";
     string IRuleDescriptor.OperationName => "NotBeOneOf";
     Type IRuleDescriptor.SubjectType => typeof(double?);

@@ -5,13 +5,15 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the boolean value and all provided values are true.
 /// </summary>
-internal class BooleanBeAllTrueValidator(PrincipalChain<bool> chain, bool?[] booleans) : IValidator, IRuleDescriptor
+internal class BooleanBeAllTrueValidator(PrincipalChain<bool> chain, bool?[] booleans)
+    : IValidator,
+        IRuleDescriptor
 {
     public static BooleanBeAllTrueValidator New(PrincipalChain<bool> chain, bool?[] booleans) =>
         new(chain, booleans);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Boolean.BeAllTrue";
     string IRuleDescriptor.OperationName => "BeAllTrue";
     Type IRuleDescriptor.SubjectType => typeof(bool);

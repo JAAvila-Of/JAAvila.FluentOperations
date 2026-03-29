@@ -6,15 +6,16 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the value is of the expected type.
 /// </summary>
 internal class ReferenceBeOfTypeValidator<TSubject>(PrincipalChain<TSubject> chain, Type expected)
-    : IValidator, IRuleDescriptor
+    : IValidator,
+        IRuleDescriptor
 {
     public static ReferenceBeOfTypeValidator<TSubject> New(
         PrincipalChain<TSubject> chain,
         Type expected
     ) => new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Reference.BeOfType";
     string IRuleDescriptor.OperationName => "BeOfType";
     Type IRuleDescriptor.SubjectType => typeof(TSubject);

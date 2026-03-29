@@ -6,12 +6,14 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable float value is a finite number (not NaN or Infinity).
 /// </summary>
-internal class NullableFloatBeFiniteValidator(PrincipalChain<float?> chain) : IValidator, IRuleDescriptor
+internal class NullableFloatBeFiniteValidator(PrincipalChain<float?> chain)
+    : IValidator,
+        IRuleDescriptor
 {
     public static NullableFloatBeFiniteValidator New(PrincipalChain<float?> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableFloat.BeFinite";
     string IRuleDescriptor.OperationName => "BeFinite";
     Type IRuleDescriptor.SubjectType => typeof(float?);

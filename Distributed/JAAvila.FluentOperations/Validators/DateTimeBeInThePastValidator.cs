@@ -5,13 +5,14 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the datetime value is in the past.
 /// </summary>
-internal class DateTimeBeInThePastValidator(PrincipalChain<DateTime> chain) : IValidator, IRuleDescriptor
+internal class DateTimeBeInThePastValidator(PrincipalChain<DateTime> chain)
+    : IValidator,
+        IRuleDescriptor
 {
-    public static DateTimeBeInThePastValidator New(PrincipalChain<DateTime> chain) =>
-        new(chain);
+    public static DateTimeBeInThePastValidator New(PrincipalChain<DateTime> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "DateTime.BeInThePast";
     string IRuleDescriptor.OperationName => "BeInThePast";
     Type IRuleDescriptor.SubjectType => typeof(DateTime);

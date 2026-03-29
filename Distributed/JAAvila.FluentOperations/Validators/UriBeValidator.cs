@@ -5,13 +5,15 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the uri value equals the expected value.
 /// </summary>
-internal class UriBeValidator(PrincipalChain<Uri?> chain, Uri expected) : IValidator, IRuleDescriptor
+internal class UriBeValidator(PrincipalChain<Uri?> chain, Uri expected)
+    : IValidator,
+        IRuleDescriptor
 {
     public static UriBeValidator New(PrincipalChain<Uri?> chain, Uri expected) =>
         new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Uri.Be";
     string IRuleDescriptor.OperationName => "Be";
     Type IRuleDescriptor.SubjectType => typeof(Uri);

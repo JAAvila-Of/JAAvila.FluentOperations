@@ -5,12 +5,14 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable double value is zero.
 /// </summary>
-internal class NullableDoubleBeZeroValidator(PrincipalChain<double?> chain) : IValidator, IRuleDescriptor
+internal class NullableDoubleBeZeroValidator(PrincipalChain<double?> chain)
+    : IValidator,
+        IRuleDescriptor
 {
     public static NullableDoubleBeZeroValidator New(PrincipalChain<double?> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableDouble.BeZero";
     string IRuleDescriptor.OperationName => "BeZero";
     Type IRuleDescriptor.SubjectType => typeof(double?);

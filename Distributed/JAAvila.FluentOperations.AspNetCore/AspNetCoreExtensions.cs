@@ -42,6 +42,7 @@ public static class AspNetCoreExtensions
         this IServiceCollection services
     )
         where TBlueprint : QualityBlueprint<TModel>
+        where TModel : notnull
     {
         services.AddScoped<BlueprintValidationFilter<TModel, TBlueprint>>();
         return services;

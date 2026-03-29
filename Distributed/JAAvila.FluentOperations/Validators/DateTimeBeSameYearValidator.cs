@@ -5,13 +5,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the datetime value falls in the same year as the expected value.
 /// </summary>
-internal class DateTimeBeSameYearValidator(PrincipalChain<DateTime> chain, DateTime expected) : IValidator, IRuleDescriptor
+internal class DateTimeBeSameYearValidator(PrincipalChain<DateTime> chain, DateTime expected)
+    : IValidator,
+        IRuleDescriptor
 {
-    public static DateTimeBeSameYearValidator New(PrincipalChain<DateTime> chain, DateTime expected) =>
-        new(chain, expected);
+    public static DateTimeBeSameYearValidator New(
+        PrincipalChain<DateTime> chain,
+        DateTime expected
+    ) => new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "DateTime.BeSameYear";
     string IRuleDescriptor.OperationName => "BeSameYear";
     Type IRuleDescriptor.SubjectType => typeof(DateTime);
@@ -25,7 +29,8 @@ internal class DateTimeBeSameYearValidator(PrincipalChain<DateTime> chain, DateT
             return true;
         }
 
-        ResultValidation = "The resulting value was expected to be in the same year as {0}, but {1} was found.";
+        ResultValidation =
+            "The resulting value was expected to be in the same year as {0}, but {1} was found.";
         return false;
     }
 

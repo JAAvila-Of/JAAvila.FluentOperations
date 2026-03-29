@@ -16,8 +16,8 @@ internal class CollectionBeSequenceEqualToValidator<T>(
         IEnumerable<T> expected
     ) => new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Collection.BeSequenceEqualTo";
     string IRuleDescriptor.OperationName => "BeSequenceEqualTo";
     Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);
@@ -50,6 +50,7 @@ internal class CollectionBeSequenceEqualToValidator<T>(
         }
 
         var firstMismatchIndex = -1;
+
         for (var i = 0; i < actualList.Count; i++)
         {
             if (!EqualityComparer<T>.Default.Equals(actualList[i], expectedList[i]))

@@ -6,20 +6,21 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the nullable boolean value does not equal the expected value.
 /// </summary>
 internal class NullableBooleanNotBeValidator(PrincipalChain<bool?> chain, bool? expectedValue)
-    : IValidator, IRuleDescriptor
+    : IValidator,
+        IRuleDescriptor
 {
     public static NullableBooleanNotBeValidator New(
         PrincipalChain<bool?> chain,
         bool? expectedValue
     ) => new(chain, expectedValue);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableBoolean.NotBe";
     string IRuleDescriptor.OperationName => "NotBe";
     Type IRuleDescriptor.SubjectType => typeof(bool?);
     IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
-        new Dictionary<string, object> { ["value"] = expectedValue };
+        new Dictionary<string, object> { ["value"] = expectedValue! };
 
     public bool Validate()
     {

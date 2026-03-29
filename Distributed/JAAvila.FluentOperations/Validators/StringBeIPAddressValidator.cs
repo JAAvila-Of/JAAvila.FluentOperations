@@ -6,12 +6,14 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the string is a valid IP address.
 /// </summary>
-internal class StringBeIPAddressValidator(PrincipalChain<string?> chain) : IValidator, IRuleDescriptor
+internal class StringBeIPAddressValidator(PrincipalChain<string?> chain)
+    : IValidator,
+        IRuleDescriptor
 {
     public static StringBeIPAddressValidator New(PrincipalChain<string?> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "String.BeIPAddress";
     string IRuleDescriptor.OperationName => "BeIPAddress";
     Type IRuleDescriptor.SubjectType => typeof(string);

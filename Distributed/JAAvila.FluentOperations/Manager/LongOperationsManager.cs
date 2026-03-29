@@ -5,6 +5,7 @@ using JAAvila.FluentOperations.Formatters;
 using JAAvila.FluentOperations.Model;
 using JAAvila.FluentOperations.Utils;
 using JAAvila.FluentOperations.Validators;
+using JAAvila.SafeTypes.Extension;
 
 namespace JAAvila.FluentOperations.Manager;
 
@@ -54,7 +55,8 @@ public class LongOperationsManager : ITestManager<LongOperationsManager, long>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -85,7 +87,11 @@ public class LongOperationsManager : ITestManager<LongOperationsManager, long>
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.MessageKey, operation.ResultValidation, expected.ToString())
+                        .WithResult(
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            expected.ToString()
+                        )
                         .WithReason(reason?.ToString())
             )
             .Execute();
@@ -113,7 +119,8 @@ public class LongOperationsManager : ITestManager<LongOperationsManager, long>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -143,7 +150,8 @@ public class LongOperationsManager : ITestManager<LongOperationsManager, long>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -173,7 +181,8 @@ public class LongOperationsManager : ITestManager<LongOperationsManager, long>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -204,7 +213,8 @@ public class LongOperationsManager : ITestManager<LongOperationsManager, long>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -236,7 +246,8 @@ public class LongOperationsManager : ITestManager<LongOperationsManager, long>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -268,7 +279,8 @@ public class LongOperationsManager : ITestManager<LongOperationsManager, long>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -300,7 +312,8 @@ public class LongOperationsManager : ITestManager<LongOperationsManager, long>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -336,7 +349,8 @@ public class LongOperationsManager : ITestManager<LongOperationsManager, long>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(min),
                             BaseFormatter.Format(max),
                             BaseFormatter.Format(PrincipalChain.GetValue())
@@ -382,7 +396,8 @@ public class LongOperationsManager : ITestManager<LongOperationsManager, long>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(min),
                             BaseFormatter.Format(max),
                             BaseFormatter.Format(PrincipalChain.GetValue())
@@ -427,8 +442,9 @@ public class LongOperationsManager : ITestManager<LongOperationsManager, long>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
-                            string.Join(", ", expected.Select(e => BaseFormatter.Format(e))),
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            string.Join(", ", expected.Select(BaseFormatter.Format)),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -436,7 +452,7 @@ public class LongOperationsManager : ITestManager<LongOperationsManager, long>
             .FailIf(
                 _ =>
                     (
-                        expected is null || expected.Length == 0,
+                        expected.IsNullOrEmpty(),
                         Fail.New(
                             $"The {nameof(BeOneOf)} operation failed because you have not provided any values."
                         )
@@ -471,8 +487,9 @@ public class LongOperationsManager : ITestManager<LongOperationsManager, long>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
-                            string.Join(", ", expected.Select(e => BaseFormatter.Format(e))),
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            string.Join(", ", expected.Select(BaseFormatter.Format)),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -480,7 +497,7 @@ public class LongOperationsManager : ITestManager<LongOperationsManager, long>
             .FailIf(
                 _ =>
                     (
-                        expected is null || expected.Length == 0,
+                        expected.IsNullOrEmpty(),
                         Fail.New(
                             $"The {nameof(NotBeOneOf)} operation failed because you have not provided any values."
                         )
@@ -515,7 +532,8 @@ public class LongOperationsManager : ITestManager<LongOperationsManager, long>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(divisor),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -555,7 +573,8 @@ public class LongOperationsManager : ITestManager<LongOperationsManager, long>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -585,7 +604,8 @@ public class LongOperationsManager : ITestManager<LongOperationsManager, long>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -601,7 +621,10 @@ public class LongOperationsManager : ITestManager<LongOperationsManager, long>
     public LongOperationsManager BeOfType<TType>(Reason? reason = null)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Common.BeOfType))
+        {
             return this;
+        }
+
         ValidateBeOfTypeOperation(reason, typeof(TType));
         return this;
     }
@@ -612,7 +635,10 @@ public class LongOperationsManager : ITestManager<LongOperationsManager, long>
     public LongOperationsManager BeOfType(Type expected, Reason? reason = null)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Common.BeOfType))
+        {
             return this;
+        }
+
         ValidateBeOfTypeOperation(reason, expected);
         return this;
     }
@@ -623,7 +649,10 @@ public class LongOperationsManager : ITestManager<LongOperationsManager, long>
     public LongOperationsManager NotBeOfType<TType>(Reason? reason = null)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Common.NotBeOfType))
+        {
             return this;
+        }
+
         ValidateNotBeOfTypeOperation(reason, typeof(TType));
         return this;
     }
@@ -634,7 +663,10 @@ public class LongOperationsManager : ITestManager<LongOperationsManager, long>
     public LongOperationsManager NotBeOfType(Type expected, Reason? reason = null)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Common.NotBeOfType))
+        {
             return this;
+        }
+
         ValidateNotBeOfTypeOperation(reason, expected);
         return this;
     }
@@ -655,7 +687,9 @@ public class LongOperationsManager : ITestManager<LongOperationsManager, long>
                 _ =>
                     (
                         type is null,
-                        Fail.New($"The {nameof(BeOfType)} operation failed because the expected type was <null>.")
+                        Fail.New(
+                            $"The {nameof(BeOfType)} operation failed because the expected type was <null>."
+                        )
                     )
             )
             .Execute();
@@ -677,7 +711,9 @@ public class LongOperationsManager : ITestManager<LongOperationsManager, long>
                 _ =>
                     (
                         type is null,
-                        Fail.New($"The {nameof(NotBeOfType)} operation failed because the expected type was <null>.")
+                        Fail.New(
+                            $"The {nameof(NotBeOfType)} operation failed because the expected type was <null>."
+                        )
                     )
             )
             .Execute();

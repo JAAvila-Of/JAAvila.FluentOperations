@@ -18,7 +18,7 @@ namespace JAAvila.FluentOperations.DataAnnotations;
 /// </remarks>
 /// <example>
 /// <code>
-/// public class UserBlueprint : DataAnnotationsBlueprint&lt;User&gt;
+/// public class UserBlueprint: DataAnnotationsBlueprint&lt;User&gt;
 /// {
 ///     public UserBlueprint()
 ///     {
@@ -46,7 +46,7 @@ public abstract class DataAnnotationsBlueprint<T> : QualityBlueprint<T>
     /// Must be called from within an active <c>using (Define())</c> scope.
     /// </summary>
     /// <param name="options">
-    /// Options that control attribute mapping behaviour.
+    /// Options that control attribute mapping behavior.
     /// When <c>null</c>, <see cref="AnnotationOptions.Default"/> is used.
     /// </param>
     protected void IncludeAnnotations(AnnotationOptions? options = null)
@@ -105,51 +105,27 @@ public abstract class DataAnnotationsBlueprint<T> : QualityBlueprint<T>
 
         if (isString)
         {
-            ApplyStringRules(
-                (Expression<Func<T, string?>>)(object)lambda,
-                attributes,
-                options
-            );
+            ApplyStringRules((Expression<Func<T, string?>>)(object)lambda, attributes, options);
         }
         else if (isInt)
         {
-            ApplyIntRules(
-                (Expression<Func<T, int>>)(object)lambda,
-                attributes,
-                options
-            );
+            ApplyIntRules((Expression<Func<T, int>>)(object)lambda, attributes, options);
         }
         else if (isNullableInt)
         {
-            ApplyNullableIntRules(
-                (Expression<Func<T, int?>>)(object)lambda,
-                attributes,
-                options
-            );
+            ApplyNullableIntRules((Expression<Func<T, int?>>)(object)lambda, attributes, options);
         }
         else if (isLong)
         {
-            ApplyLongRules(
-                (Expression<Func<T, long>>)(object)lambda,
-                attributes,
-                options
-            );
+            ApplyLongRules((Expression<Func<T, long>>)(object)lambda, attributes, options);
         }
         else if (isNullableLong)
         {
-            ApplyNullableLongRules(
-                (Expression<Func<T, long?>>)(object)lambda,
-                attributes,
-                options
-            );
+            ApplyNullableLongRules((Expression<Func<T, long?>>)(object)lambda, attributes, options);
         }
         else if (isDouble)
         {
-            ApplyDoubleRules(
-                (Expression<Func<T, double>>)(object)lambda,
-                attributes,
-                options
-            );
+            ApplyDoubleRules((Expression<Func<T, double>>)(object)lambda, attributes, options);
         }
         else if (isNullableDouble)
         {
@@ -161,11 +137,7 @@ public abstract class DataAnnotationsBlueprint<T> : QualityBlueprint<T>
         }
         else if (isDecimal)
         {
-            ApplyDecimalRules(
-                (Expression<Func<T, decimal>>)(object)lambda,
-                attributes,
-                options
-            );
+            ApplyDecimalRules((Expression<Func<T, decimal>>)(object)lambda, attributes, options);
         }
         else if (isNullableDecimal)
         {
@@ -202,9 +174,7 @@ public abstract class DataAnnotationsBlueprint<T> : QualityBlueprint<T>
             switch (attr)
             {
                 case RequiredAttribute when !options.IgnoreRequired:
-                    manager
-                        .NotBeNull()
-                        .NotBeEmpty();
+                    manager.NotBeNull().NotBeEmpty();
                     break;
 
                 case StringLengthAttribute sl:
@@ -239,7 +209,7 @@ public abstract class DataAnnotationsBlueprint<T> : QualityBlueprint<T>
                     break;
 
                 case PhoneAttribute:
-                    // Common North-American phone pattern accepted by PhoneAttribute.
+                    // Common North American phone pattern accepted by PhoneAttribute.
                     // NOTE: Standard DataAnnotations [Phone] passes validation when the value is null
                     // (only [Required] enforces non-null). FluentOperations' Match() has a FailIf null
                     // guard that rejects null values, creating an implicit non-null requirement.
@@ -276,12 +246,14 @@ public abstract class DataAnnotationsBlueprint<T> : QualityBlueprint<T>
 
         foreach (var attr in attributes)
         {
-            if (attr is RangeAttribute range)
+            if (attr is not RangeAttribute range)
             {
-                if (range.Minimum is int min && range.Maximum is int max)
-                {
-                    manager.BeInRange(min, max);
-                }
+                continue;
+            }
+
+            if (range is { Minimum: int min, Maximum: int max })
+            {
+                manager.BeInRange(min, max);
             }
         }
     }
@@ -309,7 +281,7 @@ public abstract class DataAnnotationsBlueprint<T> : QualityBlueprint<T>
                     break;
 
                 case RangeAttribute range:
-                    if (range.Minimum is int min && range.Maximum is int max)
+                    if (range is { Minimum: int min, Maximum: int max })
                     {
                         manager.BeInRange(min, max);
                     }
@@ -334,13 +306,16 @@ public abstract class DataAnnotationsBlueprint<T> : QualityBlueprint<T>
 
         foreach (var attr in attributes)
         {
-            if (attr is RangeAttribute range)
+            if (attr is not RangeAttribute range)
             {
-                var (success, min, max) = ExtractLongRange(range);
-                if (success)
-                {
-                    manager.BeInRange(min, max);
-                }
+                continue;
+            }
+
+            var (success, min, max) = ExtractLongRange(range);
+
+            if (success)
+            {
+                manager.BeInRange(min, max);
             }
         }
     }
@@ -394,12 +369,14 @@ public abstract class DataAnnotationsBlueprint<T> : QualityBlueprint<T>
 
         foreach (var attr in attributes)
         {
-            if (attr is RangeAttribute range)
+            if (attr is not RangeAttribute range)
             {
-                if (range.Minimum is double min && range.Maximum is double max)
-                {
-                    manager.BeInRange(min, max);
-                }
+                continue;
+            }
+
+            if (range is { Minimum: double min, Maximum: double max })
+            {
+                manager.BeInRange(min, max);
             }
         }
     }
@@ -427,7 +404,7 @@ public abstract class DataAnnotationsBlueprint<T> : QualityBlueprint<T>
                     break;
 
                 case RangeAttribute range:
-                    if (range.Minimum is double min && range.Maximum is double max)
+                    if (range is { Minimum: double min, Maximum: double max })
                     {
                         manager.BeInRange(min, max);
                     }
@@ -452,13 +429,15 @@ public abstract class DataAnnotationsBlueprint<T> : QualityBlueprint<T>
 
         foreach (var attr in attributes)
         {
-            if (attr is RangeAttribute range)
+            if (attr is not RangeAttribute range)
             {
-                // RangeAttribute stores min/max as object; cast to double then decimal.
-                if (range.Minimum is double minD && range.Maximum is double maxD)
-                {
-                    manager.BeInRange((decimal)minD, (decimal)maxD);
-                }
+                continue;
+            }
+
+            // RangeAttribute stores min/max as an object; cast to double then decimal.
+            if (range is { Minimum: double minD, Maximum: double maxD })
+            {
+                manager.BeInRange((decimal)minD, (decimal)maxD);
             }
         }
     }
@@ -486,7 +465,7 @@ public abstract class DataAnnotationsBlueprint<T> : QualityBlueprint<T>
                     break;
 
                 case RangeAttribute range:
-                    if (range.Minimum is double minD && range.Maximum is double maxD)
+                    if (range is { Minimum: double minD, Maximum: double maxD })
                     {
                         manager.BeInRange((decimal)minD, (decimal)maxD);
                     }
@@ -519,10 +498,7 @@ public abstract class DataAnnotationsBlueprint<T> : QualityBlueprint<T>
 
         // Build Expression<Func<T, object?>> to use the generic For<TProp, TManager> overload.
         var param = Expression.Parameter(typeof(T), "x");
-        var body = Expression.Convert(
-            Expression.Property(param, propertyInfo),
-            typeof(object)
-        );
+        var body = Expression.Convert(Expression.Property(param, propertyInfo), typeof(object));
         var lambda = Expression.Lambda<Func<T, object?>>(body, param);
 
         var config = BuildRuleConfig(options, attributes);
@@ -555,7 +531,10 @@ public abstract class DataAnnotationsBlueprint<T> : QualityBlueprint<T>
                 return (true, (long)doubleMin, (long)doubleMax);
 
             case string strMin when range.Maximum is string strMax:
-                if (long.TryParse(strMin, out var parsedMin) && long.TryParse(strMax, out var parsedMax))
+                if (
+                    long.TryParse(strMin, out var parsedMin)
+                    && long.TryParse(strMax, out var parsedMax)
+                )
                 {
                     return (true, parsedMin, parsedMax);
                 }
@@ -568,14 +547,16 @@ public abstract class DataAnnotationsBlueprint<T> : QualityBlueprint<T>
 
     private static RuleConfig BuildRuleConfig(
         AnnotationOptions options,
-        IReadOnlyList<ValidationAttribute> attributes)
+        IReadOnlyList<ValidationAttribute> attributes
+    )
     {
         string? customMessage = null;
 
         if (options.UseAnnotationErrorMessages)
         {
             var firstWithMessage = attributes.FirstOrDefault(
-                a => !string.IsNullOrEmpty(a.ErrorMessage));
+                a => !string.IsNullOrEmpty(a.ErrorMessage)
+            );
 
             if (firstWithMessage is not null)
             {
@@ -586,7 +567,9 @@ public abstract class DataAnnotationsBlueprint<T> : QualityBlueprint<T>
         return new RuleConfig
         {
             Severity = options.DefaultSeverity,
-            ErrorCode = string.IsNullOrEmpty(options.ErrorCodePrefix) ? null : options.ErrorCodePrefix,
+            ErrorCode = string.IsNullOrEmpty(options.ErrorCodePrefix)
+                ? null
+                : options.ErrorCodePrefix,
             CustomMessage = customMessage
         };
     }

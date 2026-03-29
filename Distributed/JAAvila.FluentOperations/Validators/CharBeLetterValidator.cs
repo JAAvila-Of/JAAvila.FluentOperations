@@ -9,8 +9,8 @@ internal class CharBeLetterValidator(PrincipalChain<char> chain) : IValidator, I
 {
     public static CharBeLetterValidator New(PrincipalChain<char> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Char.BeLetter";
     string IRuleDescriptor.OperationName => "BeLetter";
     Type IRuleDescriptor.SubjectType => typeof(char);

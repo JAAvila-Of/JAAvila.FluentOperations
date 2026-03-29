@@ -5,13 +5,15 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the timespan value equals the expected value.
 /// </summary>
-internal class TimeSpanBeValidator(PrincipalChain<TimeSpan> chain, TimeSpan expected) : IValidator, IRuleDescriptor
+internal class TimeSpanBeValidator(PrincipalChain<TimeSpan> chain, TimeSpan expected)
+    : IValidator,
+        IRuleDescriptor
 {
     public static TimeSpanBeValidator New(PrincipalChain<TimeSpan> chain, TimeSpan expected) =>
         new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "TimeSpan.Be";
     string IRuleDescriptor.OperationName => "Be";
     Type IRuleDescriptor.SubjectType => typeof(TimeSpan);
