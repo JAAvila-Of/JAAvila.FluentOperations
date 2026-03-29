@@ -5,13 +5,15 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the uri URI has the expected host.
 /// </summary>
-internal class UriHaveHostValidator(PrincipalChain<Uri?> chain, string host) : IValidator, IRuleDescriptor
+internal class UriHaveHostValidator(PrincipalChain<Uri?> chain, string host)
+    : IValidator,
+        IRuleDescriptor
 {
     public static UriHaveHostValidator New(PrincipalChain<Uri?> chain, string host) =>
         new(chain, host);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Uri.HaveHost";
     string IRuleDescriptor.OperationName => "HaveHost";
     Type IRuleDescriptor.SubjectType => typeof(Uri);
@@ -25,7 +27,8 @@ internal class UriHaveHostValidator(PrincipalChain<Uri?> chain, string host) : I
             return true;
         }
 
-        ResultValidation = "The resulting URI was expected to have host \"{0}\", but \"{1}\" was found.";
+        ResultValidation =
+            "The resulting URI was expected to have host \"{0}\", but \"{1}\" was found.";
         return false;
     }
 

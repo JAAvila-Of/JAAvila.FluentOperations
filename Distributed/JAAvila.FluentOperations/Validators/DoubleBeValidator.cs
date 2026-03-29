@@ -5,13 +5,15 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the double value equals the expected value.
 /// </summary>
-internal class DoubleBeValidator(PrincipalChain<double> chain, double expected) : IValidator, IRuleDescriptor
+internal class DoubleBeValidator(PrincipalChain<double> chain, double expected)
+    : IValidator,
+        IRuleDescriptor
 {
     public static DoubleBeValidator New(PrincipalChain<double> chain, double expected) =>
         new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Double.Be";
     string IRuleDescriptor.OperationName => "Be";
     Type IRuleDescriptor.SubjectType => typeof(double);

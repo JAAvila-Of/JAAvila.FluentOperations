@@ -19,8 +19,8 @@ internal class StringContainWithOccurrenceValidator(
         PrincipalChain<string?> chain
     ) => new(expected, constraint, chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "String.Contain";
     string IRuleDescriptor.OperationName => "Contain";
     Type IRuleDescriptor.SubjectType => typeof(string);

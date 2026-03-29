@@ -15,8 +15,8 @@ internal class CollectionBeSubsetOfValidator<T>(
         IEnumerable<T> superset
     ) => new(chain, superset);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Collection.BeSubsetOf";
     string IRuleDescriptor.OperationName => "BeSubsetOf";
     Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);
@@ -25,9 +25,7 @@ internal class CollectionBeSubsetOfValidator<T>(
 
     public bool Validate()
     {
-        var supersetList = superset.ToList();
-
-        if (chain.GetValue().All(e => supersetList.Contains(e)))
+        if (chain.GetValue().All(superset.Contains))
         {
             return true;
         }

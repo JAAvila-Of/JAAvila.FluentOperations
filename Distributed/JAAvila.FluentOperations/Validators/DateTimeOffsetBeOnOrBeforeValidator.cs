@@ -5,13 +5,18 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the datetimeoffset value is on or before the expected value.
 /// </summary>
-internal class DateTimeOffsetBeOnOrBeforeValidator(PrincipalChain<DateTimeOffset> chain, DateTimeOffset expected) : IValidator, IRuleDescriptor
+internal class DateTimeOffsetBeOnOrBeforeValidator(
+    PrincipalChain<DateTimeOffset> chain,
+    DateTimeOffset expected
+) : IValidator, IRuleDescriptor
 {
-    public static DateTimeOffsetBeOnOrBeforeValidator New(PrincipalChain<DateTimeOffset> chain, DateTimeOffset expected) =>
-        new(chain, expected);
+    public static DateTimeOffsetBeOnOrBeforeValidator New(
+        PrincipalChain<DateTimeOffset> chain,
+        DateTimeOffset expected
+    ) => new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "DateTimeOffset.BeOnOrBefore";
     string IRuleDescriptor.OperationName => "BeOnOrBefore";
     Type IRuleDescriptor.SubjectType => typeof(DateTimeOffset);
@@ -25,7 +30,8 @@ internal class DateTimeOffsetBeOnOrBeforeValidator(PrincipalChain<DateTimeOffset
             return true;
         }
 
-        ResultValidation = "The resulting value was expected to be on or before {0}, but {1} was found.";
+        ResultValidation =
+            "The resulting value was expected to be on or before {0}, but {1} was found.";
         return false;
     }
 

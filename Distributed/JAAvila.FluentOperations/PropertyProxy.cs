@@ -248,6 +248,16 @@ internal class PropertyProxy<TProp, TManager>(
             return (TManager)(object)new UriOperationsManager(null, propertyName);
         }
 
+        if (typeof(TManager) == typeof(TypeOperationsManager))
+        {
+            return (TManager)(object)new TypeOperationsManager(null, propertyName);
+        }
+
+        if (typeof(TManager) == typeof(AssemblyOperationsManager))
+        {
+            return (TManager)(object)new AssemblyOperationsManager(null, propertyName);
+        }
+
         if (typeof(TManager) == typeof(DateTimeOffsetOperationsManager))
         {
             return (TManager)(object)new DateTimeOffsetOperationsManager(default, propertyName);
@@ -269,14 +279,16 @@ internal class PropertyProxy<TProp, TManager>(
                 var itemType = typeof(TManager).GetGenericArguments()[0];
                 var listType = typeof(List<>).MakeGenericType(itemType);
                 var emptyList = Activator.CreateInstance(listType)!;
-                return (TManager)Activator.CreateInstance(typeof(TManager), emptyList, propertyName)!;
+                return (TManager)
+                    Activator.CreateInstance(typeof(TManager), emptyList, propertyName)!;
             }
 
             if (genericDef == typeof(ArrayOperationsManager<>))
             {
                 var itemType = typeof(TManager).GetGenericArguments()[0];
                 var emptyArray = Array.CreateInstance(itemType, 0);
-                return (TManager)Activator.CreateInstance(typeof(TManager), emptyArray, propertyName)!;
+                return (TManager)
+                    Activator.CreateInstance(typeof(TManager), emptyArray, propertyName)!;
             }
 
             if (genericDef == typeof(DictionaryOperationsManager<,>))
@@ -284,19 +296,21 @@ internal class PropertyProxy<TProp, TManager>(
                 var typeArgs = typeof(TManager).GetGenericArguments();
                 var dictType = typeof(Dictionary<,>).MakeGenericType(typeArgs);
                 var emptyDict = Activator.CreateInstance(dictType)!;
-                return (TManager)Activator.CreateInstance(typeof(TManager), emptyDict, propertyName)!;
+                return (TManager)
+                    Activator.CreateInstance(typeof(TManager), emptyDict, propertyName)!;
             }
 
             if (genericDef == typeof(EnumOperationsManager<>))
             {
                 var enumType = typeof(TManager).GetGenericArguments()[0];
                 var defaultVal = Activator.CreateInstance(enumType)!;
-                return (TManager)Activator.CreateInstance(typeof(TManager), defaultVal, propertyName)!;
+                return (TManager)
+                    Activator.CreateInstance(typeof(TManager), defaultVal, propertyName)!;
             }
 
             if (genericDef == typeof(NullableEnumOperationsManager<>))
             {
-                return (TManager)Activator.CreateInstance(typeof(TManager), (object?)null, propertyName)!;
+                return (TManager)Activator.CreateInstance(typeof(TManager), null, propertyName)!;
             }
         }
 

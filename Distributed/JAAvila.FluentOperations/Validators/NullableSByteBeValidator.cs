@@ -5,18 +5,20 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable sbyte value equals the expected value.
 /// </summary>
-internal class NullableSByteBeValidator(PrincipalChain<sbyte?> chain, sbyte? expected) : IValidator, IRuleDescriptor
+internal class NullableSByteBeValidator(PrincipalChain<sbyte?> chain, sbyte? expected)
+    : IValidator,
+        IRuleDescriptor
 {
     public static NullableSByteBeValidator New(PrincipalChain<sbyte?> chain, sbyte? expected) =>
         new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableSByte.Be";
     string IRuleDescriptor.OperationName => "Be";
     Type IRuleDescriptor.SubjectType => typeof(sbyte?);
     IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
-        new Dictionary<string, object> { ["value"] = expected };
+        new Dictionary<string, object> { ["value"] = expected! };
 
     public bool Validate()
     {

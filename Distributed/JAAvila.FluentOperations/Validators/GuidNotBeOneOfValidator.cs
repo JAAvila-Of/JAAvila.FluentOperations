@@ -5,13 +5,15 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the guid value is not one of the specified disallowed values.
 /// </summary>
-internal class GuidNotBeOneOfValidator(PrincipalChain<Guid> chain, params Guid[] expected) : IValidator, IRuleDescriptor
+internal class GuidNotBeOneOfValidator(PrincipalChain<Guid> chain, params Guid[] expected)
+    : IValidator,
+        IRuleDescriptor
 {
     public static GuidNotBeOneOfValidator New(PrincipalChain<Guid> chain, params Guid[] expected) =>
         new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Guid.NotBeOneOf";
     string IRuleDescriptor.OperationName => "NotBeOneOf";
     Type IRuleDescriptor.SubjectType => typeof(Guid);

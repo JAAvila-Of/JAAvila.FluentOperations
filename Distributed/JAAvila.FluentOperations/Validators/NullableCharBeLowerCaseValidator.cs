@@ -5,12 +5,14 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable char value is a lowercase letter.
 /// </summary>
-internal class NullableCharBeLowerCaseValidator(PrincipalChain<char?> chain) : IValidator, IRuleDescriptor
+internal class NullableCharBeLowerCaseValidator(PrincipalChain<char?> chain)
+    : IValidator,
+        IRuleDescriptor
 {
     public static NullableCharBeLowerCaseValidator New(PrincipalChain<char?> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableChar.BeLowerCase";
     string IRuleDescriptor.OperationName => "BeLowerCase";
     Type IRuleDescriptor.SubjectType => typeof(char?);

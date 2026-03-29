@@ -6,15 +6,16 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the collection has the expected number of elements.
 /// </summary>
 internal class CollectionHaveCountValidator<T>(PrincipalChain<IEnumerable<T>> chain, int expected)
-    : IValidator, IRuleDescriptor
+    : IValidator,
+        IRuleDescriptor
 {
     public static CollectionHaveCountValidator<T> New(
         PrincipalChain<IEnumerable<T>> chain,
         int expected
     ) => new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Collection.HaveCount";
     string IRuleDescriptor.OperationName => "HaveCount";
     Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);

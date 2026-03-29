@@ -6,13 +6,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the ulong value is outside the specified inclusive range.
 /// </summary>
 internal class ULongNotBeInRangeValidator(PrincipalChain<ulong> chain, ulong min, ulong max)
-    : IValidator, IRuleDescriptor
+    : IValidator,
+        IRuleDescriptor
 {
-    public static ULongNotBeInRangeValidator New(PrincipalChain<ulong> chain, ulong min, ulong max) =>
-        new(chain, min, max);
+    public static ULongNotBeInRangeValidator New(
+        PrincipalChain<ulong> chain,
+        ulong min,
+        ulong max
+    ) => new(chain, min, max);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "ULong.NotBeInRange";
     string IRuleDescriptor.OperationName => "NotBeInRange";
     Type IRuleDescriptor.SubjectType => typeof(ulong);

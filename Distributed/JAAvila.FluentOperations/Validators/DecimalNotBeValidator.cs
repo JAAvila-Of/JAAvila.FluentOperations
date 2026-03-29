@@ -5,13 +5,15 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the decimal value does not equal the expected value.
 /// </summary>
-internal class DecimalNotBeValidator(PrincipalChain<decimal> chain, decimal expected) : IValidator, IRuleDescriptor
+internal class DecimalNotBeValidator(PrincipalChain<decimal> chain, decimal expected)
+    : IValidator,
+        IRuleDescriptor
 {
     public static DecimalNotBeValidator New(PrincipalChain<decimal> chain, decimal expected) =>
         new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Decimal.NotBe";
     string IRuleDescriptor.OperationName => "NotBe";
     Type IRuleDescriptor.SubjectType => typeof(decimal);

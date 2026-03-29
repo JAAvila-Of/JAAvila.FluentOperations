@@ -33,7 +33,7 @@ public class ComparisonOptionsBuilder
     }
 
     /// <summary>
-    /// Excludes a property from the comparison using a strongly-typed expression.
+    /// Excludes a property from the comparison using a strongly typed expression.
     /// </summary>
     public ComparisonOptionsBuilder Excluding<T>(Expression<Func<T, object>> expression)
     {
@@ -56,7 +56,7 @@ public class ComparisonOptionsBuilder
     }
 
     /// <summary>
-    /// Includes only the specified property in the comparison using a strongly-typed expression.
+    /// Includes only the specified property in the comparison using a strongly typed expression.
     /// When any properties are included, all other properties are excluded.
     /// </summary>
     public ComparisonOptionsBuilder Including<T>(Expression<Func<T, object>> expression)
@@ -103,11 +103,48 @@ public class ComparisonOptionsBuilder
     }
 
     /// <summary>
+    /// Ignores leading whitespace when comparing string values.
+    /// </summary>
+    public ComparisonOptionsBuilder IgnoringLeadingWhitespace()
+    {
+        _ignoreLeadingWhitespace = true;
+        return this;
+    }
+
+    /// <summary>
+    /// Ignores trailing whitespace when comparing string values.
+    /// </summary>
+    public ComparisonOptionsBuilder IgnoringTrailingWhitespace()
+    {
+        _ignoreTrailingWhitespace = true;
+        return this;
+    }
+
+    /// <summary>
+    /// Ignores differences in newline styles (CR, LF, CRLF) when comparing string values.
+    /// </summary>
+    public ComparisonOptionsBuilder IgnoringNewLineStyle()
+    {
+        _ignoreNewLineStyle = true;
+        return this;
+    }
+
+    /// <summary>
     /// Sets the maximum recursion depth for deep comparison.
     /// </summary>
     public ComparisonOptionsBuilder WithMaxDepth(int depth)
     {
         _maxRecursionDepth = depth;
+        return this;
+    }
+
+    /// <summary>
+    /// Sets the maximum number of differences to include in the comparison report.
+    /// </summary>
+    public ComparisonOptionsBuilder WithMaxDifferencesReported(int max)
+    {
+        ArgumentOutOfRangeException.ThrowIfLessThan(max, 1);
+        _maxDifferencesReported = max;
         return this;
     }
 

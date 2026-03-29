@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Grpc.Core;
+using JAAvila.FluentOperations.Extensions;
 using JAAvila.FluentOperations.Model;
 
 namespace JAAvila.FluentOperations.Integration;
@@ -17,7 +18,10 @@ public static class GrpcStatusMapper
     /// <param name="options">Options that control the status code and trailer inclusion.</param>
     /// <returns>An <see cref="RpcException"/> with validation error metadata.</returns>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="report"/> is <see langword="null"/>.</exception>
-    public static RpcException ToRpcException(QualityReport report, GrpcBlueprintOptions? options = null)
+    public static RpcException ToRpcException(
+        QualityReport report,
+        GrpcBlueprintOptions? options = null
+    )
     {
         ArgumentNullException.ThrowIfNull(report);
 
@@ -42,12 +46,17 @@ public static class GrpcStatusMapper
             }
         }
 
-        // Optionally add a binary trailer with the full JSON-serialized error dictionary.
+        // Optionally, add a binary trailer with the full JSON-serialized error dictionary.
         // Binary metadata keys MUST end in -bin per the gRPC spec.
         if (options.IncludeReportInTrailers && errorDictionary.Count > 0)
         {
             var json = JsonSerializer.Serialize(errorDictionary);
-            metadata.Add(new Metadata.Entry("validation-errors-bin", System.Text.Encoding.UTF8.GetBytes(json)));
+            metadata.Add(
+                new Metadata.Entry(
+                    "validation-errors-bin",
+                    System.Text.Encoding.UTF8.GetBytes(json)
+                )
+            );
         }
 
         return new RpcException(status, metadata);

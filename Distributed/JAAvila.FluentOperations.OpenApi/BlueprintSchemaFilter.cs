@@ -1,7 +1,7 @@
+using System.Reflection;
 using JAAvila.FluentOperations.Contract;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using System.Reflection;
 
 namespace JAAvila.FluentOperations.OpenApi;
 
@@ -12,7 +12,7 @@ namespace JAAvila.FluentOperations.OpenApi;
 /// <remarks>
 /// For each schema type, the filter locates a blueprint that can validate that type via
 /// <see cref="IBlueprintValidator.CanValidate(Type)"/>, then calls <c>GetRuleDescriptors()</c>
-/// via reflection and applies the resulting rules through <see cref="OpenApiBlueprintMapper"/>.
+/// via reflection, and applies the resulting rules through <see cref="OpenApiBlueprintMapper"/>.
 /// </remarks>
 public sealed class BlueprintSchemaFilter : ISchemaFilter
 {
@@ -57,7 +57,7 @@ public sealed class BlueprintSchemaFilter : ISchemaFilter
 
         var rules = getRuleDescriptors.Invoke(blueprint, null);
 
-        if (rules is not IEnumerable<JAAvila.FluentOperations.Model.BlueprintRuleInfo> ruleList)
+        if (rules is not IEnumerable<Model.BlueprintRuleInfo> ruleList)
         {
             return;
         }

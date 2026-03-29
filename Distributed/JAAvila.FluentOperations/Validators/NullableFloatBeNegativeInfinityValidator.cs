@@ -6,13 +6,15 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable float value is negative infinity.
 /// </summary>
-internal class NullableFloatBeNegativeInfinityValidator(PrincipalChain<float?> chain) : IValidator, IRuleDescriptor
+internal class NullableFloatBeNegativeInfinityValidator(PrincipalChain<float?> chain)
+    : IValidator,
+        IRuleDescriptor
 {
     public static NullableFloatBeNegativeInfinityValidator New(PrincipalChain<float?> chain) =>
         new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableFloat.BeNegativeInfinity";
     string IRuleDescriptor.OperationName => "BeNegativeInfinity";
     Type IRuleDescriptor.SubjectType => typeof(float?);

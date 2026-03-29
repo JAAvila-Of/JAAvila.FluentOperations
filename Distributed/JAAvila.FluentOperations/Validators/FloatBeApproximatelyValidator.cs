@@ -17,13 +17,13 @@ internal class FloatBeApproximatelyValidator(
         float tolerance
     ) => new(chain, expected, tolerance);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Float.BeApproximately";
     string IRuleDescriptor.OperationName => "BeApproximately";
     Type IRuleDescriptor.SubjectType => typeof(float);
     IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
-        new Dictionary<string, object> { ["value"] = expected, ["value"] = tolerance };
+        new Dictionary<string, object> { ["value_exp"] = expected, ["value_tol"] = tolerance };
 
     public bool Validate()
     {

@@ -13,7 +13,11 @@ internal class ModelPredicateRule<T>(
 
     public bool Validate()
     {
-        if (_instance is null) return false;
+        if (_instance is null)
+        {
+            return false;
+        }
+
         return predicate(_instance);
     }
 

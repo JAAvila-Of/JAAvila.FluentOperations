@@ -5,18 +5,22 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable DateOnly value equals the expected value.
 /// </summary>
-internal class NullableDateOnlyBeValidator(PrincipalChain<DateOnly?> chain, DateOnly? expected) : IValidator, IRuleDescriptor
+internal class NullableDateOnlyBeValidator(PrincipalChain<DateOnly?> chain, DateOnly? expected)
+    : IValidator,
+        IRuleDescriptor
 {
-    public static NullableDateOnlyBeValidator New(PrincipalChain<DateOnly?> chain, DateOnly? expected) =>
-        new(chain, expected);
+    public static NullableDateOnlyBeValidator New(
+        PrincipalChain<DateOnly?> chain,
+        DateOnly? expected
+    ) => new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableDateOnly.Be";
     string IRuleDescriptor.OperationName => "Be";
     Type IRuleDescriptor.SubjectType => typeof(DateOnly?);
     IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
-        new Dictionary<string, object> { ["value"] = expected };
+        new Dictionary<string, object> { ["value"] = expected! };
 
     public bool Validate()
     {

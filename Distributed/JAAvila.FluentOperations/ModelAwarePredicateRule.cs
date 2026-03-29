@@ -30,7 +30,7 @@ internal class ModelAwarePredicateRule<TModel, TProp>(
     {
         if (_modelInstance is null)
         {
-            // Model not injected — fail with a safe default.
+            // Model isn't injected — fail with a safe default.
             // This should not occur if the evaluation loops are correctly implemented.
             return false;
         }

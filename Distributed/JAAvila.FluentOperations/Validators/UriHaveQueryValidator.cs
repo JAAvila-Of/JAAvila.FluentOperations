@@ -7,11 +7,10 @@ namespace JAAvila.FluentOperations.Validators;
 /// </summary>
 internal class UriHaveQueryValidator(PrincipalChain<Uri?> chain) : IValidator, IRuleDescriptor
 {
-    public static UriHaveQueryValidator New(PrincipalChain<Uri?> chain) =>
-        new(chain);
+    public static UriHaveQueryValidator New(PrincipalChain<Uri?> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Uri.HaveQuery";
     string IRuleDescriptor.OperationName => "HaveQuery";
     Type IRuleDescriptor.SubjectType => typeof(Uri);
@@ -25,7 +24,8 @@ internal class UriHaveQueryValidator(PrincipalChain<Uri?> chain) : IValidator, I
             return true;
         }
 
-        ResultValidation = "The resulting URI was expected to have a query string, but none was found.";
+        ResultValidation =
+            "The resulting URI was expected to have a query string, but none was found.";
         return false;
     }
 

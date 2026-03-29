@@ -36,11 +36,17 @@ public class BlueprintInterceptionContext
     /// </summary>
     public IDictionary<string, object> Properties { get; } = new Dictionary<string, object>();
 
+    /// Represents the context for intercepting the execution of blueprint validation operations.
+    /// This class is primarily used as a container for storing the necessary data required
+    /// during the interception of blueprint validation actions.
+    /// The context includes information about the current instance being validated,
+    /// the model type being processed, the validator to be applied, and the source of the integration.
     public BlueprintInterceptionContext(
         object instance,
         Type modelType,
         IBlueprintValidator validator,
-        string integrationSource)
+        string integrationSource
+    )
     {
         ArgumentNullException.ThrowIfNull(instance);
         ArgumentNullException.ThrowIfNull(modelType);

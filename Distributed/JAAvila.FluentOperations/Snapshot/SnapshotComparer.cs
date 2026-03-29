@@ -15,15 +15,18 @@ internal static class SnapshotComparer
         SnapshotSerializer.SnapshotData stored,
         QualityReport current,
         string snapshotName,
-        SnapshotOptions options)
+        SnapshotOptions options
+    )
     {
-        IsValidChange? isValidChange = stored.IsValid != current.IsValid
-            ? new IsValidChange(stored.IsValid, current.IsValid)
-            : null;
+        var isValidChange =
+            stored.IsValid != current.IsValid
+                ? new IsValidChange(stored.IsValid, current.IsValid)
+                : null;
 
-        RulesEvaluatedChange? rulesEvaluatedChange = stored.RulesEvaluated != current.RulesEvaluated
-            ? new RulesEvaluatedChange(stored.RulesEvaluated, current.RulesEvaluated)
-            : null;
+        var rulesEvaluatedChange =
+            stored.RulesEvaluated != current.RulesEvaluated
+                ? new RulesEvaluatedChange(stored.RulesEvaluated, current.RulesEvaluated)
+                : null;
 
         // Build lookup from stored failures by composite key (PropertyName, ErrorCode, Message)
         // Multiple failures can share the same key — track which stored entries have been matched.
@@ -53,29 +56,37 @@ internal static class SnapshotComparer
                 : null;
             var errorCodeChange = CompareErrorCode(storedFailure, currentFailure);
 
-            if (severityChange is not null || messageChange is not null || errorCodeChange is not null)
+            if (
+                severityChange is not null
+                || messageChange is not null
+                || errorCodeChange is not null
+            )
             {
-                changed.Add(new FailureChange
-                {
-                    PropertyName = currentFailure.PropertyName,
-                    ErrorCode = currentFailure.ErrorCode,
-                    SeverityChange = severityChange,
-                    MessageChange = messageChange,
-                    ErrorCodeChange = errorCodeChange,
-                });
+                changed.Add(
+                    new FailureChange
+                    {
+                        PropertyName = currentFailure.PropertyName,
+                        ErrorCode = currentFailure.ErrorCode,
+                        SeverityChange = severityChange,
+                        MessageChange = messageChange,
+                        ErrorCodeChange = errorCodeChange,
+                    }
+                );
             }
         }
 
         // Any remaining stored entries were not matched — they were removed
         foreach (var (_, storedFailure) in storedLookup)
         {
-            removed.Add(new QualityFailure
-            {
-                PropertyName = storedFailure.PropertyName,
-                Message = storedFailure.Message ?? string.Empty,
-                Severity = ParseSeverity(storedFailure.Severity),
-                ErrorCode = storedFailure.ErrorCode,
-            });
+            removed.Add(
+                new QualityFailure
+                {
+                    PropertyName = storedFailure.PropertyName,
+                    Message = storedFailure.Message ?? string.Empty,
+                    Severity = ParseSeverity(storedFailure.Severity),
+                    ErrorCode = storedFailure.ErrorCode,
+                }
+            );
         }
 
         return new SnapshotDiff
@@ -93,18 +104,27 @@ internal static class SnapshotComparer
     // Helpers
     // -------------------------------------------------------------------------
 
-    private static string BuildKey(string propertyName, string? errorCode, string? message, SnapshotOptions options)
+    private static string BuildKey(
+        string propertyName,
+        string? errorCode,
+        string? message,
+        SnapshotOptions options
+    )
     {
         var messagePart = options.IncludeMessages ? (message ?? string.Empty) : string.Empty;
         return string.Join("|", propertyName, errorCode ?? string.Empty, messagePart);
     }
 
     private static Dictionary<string, SnapshotSerializer.SnapshotFailure> BuildLookup(
-        List<SnapshotSerializer.SnapshotFailure> failures, SnapshotOptions options)
+        List<SnapshotSerializer.SnapshotFailure> failures,
+        SnapshotOptions options
+    )
     {
         // Use a counter-based suffix to handle duplicate keys
         var counts = new Dictionary<string, int>(StringComparer.Ordinal);
-        var result = new Dictionary<string, SnapshotSerializer.SnapshotFailure>(StringComparer.Ordinal);
+        var result = new Dictionary<string, SnapshotSerializer.SnapshotFailure>(
+            StringComparer.Ordinal
+        );
 
         foreach (var f in failures)
         {
@@ -119,7 +139,9 @@ internal static class SnapshotComparer
     }
 
     private static Dictionary<string, QualityFailure> BuildCurrentLookup(
-        List<QualityFailure> failures, SnapshotOptions options)
+        List<QualityFailure> failures,
+        SnapshotOptions options
+    )
     {
         var counts = new Dictionary<string, int>(StringComparer.Ordinal);
         var result = new Dictionary<string, QualityFailure>(StringComparer.Ordinal);
@@ -137,16 +159,18 @@ internal static class SnapshotComparer
     }
 
     private static (Severity Expected, Severity Actual)? CompareSeverity(
-        SnapshotSerializer.SnapshotFailure stored, QualityFailure current)
+        SnapshotSerializer.SnapshotFailure stored,
+        QualityFailure current
+    )
     {
         var storedSeverity = ParseSeverity(stored.Severity);
-        return storedSeverity != current.Severity
-            ? (storedSeverity, current.Severity)
-            : null;
+        return storedSeverity != current.Severity ? (storedSeverity, current.Severity) : null;
     }
 
     private static (string Expected, string Actual)? CompareMessage(
-        SnapshotSerializer.SnapshotFailure stored, QualityFailure current)
+        SnapshotSerializer.SnapshotFailure stored,
+        QualityFailure current
+    )
     {
         var storedMessage = stored.Message ?? string.Empty;
         return !string.Equals(storedMessage, current.Message, StringComparison.Ordinal)
@@ -155,7 +179,9 @@ internal static class SnapshotComparer
     }
 
     private static (string? Expected, string? Actual)? CompareErrorCode(
-        SnapshotSerializer.SnapshotFailure stored, QualityFailure current)
+        SnapshotSerializer.SnapshotFailure stored,
+        QualityFailure current
+    )
     {
         return !string.Equals(stored.ErrorCode, current.ErrorCode, StringComparison.Ordinal)
             ? (stored.ErrorCode, current.ErrorCode)

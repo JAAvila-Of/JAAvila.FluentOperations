@@ -46,15 +46,14 @@ public class DictionaryOperationsManager<TKey, TValue>
 
         ExecutionEngine<DictionaryOperationsManager<TKey, TValue>, IDictionary<TKey, TValue>>
             .New(this)
-            .WithOperation(
-                ReferenceBeNullValidator<IDictionary<TKey, TValue>>.New(PrincipalChain)
-            )
+            .WithOperation(ReferenceBeNullValidator<IDictionary<TKey, TValue>>.New(PrincipalChain))
             .WithTemplate(
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -117,15 +116,16 @@ public class DictionaryOperationsManager<TKey, TValue>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expected)
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(Be)} operation failed because the dictionary was null."
                         )
@@ -137,7 +137,7 @@ public class DictionaryOperationsManager<TKey, TValue>
     }
 
     /// <summary>
-    /// Asserts that the dictionary is not the same reference as <paramref name="expected"/>.
+    /// Asserts that the dictionary is different reference as <paramref name="expected"/>.
     /// </summary>
     /// <param name="expected">The dictionary reference that should not match.</param>
     /// <param name="reason">An optional reason providing context for the assertion.</param>
@@ -160,15 +160,16 @@ public class DictionaryOperationsManager<TKey, TValue>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expected)
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(NotBe)} operation failed because the dictionary was null."
                         )
@@ -275,13 +276,17 @@ public class DictionaryOperationsManager<TKey, TValue>
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.MessageKey, operation.ResultValidation, BaseFormatter.Format(key))
+                        .WithResult(
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            BaseFormatter.Format(key)
+                        )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(ContainKey)} operation failed because the dictionary was null."
                         )
@@ -315,13 +320,17 @@ public class DictionaryOperationsManager<TKey, TValue>
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.MessageKey, operation.ResultValidation, BaseFormatter.Format(key))
+                        .WithResult(
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            BaseFormatter.Format(key)
+                        )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(NotContainKey)} operation failed because the dictionary was null."
                         )
@@ -358,13 +367,17 @@ public class DictionaryOperationsManager<TKey, TValue>
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.MessageKey, operation.ResultValidation, BaseFormatter.Format(value))
+                        .WithResult(
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            BaseFormatter.Format(value)
+                        )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(ContainValue)} operation failed because the dictionary was null."
                         )
@@ -403,13 +416,17 @@ public class DictionaryOperationsManager<TKey, TValue>
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.MessageKey, operation.ResultValidation, BaseFormatter.Format(value))
+                        .WithResult(
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            BaseFormatter.Format(value)
+                        )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(NotContainValue)} operation failed because the dictionary was null."
                         )
@@ -451,16 +468,17 @@ public class DictionaryOperationsManager<TKey, TValue>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(key),
                             BaseFormatter.Format(value)
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(ContainPair)} operation failed because the dictionary was null."
                         )
@@ -472,7 +490,7 @@ public class DictionaryOperationsManager<TKey, TValue>
     }
 
     /// <summary>
-    /// Asserts that the dictionary contains entries for all of the specified keys.
+    /// Asserts that the dictionary contains entries for all the specified keys.
     /// </summary>
     /// <param name="keys">The keys expected to be present in the dictionary.</param>
     /// <returns>The current manager instance for method chaining.</returns>
@@ -485,7 +503,7 @@ public class DictionaryOperationsManager<TKey, TValue>
     }
 
     /// <summary>
-    /// Asserts that the dictionary contains entries for all of the specified keys.
+    /// Asserts that the dictionary contains entries for all the specified keys.
     /// </summary>
     /// <param name="reason">An optional reason providing context for the assertion.</param>
     /// <param name="keys">The keys expected to be present in the dictionary.</param>
@@ -493,10 +511,7 @@ public class DictionaryOperationsManager<TKey, TValue>
     /// <remarks>
     /// This operation fails immediately if the dictionary is <c>null</c> or if <paramref name="keys"/> is empty.
     /// </remarks>
-    public DictionaryOperationsManager<TKey, TValue> ContainKeys(
-        Reason? reason,
-        params TKey[] keys
-    )
+    public DictionaryOperationsManager<TKey, TValue> ContainKeys(Reason? reason, params TKey[] keys)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Dictionary.ContainKeys))
         {
@@ -513,16 +528,17 @@ public class DictionaryOperationsManager<TKey, TValue>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(keys),
                             BaseFormatter.Format(validator.MissingKeys)
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(ContainKeys)} operation failed because the dictionary was null."
                         )
@@ -566,16 +582,17 @@ public class DictionaryOperationsManager<TKey, TValue>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             expected.ToString(),
                             PrincipalChain.GetValue().Count.ToString()
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(HaveCount)} operation failed because the dictionary was null."
                         )
@@ -618,15 +635,16 @@ public class DictionaryOperationsManager<TKey, TValue>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             PrincipalChain.GetValue().Count.ToString()
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(BeEmpty)} operation failed because the dictionary was null."
                         )
@@ -663,9 +681,9 @@ public class DictionaryOperationsManager<TKey, TValue>
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(NotBeEmpty)} operation failed because the dictionary was null."
                         )
@@ -726,9 +744,9 @@ public class DictionaryOperationsManager<TKey, TValue>
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(BeOfType)} operation failed because the dictionary was <null>."
                         )
@@ -742,10 +760,7 @@ public class DictionaryOperationsManager<TKey, TValue>
         ExecutionEngine<DictionaryOperationsManager<TKey, TValue>, IDictionary<TKey, TValue>>
             .New(this)
             .WithOperation(
-                ReferenceNotBeOfTypeValidator<IDictionary<TKey, TValue>>.New(
-                    PrincipalChain,
-                    type!
-                )
+                ReferenceNotBeOfTypeValidator<IDictionary<TKey, TValue>>.New(PrincipalChain, type!)
             )
             .WithTemplate(
                 (template, operation) =>
@@ -764,9 +779,9 @@ public class DictionaryOperationsManager<TKey, TValue>
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue().IsNull(),
+                        m.PrincipalChain.GetValue().IsNull(),
                         Fail.New(
                             $"The {nameof(NotBeOfType)} operation failed because the dictionary was <null>."
                         )

@@ -17,13 +17,13 @@ internal class DateTimeOffsetNotBeInRangeValidator(
         DateTimeOffset max
     ) => new(chain, min, max);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "DateTimeOffset.NotBeInRange";
     string IRuleDescriptor.OperationName => "NotBeInRange";
     Type IRuleDescriptor.SubjectType => typeof(DateTimeOffset);
     IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
-        new Dictionary<string, object> { ["value"] = min, ["value"] = max };
+        new Dictionary<string, object> { ["value_min"] = min, ["value_max"] = max };
 
     public bool Validate()
     {

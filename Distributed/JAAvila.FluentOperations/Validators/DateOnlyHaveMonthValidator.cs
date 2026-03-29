@@ -5,13 +5,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the dateonly value has the expected month.
 /// </summary>
-internal class DateOnlyHaveMonthValidator(PrincipalChain<DateOnly> chain, int expectedMonth) : IValidator, IRuleDescriptor
+internal class DateOnlyHaveMonthValidator(PrincipalChain<DateOnly> chain, int expectedMonth)
+    : IValidator,
+        IRuleDescriptor
 {
-    public static DateOnlyHaveMonthValidator New(PrincipalChain<DateOnly> chain, int expectedMonth) =>
-        new(chain, expectedMonth);
+    public static DateOnlyHaveMonthValidator New(
+        PrincipalChain<DateOnly> chain,
+        int expectedMonth
+    ) => new(chain, expectedMonth);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "DateOnly.HaveMonth";
     string IRuleDescriptor.OperationName => "HaveMonth";
     Type IRuleDescriptor.SubjectType => typeof(DateOnly);

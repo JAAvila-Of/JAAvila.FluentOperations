@@ -7,11 +7,12 @@ using JAAvila.FluentOperations.Formatters;
 using JAAvila.FluentOperations.Model;
 using JAAvila.FluentOperations.Utils;
 using JAAvila.FluentOperations.Validators;
+using JAAvila.SafeTypes.Extension;
 
 namespace JAAvila.FluentOperations.Manager;
 
 /// <summary>
-/// Provides fluent validation operations for <c>object?</c> values.
+/// Provides fluent validation operations for <c>object?</c> Values.
 /// Supports structural equivalence, deep comparison, reference checks, type checks, and value extraction.
 /// </summary>
 public class ObjectOperationsManager
@@ -30,7 +31,7 @@ public class ObjectOperationsManager
     {
         PrincipalChain = PrincipalChain<object?>.Get(value, caller);
         GlobalConfig.Initialize();
-        SetManager(this);
+        base.SetManager(this);
     }
 
     /// <summary>
@@ -74,7 +75,8 @@ public class ObjectOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             result.DifferenceDescription ?? "no differences"
                         )
                         .WithReason(reason?.ToString())
@@ -169,7 +171,8 @@ public class ObjectOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -200,7 +203,11 @@ public class ObjectOperationsManager
                 (template, operation) =>
                     template
                         .WithSubject(PrincipalChain.GetSubject())
-                        .WithResult(operation.MessageKey, operation.ResultValidation, BaseFormatter.Format(expected))
+                        .WithResult(
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            BaseFormatter.Format(expected)
+                        )
                         .WithReason(reason?.ToString())
             )
             .Execute();
@@ -246,16 +253,16 @@ public class ObjectOperationsManager
             .FailIf(
                 _ =>
                     (
-                        expectedType is null,
+                        expectedType.IsNull(),
                         Fail.New(
                             $"The {nameof(BeAssignableTo)} operation failed because the expected type was <null>."
                         )
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(BeAssignableTo)} operation failed because the value was <null>."
                         )
@@ -303,16 +310,16 @@ public class ObjectOperationsManager
             .FailIf(
                 _ =>
                     (
-                        expectedType is null,
+                        expectedType.IsNull(),
                         Fail.New(
                             $"The {nameof(NotBeAssignableTo)} operation failed because the expected type was <null>."
                         )
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(NotBeAssignableTo)} operation failed because the value was <null>."
                         )

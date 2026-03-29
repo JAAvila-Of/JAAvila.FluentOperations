@@ -6,15 +6,16 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the datetimeoffset value has the expected day.
 /// </summary>
 internal class DateTimeOffsetHaveDayValidator(PrincipalChain<DateTimeOffset> chain, int expectedDay)
-    : IValidator, IRuleDescriptor
+    : IValidator,
+        IRuleDescriptor
 {
     public static DateTimeOffsetHaveDayValidator New(
         PrincipalChain<DateTimeOffset> chain,
         int expectedDay
     ) => new(chain, expectedDay);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "DateTimeOffset.HaveDay";
     string IRuleDescriptor.OperationName => "HaveDay";
     Type IRuleDescriptor.SubjectType => typeof(DateTimeOffset);

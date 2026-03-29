@@ -5,16 +5,18 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable char value is less than or equal to the expected value.
 /// </summary>
-internal class NullableCharBeLessThanOrEqualToValidator(PrincipalChain<char?> chain, char comparison)
-    : IValidator, IRuleDescriptor
+internal class NullableCharBeLessThanOrEqualToValidator(
+    PrincipalChain<char?> chain,
+    char comparison
+) : IValidator, IRuleDescriptor
 {
     public static NullableCharBeLessThanOrEqualToValidator New(
         PrincipalChain<char?> chain,
         char comparison
     ) => new(chain, comparison);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableChar.BeLessThanOrEqualTo";
     string IRuleDescriptor.OperationName => "BeLessThanOrEqualTo";
     Type IRuleDescriptor.SubjectType => typeof(char?);

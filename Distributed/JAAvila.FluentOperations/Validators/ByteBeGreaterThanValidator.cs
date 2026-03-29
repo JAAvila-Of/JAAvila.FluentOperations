@@ -5,13 +5,15 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the byte value is greater than the expected value.
 /// </summary>
-internal class ByteBeGreaterThanValidator(PrincipalChain<byte> chain, byte expected) : IValidator, IRuleDescriptor
+internal class ByteBeGreaterThanValidator(PrincipalChain<byte> chain, byte expected)
+    : IValidator,
+        IRuleDescriptor
 {
     public static ByteBeGreaterThanValidator New(PrincipalChain<byte> chain, byte expected) =>
         new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Byte.BeGreaterThan";
     string IRuleDescriptor.OperationName => "BeGreaterThan";
     Type IRuleDescriptor.SubjectType => typeof(byte);
@@ -25,7 +27,8 @@ internal class ByteBeGreaterThanValidator(PrincipalChain<byte> chain, byte expec
             return true;
         }
 
-        ResultValidation = "The resulting value was expected to be greater than {0}, but {1} was found.";
+        ResultValidation =
+            "The resulting value was expected to be greater than {0}, but {1} was found.";
         return false;
     }
 

@@ -5,13 +5,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the decimal value is one of the specified allowed values.
 /// </summary>
-internal class DecimalBeOneOfValidator(PrincipalChain<decimal> chain, params decimal[] expected) : IValidator, IRuleDescriptor
+internal class DecimalBeOneOfValidator(PrincipalChain<decimal> chain, params decimal[] expected)
+    : IValidator,
+        IRuleDescriptor
 {
-    public static DecimalBeOneOfValidator New(PrincipalChain<decimal> chain, params decimal[] expected) =>
-        new(chain, expected);
+    public static DecimalBeOneOfValidator New(
+        PrincipalChain<decimal> chain,
+        params decimal[] expected
+    ) => new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Decimal.BeOneOf";
     string IRuleDescriptor.OperationName => "BeOneOf";
     Type IRuleDescriptor.SubjectType => typeof(decimal);
@@ -25,7 +29,8 @@ internal class DecimalBeOneOfValidator(PrincipalChain<decimal> chain, params dec
             return true;
         }
 
-        ResultValidation = "The resulting value was expected to be one of [{0}], but {1} was found.";
+        ResultValidation =
+            "The resulting value was expected to be one of [{0}], but {1} was found.";
         return false;
     }
 
