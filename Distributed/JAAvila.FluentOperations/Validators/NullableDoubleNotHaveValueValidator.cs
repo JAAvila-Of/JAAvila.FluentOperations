@@ -5,13 +5,15 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable double does not have a value (is null).
 /// </summary>
-internal class NullableDoubleNotHaveValueValidator(PrincipalChain<double?> chain) : IValidator, IRuleDescriptor
+internal class NullableDoubleNotHaveValueValidator(PrincipalChain<double?> chain)
+    : IValidator,
+        IRuleDescriptor
 {
     public static NullableDoubleNotHaveValueValidator New(PrincipalChain<double?> chain) =>
         new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableDouble.NotHaveValue";
     string IRuleDescriptor.OperationName => "NotHaveValue";
     Type IRuleDescriptor.SubjectType => typeof(double?);

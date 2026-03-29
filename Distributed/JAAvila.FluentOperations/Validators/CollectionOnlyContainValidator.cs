@@ -17,8 +17,8 @@ internal class CollectionOnlyContainValidator<T>(
         Func<T, bool> predicate
     ) => new(chain, predicate);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Collection.OnlyContain";
     string IRuleDescriptor.OperationName => "OnlyContain";
     Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);
@@ -35,8 +35,8 @@ internal class CollectionOnlyContainValidator<T>(
             if (!predicate(item))
             {
                 ResultValidation =
-                    $"The collection was expected to only contain elements matching the predicate, " +
-                    $"but the element at index {index} ({BaseFormatter.Format(item)}) did not match.";
+                    $"The collection was expected to only contain elements matching the predicate, "
+                    + $"but the element at index {index} ({BaseFormatter.Format(item)}) did not match.";
                 return false;
             }
             index++;

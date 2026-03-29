@@ -6,7 +6,9 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the string is null or consists only of whitespace.
 /// </summary>
-internal class StringBeNullOrWhiteSpaceValidator(PrincipalChain<string?> chain) : IValidator, IRuleDescriptor
+internal class StringBeNullOrWhiteSpaceValidator(PrincipalChain<string?> chain)
+    : IValidator,
+        IRuleDescriptor
 {
     public static StringBeNullOrWhiteSpaceValidator New(PrincipalChain<string?> chain) =>
         new(chain);
@@ -15,7 +17,7 @@ internal class StringBeNullOrWhiteSpaceValidator(PrincipalChain<string?> chain) 
     public string Expected => "Be white space - \" \"";
 
     /// <inheritdoc />
-    public string ResultValidation { get; set; }
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "String.BeNullOrWhiteSpace";
     string IRuleDescriptor.OperationName => "BeNullOrWhiteSpace";
     Type IRuleDescriptor.SubjectType => typeof(string);

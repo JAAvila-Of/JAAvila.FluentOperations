@@ -5,13 +5,15 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the guid value is one of the specified allowed values.
 /// </summary>
-internal class GuidBeOneOfValidator(PrincipalChain<Guid> chain, params Guid[] expected) : IValidator, IRuleDescriptor
+internal class GuidBeOneOfValidator(PrincipalChain<Guid> chain, params Guid[] expected)
+    : IValidator,
+        IRuleDescriptor
 {
     public static GuidBeOneOfValidator New(PrincipalChain<Guid> chain, params Guid[] expected) =>
         new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Guid.BeOneOf";
     string IRuleDescriptor.OperationName => "BeOneOf";
     Type IRuleDescriptor.SubjectType => typeof(Guid);
@@ -25,7 +27,8 @@ internal class GuidBeOneOfValidator(PrincipalChain<Guid> chain, params Guid[] ex
             return true;
         }
 
-        ResultValidation = "The resulting value was expected to be one of [{0}], but {1} was found.";
+        ResultValidation =
+            "The resulting value was expected to be one of [{0}], but {1} was found.";
         return false;
     }
 

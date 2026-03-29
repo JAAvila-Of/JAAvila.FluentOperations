@@ -5,12 +5,14 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable char value is a surrogate character.
 /// </summary>
-internal class NullableCharBeSurrogateValidator(PrincipalChain<char?> chain) : IValidator, IRuleDescriptor
+internal class NullableCharBeSurrogateValidator(PrincipalChain<char?> chain)
+    : IValidator,
+        IRuleDescriptor
 {
     public static NullableCharBeSurrogateValidator New(PrincipalChain<char?> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableChar.BeSurrogate";
     string IRuleDescriptor.OperationName => "BeSurrogate";
     Type IRuleDescriptor.SubjectType => typeof(char?);

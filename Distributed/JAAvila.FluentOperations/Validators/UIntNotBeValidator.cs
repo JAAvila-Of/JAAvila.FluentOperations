@@ -5,13 +5,15 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the uint value does not equal the expected value.
 /// </summary>
-internal class UIntNotBeValidator(PrincipalChain<uint> chain, uint expected) : IValidator, IRuleDescriptor
+internal class UIntNotBeValidator(PrincipalChain<uint> chain, uint expected)
+    : IValidator,
+        IRuleDescriptor
 {
     public static UIntNotBeValidator New(PrincipalChain<uint> chain, uint expected) =>
         new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "UInt.NotBe";
     string IRuleDescriptor.OperationName => "NotBe";
     Type IRuleDescriptor.SubjectType => typeof(uint);

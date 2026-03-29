@@ -5,13 +5,15 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the double value is greater than the expected value.
 /// </summary>
-internal class DoubleBeGreaterThanValidator(PrincipalChain<double> chain, double expected) : IValidator, IRuleDescriptor
+internal class DoubleBeGreaterThanValidator(PrincipalChain<double> chain, double expected)
+    : IValidator,
+        IRuleDescriptor
 {
     public static DoubleBeGreaterThanValidator New(PrincipalChain<double> chain, double expected) =>
         new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Double.BeGreaterThan";
     string IRuleDescriptor.OperationName => "BeGreaterThan";
     Type IRuleDescriptor.SubjectType => typeof(double);
@@ -25,7 +27,8 @@ internal class DoubleBeGreaterThanValidator(PrincipalChain<double> chain, double
             return true;
         }
 
-        ResultValidation = "The resulting value was expected to be greater than {0}, but {1} was found.";
+        ResultValidation =
+            "The resulting value was expected to be greater than {0}, but {1} was found.";
         return false;
     }
 

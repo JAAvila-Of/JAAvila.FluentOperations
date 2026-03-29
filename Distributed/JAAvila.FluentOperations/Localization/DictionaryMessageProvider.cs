@@ -15,6 +15,13 @@ public class DictionaryMessageProvider : IMessageProvider
 {
     private readonly Dictionary<(string key, string culture), string> _messages;
 
+    /// <summary>
+    /// Provides localized messages backed by an in-memory dictionary implementation.
+    /// </summary>
+    /// <remarks>
+    /// The dictionary keys are tuples of message keys and culture names. A culture-neutral fallback
+    /// can be provided by using an empty string as the culture name.
+    /// </remarks>
     public DictionaryMessageProvider(Dictionary<(string key, string culture), string> messages)
     {
         ArgumentNullException.ThrowIfNull(messages);
@@ -24,13 +31,9 @@ public class DictionaryMessageProvider : IMessageProvider
     /// <inheritdoc />
     public string? GetMessage(string messageKey, CultureInfo culture)
     {
-        // Try exact culture match first, then neutral culture (empty string).
-        if (_messages.TryGetValue((messageKey, culture.Name), out var message))
-            return message;
-
-        if (_messages.TryGetValue((messageKey, ""), out var fallback))
-            return fallback;
-
-        return null;
+        // Try an exact culture match first, then neutral culture (empty string).
+        return _messages.TryGetValue((messageKey, culture.Name), out var message)
+            ? message
+            : _messages.GetValueOrDefault((messageKey, ""));
     }
 }

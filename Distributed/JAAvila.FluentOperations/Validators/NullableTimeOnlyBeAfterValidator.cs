@@ -5,13 +5,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable timeonly value is after the expected value.
 /// </summary>
-internal class NullableTimeOnlyBeAfterValidator(PrincipalChain<TimeOnly?> chain, TimeOnly expected) : IValidator, IRuleDescriptor
+internal class NullableTimeOnlyBeAfterValidator(PrincipalChain<TimeOnly?> chain, TimeOnly expected)
+    : IValidator,
+        IRuleDescriptor
 {
-    public static NullableTimeOnlyBeAfterValidator New(PrincipalChain<TimeOnly?> chain, TimeOnly expected) =>
-        new(chain, expected);
+    public static NullableTimeOnlyBeAfterValidator New(
+        PrincipalChain<TimeOnly?> chain,
+        TimeOnly expected
+    ) => new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableTimeOnly.BeAfter";
     string IRuleDescriptor.OperationName => "BeAfter";
     Type IRuleDescriptor.SubjectType => typeof(TimeOnly?);

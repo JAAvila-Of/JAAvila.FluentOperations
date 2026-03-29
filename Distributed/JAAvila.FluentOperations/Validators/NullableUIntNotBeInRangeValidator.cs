@@ -6,7 +6,8 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the nullable uint value is outside the specified inclusive range.
 /// </summary>
 internal class NullableUIntNotBeInRangeValidator(PrincipalChain<uint?> chain, uint min, uint max)
-    : IValidator, IRuleDescriptor
+    : IValidator,
+        IRuleDescriptor
 {
     public static NullableUIntNotBeInRangeValidator New(
         PrincipalChain<uint?> chain,
@@ -14,8 +15,8 @@ internal class NullableUIntNotBeInRangeValidator(PrincipalChain<uint?> chain, ui
         uint max
     ) => new(chain, min, max);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableUInt.NotBeInRange";
     string IRuleDescriptor.OperationName => "NotBeInRange";
     Type IRuleDescriptor.SubjectType => typeof(uint?);

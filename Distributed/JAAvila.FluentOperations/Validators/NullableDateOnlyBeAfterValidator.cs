@@ -5,13 +5,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable dateonly value is strictly after the expected value.
 /// </summary>
-internal class NullableDateOnlyBeAfterValidator(PrincipalChain<DateOnly?> chain, DateOnly expected) : IValidator, IRuleDescriptor
+internal class NullableDateOnlyBeAfterValidator(PrincipalChain<DateOnly?> chain, DateOnly expected)
+    : IValidator,
+        IRuleDescriptor
 {
-    public static NullableDateOnlyBeAfterValidator New(PrincipalChain<DateOnly?> chain, DateOnly expected) =>
-        new(chain, expected);
+    public static NullableDateOnlyBeAfterValidator New(
+        PrincipalChain<DateOnly?> chain,
+        DateOnly expected
+    ) => new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableDateOnly.BeAfter";
     string IRuleDescriptor.OperationName => "BeAfter";
     Type IRuleDescriptor.SubjectType => typeof(DateOnly?);

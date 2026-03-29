@@ -6,7 +6,7 @@ namespace JAAvila.FluentOperations.Connector;
 
 /// <summary>
 /// Provides fluent assertion methods for inspecting a captured exception.
-/// Returned by Throw&lt;T&gt;() and ThrowExactly&lt;T&gt;() to enable chaining.
+/// Returned by Throw&lt;T&gt;() And ThrowExactly&lt;T&gt;() To enable chaining.
 /// </summary>
 /// <typeparam name="TException">The type of the captured exception.</typeparam>
 public class ExceptionAssertionConnector<TException>
@@ -14,6 +14,11 @@ public class ExceptionAssertionConnector<TException>
 {
     private readonly ExceptionCapture<TException> _capture;
 
+    /// <summary>
+    /// Provides functionality for asserting and chaining exception-related checks
+    /// for a specific type of exception.
+    /// </summary>
+    /// <typeparam name="TException">The type of exception being asserted.</typeparam>
     public ExceptionAssertionConnector(ExceptionCapture<TException> capture)
     {
         _capture = capture;
@@ -123,7 +128,7 @@ public class ExceptionAssertionConnector<TException>
             return null!; // unreachable
         }
 
-        var innerCapture = new ExceptionCapture<TInner>(typedInner, _capture.CallerName, false);
+        var innerCapture = new ExceptionCapture<TInner>(typedInner, _capture.CallerName);
         return new ExceptionAssertionConnector<TInner>(innerCapture);
     }
 

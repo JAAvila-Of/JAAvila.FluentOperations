@@ -7,15 +7,16 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the value can be cast to the expected type.
 /// </summary>
 internal class ReferenceBeCastToValidator<TSubject>(PrincipalChain<TSubject> chain, Type expected)
-    : IValidator, IRuleDescriptor
+    : IValidator,
+        IRuleDescriptor
 {
     public static ReferenceBeCastToValidator<TSubject> New(
         PrincipalChain<TSubject> chain,
         Type expected
     ) => new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Reference.BeCastTo";
     string IRuleDescriptor.OperationName => "BeCastTo";
     Type IRuleDescriptor.SubjectType => typeof(TSubject);

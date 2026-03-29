@@ -5,7 +5,8 @@ namespace JAAvila.FluentOperations.Model;
 /// Contains the caught exception (if any) and metadata for error reporting.
 /// </summary>
 /// <typeparam name="TException">The expected exception type.</typeparam>
-public class ExceptionCapture<TException> where TException : Exception
+public class ExceptionCapture<TException>
+    where TException : Exception
 {
     /// <summary>
     /// The caught exception, cast to the expected type.
@@ -22,6 +23,10 @@ public class ExceptionCapture<TException> where TException : Exception
     /// </summary>
     public bool IsExactTypeMatch { get; }
 
+    /// <summary>
+    /// Represents the capture of an exception, including details about the exception type and the caller's context.
+    /// </summary>
+    /// <typeparam name="TException">The type of the captured exception. Must derive from <see cref="Exception"/>.</typeparam>
     public ExceptionCapture(TException exception, string callerName, bool isExactTypeMatch = false)
     {
         Exception = exception;

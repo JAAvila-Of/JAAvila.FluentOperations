@@ -6,18 +6,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the value's runtime type is assignable to the expected type.
 /// Uses Type.IsAssignableFrom (checks inheritance chain + interface implementation).
 /// </summary>
-internal class ReferenceBeAssignableToValidator(
-    PrincipalChain<object?> chain,
-    Type expected
-) : IValidator, IRuleDescriptor
+internal class ReferenceBeAssignableToValidator(PrincipalChain<object?> chain, Type expected)
+    : IValidator,
+        IRuleDescriptor
 {
     public static ReferenceBeAssignableToValidator New(
         PrincipalChain<object?> chain,
         Type expected
     ) => new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Reference.BeAssignableTo";
     string IRuleDescriptor.OperationName => "BeAssignableTo";
     Type IRuleDescriptor.SubjectType => typeof(object);

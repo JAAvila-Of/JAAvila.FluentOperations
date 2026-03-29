@@ -18,18 +18,21 @@ public static class BlueprintInterceptorPipeline
     public static QualityReport Execute(
         IReadOnlyList<IBlueprintInterceptor> interceptors,
         BlueprintInterceptionContext context,
-        Func<object, QualityReport> validate)
+        Func<object, QualityReport> validate
+    )
     {
         if (interceptors.Count == 0)
+        {
             return validate(context.Instance);
+        }
 
         var ordered = SortInterceptors(interceptors);
 
         // Before phase
-        int shortCircuitIndex = ordered.Count;
+        var shortCircuitIndex = ordered.Count;
         QualityReport? report = null;
 
-        for (int i = 0; i < ordered.Count; i++)
+        for (var i = 0; i < ordered.Count; i++)
         {
             report = ordered[i].BeforeValidation(context);
 
@@ -44,7 +47,7 @@ public static class BlueprintInterceptorPipeline
         report ??= validate(context.Instance);
 
         // After phase (reverse from shortCircuitIndex)
-        for (int i = Math.Min(shortCircuitIndex, ordered.Count - 1); i >= 0; i--)
+        for (var i = Math.Min(shortCircuitIndex, ordered.Count - 1); i >= 0; i--)
         {
             report = ordered[i].AfterValidation(context, report);
         }
@@ -60,18 +63,21 @@ public static class BlueprintInterceptorPipeline
     public static async Task<QualityReport> ExecuteAsync(
         IReadOnlyList<IAsyncBlueprintInterceptor> interceptors,
         BlueprintInterceptionContext context,
-        Func<object, Task<QualityReport>> validateAsync)
+        Func<object, Task<QualityReport>> validateAsync
+    )
     {
         if (interceptors.Count == 0)
+        {
             return await validateAsync(context.Instance);
+        }
 
         var ordered = SortInterceptors(interceptors);
 
         // Before phase
-        int shortCircuitIndex = ordered.Count;
+        var shortCircuitIndex = ordered.Count;
         QualityReport? report = null;
 
-        for (int i = 0; i < ordered.Count; i++)
+        for (var i = 0; i < ordered.Count; i++)
         {
             report = await ordered[i].BeforeValidationAsync(context);
 
@@ -86,7 +92,7 @@ public static class BlueprintInterceptorPipeline
         report ??= await validateAsync(context.Instance);
 
         // After phase (reverse from shortCircuitIndex)
-        for (int i = Math.Min(shortCircuitIndex, ordered.Count - 1); i >= 0; i--)
+        for (var i = Math.Min(shortCircuitIndex, ordered.Count - 1); i >= 0; i--)
         {
             report = await ordered[i].AfterValidationAsync(context, report);
         }
@@ -94,8 +100,6 @@ public static class BlueprintInterceptorPipeline
         return report;
     }
 
-    private static List<T> SortInterceptors<T>(IReadOnlyList<T> interceptors)
-        => interceptors
-            .OrderBy(i => i is IOrderedBlueprintInterceptor o ? o.Order : 0)
-            .ToList();
+    private static List<T> SortInterceptors<T>(IReadOnlyList<T> interceptors) =>
+        interceptors.OrderBy(i => i is IOrderedBlueprintInterceptor o ? o.Order : 0).ToList();
 }

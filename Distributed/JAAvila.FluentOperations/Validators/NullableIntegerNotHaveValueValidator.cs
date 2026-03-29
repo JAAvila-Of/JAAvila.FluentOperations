@@ -5,13 +5,15 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable integer does not have a value (is null).
 /// </summary>
-internal class NullableIntegerNotHaveValueValidator(PrincipalChain<int?> chain) : IValidator, IRuleDescriptor
+internal class NullableIntegerNotHaveValueValidator(PrincipalChain<int?> chain)
+    : IValidator,
+        IRuleDescriptor
 {
     public static NullableIntegerNotHaveValueValidator New(PrincipalChain<int?> chain) =>
         new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableInteger.NotHaveValue";
     string IRuleDescriptor.OperationName => "NotHaveValue";
     Type IRuleDescriptor.SubjectType => typeof(int?);

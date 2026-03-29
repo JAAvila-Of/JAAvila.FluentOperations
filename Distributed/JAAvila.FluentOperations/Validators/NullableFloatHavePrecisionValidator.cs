@@ -16,8 +16,8 @@ internal class NullableFloatHavePrecisionValidator(
         int expectedDecimals
     ) => new(chain, expectedDecimals);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableFloat.HavePrecision";
     string IRuleDescriptor.OperationName => "HavePrecision";
     Type IRuleDescriptor.SubjectType => typeof(float?);

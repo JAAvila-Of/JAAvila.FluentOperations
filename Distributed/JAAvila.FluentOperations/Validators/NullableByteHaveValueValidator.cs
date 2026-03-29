@@ -5,12 +5,14 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable byte has a value (is not null).
 /// </summary>
-internal class NullableByteHaveValueValidator(PrincipalChain<byte?> chain) : IValidator, IRuleDescriptor
+internal class NullableByteHaveValueValidator(PrincipalChain<byte?> chain)
+    : IValidator,
+        IRuleDescriptor
 {
     public static NullableByteHaveValueValidator New(PrincipalChain<byte?> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableByte.HaveValue";
     string IRuleDescriptor.OperationName => "HaveValue";
     Type IRuleDescriptor.SubjectType => typeof(byte?);

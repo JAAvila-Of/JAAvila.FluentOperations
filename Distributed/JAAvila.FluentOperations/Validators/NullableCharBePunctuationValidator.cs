@@ -5,12 +5,14 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable char value is a punctuation character.
 /// </summary>
-internal class NullableCharBePunctuationValidator(PrincipalChain<char?> chain) : IValidator, IRuleDescriptor
+internal class NullableCharBePunctuationValidator(PrincipalChain<char?> chain)
+    : IValidator,
+        IRuleDescriptor
 {
     public static NullableCharBePunctuationValidator New(PrincipalChain<char?> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableChar.BePunctuation";
     string IRuleDescriptor.OperationName => "BePunctuation";
     Type IRuleDescriptor.SubjectType => typeof(char?);

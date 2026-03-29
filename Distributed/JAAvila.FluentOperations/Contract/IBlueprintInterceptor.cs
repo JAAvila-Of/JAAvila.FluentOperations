@@ -25,7 +25,7 @@ public interface IBlueprintInterceptor
     /// Called after blueprint validation executes (or after a prior interceptor short-circuited).
     /// Can inspect or replace the <see cref="QualityReport"/>.
     /// </summary>
-    /// <param name="context">The interception context (same instance passed to BeforeValidation).</param>
+    /// <param name="context">The interception context (the same instance passed to BeforeValidation).</param>
     /// <param name="report">The quality report produced by validation (or by a prior short-circuit).</param>
     /// <returns>
     /// The report to use going forward. Return <paramref name="report"/> unchanged to pass through,

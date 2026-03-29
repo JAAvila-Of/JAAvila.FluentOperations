@@ -15,13 +15,13 @@ internal class ReferenceNotBeSameAsValidator<TSubject>(
         TSubject expected
     ) => new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Reference.NotBeSameAs";
     string IRuleDescriptor.OperationName => "NotBeSameAs";
     Type IRuleDescriptor.SubjectType => typeof(TSubject);
     IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
-        new Dictionary<string, object> { ["value"] = expected };
+        new Dictionary<string, object> { ["value"] = expected! };
 
     public bool Validate()
     {

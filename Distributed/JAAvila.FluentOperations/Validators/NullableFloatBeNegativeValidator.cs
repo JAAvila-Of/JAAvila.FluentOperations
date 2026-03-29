@@ -5,12 +5,14 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable float value is strictly negative.
 /// </summary>
-internal class NullableFloatBeNegativeValidator(PrincipalChain<float?> chain) : IValidator, IRuleDescriptor
+internal class NullableFloatBeNegativeValidator(PrincipalChain<float?> chain)
+    : IValidator,
+        IRuleDescriptor
 {
     public static NullableFloatBeNegativeValidator New(PrincipalChain<float?> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableFloat.BeNegative";
     string IRuleDescriptor.OperationName => "BeNegative";
     Type IRuleDescriptor.SubjectType => typeof(float?);

@@ -5,13 +5,15 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the byte value is one of the specified allowed values.
 /// </summary>
-internal class ByteBeOneOfValidator(PrincipalChain<byte> chain, params byte[] expected) : IValidator, IRuleDescriptor
+internal class ByteBeOneOfValidator(PrincipalChain<byte> chain, params byte[] expected)
+    : IValidator,
+        IRuleDescriptor
 {
     public static ByteBeOneOfValidator New(PrincipalChain<byte> chain, params byte[] expected) =>
         new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Byte.BeOneOf";
     string IRuleDescriptor.OperationName => "BeOneOf";
     Type IRuleDescriptor.SubjectType => typeof(byte);
@@ -25,7 +27,8 @@ internal class ByteBeOneOfValidator(PrincipalChain<byte> chain, params byte[] ex
             return true;
         }
 
-        ResultValidation = "The resulting value was expected to be one of [{0}], but {1} was found.";
+        ResultValidation =
+            "The resulting value was expected to be one of [{0}], but {1} was found.";
         return false;
     }
 

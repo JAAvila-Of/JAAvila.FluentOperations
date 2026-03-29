@@ -5,18 +5,25 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the elapsed time is between min and max (inclusive).
 /// </summary>
-internal class ActionStatsHaveElapsedTimeBetweenValidator(PrincipalChain<Model.ActionStats?> chain, TimeSpan min, TimeSpan max) : IValidator, IRuleDescriptor
+internal class ActionStatsHaveElapsedTimeBetweenValidator(
+    PrincipalChain<Model.ActionStats?> chain,
+    TimeSpan min,
+    TimeSpan max
+) : IValidator, IRuleDescriptor
 {
-    public static ActionStatsHaveElapsedTimeBetweenValidator New(PrincipalChain<Model.ActionStats?> chain, TimeSpan min, TimeSpan max) =>
-        new(chain, min, max);
+    public static ActionStatsHaveElapsedTimeBetweenValidator New(
+        PrincipalChain<Model.ActionStats?> chain,
+        TimeSpan min,
+        TimeSpan max
+    ) => new(chain, min, max);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "ActionStats.HaveElapsedTimeBetween";
     string IRuleDescriptor.OperationName => "HaveElapsedTimeBetween";
     Type IRuleDescriptor.SubjectType => typeof(Model.ActionStats);
     IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
-        new Dictionary<string, object> { ["value"] = min, ["value"] = max };
+        new Dictionary<string, object> { ["value_min"] = min, ["value_max"] = max };
 
     public bool Validate()
     {

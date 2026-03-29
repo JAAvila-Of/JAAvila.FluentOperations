@@ -5,13 +5,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the decimal value has the expected number of decimal places.
 /// </summary>
-internal class DecimalHavePrecisionValidator(PrincipalChain<decimal> chain, int expectedDecimals) : IValidator, IRuleDescriptor
+internal class DecimalHavePrecisionValidator(PrincipalChain<decimal> chain, int expectedDecimals)
+    : IValidator,
+        IRuleDescriptor
 {
-    public static DecimalHavePrecisionValidator New(PrincipalChain<decimal> chain, int expectedDecimals) =>
-        new(chain, expectedDecimals);
+    public static DecimalHavePrecisionValidator New(
+        PrincipalChain<decimal> chain,
+        int expectedDecimals
+    ) => new(chain, expectedDecimals);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Decimal.HavePrecision";
     string IRuleDescriptor.OperationName => "HavePrecision";
     Type IRuleDescriptor.SubjectType => typeof(decimal);
@@ -29,7 +33,8 @@ internal class DecimalHavePrecisionValidator(PrincipalChain<decimal> chain, int 
             return true;
         }
 
-        ResultValidation = "The resulting value was expected to have at most {0} decimal places, but {1} was found.";
+        ResultValidation =
+            "The resulting value was expected to have at most {0} decimal places, but {1} was found.";
         return false;
     }
 

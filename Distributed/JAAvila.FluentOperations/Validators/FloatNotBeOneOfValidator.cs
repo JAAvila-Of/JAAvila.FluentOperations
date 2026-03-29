@@ -5,13 +5,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the float value is not one of the specified disallowed values.
 /// </summary>
-internal class FloatNotBeOneOfValidator(PrincipalChain<float> chain, params float[] expected) : IValidator, IRuleDescriptor
+internal class FloatNotBeOneOfValidator(PrincipalChain<float> chain, params float[] expected)
+    : IValidator,
+        IRuleDescriptor
 {
-    public static FloatNotBeOneOfValidator New(PrincipalChain<float> chain, params float[] expected) =>
-        new(chain, expected);
+    public static FloatNotBeOneOfValidator New(
+        PrincipalChain<float> chain,
+        params float[] expected
+    ) => new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Float.NotBeOneOf";
     string IRuleDescriptor.OperationName => "NotBeOneOf";
     Type IRuleDescriptor.SubjectType => typeof(float);
@@ -25,7 +29,8 @@ internal class FloatNotBeOneOfValidator(PrincipalChain<float> chain, params floa
             return true;
         }
 
-        ResultValidation = "The resulting value was expected to not be one of [{0}], but {1} was found.";
+        ResultValidation =
+            "The resulting value was expected to not be one of [{0}], but {1} was found.";
         return false;
     }
 

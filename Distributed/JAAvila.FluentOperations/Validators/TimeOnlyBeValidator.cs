@@ -5,13 +5,15 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the timeonly value equals the expected value.
 /// </summary>
-internal class TimeOnlyBeValidator(PrincipalChain<TimeOnly> chain, TimeOnly expected) : IValidator, IRuleDescriptor
+internal class TimeOnlyBeValidator(PrincipalChain<TimeOnly> chain, TimeOnly expected)
+    : IValidator,
+        IRuleDescriptor
 {
     public static TimeOnlyBeValidator New(PrincipalChain<TimeOnly> chain, TimeOnly expected) =>
         new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "TimeOnly.Be";
     string IRuleDescriptor.OperationName => "Be";
     Type IRuleDescriptor.SubjectType => typeof(TimeOnly);

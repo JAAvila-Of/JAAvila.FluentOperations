@@ -48,8 +48,7 @@ public sealed class CompositeBlueprint<T> : IBlueprintValidator
         _validators = validators.ToList().AsReadOnly();
 
         if (_validators.Count == 0)
-            throw new ArgumentException(
-                "At least one validator is required.", nameof(validators));
+            throw new ArgumentException("At least one validator is required.", nameof(validators));
     }
 
     /// <summary>
@@ -69,8 +68,7 @@ public sealed class CompositeBlueprint<T> : IBlueprintValidator
         ArgumentNullException.ThrowIfNull(blueprints);
 
         if (blueprints.Length == 0)
-            throw new ArgumentException(
-                "At least one blueprint is required.", nameof(blueprints));
+            throw new ArgumentException("At least one blueprint is required.", nameof(blueprints));
 
         _validators = blueprints.Cast<IBlueprintValidator>().ToList().AsReadOnly();
     }
@@ -102,11 +100,14 @@ public sealed class CompositeBlueprint<T> : IBlueprintValidator
         ArgumentNullException.ThrowIfNull(instance);
         // CompositeBlueprint delegates ruleSet filtering to each composed validator.
         var merged = new QualityReport();
-        foreach (var validator in _validators)
+
+        foreach (
+            var report in _validators.Select(validator => validator.Validate(instance, ruleSets))
+        )
         {
-            var report = validator.Validate(instance, ruleSets);
             MergeInto(merged, report);
         }
+
         return merged;
     }
 
@@ -116,16 +117,20 @@ public sealed class CompositeBlueprint<T> : IBlueprintValidator
         ArgumentNullException.ThrowIfNull(instance);
         // CompositeBlueprint delegates ruleSet filtering to each composed validator.
         var tasks = new Task<QualityReport>[_validators.Count];
+
         for (var i = 0; i < _validators.Count; i++)
         {
             tasks[i] = _validators[i].ValidateAsync(instance, ruleSets);
         }
+
         var reports = await Task.WhenAll(tasks);
         var merged = new QualityReport();
+
         foreach (var report in reports)
         {
             MergeInto(merged, report);
         }
+
         return merged;
     }
 
@@ -147,9 +152,8 @@ public sealed class CompositeBlueprint<T> : IBlueprintValidator
 
         var merged = new QualityReport();
 
-        foreach (var validator in _validators)
+        foreach (var report in _validators.Select(validator => validator.Validate(instance)))
         {
-            var report = validator.Validate(instance);
             MergeInto(merged, report);
         }
 

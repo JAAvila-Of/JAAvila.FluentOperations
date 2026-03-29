@@ -15,8 +15,8 @@ internal class NullableDoubleBeGreaterThanOrEqualToValidator(
         double comparison
     ) => new(chain, comparison);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableDouble.BeGreaterThanOrEqualTo";
     string IRuleDescriptor.OperationName => "BeGreaterThanOrEqualTo";
     Type IRuleDescriptor.SubjectType => typeof(double?);

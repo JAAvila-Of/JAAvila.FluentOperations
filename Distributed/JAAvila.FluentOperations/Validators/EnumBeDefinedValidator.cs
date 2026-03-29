@@ -10,8 +10,8 @@ internal class EnumBeDefinedValidator<T>(PrincipalChain<T> chain) : IValidator, 
 {
     public static EnumBeDefinedValidator<T> New(PrincipalChain<T> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Enum.BeDefined";
     string IRuleDescriptor.OperationName => "BeDefined";
     Type IRuleDescriptor.SubjectType => typeof(T);

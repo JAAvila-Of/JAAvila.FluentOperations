@@ -9,8 +9,8 @@ internal class ByteBeZeroValidator(PrincipalChain<byte> chain) : IValidator, IRu
 {
     public static ByteBeZeroValidator New(PrincipalChain<byte> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Byte.BeZero";
     string IRuleDescriptor.OperationName => "BeZero";
     Type IRuleDescriptor.SubjectType => typeof(byte);

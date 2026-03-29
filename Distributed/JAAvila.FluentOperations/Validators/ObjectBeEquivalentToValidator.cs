@@ -18,13 +18,13 @@ internal class ObjectBeEquivalentToValidator(
         ComparisonOptions? options = null
     ) => new(chain, expected, options);
 
-    public string Expected { get; } = string.Empty;
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Object.BeEquivalentTo";
     string IRuleDescriptor.OperationName => "BeEquivalentTo";
     Type IRuleDescriptor.SubjectType => typeof(object);
     IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
-        new Dictionary<string, object> { ["value"] = expected };
+        new Dictionary<string, object> { ["value"] = expected! };
 
     public bool Validate()
     {

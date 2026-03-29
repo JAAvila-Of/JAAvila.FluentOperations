@@ -17,8 +17,8 @@ internal class NullableTimeOnlyBeInRangeValidator(
         TimeOnly max
     ) => new(chain, min, max);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableTimeOnly.BeInRange";
     string IRuleDescriptor.OperationName => "BeInRange";
     Type IRuleDescriptor.SubjectType => typeof(TimeOnly?);
@@ -27,9 +27,7 @@ internal class NullableTimeOnlyBeInRangeValidator(
 
     public bool Validate()
     {
-        var value = chain.GetValue();
-
-        if (value.Value.IsBetween(min, max))
+        if (chain.GetValue()!.Value.IsBetween(min, max))
         {
             return true;
         }

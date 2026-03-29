@@ -17,13 +17,13 @@ internal class DecimalBeApproximatelyValidator(
         decimal tolerance
     ) => new(chain, expected, tolerance);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Decimal.BeApproximately";
     string IRuleDescriptor.OperationName => "BeApproximately";
     Type IRuleDescriptor.SubjectType => typeof(decimal);
     IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
-        new Dictionary<string, object> { ["value"] = expected, ["value"] = tolerance };
+        new Dictionary<string, object> { ["value_exp"] = expected, ["value_tol"] = tolerance };
 
     public bool Validate()
     {

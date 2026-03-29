@@ -5,13 +5,15 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the char value is within the specified inclusive range.
 /// </summary>
-internal class CharBeInRangeValidator(PrincipalChain<char> chain, char min, char max) : IValidator, IRuleDescriptor
+internal class CharBeInRangeValidator(PrincipalChain<char> chain, char min, char max)
+    : IValidator,
+        IRuleDescriptor
 {
     public static CharBeInRangeValidator New(PrincipalChain<char> chain, char min, char max) =>
         new(chain, min, max);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Char.BeInRange";
     string IRuleDescriptor.OperationName => "BeInRange";
     Type IRuleDescriptor.SubjectType => typeof(char);

@@ -11,8 +11,8 @@ internal class StringBeIPv6Validator(PrincipalChain<string?> chain) : IValidator
 {
     public static StringBeIPv6Validator New(PrincipalChain<string?> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "String.BeIPv6";
     string IRuleDescriptor.OperationName => "BeIPv6";
     Type IRuleDescriptor.SubjectType => typeof(string);
@@ -23,7 +23,10 @@ internal class StringBeIPv6Validator(PrincipalChain<string?> chain) : IValidator
     {
         var value = chain.GetValue();
 
-        if (!IPAddress.TryParse(value, out var ip) || ip.AddressFamily != AddressFamily.InterNetworkV6)
+        if (
+            !IPAddress.TryParse(value, out var ip)
+            || ip.AddressFamily != AddressFamily.InterNetworkV6
+        )
         {
             ResultValidation = "The value was expected to be a valid IPv6 address.";
             return false;

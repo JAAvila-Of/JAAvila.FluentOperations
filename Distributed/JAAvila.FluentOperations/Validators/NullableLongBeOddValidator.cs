@@ -9,8 +9,8 @@ internal class NullableLongBeOddValidator(PrincipalChain<long?> chain) : IValida
 {
     public static NullableLongBeOddValidator New(PrincipalChain<long?> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableLong.BeOdd";
     string IRuleDescriptor.OperationName => "BeOdd";
     Type IRuleDescriptor.SubjectType => typeof(long?);

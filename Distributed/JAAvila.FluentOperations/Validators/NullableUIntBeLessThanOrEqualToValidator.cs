@@ -15,8 +15,8 @@ internal class NullableUIntBeLessThanOrEqualToValidator(
         uint comparison
     ) => new(chain, comparison);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableUInt.BeLessThanOrEqualTo";
     string IRuleDescriptor.OperationName => "BeLessThanOrEqualTo";
     Type IRuleDescriptor.SubjectType => typeof(uint?);
