@@ -116,10 +116,13 @@ public class ObjectComparator : IComparator<object?>
                 return;
             }
 
-            // String comparison: respect options.StringComparison
+            // String comparison: respect options.StringComparison and whitespace/newline options
             if (actual is string actualStr && expected is string expectedStr)
             {
-                if (!string.Equals(actualStr, expectedStr, options.StringComparison))
+                var normalizedActual = NormalizeString(actualStr, options);
+                var normalizedExpected = NormalizeString(expectedStr, options);
+
+                if (!string.Equals(normalizedActual, normalizedExpected, options.StringComparison))
                 {
                     var label = string.IsNullOrEmpty(path) ? "<root>" : $"Property '{path}'";
                     differences.Add(
@@ -409,6 +412,29 @@ public class ObjectComparator : IComparator<object?>
     }
 
     private static string FormatValue(object? value) => value?.ToString() ?? "<null>";
+
+    /// <summary>
+    /// Applies whitespace and newline normalization to a string based on comparison options.
+    /// </summary>
+    private static string NormalizeString(string value, ComparisonOptions options)
+    {
+        if (options.IgnoreNewLineStyle)
+        {
+            value = value.Replace("\r\n", "\n").Replace("\r", "\n");
+        }
+
+        if (options.IgnoreLeadingWhitespace)
+        {
+            value = value.TrimStart();
+        }
+
+        if (options.IgnoreTrailingWhitespace)
+        {
+            value = value.TrimEnd();
+        }
+
+        return value;
+    }
 
     private static bool TryCompareWithTolerance(
         object actual,

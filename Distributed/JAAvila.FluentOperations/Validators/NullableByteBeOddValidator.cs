@@ -9,8 +9,8 @@ internal class NullableByteBeOddValidator(PrincipalChain<byte?> chain) : IValida
 {
     public static NullableByteBeOddValidator New(PrincipalChain<byte?> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableByte.BeOdd";
     string IRuleDescriptor.OperationName => "BeOdd";
     Type IRuleDescriptor.SubjectType => typeof(byte?);

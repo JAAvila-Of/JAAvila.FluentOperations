@@ -10,7 +10,7 @@ namespace JAAvila.FluentOperations;
 /// <summary>
 /// Represents a scoped transactional context that accumulates validation failures instead of
 /// throwing immediately. Multiple failures are collected and surfaced as a single composite
-/// exception when the scope is disposed. Supports nested scopes and async-safe isolation
+/// exception when the scope is disposed of. Supports nested scopes and async-safe isolation
 /// via <see cref="AsyncLocal{T}"/>.
 /// </summary>
 public class TransactionalOperations : IDisposable
@@ -29,28 +29,28 @@ public class TransactionalOperations : IDisposable
         "Unfinished operations have been found in the execution of the transaction:";
 
     /// <summary>
-    /// Initialises a new transactional scope with the default mode
+    /// Initializes a new transactional scope with the default mode
     /// (<see cref="TransactionalMode.AccumulateFailsAndDisposeThis"/>) and an auto-generated identifier.
     /// </summary>
     public TransactionalOperations()
         : this(() => null) { }
 
     /// <summary>
-    /// Initialises a new transactional scope with the given name and the default mode.
+    /// Initializes a new transactional scope with the given name and the default mode.
     /// </summary>
     /// <param name="name">A human-readable label included in failure messages.</param>
     public TransactionalOperations(string name)
         : this(() => name) { }
 
     /// <summary>
-    /// Initialises a new transactional scope with an auto-generated identifier and the specified mode.
+    /// Initializes a new transactional scope with an auto-generated identifier and the specified mode.
     /// </summary>
     /// <param name="mode">Controls how the scope propagates failures to the parent and when it throws.</param>
     public TransactionalOperations(TransactionalMode mode)
         : this(() => null, mode) { }
 
     /// <summary>
-    /// Initialises a new transactional scope with the given name and mode.
+    /// Initializes a new transactional scope with the given name and mode.
     /// </summary>
     /// <param name="name">A human-readable label included in failure messages.</param>
     /// <param name="mode">Controls how the scope propagates failures to the parent and when it throws.</param>
@@ -96,7 +96,7 @@ public class TransactionalOperations : IDisposable
     /// <summary>
     /// Returns <c>true</c> when there is no active transactional scope, or when the current scope
     /// has not been interrupted by a fatal failure. Used by operation managers to short-circuit
-    /// further assertions after a first-fail mode triggers.
+    /// further assertions after a first-fail mode trigger.
     /// </summary>
     public static bool CanContinue()
     {
@@ -114,7 +114,7 @@ public class TransactionalOperations : IDisposable
     }
 
     /// <summary>
-    /// Gets the display name of this scope, composed from the scope's own name and any parent scope names.
+    /// Gets the display name of this scope, composed of the scope's own name and any parent scope names.
     /// Falls back to an auto-generated identifier when no name was supplied.
     /// </summary>
     public string Name => _nameBuilder();
@@ -154,7 +154,7 @@ public class TransactionalOperations : IDisposable
     public IReadOnlyList<string> GetTemplates() => _templates.AsReadOnly();
 
     /// <summary>
-    /// Removes all accumulated failure messages from this scope without disposing it.
+    /// Removes all accumulated failure messages from this scope without disposing of it.
     /// </summary>
     public void ClearTemplates() => _templates.Clear();
 

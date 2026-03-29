@@ -18,8 +18,8 @@ internal class DoubleHaveScaledPrecisionValidator(
         int maxTotalDigits
     ) => new(chain, expectedDecimals, maxTotalDigits);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Double.HaveScaledPrecision";
     string IRuleDescriptor.OperationName => "HaveScaledPrecision";
     Type IRuleDescriptor.SubjectType => typeof(double);
@@ -36,6 +36,7 @@ internal class DoubleHaveScaledPrecisionValidator(
 
         // Scale check: ensure value rounds cleanly to expectedDecimals places
         var rounded = Math.Round(value, expectedDecimals);
+
         if (Math.Abs(rounded - value) >= double.Epsilon)
         {
             ResultValidation =
@@ -47,9 +48,9 @@ internal class DoubleHaveScaledPrecisionValidator(
         var absValue = Math.Abs(value);
         var integerPart = Math.Truncate(absValue);
         var integerDigits = integerPart == 0.0 ? 1 : (int)Math.Floor(Math.Log10(integerPart)) + 1;
-        var actualScale = (int)Math.Round(
+        /*var actualScale = (int)Math.Round(
             -Math.Log10(Math.Abs(value - Math.Truncate(value)) + double.Epsilon)
-        );
+        );*/
         // Use the string representation to reliably count decimal places
         var strValue = value.ToString("G17");
         var dotIndex = strValue.IndexOf('.');

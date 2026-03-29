@@ -5,13 +5,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the ulong value is not one of the specified disallowed values.
 /// </summary>
-internal class ULongNotBeOneOfValidator(PrincipalChain<ulong> chain, params ulong[] expected) : IValidator, IRuleDescriptor
+internal class ULongNotBeOneOfValidator(PrincipalChain<ulong> chain, params ulong[] expected)
+    : IValidator,
+        IRuleDescriptor
 {
-    public static ULongNotBeOneOfValidator New(PrincipalChain<ulong> chain, params ulong[] expected) =>
-        new(chain, expected);
+    public static ULongNotBeOneOfValidator New(
+        PrincipalChain<ulong> chain,
+        params ulong[] expected
+    ) => new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "ULong.NotBeOneOf";
     string IRuleDescriptor.OperationName => "NotBeOneOf";
     Type IRuleDescriptor.SubjectType => typeof(ulong);
@@ -25,7 +29,8 @@ internal class ULongNotBeOneOfValidator(PrincipalChain<ulong> chain, params ulon
             return true;
         }
 
-        ResultValidation = "The resulting value was expected to not be one of [{0}], but {1} was found.";
+        ResultValidation =
+            "The resulting value was expected to not be one of [{0}], but {1} was found.";
         return false;
     }
 

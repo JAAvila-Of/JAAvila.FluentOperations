@@ -75,6 +75,7 @@ internal static class StringDiffFormatter
     private static int FindFirstDifferenceIndex(string a, string b)
     {
         var minLen = Math.Min(a.Length, b.Length);
+        
         for (var i = 0; i < minLen; i++)
         {
             if (a[i] != b[i])
@@ -104,15 +105,17 @@ internal static class StringDiffFormatter
             return string.Empty;
         }
 
-        // Walk back to start of word
+        // Walk back to the start of the word
         var start = index;
+        
         while (start > 0 && !char.IsWhiteSpace(value[start - 1]))
         {
             start--;
         }
 
-        // Walk forward to end of word
+        // Walk forward to the end of the word
         var end = index;
+        
         while (end < value.Length && !char.IsWhiteSpace(value[end]))
         {
             end++;

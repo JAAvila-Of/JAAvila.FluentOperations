@@ -54,7 +54,8 @@ public class TimeSpanOperationsManager : ITestManager<TimeSpanOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -86,7 +87,8 @@ public class TimeSpanOperationsManager : ITestManager<TimeSpanOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -117,7 +119,8 @@ public class TimeSpanOperationsManager : ITestManager<TimeSpanOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -147,7 +150,8 @@ public class TimeSpanOperationsManager : ITestManager<TimeSpanOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -177,7 +181,8 @@ public class TimeSpanOperationsManager : ITestManager<TimeSpanOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -208,7 +213,8 @@ public class TimeSpanOperationsManager : ITestManager<TimeSpanOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -240,7 +246,8 @@ public class TimeSpanOperationsManager : ITestManager<TimeSpanOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -276,7 +283,8 @@ public class TimeSpanOperationsManager : ITestManager<TimeSpanOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(min),
                             BaseFormatter.Format(max),
                             BaseFormatter.Format(PrincipalChain.GetValue())
@@ -322,7 +330,8 @@ public class TimeSpanOperationsManager : ITestManager<TimeSpanOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(min),
                             BaseFormatter.Format(max),
                             BaseFormatter.Format(PrincipalChain.GetValue())
@@ -364,7 +373,8 @@ public class TimeSpanOperationsManager : ITestManager<TimeSpanOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(days),
                             BaseFormatter.Format(PrincipalChain.GetValue().Days)
                         )
@@ -396,7 +406,8 @@ public class TimeSpanOperationsManager : ITestManager<TimeSpanOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(hours),
                             BaseFormatter.Format(PrincipalChain.GetValue().Hours)
                         )
@@ -428,7 +439,8 @@ public class TimeSpanOperationsManager : ITestManager<TimeSpanOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(minutes),
                             BaseFormatter.Format(PrincipalChain.GetValue().Minutes)
                         )
@@ -460,7 +472,8 @@ public class TimeSpanOperationsManager : ITestManager<TimeSpanOperationsManager,
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(seconds),
                             BaseFormatter.Format(PrincipalChain.GetValue().Seconds)
                         )
@@ -477,7 +490,10 @@ public class TimeSpanOperationsManager : ITestManager<TimeSpanOperationsManager,
     public TimeSpanOperationsManager BeOfType<TType>(Reason? reason = null)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Common.BeOfType))
+        {
             return this;
+        }
+
         ValidateBeOfTypeOperation(reason, typeof(TType));
         return this;
     }
@@ -488,7 +504,10 @@ public class TimeSpanOperationsManager : ITestManager<TimeSpanOperationsManager,
     public TimeSpanOperationsManager BeOfType(Type expected, Reason? reason = null)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Common.BeOfType))
+        {
             return this;
+        }
+
         ValidateBeOfTypeOperation(reason, expected);
         return this;
     }
@@ -499,7 +518,10 @@ public class TimeSpanOperationsManager : ITestManager<TimeSpanOperationsManager,
     public TimeSpanOperationsManager NotBeOfType<TType>(Reason? reason = null)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Common.NotBeOfType))
+        {
             return this;
+        }
+
         ValidateNotBeOfTypeOperation(reason, typeof(TType));
         return this;
     }
@@ -510,7 +532,10 @@ public class TimeSpanOperationsManager : ITestManager<TimeSpanOperationsManager,
     public TimeSpanOperationsManager NotBeOfType(Type expected, Reason? reason = null)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Common.NotBeOfType))
+        {
             return this;
+        }
+
         ValidateNotBeOfTypeOperation(reason, expected);
         return this;
     }
@@ -531,7 +556,9 @@ public class TimeSpanOperationsManager : ITestManager<TimeSpanOperationsManager,
                 _ =>
                     (
                         type is null,
-                        Fail.New($"The {nameof(BeOfType)} operation failed because the expected type was <null>.")
+                        Fail.New(
+                            $"The {nameof(BeOfType)} operation failed because the expected type was <null>."
+                        )
                     )
             )
             .Execute();
@@ -553,7 +580,9 @@ public class TimeSpanOperationsManager : ITestManager<TimeSpanOperationsManager,
                 _ =>
                     (
                         type is null,
-                        Fail.New($"The {nameof(NotBeOfType)} operation failed because the expected type was <null>.")
+                        Fail.New(
+                            $"The {nameof(NotBeOfType)} operation failed because the expected type was <null>."
+                        )
                     )
             )
             .Execute();

@@ -5,18 +5,22 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable boolean value equals the expected value.
 /// </summary>
-internal class NullableBooleanBeValidator(PrincipalChain<bool?> chain, bool? expectedValue) : IValidator, IRuleDescriptor
+internal class NullableBooleanBeValidator(PrincipalChain<bool?> chain, bool? expectedValue)
+    : IValidator,
+        IRuleDescriptor
 {
-    public static NullableBooleanBeValidator New(PrincipalChain<bool?> chain, bool? expectedValue) =>
-        new(chain, expectedValue);
+    public static NullableBooleanBeValidator New(
+        PrincipalChain<bool?> chain,
+        bool? expectedValue
+    ) => new(chain, expectedValue);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableBoolean.Be";
     string IRuleDescriptor.OperationName => "Be";
     Type IRuleDescriptor.SubjectType => typeof(bool?);
     IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
-        new Dictionary<string, object> { ["value"] = expectedValue };
+        new Dictionary<string, object> { ["value"] = expectedValue! };
 
     public bool Validate()
     {

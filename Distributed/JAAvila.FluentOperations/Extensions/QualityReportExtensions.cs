@@ -1,4 +1,6 @@
-namespace JAAvila.FluentOperations.Model;
+using JAAvila.FluentOperations.Model;
+
+namespace JAAvila.FluentOperations.Extensions;
 
 /// <summary>
 /// Extension methods for <see cref="QualityReport"/> that provide RFC 7807-compatible output formats.

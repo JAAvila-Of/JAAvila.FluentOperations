@@ -6,7 +6,8 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the nullable byte value is outside the specified inclusive range.
 /// </summary>
 internal class NullableByteNotBeInRangeValidator(PrincipalChain<byte?> chain, byte min, byte max)
-    : IValidator, IRuleDescriptor
+    : IValidator,
+        IRuleDescriptor
 {
     public static NullableByteNotBeInRangeValidator New(
         PrincipalChain<byte?> chain,
@@ -14,8 +15,8 @@ internal class NullableByteNotBeInRangeValidator(PrincipalChain<byte?> chain, by
         byte max
     ) => new(chain, min, max);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableByte.NotBeInRange";
     string IRuleDescriptor.OperationName => "NotBeInRange";
     Type IRuleDescriptor.SubjectType => typeof(byte?);

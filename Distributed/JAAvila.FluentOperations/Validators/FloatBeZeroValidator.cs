@@ -7,11 +7,10 @@ namespace JAAvila.FluentOperations.Validators;
 /// </summary>
 internal class FloatBeZeroValidator(PrincipalChain<float> chain) : IValidator, IRuleDescriptor
 {
-    public static FloatBeZeroValidator New(PrincipalChain<float> chain) =>
-        new(chain);
+    public static FloatBeZeroValidator New(PrincipalChain<float> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Float.BeZero";
     string IRuleDescriptor.OperationName => "BeZero";
     Type IRuleDescriptor.SubjectType => typeof(float);

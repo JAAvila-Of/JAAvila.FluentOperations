@@ -45,7 +45,7 @@ public static class FormatterPipeline
     /// Formats a value using the first matching formatter in priority order.
     /// Falls back to ToString() if no formatter matches.
     /// </summary>
-    /// <param name="value">The value to format. May be null.</param>
+    /// <param name="value">The value to format. Maybe null.</param>
     /// <param name="type">The declared type of the value.</param>
     /// <returns>Formatted string representation.</returns>
     public static string Format(object? value, Type type)

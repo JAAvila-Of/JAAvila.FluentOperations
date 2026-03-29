@@ -9,8 +9,8 @@ internal class ShortBeZeroValidator(PrincipalChain<short> chain) : IValidator, I
 {
     public static ShortBeZeroValidator New(PrincipalChain<short> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Short.BeZero";
     string IRuleDescriptor.OperationName => "BeZero";
     Type IRuleDescriptor.SubjectType => typeof(short);

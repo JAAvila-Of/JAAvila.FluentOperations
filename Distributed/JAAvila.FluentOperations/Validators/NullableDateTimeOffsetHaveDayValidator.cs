@@ -5,13 +5,18 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable datetimeoffset value has the expected day of the month.
 /// </summary>
-internal class NullableDateTimeOffsetHaveDayValidator(PrincipalChain<DateTimeOffset?> chain, int expectedDay) : IValidator, IRuleDescriptor
+internal class NullableDateTimeOffsetHaveDayValidator(
+    PrincipalChain<DateTimeOffset?> chain,
+    int expectedDay
+) : IValidator, IRuleDescriptor
 {
-    public static NullableDateTimeOffsetHaveDayValidator New(PrincipalChain<DateTimeOffset?> chain, int expectedDay) =>
-        new(chain, expectedDay);
+    public static NullableDateTimeOffsetHaveDayValidator New(
+        PrincipalChain<DateTimeOffset?> chain,
+        int expectedDay
+    ) => new(chain, expectedDay);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableDateTimeOffset.HaveDay";
     string IRuleDescriptor.OperationName => "HaveDay";
     Type IRuleDescriptor.SubjectType => typeof(DateTimeOffset?);

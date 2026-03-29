@@ -25,12 +25,8 @@ public abstract partial class QualityBlueprint<T>
         {
             foreach (var rule in def.Rules)
             {
-                var info = ExtractRuleInfo(
-                    rule,
-                    def.PropertyName,
-                    def.Scenario,
-                    def.RuleSet
-                );
+                var info = ExtractRuleInfo(rule, def.PropertyName, def.Scenario, def.RuleSet);
+
                 if (info is not null)
                 {
                     result.Add(info);
@@ -42,14 +38,10 @@ public abstract partial class QualityBlueprint<T>
         foreach (var def in _forEachDefinitions)
         {
             var collectionPropertyName = $"{def.PropertyName}[]";
+
             foreach (var rule in def.Rules)
             {
-                var info = ExtractRuleInfo(
-                    rule,
-                    collectionPropertyName,
-                    def.Scenario,
-                    def.RuleSet
-                );
+                var info = ExtractRuleInfo(rule, collectionPropertyName, def.Scenario, def.RuleSet);
                 if (info is not null)
                 {
                     result.Add(info);
@@ -69,7 +61,8 @@ public abstract partial class QualityBlueprint<T>
         IQualityRule rule,
         string propertyName,
         Type? scenario,
-        string? ruleSet = null)
+        string? ruleSet = null
+    )
     {
         // Unwrap CapturedRule decorator to access the inner engine and its config
         var capturedRule = rule as CapturedRule;
@@ -80,7 +73,7 @@ public abstract partial class QualityBlueprint<T>
         var severity = config?.Severity ?? Severity.Error;
         var errorCode = config?.ErrorCode;
 
-        // Try to get structured descriptor from the inner rule (ExecutionEngine implements IRuleDescriptor)
+        // Try to get a structured descriptor from the inner rule (ExecutionEngine implements IRuleDescriptor)
         if (innerRule is IRuleDescriptor descriptor)
         {
             return new BlueprintRuleInfo

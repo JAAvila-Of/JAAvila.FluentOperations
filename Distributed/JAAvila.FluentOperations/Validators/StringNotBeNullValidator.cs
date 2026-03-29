@@ -13,7 +13,7 @@ internal class StringNotBeNullValidator(PrincipalChain<string?> chain) : IValida
     public string Expected => "Not Be Null - <not null>";
 
     /// <inheritdoc />
-    public string ResultValidation { get; set; }
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "String.NotBeNull";
 
     string IRuleDescriptor.OperationName => "NotBeNull";

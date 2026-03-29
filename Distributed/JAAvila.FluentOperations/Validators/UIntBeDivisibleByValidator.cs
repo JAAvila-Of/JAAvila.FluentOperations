@@ -5,13 +5,15 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the uint value is evenly divisible by the specified divisor.
 /// </summary>
-internal class UIntBeDivisibleByValidator(PrincipalChain<uint> chain, uint divisor) : IValidator, IRuleDescriptor
+internal class UIntBeDivisibleByValidator(PrincipalChain<uint> chain, uint divisor)
+    : IValidator,
+        IRuleDescriptor
 {
     public static UIntBeDivisibleByValidator New(PrincipalChain<uint> chain, uint divisor) =>
         new(chain, divisor);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "UInt.BeDivisibleBy";
     string IRuleDescriptor.OperationName => "BeDivisibleBy";
     Type IRuleDescriptor.SubjectType => typeof(uint);
@@ -25,7 +27,8 @@ internal class UIntBeDivisibleByValidator(PrincipalChain<uint> chain, uint divis
             return true;
         }
 
-        ResultValidation = "The resulting value was expected to be divisible by {0}, but {1} was found.";
+        ResultValidation =
+            "The resulting value was expected to be divisible by {0}, but {1} was found.";
         return false;
     }
 

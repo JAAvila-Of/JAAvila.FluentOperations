@@ -5,12 +5,14 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable long does not have a value (is null).
 /// </summary>
-internal class NullableLongNotHaveValueValidator(PrincipalChain<long?> chain) : IValidator, IRuleDescriptor
+internal class NullableLongNotHaveValueValidator(PrincipalChain<long?> chain)
+    : IValidator,
+        IRuleDescriptor
 {
     public static NullableLongNotHaveValueValidator New(PrincipalChain<long?> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableLong.NotHaveValue";
     string IRuleDescriptor.OperationName => "NotHaveValue";
     Type IRuleDescriptor.SubjectType => typeof(long?);

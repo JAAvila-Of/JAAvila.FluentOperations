@@ -15,8 +15,8 @@ internal class DateTimeOffsetHaveOffsetValidator(
         TimeSpan expectedOffset
     ) => new(chain, expectedOffset);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "DateTimeOffset.HaveOffset";
     string IRuleDescriptor.OperationName => "HaveOffset";
     Type IRuleDescriptor.SubjectType => typeof(DateTimeOffset);

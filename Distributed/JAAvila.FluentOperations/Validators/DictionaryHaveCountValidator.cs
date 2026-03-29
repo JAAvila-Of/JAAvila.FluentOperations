@@ -8,15 +8,16 @@ namespace JAAvila.FluentOperations.Validators;
 internal class DictionaryHaveCountValidator<TKey, TValue>(
     PrincipalChain<IDictionary<TKey, TValue>> chain,
     int expected
-) : IValidator, IRuleDescriptor where TKey : notnull
+) : IValidator, IRuleDescriptor
+    where TKey : notnull
 {
     public static DictionaryHaveCountValidator<TKey, TValue> New(
         PrincipalChain<IDictionary<TKey, TValue>> chain,
         int expected
     ) => new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Dictionary.HaveCount";
     string IRuleDescriptor.OperationName => "HaveCount";
     Type IRuleDescriptor.SubjectType => typeof(IDictionary<,>);
@@ -30,7 +31,8 @@ internal class DictionaryHaveCountValidator<TKey, TValue>(
             return true;
         }
 
-        ResultValidation = "The resulting dictionary was expected to have {0} entry(ies), but it had {1}.";
+        ResultValidation =
+            "The resulting dictionary was expected to have {0} entry(ies), but it had {1}.";
         return false;
     }
 

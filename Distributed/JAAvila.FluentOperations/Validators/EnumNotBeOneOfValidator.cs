@@ -5,14 +5,16 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the enum value is not one of the specified disallowed values.
 /// </summary>
-internal class EnumNotBeOneOfValidator<T>(PrincipalChain<T> chain, params T[] expected) : IValidator, IRuleDescriptor
+internal class EnumNotBeOneOfValidator<T>(PrincipalChain<T> chain, params T[] expected)
+    : IValidator,
+        IRuleDescriptor
     where T : Enum
 {
     public static EnumNotBeOneOfValidator<T> New(PrincipalChain<T> chain, params T[] expected) =>
         new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Enum.NotBeOneOf";
     string IRuleDescriptor.OperationName => "NotBeOneOf";
     Type IRuleDescriptor.SubjectType => typeof(T);

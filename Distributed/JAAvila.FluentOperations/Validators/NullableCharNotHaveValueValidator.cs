@@ -5,13 +5,14 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable char does not have a value (is null).
 /// </summary>
-internal class NullableCharNotHaveValueValidator(PrincipalChain<char?> chain) : IValidator, IRuleDescriptor
+internal class NullableCharNotHaveValueValidator(PrincipalChain<char?> chain)
+    : IValidator,
+        IRuleDescriptor
 {
-    public static NullableCharNotHaveValueValidator New(PrincipalChain<char?> chain) =>
-        new(chain);
+    public static NullableCharNotHaveValueValidator New(PrincipalChain<char?> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableChar.NotHaveValue";
     string IRuleDescriptor.OperationName => "NotHaveValue";
     Type IRuleDescriptor.SubjectType => typeof(char?);

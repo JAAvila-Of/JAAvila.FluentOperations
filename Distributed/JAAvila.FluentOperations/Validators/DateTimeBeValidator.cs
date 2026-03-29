@@ -5,13 +5,15 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the datetime value equals the expected value.
 /// </summary>
-internal class DateTimeBeValidator(PrincipalChain<DateTime> chain, DateTime expected) : IValidator, IRuleDescriptor
+internal class DateTimeBeValidator(PrincipalChain<DateTime> chain, DateTime expected)
+    : IValidator,
+        IRuleDescriptor
 {
     public static DateTimeBeValidator New(PrincipalChain<DateTime> chain, DateTime expected) =>
         new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "DateTime.Be";
     string IRuleDescriptor.OperationName => "Be";
     Type IRuleDescriptor.SubjectType => typeof(DateTime);

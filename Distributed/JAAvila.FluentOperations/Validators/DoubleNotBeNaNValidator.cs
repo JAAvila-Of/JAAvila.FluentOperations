@@ -7,11 +7,10 @@ namespace JAAvila.FluentOperations.Validators;
 /// </summary>
 internal class DoubleNotBeNaNValidator(PrincipalChain<double> chain) : IValidator, IRuleDescriptor
 {
-    public static DoubleNotBeNaNValidator New(PrincipalChain<double> chain) =>
-        new(chain);
+    public static DoubleNotBeNaNValidator New(PrincipalChain<double> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Double.NotBeNaN";
     string IRuleDescriptor.OperationName => "NotBeNaN";
     Type IRuleDescriptor.SubjectType => typeof(double);

@@ -28,7 +28,8 @@ public static class OpenApiBlueprintMapper
         OpenApiSchema propertySchema,
         string propertyName,
         IEnumerable<BlueprintRuleInfo> rules,
-        OpenApiSchema? parentSchema = null)
+        OpenApiSchema? parentSchema = null
+    )
     {
         foreach (var rule in rules.Where(r => r.PropertyName == propertyName))
         {
@@ -45,19 +46,23 @@ public static class OpenApiBlueprintMapper
     /// <param name="rules">All rule descriptors from the blueprint.</param>
     public static void ApplyAllRules(
         OpenApiSchema parentSchema,
-        IEnumerable<BlueprintRuleInfo> rules)
+        IEnumerable<BlueprintRuleInfo> rules
+    )
     {
         var ruleList = rules.ToList();
         var propertyNames = ruleList.Select(r => r.PropertyName).Distinct();
 
         foreach (var propertyName in propertyNames)
         {
-            if (!parentSchema.Properties.TryGetValue(
+            if (
+                !parentSchema.Properties.TryGetValue(
                     // OpenAPI property names are typically camelCase
                     ToCamelCase(propertyName),
-                    out var propertySchema))
+                    out var propertySchema
+                )
+            )
             {
-                // Also try exact match (PascalCase)
+                // Also try the exact match (PascalCase)
                 if (!parentSchema.Properties.TryGetValue(propertyName, out propertySchema))
                 {
                     continue;
@@ -72,21 +77,21 @@ public static class OpenApiBlueprintMapper
         OpenApiSchema propertySchema,
         string propertyName,
         BlueprintRuleInfo rule,
-        OpenApiSchema? parentSchema)
+        OpenApiSchema? parentSchema
+    )
     {
         switch (rule.OperationName)
         {
             case "NotBeNull":
-                // Add property to parent required array
+                // Add property to a parent required array
                 if (parentSchema is not null)
                 {
                     parentSchema.Required ??= new HashSet<string>();
                     var camel = ToCamelCase(propertyName);
-                    if (!parentSchema.Required.Contains(camel))
-                    {
-                        parentSchema.Required.Add(camel);
-                    }
+
+                    parentSchema.Required.Add(camel);
                 }
+
                 break;
 
             case "NotBeEmpty":
@@ -95,26 +100,31 @@ public static class OpenApiBlueprintMapper
 
             case "NotBeNullOrEmpty":
                 propertySchema.MinLength = 1;
+
                 if (parentSchema is not null)
                 {
                     parentSchema.Required ??= new HashSet<string>();
                     var camel = ToCamelCase(propertyName);
-                    if (!parentSchema.Required.Contains(camel))
-                    {
-                        parentSchema.Required.Add(camel);
-                    }
+                    parentSchema.Required.Add(camel);
                 }
+
                 break;
 
             case "HaveMinLength":
-                if (rule.Parameters.TryGetValue("minLength", out var minLen) && minLen is int minLenInt)
+                if (
+                    rule.Parameters.TryGetValue("minLength", out var minLen)
+                    && minLen is int minLenInt
+                )
                 {
                     propertySchema.MinLength = minLenInt;
                 }
                 break;
 
             case "HaveMaxLength":
-                if (rule.Parameters.TryGetValue("maxLength", out var maxLen) && maxLen is int maxLenInt)
+                if (
+                    rule.Parameters.TryGetValue("maxLength", out var maxLen)
+                    && maxLen is int maxLenInt
+                )
                 {
                     propertySchema.MaxLength = maxLenInt;
                 }
@@ -125,18 +135,24 @@ public static class OpenApiBlueprintMapper
                 {
                     propertySchema.MinLength = minBInt;
                 }
+
                 if (rule.Parameters.TryGetValue("max", out var maxB) && maxB is int maxBInt)
                 {
                     propertySchema.MaxLength = maxBInt;
                 }
+
                 break;
 
             case "Match":
             case "MatchRegex":
-                if (rule.Parameters.TryGetValue("pattern", out var patternObj) && patternObj is string pattern)
+                if (
+                    rule.Parameters.TryGetValue("pattern", out var patternObj)
+                    && patternObj is string pattern
+                )
                 {
                     propertySchema.Pattern = pattern;
                 }
+
                 break;
 
             case "BeEmail":
@@ -154,6 +170,7 @@ public static class OpenApiBlueprintMapper
                     propertySchema.Minimum = gtInt;
                     propertySchema.ExclusiveMinimum = true;
                 }
+
                 break;
 
             case "BeLessThan":
@@ -162,6 +179,7 @@ public static class OpenApiBlueprintMapper
                     propertySchema.Maximum = ltInt;
                     propertySchema.ExclusiveMaximum = true;
                 }
+
                 break;
 
             case "BeGreaterThanOrEqualTo":
@@ -169,6 +187,7 @@ public static class OpenApiBlueprintMapper
                 {
                     propertySchema.Minimum = gteInt;
                 }
+
                 break;
 
             case "BeLessThanOrEqualTo":
@@ -176,12 +195,14 @@ public static class OpenApiBlueprintMapper
                 {
                     propertySchema.Maximum = lteInt;
                 }
+
                 break;
 
             case "BeOneOf":
                 if (rule.Parameters.TryGetValue("values", out var valuesObj))
                 {
                     propertySchema.Enum ??= [];
+
                     if (valuesObj is int[] intValues)
                     {
                         foreach (var v in intValues)
@@ -193,23 +214,26 @@ public static class OpenApiBlueprintMapper
                     {
                         foreach (var v in strValues)
                         {
-                            propertySchema.Enum.Add(v is null
-                                ? new OpenApiNull()
-                                : new OpenApiString(v));
+                            propertySchema.Enum.Add(
+                                v is null ? new OpenApiNull() : new OpenApiString(v)
+                            );
                         }
                     }
                 }
+
                 break;
 
             default:
                 // Unknown operation: add as x-validation extension entry
                 var ext = propertySchema.Extensions;
-                var key = "x-validation-rules";
+                const string key = "x-validation-rules";
+
                 if (!ext.TryGetValue(key, out var existing) || existing is not OpenApiArray arr)
                 {
                     arr = [];
                     ext[key] = arr;
                 }
+
                 arr.Add(new OpenApiString(rule.OperationName));
                 break;
         }

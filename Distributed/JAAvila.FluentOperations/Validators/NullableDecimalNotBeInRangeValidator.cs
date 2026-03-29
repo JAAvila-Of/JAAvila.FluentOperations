@@ -17,8 +17,8 @@ internal class NullableDecimalNotBeInRangeValidator(
         decimal max
     ) => new(chain, min, max);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableDecimal.NotBeInRange";
     string IRuleDescriptor.OperationName => "NotBeInRange";
     Type IRuleDescriptor.SubjectType => typeof(decimal?);

@@ -55,7 +55,8 @@ public class DateTimeOffsetOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -87,7 +88,8 @@ public class DateTimeOffsetOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -119,7 +121,8 @@ public class DateTimeOffsetOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -151,7 +154,8 @@ public class DateTimeOffsetOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -186,7 +190,8 @@ public class DateTimeOffsetOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -221,7 +226,8 @@ public class DateTimeOffsetOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -261,7 +267,8 @@ public class DateTimeOffsetOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(min),
                             BaseFormatter.Format(max),
                             BaseFormatter.Format(PrincipalChain.GetValue())
@@ -311,7 +318,8 @@ public class DateTimeOffsetOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(min),
                             BaseFormatter.Format(max),
                             BaseFormatter.Format(PrincipalChain.GetValue())
@@ -353,7 +361,8 @@ public class DateTimeOffsetOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expected),
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
@@ -392,7 +401,8 @@ public class DateTimeOffsetOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             expected.ToString("O"),
                             BaseFormatter.Format(tolerance),
                             BaseFormatter.Format(PrincipalChain.GetValue())
@@ -444,7 +454,8 @@ public class DateTimeOffsetOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             expected.ToString("O"),
                             BaseFormatter.Format(tolerance),
                             BaseFormatter.Format(PrincipalChain.GetValue())
@@ -489,7 +500,8 @@ public class DateTimeOffsetOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expectedOffset),
                             BaseFormatter.Format(PrincipalChain.GetValue().Offset)
                         )
@@ -520,7 +532,8 @@ public class DateTimeOffsetOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -550,7 +563,8 @@ public class DateTimeOffsetOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -581,7 +595,8 @@ public class DateTimeOffsetOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expectedYear),
                             BaseFormatter.Format(PrincipalChain.GetValue().Year)
                         )
@@ -613,7 +628,8 @@ public class DateTimeOffsetOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expectedMonth),
                             BaseFormatter.Format(PrincipalChain.GetValue().Month)
                         )
@@ -645,7 +661,8 @@ public class DateTimeOffsetOperationsManager
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(expectedDay),
                             BaseFormatter.Format(PrincipalChain.GetValue().Day)
                         )
@@ -662,7 +679,10 @@ public class DateTimeOffsetOperationsManager
     public DateTimeOffsetOperationsManager BeOfType<TType>(Reason? reason = null)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Common.BeOfType))
+        {
             return this;
+        }
+
         ValidateBeOfTypeOperation(reason, typeof(TType));
         return this;
     }
@@ -673,7 +693,10 @@ public class DateTimeOffsetOperationsManager
     public DateTimeOffsetOperationsManager BeOfType(Type expected, Reason? reason = null)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Common.BeOfType))
+        {
             return this;
+        }
+
         ValidateBeOfTypeOperation(reason, expected);
         return this;
     }
@@ -684,7 +707,10 @@ public class DateTimeOffsetOperationsManager
     public DateTimeOffsetOperationsManager NotBeOfType<TType>(Reason? reason = null)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Common.NotBeOfType))
+        {
             return this;
+        }
+
         ValidateNotBeOfTypeOperation(reason, typeof(TType));
         return this;
     }
@@ -695,7 +721,10 @@ public class DateTimeOffsetOperationsManager
     public DateTimeOffsetOperationsManager NotBeOfType(Type expected, Reason? reason = null)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Common.NotBeOfType))
+        {
             return this;
+        }
+
         ValidateNotBeOfTypeOperation(reason, expected);
         return this;
     }
@@ -716,7 +745,9 @@ public class DateTimeOffsetOperationsManager
                 _ =>
                     (
                         type is null,
-                        Fail.New($"The {nameof(BeOfType)} operation failed because the expected type was <null>.")
+                        Fail.New(
+                            $"The {nameof(BeOfType)} operation failed because the expected type was <null>."
+                        )
                     )
             )
             .Execute();
@@ -738,7 +769,9 @@ public class DateTimeOffsetOperationsManager
                 _ =>
                     (
                         type is null,
-                        Fail.New($"The {nameof(NotBeOfType)} operation failed because the expected type was <null>.")
+                        Fail.New(
+                            $"The {nameof(NotBeOfType)} operation failed because the expected type was <null>."
+                        )
                     )
             )
             .Execute();

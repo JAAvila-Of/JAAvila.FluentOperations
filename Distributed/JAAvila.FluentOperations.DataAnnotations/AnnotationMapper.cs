@@ -24,6 +24,7 @@ internal static class AnnotationMapper
         where TModel : notnull
     {
         var bindingFlags = BindingFlags.Public | BindingFlags.Instance;
+
         if (!options.IncludeInheritedProperties)
         {
             bindingFlags |= BindingFlags.DeclaredOnly;

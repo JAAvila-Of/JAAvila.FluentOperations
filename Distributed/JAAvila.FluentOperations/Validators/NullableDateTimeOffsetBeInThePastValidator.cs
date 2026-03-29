@@ -5,13 +5,16 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable datetimeoffset value is in the past.
 /// </summary>
-internal class NullableDateTimeOffsetBeInThePastValidator(PrincipalChain<DateTimeOffset?> chain) : IValidator, IRuleDescriptor
+internal class NullableDateTimeOffsetBeInThePastValidator(PrincipalChain<DateTimeOffset?> chain)
+    : IValidator,
+        IRuleDescriptor
 {
-    public static NullableDateTimeOffsetBeInThePastValidator New(PrincipalChain<DateTimeOffset?> chain) =>
-        new(chain);
+    public static NullableDateTimeOffsetBeInThePastValidator New(
+        PrincipalChain<DateTimeOffset?> chain
+    ) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableDateTimeOffset.BeInThePast";
     string IRuleDescriptor.OperationName => "BeInThePast";
     Type IRuleDescriptor.SubjectType => typeof(DateTimeOffset?);

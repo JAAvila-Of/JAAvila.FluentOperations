@@ -48,7 +48,8 @@ public class ActionStatsOperationsManager : ITestManager<ActionStatsOperationsMa
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(PrincipalChain.GetValue())
                         )
                         .WithReason(reason?.ToString())
@@ -106,16 +107,17 @@ public class ActionStatsOperationsManager : ITestManager<ActionStatsOperationsMa
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(maxDuration),
                             BaseFormatter.Format(PrincipalChain.GetValue()?.ElapsedTime)
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(CompleteWithin)} operation failed because the ActionStats was null."
                         )
@@ -158,16 +160,17 @@ public class ActionStatsOperationsManager : ITestManager<ActionStatsOperationsMa
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(minDuration),
                             BaseFormatter.Format(PrincipalChain.GetValue()?.ElapsedTime)
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(TakeLongerThan)} operation failed because the ActionStats was null."
                         )
@@ -210,16 +213,17 @@ public class ActionStatsOperationsManager : ITestManager<ActionStatsOperationsMa
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(maxDuration),
                             BaseFormatter.Format(PrincipalChain.GetValue()?.ElapsedTime)
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(TakeShorterThan)} operation failed because the ActionStats was null."
                         )
@@ -236,7 +240,10 @@ public class ActionStatsOperationsManager : ITestManager<ActionStatsOperationsMa
     /// <param name="ms">The exclusive upper bound in milliseconds.</param>
     /// <param name="reason">An optional reason providing context for the assertion.</param>
     /// <returns>The current manager instance for method chaining.</returns>
-    public ActionStatsOperationsManager TakeShorterThanMilliseconds(double ms, Reason? reason = null)
+    public ActionStatsOperationsManager TakeShorterThanMilliseconds(
+        double ms,
+        Reason? reason = null
+    )
     {
         return TakeShorterThan(TimeSpan.FromMilliseconds(ms), reason);
     }
@@ -252,7 +259,10 @@ public class ActionStatsOperationsManager : ITestManager<ActionStatsOperationsMa
     /// Fails immediately if <paramref name="min"/> is greater than <paramref name="max"/> (inverted range).
     /// </remarks>
     public ActionStatsOperationsManager HaveElapsedTimeBetween(
-        TimeSpan min, TimeSpan max, Reason? reason = null)
+        TimeSpan min,
+        TimeSpan max,
+        Reason? reason = null
+    )
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.ActionStats.HaveElapsedTimeBetween))
         {
@@ -267,7 +277,8 @@ public class ActionStatsOperationsManager : ITestManager<ActionStatsOperationsMa
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(min),
                             BaseFormatter.Format(max),
                             BaseFormatter.Format(PrincipalChain.GetValue()?.ElapsedTime)
@@ -275,9 +286,9 @@ public class ActionStatsOperationsManager : ITestManager<ActionStatsOperationsMa
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(HaveElapsedTimeBetween)} operation failed because the ActionStats was null."
                         )
@@ -319,15 +330,16 @@ public class ActionStatsOperationsManager : ITestManager<ActionStatsOperationsMa
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             validator.ExceptionInfo
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(Succeed)} operation failed because the ActionStats was null."
                         )
@@ -361,9 +373,9 @@ public class ActionStatsOperationsManager : ITestManager<ActionStatsOperationsMa
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(NotSucceed)} operation failed because the ActionStats was null."
                         )
@@ -399,23 +411,25 @@ public class ActionStatsOperationsManager : ITestManager<ActionStatsOperationsMa
                         ? template
                             .WithSubject(PrincipalChain.GetSubject())
                             .WithResult(
-                                operation.MessageKey, operation.ResultValidation,
+                                operation.MessageKey,
+                                operation.ResultValidation,
                                 typeof(TException).Name
                             )
                             .WithReason(reason?.ToString())
                         : template
                             .WithSubject(PrincipalChain.GetSubject())
                             .WithResult(
-                                operation.MessageKey, operation.ResultValidation,
+                                operation.MessageKey,
+                                operation.ResultValidation,
                                 typeof(TException).Name,
                                 PrincipalChain.GetValue()?.Exception?.GetType().Name ?? "null"
                             )
                             .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(HaveException)} operation failed because the ActionStats was null."
                         )
@@ -447,16 +461,17 @@ public class ActionStatsOperationsManager : ITestManager<ActionStatsOperationsMa
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(bytes),
                             BaseFormatter.Format(PrincipalChain.GetValue()?.MemoryDelta)
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(ConsumeMemoryLessThan)} operation failed because the ActionStats was null."
                         )
@@ -488,16 +503,17 @@ public class ActionStatsOperationsManager : ITestManager<ActionStatsOperationsMa
                     template
                         .WithSubject(PrincipalChain.GetSubject())
                         .WithResult(
-                            operation.MessageKey, operation.ResultValidation,
+                            operation.MessageKey,
+                            operation.ResultValidation,
                             BaseFormatter.Format(bytes),
                             BaseFormatter.Format(PrincipalChain.GetValue()?.MemoryDelta)
                         )
                         .WithReason(reason?.ToString())
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
+                        m.PrincipalChain.GetValue() is null,
                         Fail.New(
                             $"The {nameof(ConsumeMemoryGreaterThan)} operation failed because the ActionStats was null."
                         )
@@ -514,7 +530,10 @@ public class ActionStatsOperationsManager : ITestManager<ActionStatsOperationsMa
     public ActionStatsOperationsManager BeOfType<TType>(Reason? reason = null)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Common.BeOfType))
+        {
             return this;
+        }
+
         ValidateBeOfTypeOperation(reason, typeof(TType));
         return this;
     }
@@ -525,7 +544,10 @@ public class ActionStatsOperationsManager : ITestManager<ActionStatsOperationsMa
     public ActionStatsOperationsManager BeOfType(Type expected, Reason? reason = null)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Common.BeOfType))
+        {
             return this;
+        }
+
         ValidateBeOfTypeOperation(reason, expected);
         return this;
     }
@@ -536,7 +558,10 @@ public class ActionStatsOperationsManager : ITestManager<ActionStatsOperationsMa
     public ActionStatsOperationsManager NotBeOfType<TType>(Reason? reason = null)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Common.NotBeOfType))
+        {
             return this;
+        }
+
         ValidateNotBeOfTypeOperation(reason, typeof(TType));
         return this;
     }
@@ -547,7 +572,10 @@ public class ActionStatsOperationsManager : ITestManager<ActionStatsOperationsMa
     public ActionStatsOperationsManager NotBeOfType(Type expected, Reason? reason = null)
     {
         if (!OperationUtils.CheckOperationAllowed(Operations.Common.NotBeOfType))
+        {
             return this;
+        }
+
         ValidateNotBeOfTypeOperation(reason, expected);
         return this;
     }
@@ -568,14 +596,18 @@ public class ActionStatsOperationsManager : ITestManager<ActionStatsOperationsMa
                 _ =>
                     (
                         type is null,
-                        Fail.New($"The {nameof(BeOfType)} operation failed because the expected type was <null>.")
+                        Fail.New(
+                            $"The {nameof(BeOfType)} operation failed because the expected type was <null>."
+                        )
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
-                        Fail.New($"The {nameof(BeOfType)} operation failed because the value was <null>.")
+                        m.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(BeOfType)} operation failed because the value was <null>."
+                        )
                     )
             )
             .Execute();
@@ -597,14 +629,18 @@ public class ActionStatsOperationsManager : ITestManager<ActionStatsOperationsMa
                 _ =>
                     (
                         type is null,
-                        Fail.New($"The {nameof(NotBeOfType)} operation failed because the expected type was <null>.")
+                        Fail.New(
+                            $"The {nameof(NotBeOfType)} operation failed because the expected type was <null>."
+                        )
                     )
             )
             .FailIf(
-                manager =>
+                m =>
                     (
-                        manager.PrincipalChain.GetValue() is null,
-                        Fail.New($"The {nameof(NotBeOfType)} operation failed because the value was <null>.")
+                        m.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(NotBeOfType)} operation failed because the value was <null>."
+                        )
                     )
             )
             .Execute();

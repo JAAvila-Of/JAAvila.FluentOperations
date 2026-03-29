@@ -20,13 +20,17 @@ internal class StringEndWithValidator(
         StringComparison comparison
     ) => new(suffix, chain, comparison);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "String.EndWith";
     string IRuleDescriptor.OperationName => "EndWith";
     Type IRuleDescriptor.SubjectType => typeof(string);
     IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
-        new Dictionary<string, object> { ["value"] = suffix, ["comparison"] = StringComparison.Ordinal.ToString() };
+        new Dictionary<string, object>
+        {
+            ["value"] = suffix,
+            ["comparison"] = nameof(StringComparison.Ordinal)
+        };
 
     public bool Validate()
     {

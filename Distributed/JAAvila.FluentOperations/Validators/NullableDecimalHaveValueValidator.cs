@@ -5,13 +5,15 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable decimal has a value (is not null).
 /// </summary>
-internal class NullableDecimalHaveValueValidator(PrincipalChain<decimal?> chain) : IValidator, IRuleDescriptor
+internal class NullableDecimalHaveValueValidator(PrincipalChain<decimal?> chain)
+    : IValidator,
+        IRuleDescriptor
 {
     public static NullableDecimalHaveValueValidator New(PrincipalChain<decimal?> chain) =>
         new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableDecimal.HaveValue";
     string IRuleDescriptor.OperationName => "HaveValue";
     Type IRuleDescriptor.SubjectType => typeof(decimal?);

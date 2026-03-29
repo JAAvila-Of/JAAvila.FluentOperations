@@ -7,11 +7,10 @@ namespace JAAvila.FluentOperations.Validators;
 /// </summary>
 internal class UIntBeEvenValidator(PrincipalChain<uint> chain) : IValidator, IRuleDescriptor
 {
-    public static UIntBeEvenValidator New(PrincipalChain<uint> chain) =>
-        new(chain);
+    public static UIntBeEvenValidator New(PrincipalChain<uint> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "UInt.BeEven";
     string IRuleDescriptor.OperationName => "BeEven";
     Type IRuleDescriptor.SubjectType => typeof(uint);

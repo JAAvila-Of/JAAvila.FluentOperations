@@ -11,7 +11,7 @@ internal static class JsonSchemaRuleMapper
 {
     /// <summary>
     /// Writes JSON Schema constraint keywords derived from the supplied rules onto the
-    /// currently-open property object in the writer.
+    /// currently open property object in the writer.
     /// </summary>
     /// <param name="writer">The JSON writer, positioned inside a property schema object.</param>
     /// <param name="rules">All rules registered for the property being written.</param>
@@ -23,7 +23,8 @@ internal static class JsonSchemaRuleMapper
     internal static bool WriteConstraints(
         Utf8JsonWriter writer,
         IReadOnlyList<BlueprintRuleInfo> rules,
-        JsonSchemaOptions options)
+        JsonSchemaOptions options
+    )
     {
         var isRequired = false;
         var unmappedRules = new List<BlueprintRuleInfo>();
@@ -32,6 +33,7 @@ internal static class JsonSchemaRuleMapper
         foreach (var rule in rules)
         {
             var mapped = TryWriteStandardConstraint(writer, rule, ref isRequired);
+
             if (mapped)
             {
                 mappedRuleNames.Add(rule.OperationName);
@@ -44,9 +46,13 @@ internal static class JsonSchemaRuleMapper
 
         if (options.IncludeExtensions)
         {
-            WriteExtensions(writer, unmappedRules, options.IncludeMetadataForMappedRules
-                ? rules.Where(r => mappedRuleNames.Contains(r.OperationName)).ToList()
-                : []);
+            WriteExtensions(
+                writer,
+                unmappedRules,
+                options.IncludeMetadataForMappedRules
+                    ? rules.Where(r => mappedRuleNames.Contains(r.OperationName)).ToList()
+                    : []
+            );
         }
 
         return isRequired;
@@ -60,7 +66,8 @@ internal static class JsonSchemaRuleMapper
     private static bool TryWriteStandardConstraint(
         Utf8JsonWriter writer,
         BlueprintRuleInfo rule,
-        ref bool isRequired)
+        ref bool isRequired
+    )
     {
         switch (rule.OperationName)
         {
@@ -79,12 +86,18 @@ internal static class JsonSchemaRuleMapper
 
             case "HaveMinLength":
                 if (rule.Parameters.TryGetValue("minLength", out var minLen))
+                {
                     writer.WriteNumber("minLength", Convert.ToInt64(minLen));
+                }
+
                 return true;
 
             case "HaveMaxLength":
                 if (rule.Parameters.TryGetValue("maxLength", out var maxLen))
+                {
                     writer.WriteNumber("maxLength", Convert.ToInt64(maxLen));
+                }
+
                 return true;
 
             case "HaveLength":
@@ -94,19 +107,29 @@ internal static class JsonSchemaRuleMapper
                     writer.WriteNumber("minLength", lenVal);
                     writer.WriteNumber("maxLength", lenVal);
                 }
+
                 return true;
 
             case "HaveLengthBetween":
                 if (rule.Parameters.TryGetValue("min", out var lbMin))
+                {
                     writer.WriteNumber("minLength", Convert.ToInt64(lbMin));
+                }
+
                 if (rule.Parameters.TryGetValue("max", out var lbMax))
+                {
                     writer.WriteNumber("maxLength", Convert.ToInt64(lbMax));
+                }
+
                 return true;
 
             case "Match":
             case "MatchRegex":
                 if (rule.Parameters.TryGetValue("pattern", out var pattern))
+                {
                     writer.WriteString("pattern", pattern.ToString());
+                }
+
                 return true;
 
             case "BeEmail":
@@ -132,29 +155,47 @@ internal static class JsonSchemaRuleMapper
 
             case "BeGreaterThan":
                 if (rule.Parameters.TryGetValue("value", out var gtValue))
+                {
                     WriteNumberOrDecimal(writer, "exclusiveMinimum", gtValue);
+                }
+
                 return true;
 
             case "BeLessThan":
                 if (rule.Parameters.TryGetValue("value", out var ltValue))
+                {
                     WriteNumberOrDecimal(writer, "exclusiveMaximum", ltValue);
+                }
+
                 return true;
 
             case "BeGreaterThanOrEqualTo":
                 if (rule.Parameters.TryGetValue("value", out var gteValue))
+                {
                     WriteNumberOrDecimal(writer, "minimum", gteValue);
+                }
+
                 return true;
 
             case "BeLessThanOrEqualTo":
                 if (rule.Parameters.TryGetValue("value", out var lteValue))
+                {
                     WriteNumberOrDecimal(writer, "maximum", lteValue);
+                }
+
                 return true;
 
             case "BeInRange":
                 if (rule.Parameters.TryGetValue("min", out var rangeMin))
+                {
                     WriteNumberOrDecimal(writer, "minimum", rangeMin);
+                }
+
                 if (rule.Parameters.TryGetValue("max", out var rangeMax))
+                {
                     WriteNumberOrDecimal(writer, "maximum", rangeMax);
+                }
+
                 return true;
 
             case "BePositive":
@@ -174,6 +215,7 @@ internal static class JsonSchemaRuleMapper
                 {
                     writer.WritePropertyName("enum");
                     writer.WriteStartArray();
+
                     if (oneOfValues is System.Collections.IEnumerable enumValues)
                     {
                         foreach (var v in enumValues)
@@ -181,8 +223,10 @@ internal static class JsonSchemaRuleMapper
                             WriteJsonValue(writer, v);
                         }
                     }
+
                     writer.WriteEndArray();
                 }
+
                 return true;
 
             case "BeTrue":
@@ -195,11 +239,15 @@ internal static class JsonSchemaRuleMapper
 
             case "Be":
                 // Boolean Be: maps to const when the expected value is a known bool
-                if (rule.Parameters.TryGetValue("value", out var beValue) && beValue is bool boolConst)
+                if (
+                    rule.Parameters.TryGetValue("value", out var beValue)
+                    && beValue is bool boolConst
+                )
                 {
                     writer.WriteBoolean("const", boolConst);
                     return true;
                 }
+
                 return false;
 
             default:
@@ -210,11 +258,15 @@ internal static class JsonSchemaRuleMapper
     private static void WriteExtensions(
         Utf8JsonWriter writer,
         IReadOnlyList<BlueprintRuleInfo> unmappedRules,
-        IEnumerable<BlueprintRuleInfo> mappedRules)
+        IEnumerable<BlueprintRuleInfo> mappedRules
+    )
     {
         var allExtensionRules = unmappedRules.Concat(mappedRules).ToList();
+
         if (allExtensionRules.Count == 0)
+        {
             return;
+        }
 
         writer.WritePropertyName("x-fo-validation");
         writer.WriteStartArray();
@@ -228,15 +280,17 @@ internal static class JsonSchemaRuleMapper
             {
                 writer.WritePropertyName("parameters");
                 writer.WriteStartObject();
+
                 foreach (var (key, value) in rule.Parameters)
                 {
                     writer.WritePropertyName(key);
                     WriteJsonValue(writer, value);
                 }
+
                 writer.WriteEndObject();
             }
 
-            if (rule.Severity != Model.Severity.Error)
+            if (rule.Severity != Severity.Error)
             {
                 writer.WriteString("severity", rule.Severity.ToString());
             }
@@ -252,21 +306,46 @@ internal static class JsonSchemaRuleMapper
         writer.WriteEndArray();
     }
 
-    private static void WriteNumberOrDecimal(Utf8JsonWriter writer, string propertyName, object value)
+    private static void WriteNumberOrDecimal(
+        Utf8JsonWriter writer,
+        string propertyName,
+        object value
+    )
     {
         writer.WritePropertyName(propertyName);
+
         switch (value)
         {
-            case int i: writer.WriteNumberValue(i); break;
-            case long l: writer.WriteNumberValue(l); break;
-            case float f: writer.WriteNumberValue(f); break;
-            case double d: writer.WriteNumberValue(d); break;
-            case decimal dec: writer.WriteNumberValue(dec); break;
-            case short s: writer.WriteNumberValue(s); break;
-            case byte b: writer.WriteNumberValue(b); break;
-            case uint ui: writer.WriteNumberValue(ui); break;
-            case ulong ul: writer.WriteNumberValue(ul); break;
-            default: writer.WriteNumberValue(Convert.ToDouble(value)); break;
+            case int i:
+                writer.WriteNumberValue(i);
+                break;
+            case long l:
+                writer.WriteNumberValue(l);
+                break;
+            case float f:
+                writer.WriteNumberValue(f);
+                break;
+            case double d:
+                writer.WriteNumberValue(d);
+                break;
+            case decimal dec:
+                writer.WriteNumberValue(dec);
+                break;
+            case short s:
+                writer.WriteNumberValue(s);
+                break;
+            case byte b:
+                writer.WriteNumberValue(b);
+                break;
+            case uint ui:
+                writer.WriteNumberValue(ui);
+                break;
+            case ulong ul:
+                writer.WriteNumberValue(ul);
+                break;
+            default:
+                writer.WriteNumberValue(Convert.ToDouble(value));
+                break;
         }
     }
 
@@ -274,19 +353,45 @@ internal static class JsonSchemaRuleMapper
     {
         switch (value)
         {
-            case null: writer.WriteNullValue(); break;
-            case bool boolVal: writer.WriteBooleanValue(boolVal); break;
-            case int i: writer.WriteNumberValue(i); break;
-            case long l: writer.WriteNumberValue(l); break;
-            case float f: writer.WriteNumberValue(f); break;
-            case double d: writer.WriteNumberValue(d); break;
-            case decimal dec: writer.WriteNumberValue(dec); break;
-            case short s: writer.WriteNumberValue(s); break;
-            case byte b: writer.WriteNumberValue(b); break;
-            case uint ui: writer.WriteNumberValue(ui); break;
-            case ulong ul: writer.WriteNumberValue(ul); break;
-            case string str: writer.WriteStringValue(str); break;
-            default: writer.WriteStringValue(value.ToString()); break;
+            case null:
+                writer.WriteNullValue();
+                break;
+            case bool boolVal:
+                writer.WriteBooleanValue(boolVal);
+                break;
+            case int i:
+                writer.WriteNumberValue(i);
+                break;
+            case long l:
+                writer.WriteNumberValue(l);
+                break;
+            case float f:
+                writer.WriteNumberValue(f);
+                break;
+            case double d:
+                writer.WriteNumberValue(d);
+                break;
+            case decimal dec:
+                writer.WriteNumberValue(dec);
+                break;
+            case short s:
+                writer.WriteNumberValue(s);
+                break;
+            case byte b:
+                writer.WriteNumberValue(b);
+                break;
+            case uint ui:
+                writer.WriteNumberValue(ui);
+                break;
+            case ulong ul:
+                writer.WriteNumberValue(ul);
+                break;
+            case string str:
+                writer.WriteStringValue(str);
+                break;
+            default:
+                writer.WriteStringValue(value.ToString());
+                break;
         }
     }
 }

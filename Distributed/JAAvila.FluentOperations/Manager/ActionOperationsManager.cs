@@ -28,14 +28,16 @@ public class ActionOperationsManager
 
     private void EnsureActionNotNull(string operationName)
     {
-        if (_action is null)
+        if (_action is not null)
         {
-            var template = new TemplateHandler()
-                .WithSubject(_callerName)
-                .WithFail($"The {operationName} operation failed because the action was null.")
-                .Result;
-            ExceptionHandler.Handle(template);
+            return;
         }
+
+        var template = new TemplateHandler()
+            .WithSubject(_callerName)
+            .WithFail($"The {operationName} operation failed because the action was null.")
+            .Result;
+        ExceptionHandler.Handle(template);
     }
 
     /// <summary>
@@ -94,7 +96,7 @@ public class ActionOperationsManager
     }
 
     /// <summary>
-    /// Asserts that the action throws an exception of exactly <typeparamref name="TException"/>
+    /// Asserts that the action throws an exception to exactly <typeparamref name="TException"/>
     /// (not a derived type).
     /// </summary>
     /// <typeparam name="TException">The exact expected exception type.</typeparam>
@@ -248,7 +250,9 @@ public class ActionOperationsManager
         {
             var template = new TemplateHandler()
                 .WithSubject(_callerName)
-                .WithFail($"The {nameof(NotThrowAfter)} operation failed because the timeout must be positive.")
+                .WithFail(
+                    $"The {nameof(NotThrowAfter)} operation failed because the timeout must be positive."
+                )
                 .Result;
             ExceptionHandler.Handle(template);
         }
@@ -257,7 +261,9 @@ public class ActionOperationsManager
         {
             var template = new TemplateHandler()
                 .WithSubject(_callerName)
-                .WithFail($"The {nameof(NotThrowAfter)} operation failed because the poll interval must be positive.")
+                .WithFail(
+                    $"The {nameof(NotThrowAfter)} operation failed because the poll interval must be positive."
+                )
                 .Result;
             ExceptionHandler.Handle(template);
         }

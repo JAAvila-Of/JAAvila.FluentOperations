@@ -6,15 +6,16 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the nullable ulong value is evenly divisible by the specified divisor.
 /// </summary>
 internal class NullableULongBeDivisibleByValidator(PrincipalChain<ulong?> chain, ulong divisor)
-    : IValidator, IRuleDescriptor
+    : IValidator,
+        IRuleDescriptor
 {
     public static NullableULongBeDivisibleByValidator New(
         PrincipalChain<ulong?> chain,
         ulong divisor
     ) => new(chain, divisor);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableULong.BeDivisibleBy";
     string IRuleDescriptor.OperationName => "BeDivisibleBy";
     Type IRuleDescriptor.SubjectType => typeof(ulong?);

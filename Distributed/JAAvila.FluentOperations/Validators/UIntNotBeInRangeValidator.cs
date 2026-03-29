@@ -6,13 +6,14 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the uint value is outside the specified inclusive range.
 /// </summary>
 internal class UIntNotBeInRangeValidator(PrincipalChain<uint> chain, uint min, uint max)
-    : IValidator, IRuleDescriptor
+    : IValidator,
+        IRuleDescriptor
 {
     public static UIntNotBeInRangeValidator New(PrincipalChain<uint> chain, uint min, uint max) =>
         new(chain, min, max);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "UInt.NotBeInRange";
     string IRuleDescriptor.OperationName => "NotBeInRange";
     Type IRuleDescriptor.SubjectType => typeof(uint);

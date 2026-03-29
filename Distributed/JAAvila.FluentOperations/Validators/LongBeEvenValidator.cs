@@ -7,11 +7,10 @@ namespace JAAvila.FluentOperations.Validators;
 /// </summary>
 internal class LongBeEvenValidator(PrincipalChain<long> chain) : IValidator, IRuleDescriptor
 {
-    public static LongBeEvenValidator New(PrincipalChain<long> chain) =>
-        new(chain);
+    public static LongBeEvenValidator New(PrincipalChain<long> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Long.BeEven";
     string IRuleDescriptor.OperationName => "BeEven";
     Type IRuleDescriptor.SubjectType => typeof(long);

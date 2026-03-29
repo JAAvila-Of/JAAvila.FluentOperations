@@ -16,8 +16,8 @@ internal class CollectionNotBeSequenceEqualToValidator<T>(
         IEnumerable<T> expected
     ) => new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Collection.NotBeSequenceEqualTo";
     string IRuleDescriptor.OperationName => "NotBeSequenceEqualTo";
     Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);
@@ -29,7 +29,7 @@ internal class CollectionNotBeSequenceEqualToValidator<T>(
         var actual = chain.GetValue();
 
         // If actual is null but expected is not, they are NOT sequence-equal => pass
-        if (actual is null)
+        if (actual.IsNull())
         {
             return true;
         }

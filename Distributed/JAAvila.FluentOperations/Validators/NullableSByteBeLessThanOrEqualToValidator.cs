@@ -15,8 +15,8 @@ internal class NullableSByteBeLessThanOrEqualToValidator(
         sbyte comparison
     ) => new(chain, comparison);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableSByte.BeLessThanOrEqualTo";
     string IRuleDescriptor.OperationName => "BeLessThanOrEqualTo";
     Type IRuleDescriptor.SubjectType => typeof(sbyte?);

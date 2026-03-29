@@ -6,13 +6,14 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the collection contains exactly one element and captures it for extraction.
 /// </summary>
 internal class CollectionExtractSingleValidator<T>(PrincipalChain<IEnumerable<T>> chain)
-    : IValidator, IRuleDescriptor
+    : IValidator,
+        IRuleDescriptor
 {
     public static CollectionExtractSingleValidator<T> New(PrincipalChain<IEnumerable<T>> chain) =>
         new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Collection.ExtractSingle";
     string IRuleDescriptor.OperationName => "ExtractSingle";
     Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);

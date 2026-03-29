@@ -1,5 +1,4 @@
 using JAAvila.FluentOperations.Contract;
-using JAAvila.FluentOperations.Model;
 
 namespace JAAvila.FluentOperations;
 
@@ -38,6 +37,7 @@ public abstract partial class QualityBlueprint<T>
 
         // Capture rules for 'otherwise' branch (if provided)
         var otherwiseRules = new List<IQualityRule>();
+
         if (otherwise is not null)
         {
             RuleCaptureContext.BeginPropertyCapture(
@@ -71,7 +71,13 @@ public abstract partial class QualityBlueprint<T>
                 conditionGroup: group
             );
             _capturedDuringDefinition.Add(
-                new CapturedRule(captured.PropertyName, wrapped, captured.Scenario, captured.Config, captured.RuleSet)
+                new CapturedRule(
+                    captured.PropertyName,
+                    wrapped,
+                    captured.Scenario,
+                    captured.Config,
+                    captured.RuleSet
+                )
             );
 
             // Ensure the extractor is registered
@@ -95,7 +101,13 @@ public abstract partial class QualityBlueprint<T>
                 conditionGroup: group
             );
             _capturedDuringDefinition.Add(
-                new CapturedRule(captured.PropertyName, wrapped, captured.Scenario, captured.Config, captured.RuleSet)
+                new CapturedRule(
+                    captured.PropertyName,
+                    wrapped,
+                    captured.Scenario,
+                    captured.Config,
+                    captured.RuleSet
+                )
             );
 
             if (!_extractors.ContainsKey(captured.PropertyName))

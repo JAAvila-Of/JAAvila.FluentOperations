@@ -7,15 +7,16 @@ namespace JAAvila.FluentOperations.Validators;
 /// Validates that the nullable decimal value is not one of the specified disallowed values.
 /// </summary>
 internal class NullableDecimalNotBeOneOfValidator(PrincipalChain<decimal?> chain, decimal[] values)
-    : IValidator, IRuleDescriptor
+    : IValidator,
+        IRuleDescriptor
 {
     public static NullableDecimalNotBeOneOfValidator New(
         PrincipalChain<decimal?> chain,
         decimal[] values
     ) => new(chain, values);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableDecimal.NotBeOneOf";
     string IRuleDescriptor.OperationName => "NotBeOneOf";
     Type IRuleDescriptor.SubjectType => typeof(decimal?);

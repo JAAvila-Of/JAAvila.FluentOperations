@@ -9,8 +9,8 @@ internal class StringBeNumericValidator(PrincipalChain<string?> chain) : IValida
 {
     public static StringBeNumericValidator New(PrincipalChain<string?> chain) => new(chain);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "String.BeNumeric";
     string IRuleDescriptor.OperationName => "BeNumeric";
     Type IRuleDescriptor.SubjectType => typeof(string);

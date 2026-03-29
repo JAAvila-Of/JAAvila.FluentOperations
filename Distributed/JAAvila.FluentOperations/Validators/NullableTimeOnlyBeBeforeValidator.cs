@@ -5,13 +5,17 @@ namespace JAAvila.FluentOperations.Validators;
 /// <summary>
 /// Validates that the nullable timeonly value is before the expected value.
 /// </summary>
-internal class NullableTimeOnlyBeBeforeValidator(PrincipalChain<TimeOnly?> chain, TimeOnly expected) : IValidator, IRuleDescriptor
+internal class NullableTimeOnlyBeBeforeValidator(PrincipalChain<TimeOnly?> chain, TimeOnly expected)
+    : IValidator,
+        IRuleDescriptor
 {
-    public static NullableTimeOnlyBeBeforeValidator New(PrincipalChain<TimeOnly?> chain, TimeOnly expected) =>
-        new(chain, expected);
+    public static NullableTimeOnlyBeBeforeValidator New(
+        PrincipalChain<TimeOnly?> chain,
+        TimeOnly expected
+    ) => new(chain, expected);
 
-    public string Expected { get; }
-    public string ResultValidation { get; set; }
+    public string Expected { get; } = null!;
+    public string ResultValidation { get; set; } = null!;
     public string MessageKey => "NullableTimeOnly.BeBefore";
     string IRuleDescriptor.OperationName => "BeBefore";
     Type IRuleDescriptor.SubjectType => typeof(TimeOnly?);
