@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using JAAvila.FluentOperations.Common;
 using JAAvila.FluentOperations.Config;
 using JAAvila.FluentOperations.Connector;
@@ -774,6 +775,213 @@ public class DictionaryOperationsManager<TKey, TValue>
             extractedValue,
             PrincipalChain.GetSubject()
         );
+    }
+
+    /// <summary>
+    /// Asserts that the dictionary satisfies the given expression predicate.
+    /// </summary>
+    /// <param name="expression">A lambda expression that must evaluate to <c>true</c>.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public DictionaryOperationsManager<TKey, TValue> Evaluate(
+        Expression<Func<IDictionary<TKey, TValue>, bool>> expression,
+        Reason? reason = null
+    )
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Common.Evaluate))
+        {
+            return this;
+        }
+
+        ExecutionEngine<DictionaryOperationsManager<TKey, TValue>, IDictionary<TKey, TValue>>
+            .New(this)
+            .WithOperation(
+                ReferenceEvaluateExpressionValidator<IDictionary<TKey, TValue>>.New(
+                    PrincipalChain,
+                    expression
+                )
+            )
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
+                        .WithExpression(expression.ToString())
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                _ =>
+                    (
+                        expression.IsNull(),
+                        Fail.New(
+                            $"The {nameof(Evaluate)} operation failed because the expected expression was <null>."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Runs the given <paramref name="action"/> against the dictionary cast as <typeparamref name="TType"/>,
+    /// collecting all inner assertion failures into a single transactional failure report.
+    /// </summary>
+    /// <typeparam name="TType">The type to cast the dictionary to before passing it to the action.</typeparam>
+    /// <param name="action">The inspection action to run against the cast dictionary.</param>
+    /// <param name="mode">The transactional mode that controls how failures are accumulated and surfaced.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public DictionaryOperationsManager<TKey, TValue> Evaluate<TType>(
+        Action<TType> action,
+        TransactionalMode mode = TransactionalMode.AccumulateFailsAndDisposeThis
+    )
+        where TType : IDictionary<TKey, TValue>
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Common.Evaluate))
+        {
+            return this;
+        }
+
+        using var transaction = new TransactionalOperations(mode);
+
+        transaction.SetHeader(
+            Template.New(
+                "The evaluation of {0} of type {1} has not been satisfactory and the following observations have been found:",
+                PrincipalChain.GetSubject(),
+                TypeFormatter.FriendlyName(typeof(TType))
+            )
+        );
+
+        ExecutionEngine<DictionaryOperationsManager<TKey, TValue>, IDictionary<TKey, TValue>>
+            .New(this)
+            .WithOperation(
+                ReferenceEvaluateActionValidator<IDictionary<TKey, TValue>, TType>.New(
+                    PrincipalChain,
+                    action
+                )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        action.IsNull(),
+                        Fail.New(
+                            $"The {nameof(Evaluate)} operation failed because the inspector action was <null>."
+                        )
+                    )
+            )
+            .FailIf(
+                m =>
+                    (
+                        m.PrincipalChain.GetValue() is null,
+                        Fail.New(
+                            $"The {nameof(Evaluate)} operation failed because the resulting value was <null>."
+                        )
+                    )
+            )
+            .FailIf(
+                m =>
+                    (
+                        m.PrincipalChain.GetValue() is not TType,
+                        Fail.New(
+                            $"The {nameof(Evaluate)} operation failed because the resulting value should be assignable to {{0}}, but {{1}} was found.",
+                            TypeFormatter.FriendlyName(typeof(TType)),
+                            TypeFormatter.FriendlyName(m.PrincipalChain.GetValue()!.GetType())
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts that the dictionary passes the given <see cref="ICustomValidator{T}"/>.
+    /// </summary>
+    /// <param name="customValidator">The custom validator to evaluate.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>The current manager instance for method chaining.</returns>
+    public DictionaryOperationsManager<TKey, TValue> Evaluate(
+        ICustomValidator<IDictionary<TKey, TValue>> customValidator,
+        Reason? reason = null
+    )
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Common.Evaluate))
+        {
+            return this;
+        }
+
+        ExecutionEngine<DictionaryOperationsManager<TKey, TValue>, IDictionary<TKey, TValue>>
+            .New(this)
+            .WithOperation(
+                ReferenceEvaluateCustomValidator<IDictionary<TKey, TValue>>.New(
+                    PrincipalChain,
+                    customValidator
+                )
+            )
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                _ =>
+                    (
+                        customValidator.IsNull(),
+                        Fail.New(
+                            $"The {nameof(Evaluate)} operation failed because the custom validator was <null>."
+                        )
+                    )
+            )
+            .Execute();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Asserts asynchronously that the dictionary passes the given <see cref="IAsyncCustomValidator{T}"/>.
+    /// </summary>
+    /// <param name="customValidator">The async custom validator to evaluate.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>A task that completes with the current manager instance for method chaining.</returns>
+    public async Task<DictionaryOperationsManager<TKey, TValue>> EvaluateAsync(
+        IAsyncCustomValidator<IDictionary<TKey, TValue>> customValidator,
+        Reason? reason = null
+    )
+    {
+        if (!OperationUtils.CheckOperationAllowed(Operations.Common.Evaluate))
+        {
+            return this;
+        }
+
+        await ExecutionEngine<DictionaryOperationsManager<TKey, TValue>, IDictionary<TKey, TValue>>
+            .New(this)
+            .WithOperation(
+                ReferenceEvaluateAsyncCustomValidator<IDictionary<TKey, TValue>>.New(
+                    PrincipalChain,
+                    customValidator
+                )
+            )
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                _ =>
+                    (
+                        customValidator.IsNull(),
+                        Fail.New(
+                            $"The {nameof(EvaluateAsync)} operation failed because the async custom validator was <null>."
+                        )
+                    )
+            )
+            .ExecuteAsync();
+
+        return this;
     }
 
     /// <summary>
