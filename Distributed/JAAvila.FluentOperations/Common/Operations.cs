@@ -2554,6 +2554,10 @@ public struct Operations
         [EnumStringValue("extractsinglematch")]
         ExtractSingleMatch,
 
+        /// <summary>Extracts the element at the specified index for further assertion.</summary>
+        [EnumStringValue("extractatindex")]
+        ExtractAtIndex,
+
         /// <summary>Asserts that the collection contains an element equivalent to the specified value.</summary>
         [EnumStringValue("containequivalentof")]
         ContainEquivalentOf,

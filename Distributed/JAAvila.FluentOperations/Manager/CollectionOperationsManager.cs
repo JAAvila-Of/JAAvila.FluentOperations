@@ -994,6 +994,77 @@ public class CollectionOperationsManager<T>
     }
 
     /// <summary>
+    /// Asserts that the collection has an element at the specified index and extracts it.
+    /// Returns an <see cref="AndWhichConnector{TManager,TSubject}"/> whose <c>Subject</c> is the extracted element.
+    /// </summary>
+    /// <param name="index">The zero-based index of the element to extract.</param>
+    /// <returns>A connector exposing the element at the given index via <c>.Subject</c> and the parent manager via <c>.And</c>.</returns>
+    public AndWhichConnector<CollectionOperationsManager<T>, T> Extract(int index)
+    {
+        return Extract(index, null);
+    }
+
+    /// <summary>
+    /// Asserts that the collection has an element at the specified index and extracts it.
+    /// Returns an <see cref="AndWhichConnector{TManager,TSubject}"/> whose <c>Subject</c> is the extracted element.
+    /// </summary>
+    /// <param name="index">The zero-based index of the element to extract.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>A connector exposing the element at the given index via <c>.Subject</c> and the parent manager via <c>.And</c>.</returns>
+    public AndWhichConnector<CollectionOperationsManager<T>, T> Extract(int index, Reason? reason)
+    {
+        T extractedValue = default!;
+
+        if (!OperationUtils.CheckOperationAllowed(Operations.Collection.ExtractAtIndex))
+        {
+            return new AndWhichConnector<CollectionOperationsManager<T>, T>(
+                this,
+                extractedValue,
+                PrincipalChain.GetSubject()
+            );
+        }
+
+        var validator = CollectionExtractAtIndexValidator<T>.New(PrincipalChain, index);
+
+        ExecutionEngine<CollectionOperationsManager<T>, IEnumerable<T>>
+            .New(this)
+            .WithOperation(validator)
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            index.ToString(),
+                            PrincipalChain.GetValue().Count().ToString()
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                m =>
+                    (
+                        m.PrincipalChain.GetValue().IsNull(),
+                        Fail.New(
+                            $"The {nameof(Extract)} operation failed because the collection was null."
+                        )
+                    )
+            )
+            .Execute();
+
+        if (validator.ExtractedValue is not null)
+        {
+            extractedValue = validator.ExtractedValue;
+        }
+
+        return new AndWhichConnector<CollectionOperationsManager<T>, T>(
+            this,
+            extractedValue,
+            PrincipalChain.GetSubject()
+        );
+    }
+
+    /// <summary>
     /// Asserts that the collection contains all the specified items.
     /// </summary>
     /// <param name="items">The items that must all be present in the collection.</param>
