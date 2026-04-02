@@ -2558,6 +2558,10 @@ public struct Operations
         [EnumStringValue("extractatindex")]
         ExtractAtIndex,
 
+        /// <summary>Extracts all elements matching the predicate for further assertion.</summary>
+        [EnumStringValue("extractpredicate")]
+        ExtractPredicate,
+
         /// <summary>Asserts that the collection contains an element equivalent to the specified value.</summary>
         [EnumStringValue("containequivalentof")]
         ContainEquivalentOf,
