@@ -2657,6 +2657,10 @@ public struct Operations
         /// <summary>Extracts the value associated with the specified key for further assertion.</summary>
         [EnumStringValue("extractkey")]
         ExtractKey,
+
+        /// <summary>Extracts the single entry from the dictionary for further assertion.</summary>
+        [EnumStringValue("extractsingle")]
+        ExtractSingle,
     }
 
     /// <summary>

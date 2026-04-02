@@ -778,6 +778,66 @@ public class DictionaryOperationsManager<TKey, TValue>
     }
 
     /// <summary>
+    /// Asserts that the dictionary contains exactly one entry and extracts it.
+    /// Returns an <see cref="AndWhichConnector{TManager,TSubject}"/> whose <c>Subject</c> is the extracted key-value pair.
+    /// </summary>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>A connector exposing the single entry via <c>.Subject</c> and the parent manager via <c>.And</c>.</returns>
+    public AndWhichConnector<DictionaryOperationsManager<TKey, TValue>, KeyValuePair<TKey, TValue>> ExtractSingle(
+        Reason? reason = null
+    )
+    {
+        KeyValuePair<TKey, TValue> extractedValue = default;
+
+        if (!OperationUtils.CheckOperationAllowed(Operations.Dictionary.ExtractSingle))
+        {
+            return new AndWhichConnector<DictionaryOperationsManager<TKey, TValue>, KeyValuePair<TKey, TValue>>(
+                this,
+                extractedValue,
+                PrincipalChain.GetSubject()
+            );
+        }
+
+        var validator = DictionaryExtractSingleValidator<TKey, TValue>.New(PrincipalChain);
+
+        ExecutionEngine<DictionaryOperationsManager<TKey, TValue>, IDictionary<TKey, TValue>>
+            .New(this)
+            .WithOperation(validator)
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            PrincipalChain.GetValue().Count.ToString()
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                m =>
+                    (
+                        m.PrincipalChain.GetValue().IsNull(),
+                        Fail.New(
+                            $"The {nameof(ExtractSingle)} operation failed because the dictionary was null."
+                        )
+                    )
+            )
+            .Execute();
+
+        if (validator.ExtractedValue.Key is not null)
+        {
+            extractedValue = validator.ExtractedValue;
+        }
+
+        return new AndWhichConnector<DictionaryOperationsManager<TKey, TValue>, KeyValuePair<TKey, TValue>>(
+            this,
+            extractedValue,
+            PrincipalChain.GetSubject()
+        );
+    }
+
+    /// <summary>
     /// Asserts that the dictionary satisfies the given expression predicate.
     /// </summary>
     /// <param name="expression">A lambda expression that must evaluate to <c>true</c>.</param>
