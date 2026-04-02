@@ -2649,6 +2649,10 @@ public struct Operations
         /// <summary>Asserts that the dictionary is not equal to the expected dictionary.</summary>
         [EnumStringValue("notbe")]
         NotBe,
+
+        /// <summary>Extracts the value associated with the specified key for further assertion.</summary>
+        [EnumStringValue("extractkey")]
+        ExtractKey,
     }
 
     /// <summary>

@@ -695,6 +695,88 @@ public class DictionaryOperationsManager<TKey, TValue>
     }
 
     /// <summary>
+    /// Asserts that the dictionary contains the specified key and extracts the associated value.
+    /// Returns an <see cref="AndWhichConnector{TManager,TSubject}"/> whose <c>Subject</c> is the extracted value.
+    /// </summary>
+    /// <param name="key">The key whose associated value should be extracted.</param>
+    /// <returns>A connector exposing the value via <c>.Subject</c> and the parent manager via <c>.And</c>.</returns>
+    public AndWhichConnector<DictionaryOperationsManager<TKey, TValue>, TValue> Extract(TKey key)
+    {
+        return Extract(key, null);
+    }
+
+    /// <summary>
+    /// Asserts that the dictionary contains the specified key and extracts the associated value.
+    /// Returns an <see cref="AndWhichConnector{TManager,TSubject}"/> whose <c>Subject</c> is the extracted value.
+    /// </summary>
+    /// <param name="key">The key whose associated value should be extracted.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>A connector exposing the value via <c>.Subject</c> and the parent manager via <c>.And</c>.</returns>
+    public AndWhichConnector<DictionaryOperationsManager<TKey, TValue>, TValue> Extract(
+        TKey key,
+        Reason? reason
+    )
+    {
+        TValue extractedValue = default!;
+
+        if (!OperationUtils.CheckOperationAllowed(Operations.Dictionary.ExtractKey))
+        {
+            return new AndWhichConnector<DictionaryOperationsManager<TKey, TValue>, TValue>(
+                this,
+                extractedValue,
+                PrincipalChain.GetSubject()
+            );
+        }
+
+        var validator = DictionaryExtractKeyValidator<TKey, TValue>.New(PrincipalChain, key);
+
+        ExecutionEngine<DictionaryOperationsManager<TKey, TValue>, IDictionary<TKey, TValue>>
+            .New(this)
+            .WithOperation(validator)
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            BaseFormatter.Format(key)
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                m =>
+                    (
+                        m.PrincipalChain.GetValue().IsNull(),
+                        Fail.New(
+                            $"The {nameof(Extract)} operation failed because the dictionary was null."
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        key.IsNull(),
+                        Fail.New(
+                            $"The {nameof(Extract)} operation failed because the key cannot be null."
+                        )
+                    )
+            )
+            .Execute();
+
+        if (validator.ExtractedValue is not null)
+        {
+            extractedValue = validator.ExtractedValue;
+        }
+
+        return new AndWhichConnector<DictionaryOperationsManager<TKey, TValue>, TValue>(
+            this,
+            extractedValue,
+            PrincipalChain.GetSubject()
+        );
+    }
+
+    /// <summary>
     /// Extracts a sub-value from the current dictionary using the given selector.
     /// Returns a connector that exposes the sub-value for further assertions.
     /// </summary>

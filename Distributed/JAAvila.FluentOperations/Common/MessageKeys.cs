@@ -475,6 +475,8 @@ public static class MessageKeys
         public const string NotContainKey = "Dictionary.NotContainKey";
         /// <summary>Asserts that the dictionary does not contain the specified value.</summary>
         public const string NotContainValue = "Dictionary.NotContainValue";
+        /// <summary>Extracts the value associated with the specified key from the dictionary.</summary>
+        public const string ExtractKey = "Dictionary.ExtractKey";
     }
 
     /// <summary>Keys for <c>Double</c> operations.</summary>
