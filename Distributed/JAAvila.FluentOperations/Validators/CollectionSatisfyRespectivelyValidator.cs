@@ -18,6 +18,7 @@ internal class CollectionSatisfyRespectivelyValidator<T>(
     public string Expected { get; } = null!;
     public string ResultValidation { get; set; } = null!;
     public string MessageKey => "Collection.SatisfyRespectively";
+    public int FailingIndex { get; private set; } = -1;
     string IRuleDescriptor.OperationName => "SatisfyRespectively";
     Type IRuleDescriptor.SubjectType => typeof(IEnumerable<>);
     IReadOnlyDictionary<string, object> IRuleDescriptor.Parameters =>
@@ -34,11 +35,15 @@ internal class CollectionSatisfyRespectivelyValidator<T>(
             return false;
         }
 
-        if (list.Where((t, i) => !predicates[i](t)).Any())
+        for (var i = 0; i < list.Count; i++)
         {
-            ResultValidation =
-                "The collection was expected to satisfy the respective predicates for each element, but element at index {0} did not satisfy its predicate.";
-            return false;
+            if (!predicates[i](list[i]))
+            {
+                FailingIndex = i;
+                ResultValidation =
+                    "The collection was expected to satisfy the respective predicates for each element, but element at index {2} did not satisfy its predicate.";
+                return false;
+            }
         }
 
         return true;

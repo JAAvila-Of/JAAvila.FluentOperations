@@ -2440,12 +2440,11 @@ public class CollectionOperationsManager<T>
         }
 
         var list = PrincipalChain.GetValue().ToList();
+        var validator = CollectionSatisfyRespectivelyValidator<T>.New(PrincipalChain, predicates);
 
         ExecutionEngine<CollectionOperationsManager<T>, IEnumerable<T>>
             .New(this)
-            .WithOperation(
-                CollectionSatisfyRespectivelyValidator<T>.New(PrincipalChain, predicates)
-            )
+            .WithOperation(validator)
             .WithTemplate(
                 (template, operation) =>
                     template
@@ -2454,7 +2453,8 @@ public class CollectionOperationsManager<T>
                             operation.MessageKey,
                             operation.ResultValidation,
                             list.Count.ToString(),
-                            predicates.Length.ToString()
+                            predicates.Length.ToString(),
+                            validator.FailingIndex.ToString()
                         )
                         .WithReason(reason?.ToString())
             )

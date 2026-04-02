@@ -2353,11 +2353,11 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
             return this;
         }
 
+        var validator = CollectionSatisfyRespectivelyValidator<T>.New(PrincipalChain, predicates);
+
         ExecutionEngine<ArrayOperationsManager<T>, IEnumerable<T>>
             .New(this)
-            .WithOperation(
-                CollectionSatisfyRespectivelyValidator<T>.New(PrincipalChain, predicates)
-            )
+            .WithOperation(validator)
             .WithTemplate(
                 (template, operation) =>
                     template
@@ -2366,7 +2366,8 @@ public class ArrayOperationsManager<T> : ITestManager<ArrayOperationsManager<T>,
                             operation.MessageKey,
                             operation.ResultValidation,
                             PrincipalChain.GetValue().Count().ToString(),
-                            predicates.Length.ToString()
+                            predicates.Length.ToString(),
+                            validator.FailingIndex.ToString()
                         )
                         .WithReason(reason?.ToString())
             )
