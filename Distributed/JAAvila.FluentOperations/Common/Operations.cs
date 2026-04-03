@@ -2554,6 +2554,14 @@ public struct Operations
         [EnumStringValue("extractsinglematch")]
         ExtractSingleMatch,
 
+        /// <summary>Extracts the element at the specified index for further assertion.</summary>
+        [EnumStringValue("extractatindex")]
+        ExtractAtIndex,
+
+        /// <summary>Extracts all elements matching the predicate for further assertion.</summary>
+        [EnumStringValue("extractpredicate")]
+        ExtractPredicate,
+
         /// <summary>Asserts that the collection contains an element equivalent to the specified value.</summary>
         [EnumStringValue("containequivalentof")]
         ContainEquivalentOf,
@@ -2645,6 +2653,14 @@ public struct Operations
         /// <summary>Asserts that the dictionary is not equal to the expected dictionary.</summary>
         [EnumStringValue("notbe")]
         NotBe,
+
+        /// <summary>Extracts the value associated with the specified key for further assertion.</summary>
+        [EnumStringValue("extractkey")]
+        ExtractKey,
+
+        /// <summary>Extracts the single entry from the dictionary for further assertion.</summary>
+        [EnumStringValue("extractsingle")]
+        ExtractSingle,
     }
 
     /// <summary>

@@ -211,6 +211,10 @@ public static class MessageKeys
         public const string ExtractSingle = "Collection.ExtractSingle";
         /// <summary>Asserts the collection contains exactly one element matching the predicate and extracts it.</summary>
         public const string ExtractSinglePredicate = "Collection.ExtractSinglePredicate";
+        /// <summary>Extracts the element at the specified index from the collection.</summary>
+        public const string ExtractAtIndex = "Collection.ExtractAtIndex";
+        /// <summary>Extracts all elements matching the predicate from the collection.</summary>
+        public const string ExtractPredicate = "Collection.ExtractPredicate";
         /// <summary>Asserts that the collection has exactly the specified number of elements.</summary>
         public const string HaveCount = "Collection.HaveCount";
         /// <summary>Asserts that the element count falls within the specified range.</summary>
@@ -473,6 +477,10 @@ public static class MessageKeys
         public const string NotContainKey = "Dictionary.NotContainKey";
         /// <summary>Asserts that the dictionary does not contain the specified value.</summary>
         public const string NotContainValue = "Dictionary.NotContainValue";
+        /// <summary>Extracts the value associated with the specified key from the dictionary.</summary>
+        public const string ExtractKey = "Dictionary.ExtractKey";
+        /// <summary>Extracts the single entry from the dictionary.</summary>
+        public const string ExtractSingle = "Dictionary.ExtractSingle";
     }
 
     /// <summary>Keys for <c>Double</c> operations.</summary>
