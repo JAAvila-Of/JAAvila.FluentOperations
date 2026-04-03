@@ -697,6 +697,8 @@ Manager: `CollectionOperationsManager<T>`
 | `Inspect(Action<T>)` | Deep inspection of each element |
 | `ExtractSingle()` | Extract the single element via `AndWhichConnector` |
 | `ExtractSingle(Func<T, bool>)` | Extract single matching element via `AndWhichConnector` |
+| `Extract(int)` | Extract element at index via `AndWhichConnector` |
+| `Extract(Func<T, bool>)` | Extract all matching elements as sub-collection via `AndWhichConnector` |
 | `Be(IEnumerable<T>)` | Same reference as expected |
 | `NotBe(IEnumerable<T>)` | Not the same reference |
 | `BeOfType<TType>()` | Runtime type is exactly TType |
@@ -717,7 +719,7 @@ Manager: `CollectionOperationsManager<T>`
 
 Manager: `ArrayOperationsManager<T>`
 
-All Collection operations plus (including equivalence: `BeEquivalentTo`, `BeEquivalentTo(builder)`, `NotBeEquivalentTo`, `BeSequenceEqualTo`, `NotBeSequenceEqualTo`, `NotContainAny`, `NotContainAll`, `BeInAscendingOrder(keySelector)`, `BeInDescendingOrder(keySelector)`, `Inspect`, `ExtractSingle`, `OnlyContain`, `ContainEquivalentOf`, `NotContainEquivalentOf`):
+All Collection operations plus (including equivalence: `BeEquivalentTo`, `BeEquivalentTo(builder)`, `NotBeEquivalentTo`, `BeSequenceEqualTo`, `NotBeSequenceEqualTo`, `NotContainAny`, `NotContainAll`, `BeInAscendingOrder(keySelector)`, `BeInDescendingOrder(keySelector)`, `Inspect`, `ExtractSingle`, `Extract`, `OnlyContain`, `ContainEquivalentOf`, `NotContainEquivalentOf`):
 
 | Method | Description |
 |--------|-------------|
@@ -759,6 +761,12 @@ Manager: `DictionaryOperationsManager<TKey, TValue>`
 | `NotBeOfType(Type)` | Runtime type is not the specified type |
 | `ContainKeys(params TKey[])` | Contains all specified keys |
 | `Which<TResult>(Func<IDictionary<TKey, TValue>, TResult>)` | Extract sub-value for chained assertions |
+| `Extract(TKey)` | Extract value by key via `AndWhichConnector` |
+| `ExtractSingle()` | Extract the single entry as `KeyValuePair` via `AndWhichConnector` |
+| `Evaluate(Expression<Func<IDictionary<TKey, TValue>, bool>>)` | Custom predicate expression |
+| `Evaluate<TType>(Action<TType>)` | Custom action with transactional mode |
+| `Evaluate(ICustomValidator<IDictionary<TKey, TValue>>)` | Custom sync validator |
+| `EvaluateAsync(IAsyncCustomValidator<IDictionary<TKey, TValue>>)` | Custom async validator |
 
 ---
 

@@ -994,6 +994,157 @@ public class CollectionOperationsManager<T>
     }
 
     /// <summary>
+    /// Asserts that the collection has an element at the specified index and extracts it.
+    /// Returns an <see cref="AndWhichConnector{TManager,TSubject}"/> whose <c>Subject</c> is the extracted element.
+    /// </summary>
+    /// <param name="index">The zero-based index of the element to extract.</param>
+    /// <returns>A connector exposing the element at the given index via <c>.Subject</c> and the parent manager via <c>.And</c>.</returns>
+    public AndWhichConnector<CollectionOperationsManager<T>, T> Extract(int index)
+    {
+        return Extract(index, null);
+    }
+
+    /// <summary>
+    /// Asserts that the collection has an element at the specified index and extracts it.
+    /// Returns an <see cref="AndWhichConnector{TManager,TSubject}"/> whose <c>Subject</c> is the extracted element.
+    /// </summary>
+    /// <param name="index">The zero-based index of the element to extract.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>A connector exposing the element at the given index via <c>.Subject</c> and the parent manager via <c>.And</c>.</returns>
+    public AndWhichConnector<CollectionOperationsManager<T>, T> Extract(int index, Reason? reason)
+    {
+        T extractedValue = default!;
+
+        if (!OperationUtils.CheckOperationAllowed(Operations.Collection.ExtractAtIndex))
+        {
+            return new AndWhichConnector<CollectionOperationsManager<T>, T>(
+                this,
+                extractedValue,
+                PrincipalChain.GetSubject()
+            );
+        }
+
+        var validator = CollectionExtractAtIndexValidator<T>.New(PrincipalChain, index);
+
+        ExecutionEngine<CollectionOperationsManager<T>, IEnumerable<T>>
+            .New(this)
+            .WithOperation(validator)
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(
+                            operation.MessageKey,
+                            operation.ResultValidation,
+                            index.ToString(),
+                            PrincipalChain.GetValue().Count().ToString()
+                        )
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                m =>
+                    (
+                        m.PrincipalChain.GetValue().IsNull(),
+                        Fail.New(
+                            $"The {nameof(Extract)} operation failed because the collection was null."
+                        )
+                    )
+            )
+            .Execute();
+
+        if (validator.ExtractedValue is not null)
+        {
+            extractedValue = validator.ExtractedValue;
+        }
+
+        return new AndWhichConnector<CollectionOperationsManager<T>, T>(
+            this,
+            extractedValue,
+            PrincipalChain.GetSubject()
+        );
+    }
+
+    /// <summary>
+    /// Asserts that the collection contains at least one element matching the predicate and extracts all matching elements.
+    /// Returns an <see cref="AndWhichConnector{TManager,TSubject}"/> whose <c>Subject</c> is the sequence of matching elements.
+    /// </summary>
+    /// <param name="predicate">A function to filter elements.</param>
+    /// <returns>A connector exposing the matching elements via <c>.Subject</c> and the parent manager via <c>.And</c>.</returns>
+    public AndWhichConnector<CollectionOperationsManager<T>, IEnumerable<T>> Extract(
+        Func<T, bool> predicate
+    )
+    {
+        return Extract(predicate, null);
+    }
+
+    /// <summary>
+    /// Asserts that the collection contains at least one element matching the predicate and extracts all matching elements.
+    /// Returns an <see cref="AndWhichConnector{TManager,TSubject}"/> whose <c>Subject</c> is the sequence of matching elements.
+    /// </summary>
+    /// <param name="predicate">A function to filter elements.</param>
+    /// <param name="reason">An optional reason providing context for the assertion.</param>
+    /// <returns>A connector exposing the matching elements via <c>.Subject</c> and the parent manager via <c>.And</c>.</returns>
+    public AndWhichConnector<CollectionOperationsManager<T>, IEnumerable<T>> Extract(
+        Func<T, bool> predicate,
+        Reason? reason
+    )
+    {
+        IEnumerable<T> extractedValues = Enumerable.Empty<T>();
+
+        if (!OperationUtils.CheckOperationAllowed(Operations.Collection.ExtractPredicate))
+        {
+            return new AndWhichConnector<CollectionOperationsManager<T>, IEnumerable<T>>(
+                this,
+                extractedValues,
+                PrincipalChain.GetSubject()
+            );
+        }
+
+        var validator = CollectionExtractPredicateValidator<T>.New(PrincipalChain, predicate);
+
+        ExecutionEngine<CollectionOperationsManager<T>, IEnumerable<T>>
+            .New(this)
+            .WithOperation(validator)
+            .WithTemplate(
+                (template, operation) =>
+                    template
+                        .WithSubject(PrincipalChain.GetSubject())
+                        .WithResult(operation.MessageKey, operation.ResultValidation)
+                        .WithReason(reason?.ToString())
+            )
+            .FailIf(
+                m =>
+                    (
+                        m.PrincipalChain.GetValue().IsNull(),
+                        Fail.New(
+                            $"The {nameof(Extract)} operation failed because the collection was null."
+                        )
+                    )
+            )
+            .FailIf(
+                _ =>
+                    (
+                        predicate.IsNull(),
+                        Fail.New(
+                            $"The {nameof(Extract)} operation failed because the predicate cannot be null."
+                        )
+                    )
+            )
+            .Execute();
+
+        if (validator.ExtractedValues is not null)
+        {
+            extractedValues = validator.ExtractedValues;
+        }
+
+        return new AndWhichConnector<CollectionOperationsManager<T>, IEnumerable<T>>(
+            this,
+            extractedValues,
+            PrincipalChain.GetSubject()
+        );
+    }
+
+    /// <summary>
     /// Asserts that the collection contains all the specified items.
     /// </summary>
     /// <param name="items">The items that must all be present in the collection.</param>
